@@ -16,6 +16,13 @@
     transition: background-color 240ms ease, box-shadow 240ms ease;
   }
 
+  body.home-hero-header-enabled .section-header .header {
+    position: relative !important;
+    inset: auto !important;
+    top: 0 !important;
+    width: 100%;
+  }
+
   body.home-hero-header-enabled.home-hero-header-solid .section-header .header-wrapper,
   body.home-hero-header-enabled.home-hero-header-solid .section-header .header {
     background: rgba(0, 0, 0, 0.94) !important;
@@ -279,7 +286,7 @@
     { "type": "text", "id": "tagline", "label": "Tagline", "default": "OFFICE-READY, WEEKEND-EASY" },
     { "type": "text", "id": "primary_button_label", "label": "First button label", "default": "View Collection" },
     { "type": "text", "id": "secondary_button_label", "label": "Second button label", "default": "Shop now" },
-    { "type": "url", "id": "button_link", "label": "Button link", "default": "/collections/back-to-rhythm" }
+    { "type": "url", "id": "button_link", "label": "Button link" }
   ],
   "presets": [
     { "name": "Home hero photo" }
