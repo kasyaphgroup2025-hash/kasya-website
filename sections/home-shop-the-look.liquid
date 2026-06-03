@@ -2,6 +2,14 @@
 
 <section class="home-editorial home-shop-the-look">
   <div class="home-editorial__inner">
+    <div class="home-shop-the-look__heading-bar">
+      {%- if section.settings.kicker != blank -%}
+        <h2 class="home-editorial__heading home-editorial__heading--title">{{ section.settings.kicker | escape }}</h2>
+      {%- else -%}
+        <h2 class="home-editorial__heading home-editorial__heading--title">Shop the Look</h2>
+      {%- endif -%}
+    </div>
+
     <div class="home-shop-the-look__layout">
       <div class="home-shop-the-look__image-wrap">
         {%- if section.settings.mobile_image != blank or section.settings.desktop_image != blank -%}
@@ -17,14 +25,14 @@
           <div class="home-media home-media--empty"></div>
         {%- endif -%}
         <div class="home-shop-the-look__overlay">
-          {%- if section.settings.kicker != blank -%}
-            <p class="home-editorial__kicker">{{ section.settings.kicker | escape }}</p>
-          {%- endif -%}
           {%- if section.settings.heading != blank -%}
-            <h2 class="home-editorial__heading">{{ section.settings.heading | escape }}</h2>
+            <h3 class="home-editorial__heading home-editorial__heading--title">{{ section.settings.heading | escape }}</h3>
           {%- endif -%}
           {%- if section.settings.copy != blank -%}
             <div class="home-editorial__copy">{{ section.settings.copy }}</div>
+          {%- endif -%}
+          {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
+            <a class="home-editorial__button home-editorial__button--outline" href="{{ section.settings.button_link }}">{{ section.settings.button_label | escape }}</a>
           {%- endif -%}
         </div>
       </div>
@@ -55,10 +63,6 @@
             </div>
           {%- endfor -%}
         {%- endfor -%}
-
-        {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
-          <a class="home-editorial__button" href="{{ section.settings.button_link }}">{{ section.settings.button_label | escape }}</a>
-        {%- endif -%}
       </div>
     </div>
   </div>
@@ -73,12 +77,12 @@
     { "type": "image_picker", "id": "mobile_image", "label": "Mobile look image" },
     { "type": "image_picker", "id": "desktop_image", "label": "Desktop look image" },
     { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Styled Kasya look" },
-    { "type": "text", "id": "kicker", "label": "Kicker", "default": "Shop the look" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "One look, all day" },
+    { "type": "text", "id": "kicker", "label": "Section heading", "default": "Shop the Look" },
+    { "type": "text", "id": "heading", "label": "Look title", "default": "One look, all day" },
     { "type": "richtext", "id": "copy", "label": "Copy", "default": "<p>Pair soft structure with pieces selected for the full outfit.</p>" },
     { "type": "product_list", "id": "product_list", "label": "Products in this look", "limit": 6 },
     { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 1, "max": 6, "step": 1, "default": 3 },
-    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop collection" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop Now" },
     { "type": "url", "id": "button_link", "label": "Button link" }
   ],
   "presets": [
