@@ -25,7 +25,78 @@
     },
     "home_quick_shop_grid": {
       "type": "home-quick-shop-grid",
-      "settings": {}
+      "blocks": {
+        "quick_product_1": {
+          "type": "product_card",
+          "settings": {
+            "product": "",
+            "custom_url": "",
+            "product_title": "Daliah Polo",
+            "product_price": "₱999",
+            "image_1_alt": "Daliah Polo",
+            "color_1_label": "Black",
+            "color_1_swatch": "#111111",
+            "image_2_alt": "Daliah Polo alternate color",
+            "color_2_label": "Ivory",
+            "color_2_swatch": "#d8c8ad"
+          }
+        },
+        "quick_product_2": {
+          "type": "product_card",
+          "settings": {
+            "product": "",
+            "custom_url": "",
+            "product_title": "Inah Blouse",
+            "product_price": "₱999",
+            "image_1_alt": "Inah Blouse",
+            "color_1_label": "Stone",
+            "color_1_swatch": "#8f8f88",
+            "image_2_alt": "Inah Blouse alternate color",
+            "color_2_label": "Cream",
+            "color_2_swatch": "#f0e5b8"
+          }
+        },
+        "quick_product_3": {
+          "type": "product_card",
+          "settings": {
+            "product": "",
+            "custom_url": "",
+            "product_title": "Hazel Trouser",
+            "product_price": "₱999",
+            "image_1_alt": "Hazel Trouser",
+            "color_1_label": "Black",
+            "color_1_swatch": "#111111",
+            "image_2_alt": "Hazel Trouser alternate color",
+            "color_2_label": "Taupe",
+            "color_2_swatch": "#c5b497"
+          }
+        },
+        "quick_product_4": {
+          "type": "product_card",
+          "settings": {
+            "product": "",
+            "custom_url": "",
+            "product_title": "Demi Barrel Pants",
+            "product_price": "₱999",
+            "image_1_alt": "Demi Barrel Pants",
+            "color_1_label": "Charcoal",
+            "color_1_swatch": "#555555",
+            "image_2_alt": "Demi Barrel Pants alternate color",
+            "color_2_label": "Butter",
+            "color_2_swatch": "#efe4a8"
+          }
+        }
+      },
+      "block_order": [
+        "quick_product_1",
+        "quick_product_2",
+        "quick_product_3",
+        "quick_product_4"
+      ],
+      "settings": {
+        "banner_alt": "Back to Rhythm collection",
+        "banner_heading": "Back to Rhythm"
+      }
     },
     "home_shop_the_look": {
       "type": "home-shop-the-look",
