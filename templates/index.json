@@ -5,12 +5,14 @@
       "settings": {
         "mobile_image": "",
         "desktop_image": "",
-        "image_alt": "Kasya editorial campaign",
-        "kicker": "New campaign",
-        "heading": "Everyday Edit",
-        "copy": "<p>Soft silhouettes, confident layers, and pieces made for your daily rhythm.</p>",
-        "button_label": "Shop now",
-        "button_link": ""
+        "image_alt": "Kasya Back to Rythm campaign",
+        "collection_label": "6.6 COLLECTION",
+        "headline_top": "BACK TO",
+        "headline_italic": "RYTHM",
+        "tagline": "OFFICE-READY, WEEKEND-EASY",
+        "primary_button_label": "View Collection",
+        "secondary_button_label": "Shop now",
+        "button_link": "/collections/back-to-rhythm"
       }
     },
     "home_campaign_story": {
