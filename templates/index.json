@@ -25,6 +25,7 @@
     },
     "home_campaign_story": {
       "type": "home-campaign-story",
+      "disabled": true,
       "settings": {
         "image_alt": "Campaign story image"
       }
