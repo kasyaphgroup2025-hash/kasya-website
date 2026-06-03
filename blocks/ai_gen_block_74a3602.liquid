@@ -1,0 +1,1179 @@
+{% doc %}
+  @prompt
+    Create a Customer Reviews section that matches the elegant Radiance Collection black-and-white minimalist theme.
+    The section should look refined, clean, and editorial — focused on authenticity and trust, not clutter.
+    
+    Layout direction:
+    
+    Background: black with subtle radiant glow or gradient behind each review card.
+    
+    Display 3–4 reviews on desktop, 1–2 per row on mobile, with smooth carousel swipe.
+    
+    Each review card includes:
+    
+    Customer name (bold serif, white text)
+    
+    Star rating in soft gold or white icons (minimal, not flashy)
+    
+    Review text in light gray sans serif
+    
+    Optional product photo or small circular avatar if available
+    
+    Add section headline: “What Our Customers Say” or “Real Stories. Real Radiance.”
+    
+    Subheading: “See why women are glowing with confidence in the Radiance Collection.”
+    
+    Keep spacing generous and typography elegant.
+    
+    Animation: smooth fade-in on scroll, light zoom when swiping cards.
+    
+    Call-to-action (optional, below reviews):
+    Add a minimalist “Write a Review” or “Share Your Glow” button — white with black text, inverts on hover.
+    
+    Ensure all elements — fonts, glow accents, and motion — stay consistent with the hero and product sections’ Radiance aesthetic., Can you make another button like "Shop the new arrival then make it scroll from the top , can you smooth the scroll effects in shop new arrivals 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-reviews-section-{{ ai_gen_id }} {
+    background: {{ block.settings.background_color }};
+    padding: {{ block.settings.section_padding_top }}px 20px {{ block.settings.section_padding_bottom }}px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-reviews-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-reviews-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: {{ block.settings.header_spacing }}px;
+  }
+
+  .ai-reviews-headline-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 16px;
+    letter-spacing: 0.02em;
+  }
+
+  .ai-reviews-subheading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subheading_size }}px;
+    color: {{ block.settings.subheading_color }};
+    margin: 0;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .ai-reviews-top-button-wrapper-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: {{ block.settings.top_button_spacing }}px;
+    opacity: 0;
+    animation: ai-smooth-scroll-from-top-{{ ai_gen_id }} 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 0.2s;
+  }
+
+  @keyframes ai-smooth-scroll-from-top-{{ ai_gen_id }} {
+    0% {
+      opacity: 0;
+      transform: translateY(-50px) scale(0.9);
+    }
+    60% {
+      opacity: 0.8;
+      transform: translateY(5px) scale(1.02);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .ai-reviews-carousel-{{ ai_gen_id }} {
+    position: relative;
+    margin-bottom: {{ block.settings.carousel_bottom_spacing }}px;
+  }
+
+  .ai-reviews-track-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.card_gap }}px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 20px 0;
+  }
+
+  .ai-reviews-track-{{ ai_gen_id }}::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ai-review-card-{{ ai_gen_id }} {
+    flex: 0 0 calc((100% - {{ block.settings.card_gap }}px) / {{ block.settings.cards_per_row_mobile }});
+    scroll-snap-align: start;
+    background: {{ block.settings.card_background }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    padding: {{ block.settings.card_padding }}px;
+    position: relative;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+    {% if block.settings.enable_glow %}
+      box-shadow: 0 0 {{ block.settings.glow_intensity }}px {{ block.settings.glow_color }};
+    {% endif %}
+  }
+
+  .ai-review-card-{{ ai_gen_id }}:hover {
+    transform: scale(1.03) translateY(-5px);
+    {% if block.settings.enable_glow %}
+      box-shadow: 0 5px {{ block.settings.glow_intensity | plus: 10 }}px {{ block.settings.glow_color }};
+    {% endif %}
+  }
+
+  .ai-review-header-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .ai-review-avatar-{{ ai_gen_id }} {
+    width: {{ block.settings.avatar_size }}px;
+    height: {{ block.settings.avatar_size }}px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: {{ block.settings.avatar_placeholder_bg }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-review-avatar-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-review-avatar-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-review-avatar-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-review-info-{{ ai_gen_id }} {
+    flex: 1;
+  }
+
+  .ai-review-name-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.name_font_weight }};
+    font-size: {{ block.settings.name_size }}px;
+    color: {{ block.settings.name_color }};
+    margin: 0 0 8px;
+  }
+
+  .ai-review-stars-{{ ai_gen_id }} {
+    display: flex;
+    gap: 4px;
+  }
+
+  .ai-review-star-{{ ai_gen_id }} {
+    width: {{ block.settings.star_size }}px;
+    height: {{ block.settings.star_size }}px;
+    fill: {{ block.settings.star_color }};
+  }
+
+  .ai-review-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.review_text_size }}px;
+    color: {{ block.settings.review_text_color }};
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .ai-reviews-cta-{{ ai_gen_id }} {
+    text-align: center;
+  }
+
+  .ai-reviews-button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
+    background: {{ block.settings.button_bg }};
+    color: {{ block.settings.button_text_color }};
+    border: 2px solid {{ block.settings.button_border_color }};
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_text_size }}px;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .ai-reviews-button-{{ ai_gen_id }}:hover {
+    background: {{ block.settings.button_hover_bg }};
+    color: {{ block.settings.button_hover_text_color }};
+    border-color: {{ block.settings.button_hover_border_color }};
+    transform: translateY(-2px);
+  }
+
+  .ai-reviews-top-button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: {{ block.settings.top_button_padding_vertical }}px {{ block.settings.top_button_padding_horizontal }}px;
+    background: {{ block.settings.top_button_bg }};
+    color: {{ block.settings.top_button_text_color }};
+    border: 2px solid {{ block.settings.top_button_border_color }};
+    border-radius: {{ block.settings.top_button_border_radius }}px;
+    font-size: {{ block.settings.top_button_text_size }}px;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .ai-reviews-top-button-{{ ai_gen_id }}:hover {
+    background: {{ block.settings.top_button_hover_bg }};
+    color: {{ block.settings.top_button_hover_text_color }};
+    border-color: {{ block.settings.top_button_hover_border_color }};
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.15);
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-review-card-{{ ai_gen_id }} {
+      flex: 0 0 calc((100% - ({{ block.settings.card_gap }}px * ({{ block.settings.cards_per_row_tablet }} - 1))) / {{ block.settings.cards_per_row_tablet }});
+    }
+
+    .ai-reviews-headline-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 1.2 }}px;
+    }
+
+    .ai-reviews-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size | times: 1.1 }}px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .ai-review-card-{{ ai_gen_id }} {
+      flex: 0 0 calc((100% - ({{ block.settings.card_gap }}px * ({{ block.settings.cards_per_row_desktop }} - 1))) / {{ block.settings.cards_per_row_desktop }});
+    }
+
+    .ai-reviews-headline-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 1.4 }}px;
+    }
+
+    .ai-reviews-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size | times: 1.2 }}px;
+    }
+  }
+
+  {% if block.settings.enable_fade_animation %}
+    .ai-review-card-{{ ai_gen_id }} {
+      opacity: 0;
+      animation: ai-fade-in-{{ ai_gen_id }} 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .ai-review-card-{{ ai_gen_id }}:nth-child(1) {
+      animation-delay: 0.2s;
+    }
+
+    .ai-review-card-{{ ai_gen_id }}:nth-child(2) {
+      animation-delay: 0.35s;
+    }
+
+    .ai-review-card-{{ ai_gen_id }}:nth-child(3) {
+      animation-delay: 0.5s;
+    }
+
+    .ai-review-card-{{ ai_gen_id }}:nth-child(4) {
+      animation-delay: 0.65s;
+    }
+
+    @keyframes ai-fade-in-{{ ai_gen_id }} {
+      0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+      }
+      60% {
+        opacity: 0.8;
+        transform: translateY(-5px) scale(1.01);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+  {% endif %}
+{% endstyle %}
+
+<div class="ai-reviews-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-reviews-container-{{ ai_gen_id }}">
+    {% if block.settings.show_top_button %}
+      <div class="ai-reviews-top-button-wrapper-{{ ai_gen_id }}">
+        <a href="{{ block.settings.top_button_link }}" class="ai-reviews-top-button-{{ ai_gen_id }}">
+          {{ block.settings.top_button_text }}
+        </a>
+      </div>
+    {% endif %}
+
+    <div class="ai-reviews-header-{{ ai_gen_id }}">
+      {% if block.settings.headline != blank %}
+        <h2 class="ai-reviews-headline-{{ ai_gen_id }}">{{ block.settings.headline }}</h2>
+      {% endif %}
+      {% if block.settings.subheading != blank %}
+        <p class="ai-reviews-subheading-{{ ai_gen_id }}">{{ block.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    <customer-reviews-{{ ai_gen_id }} class="ai-reviews-carousel-{{ ai_gen_id }}">
+      <div class="ai-reviews-track-{{ ai_gen_id }}">
+        {% for i in (1..4) %}
+          {% liquid
+            assign review_enabled_key = 'review_' | append: i | append: '_enabled'
+            assign review_name_key = 'review_' | append: i | append: '_name'
+            assign review_rating_key = 'review_' | append: i | append: '_rating'
+            assign review_text_key = 'review_' | append: i | append: '_text'
+            assign review_image_key = 'review_' | append: i | append: '_image'
+
+            assign review_enabled = block.settings[review_enabled_key]
+            assign review_name = block.settings[review_name_key]
+            assign review_rating = block.settings[review_rating_key]
+            assign review_text = block.settings[review_text_key]
+            assign review_image = block.settings[review_image_key]
+          %}
+
+          {% if review_enabled %}
+            <div class="ai-review-card-{{ ai_gen_id }}">
+              <div class="ai-review-header-{{ ai_gen_id }}">
+                <div class="ai-review-avatar-{{ ai_gen_id }}">
+                  {% if review_image %}
+                    <img
+                      src="{{ review_image | image_url: width: 200 }}"
+                      alt="{{ review_name | escape }}"
+                      loading="lazy"
+                      width="200"
+                      height="200"
+                    >
+                  {% else %}
+                    <div class="ai-review-avatar-placeholder-{{ ai_gen_id }}">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                      </svg>
+                    </div>
+                  {% endif %}
+                </div>
+                <div class="ai-review-info-{{ ai_gen_id }}">
+                  <h3 class="ai-review-name-{{ ai_gen_id }}">{{ review_name }}</h3>
+                  <div class="ai-review-stars-{{ ai_gen_id }}">
+                    {% for star in (1..review_rating) %}
+                      <svg class="ai-review-star-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                      </svg>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+              <p class="ai-review-text-{{ ai_gen_id }}">{{ review_text }}</p>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </customer-reviews-{{ ai_gen_id }}>
+
+    {% if block.settings.show_cta %}
+      <div class="ai-reviews-cta-{{ ai_gen_id }}">
+        <a href="{{ block.settings.cta_link }}" class="ai-reviews-button-{{ ai_gen_id }}">
+          {{ block.settings.cta_text }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  (function() {
+    class CustomerReviews{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.track = this.querySelector('.ai-reviews-track-{{ ai_gen_id }}');
+        this.cards = this.querySelectorAll('.ai-review-card-{{ ai_gen_id }}');
+        this.startX = 0;
+        this.scrollLeft = 0;
+        this.isDown = false;
+        this.velocity = 0;
+        this.momentum = 0;
+      }
+
+      connectedCallback() {
+        this.setupTouchEvents();
+        this.setupSmoothScroll();
+      }
+
+      setupSmoothScroll() {
+        if (!this.track) return;
+
+        let isScrolling;
+        this.track.addEventListener('scroll', () => {
+          window.clearTimeout(isScrolling);
+          isScrolling = setTimeout(() => {
+            this.snapToNearest();
+          }, 150);
+        });
+      }
+
+      snapToNearest() {
+        const cardWidth = this.cards[0]?.offsetWidth || 0;
+        const gap = {{ block.settings.card_gap }};
+        const scrollPosition = this.track.scrollLeft;
+        const itemWidth = cardWidth + gap;
+        const nearestIndex = Math.round(scrollPosition / itemWidth);
+        const targetScroll = nearestIndex * itemWidth;
+
+        this.track.scrollTo({
+          left: targetScroll,
+          behavior: 'smooth'
+        });
+      }
+
+      setupTouchEvents() {
+        if (!this.track) return;
+
+        this.track.addEventListener('mousedown', (e) => {
+          this.isDown = true;
+          this.startX = e.pageX - this.track.offsetLeft;
+          this.scrollLeft = this.track.scrollLeft;
+          this.track.style.cursor = 'grabbing';
+          this.velocity = 0;
+        });
+
+        this.track.addEventListener('mouseleave', () => {
+          this.isDown = false;
+          this.track.style.cursor = 'grab';
+        });
+
+        this.track.addEventListener('mouseup', () => {
+          this.isDown = false;
+          this.track.style.cursor = 'grab';
+        });
+
+        this.track.addEventListener('mousemove', (e) => {
+          if (!this.isDown) return;
+          e.preventDefault();
+          const x = e.pageX - this.track.offsetLeft;
+          const walk = (x - this.startX) * 1.5;
+          this.velocity = walk;
+          this.track.scrollLeft = this.scrollLeft - walk;
+        });
+
+        this.track.addEventListener('touchstart', (e) => {
+          this.startX = e.touches[0].pageX - this.track.offsetLeft;
+          this.scrollLeft = this.track.scrollLeft;
+        });
+
+        this.track.addEventListener('touchmove', (e) => {
+          const x = e.touches[0].pageX - this.track.offsetLeft;
+          const walk = (x - this.startX) * 1.5;
+          this.track.scrollLeft = this.scrollLeft - walk;
+        });
+      }
+    }
+
+    customElements.define('customer-reviews-{{ ai_gen_id }}', CustomerReviews{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Customer reviews",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Top button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_button",
+      "label": "Show top button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "top_button_text",
+      "label": "Button text",
+      "default": "Shop New Arrivals"
+    },
+    {
+      "type": "url",
+      "id": "top_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "top_button_spacing",
+      "min": 20,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "top_button_padding_vertical",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "top_button_padding_horizontal",
+      "min": 20,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "top_button_text_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "top_button_bg",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "top_button_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "top_button_border_color",
+      "label": "Border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "top_button_hover_bg",
+      "label": "Hover background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "top_button_hover_text_color",
+      "label": "Hover text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "top_button_hover_border_color",
+      "label": "Hover border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "top_button_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "What Our Customers Say"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "See why women are glowing with confidence in the Radiance Collection."
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "playfair_n4"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#cccccc"
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Header spacing",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "label": "Container width",
+      "default": 1440
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 40,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 40,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 80
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "cards_per_row_desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Cards per row (desktop)",
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "cards_per_row_tablet",
+      "label": "Cards per row (tablet)",
+      "options": [
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "select",
+      "id": "cards_per_row_mobile",
+      "label": "Cards per row (mobile)",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "min": 12,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Card gap",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "carousel_bottom_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Carousel bottom spacing",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Review cards"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 20,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Card padding",
+      "default": 32
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_glow",
+      "label": "Enable glow effect",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "glow_intensity",
+      "min": 10,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Glow intensity",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "glow_color",
+      "label": "Glow color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Customer info"
+    },
+    {
+      "type": "range",
+      "id": "avatar_size",
+      "min": 40,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Avatar size",
+      "default": 60
+    },
+    {
+      "type": "color",
+      "id": "avatar_placeholder_bg",
+      "label": "Avatar placeholder background",
+      "default": "#2a2a2a"
+    },
+    {
+      "type": "range",
+      "id": "name_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Name size",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "name_font_weight",
+      "label": "Name font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "name_color",
+      "label": "Name color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "star_size",
+      "min": 12,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Star size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#d4af37"
+    },
+    {
+      "type": "range",
+      "id": "review_text_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Review text size",
+      "default": 15
+    },
+    {
+      "type": "color",
+      "id": "review_text_color",
+      "label": "Review text color",
+      "default": "#b3b3b3"
+    },
+    {
+      "type": "header",
+      "content": "Review 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "review_1_enabled",
+      "label": "Enable review 1",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "review_1_name",
+      "label": "Customer name",
+      "default": "Sophia Martinez"
+    },
+    {
+      "type": "range",
+      "id": "review_1_rating",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "Rating",
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "review_1_text",
+      "label": "Review text",
+      "default": "Absolutely stunning! The Radiance Collection has transformed my skincare routine. My skin has never looked more luminous and healthy."
+    },
+    {
+      "type": "image_picker",
+      "id": "review_1_image",
+      "label": "Customer photo"
+    },
+    {
+      "type": "header",
+      "content": "Review 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "review_2_enabled",
+      "label": "Enable review 2",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "review_2_name",
+      "label": "Customer name",
+      "default": "Emma Chen"
+    },
+    {
+      "type": "range",
+      "id": "review_2_rating",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "Rating",
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "review_2_text",
+      "label": "Review text",
+      "default": "I've tried countless products, but nothing compares to this. The elegant packaging and luxurious feel make every application a ritual."
+    },
+    {
+      "type": "image_picker",
+      "id": "review_2_image",
+      "label": "Customer photo"
+    },
+    {
+      "type": "header",
+      "content": "Review 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "review_3_enabled",
+      "label": "Enable review 3",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "review_3_name",
+      "label": "Customer name",
+      "default": "Isabella Rose"
+    },
+    {
+      "type": "range",
+      "id": "review_3_rating",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "Rating",
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "review_3_text",
+      "label": "Review text",
+      "default": "Pure radiance in a bottle. My confidence has soared since using these products. The results speak for themselves!"
+    },
+    {
+      "type": "image_picker",
+      "id": "review_3_image",
+      "label": "Customer photo"
+    },
+    {
+      "type": "header",
+      "content": "Review 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "review_4_enabled",
+      "label": "Enable review 4",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "review_4_name",
+      "label": "Customer name",
+      "default": "Olivia Thompson"
+    },
+    {
+      "type": "range",
+      "id": "review_4_rating",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "Rating",
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "review_4_text",
+      "label": "Review text",
+      "default": "The quality is exceptional. Every product feels premium and delivers visible results. Worth every penny!"
+    },
+    {
+      "type": "image_picker",
+      "id": "review_4_image",
+      "label": "Customer photo"
+    },
+    {
+      "type": "header",
+      "content": "Bottom call to action"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Show call to action",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button text",
+      "default": "Share Your Glow"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Button vertical padding",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "min": 20,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Button horizontal padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Button text size",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Button border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg",
+      "label": "Button hover background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Button hover text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_border_color",
+      "label": "Button hover border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_fade_animation",
+      "label": "Enable fade-in animation",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Customer reviews"
+    }
+  ]
+}
+{% endschema %}

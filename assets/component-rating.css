@@ -1,0 +1,33 @@
+.card__rating {
+  column-gap: 0.3rem;
+  justify-content: var(--product-card-text-alignment);
+}
+
+.rating-star {
+  --remain-stars: calc(var(--rating-max) - var(--rating));
+  --star-gap: 0.2rem;
+  --star-width: 1.3rem;
+  column-gap: var(--star-gap);
+  color: rgb(var(--color-review-stars-foreground));
+  z-index: 0;
+}
+
+.rating--in-card svg {
+  width: var(--star-width);
+}
+
+.rating-star::before {
+  content: '';
+  background: rgb(var(--color-background));
+  height: 100%;
+  overflow: hidden;
+  mix-blend-mode: color;
+  position: absolute;
+  top: 0;
+  inset-inline-end: 0;
+  width: calc(var(--remain-stars) * var(--star-width) + var(--number-gap) * var(--star-gap));
+}
+
+.rating-count {
+  color: rgb(var(--color-foreground), 0.6);
+}

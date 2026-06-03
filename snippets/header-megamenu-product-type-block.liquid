@@ -1,0 +1,42 @@
+<div class="mega-menu__column__item{% if add_classes %} {{ add_classes }}{% endif %} mega-menu__product-type"{% unless no_block_attributes %} {{ block.shopify_attributes }}{% endunless %}>
+  <ul class="margin0 list-unstyled" role="list">
+		<li>
+			{%- unless block.settings.item_url -%}
+        <span class="mega-menu__link font-body-bold mega-menu__link--title h3">
+          {{ block.settings.item_label }}
+        </span>
+      {%- else -%}
+        <a href="{{ block.settings.item_url }}" class="mega-menu__link link font-body-bold mega-menu__link--title h3">
+          {{ block.settings.item_label }}
+        </a>
+      {%- endunless -%}
+			<ul class="list-unstyled" role="list">
+				{%- for i in (1..15) -%}
+					{%- liquid
+            assign type_index = 'type_' | append: i
+            assign type_image_index = 'type_image_' | append: i
+            assign type_link_index = 'type_link_' | append: i
+            assign type_link = block.settings[type_link_index]
+            if type_link == blank
+              assign type_link = block.settings[type_index] | url_for_type
+            endif
+          -%}
+					{%- if block.settings[type_index] != blank -%}
+						<li>
+							<a href="{{ type_link }}" class="mega-menu__link link header-menu__link-sub font-body-semi-bold{% if block.settings[type_image_index] != blank %} mega-menu__link--has-small-image align-center{% endif %}"{% if type_link == blank %} data-no-instant{% endif %}>
+								{%- if block.settings[type_image_index] != blank -%}
+									<div class="mega-menu__small-image mega-menu__small-image--{{ block.settings.image_ratio }}">
+										<div class="media media--{{ block.settings.image_ratio }}">
+											{{ block.settings[type_image_index] | image_url: width: 100 | image_tag: class: 'motion-reduce', loading: 'lazy' }}
+										</div>
+									</div>	
+								{%- endif -%}	
+								<span class="link-effect-no-underline">{{ block.settings[type_index] | escape }}</span>
+							</a>
+						</li>
+					{%- endif -%}
+				{%- endfor -%}
+			</ul>
+		</li>
+  </ul>
+</div>

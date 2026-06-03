@@ -1,0 +1,87 @@
+{%-liquid
+  assign has_wrapper_link = false
+  if promo_block.settings.link != blank and promo_block.settings.heading == blank and promo_block.settings.button_label == blank
+    assign has_wrapper_link = true
+  endif
+  assign columns_desktop_number = columns_desktop | default: 4
+  if promo_block.settings.enable_parallax_scrolling_effect
+    assign promo_tag = 'parallax-element'
+  else  
+    assign promo_tag = 'div'
+  endif
+  assign style_card = ''
+  assign image_class = ''
+  if promo_block.settings.image != blank
+    if promo_block.settings.mobile_image != blank
+      assign style_card = '--aspect-ratio:' | append: promo_block.settings.mobile_image.aspect_ratio
+      assign image_class = 'small-hide'
+    else
+      assign style_card = '--aspect-ratio:' | append: promo_block.settings.image.aspect_ratio
+    endif
+  endif
+  assign large_on_mobile = true
+  if promo_block.settings.mobile_size == '1column' and section.settings.columns_mobile == '2'
+    assign large_on_mobile = false
+  endif
+-%}
+<li class="grid__item por grid__item--promotion-tile{% if use_animate %} appear-animate-item-in-list{% endif %}{% if promo_block.settings.desktop_size == '2columns' and section.settings.columns_desktop > 1 %} grid__item--promotile-large-desktop{% endif %}{% if large_on_mobile %} grid__item--promotile-large-mobile{% endif %} grid__item--promotile-{{ promo_block.settings.tablet_size }}-tablet">
+  <div class="card-wrapper por collection-grid-promo collection-grid-promo--{{ promo_block.id }} h100 overflow-hidden custom-radius" style="--border-radius: {{ promo_block.settings.corner_radius }}px">
+    {%- if has_wrapper_link -%}
+      <a class="full-unstyled-link por h100" href="{{ promo_block.settings.link }}"
+        {% unless promo_block.settings.heading %}
+          aria-label="{% if promo_block.settings.image != blank %}{{ promo_block.settings.image.alt | escape }}{% endif %}"
+        {% endunless %}>
+    {%- endif -%}  
+    <{{ promo_tag }}{% if promo_block.settings.enable_parallax_scrolling_effect %} data-speed="0.3"{% endif %}{% if promo_block.settings.enable_parallax_scrolling_effect %} style="--speed: 0.3;"{% endif %}
+    >
+      <div class="parallax-ele media w100 h100 collection-grid-promo__image-wrapper"
+      {% if style_card != '' %}style="{{ style_card }}"{% endif %}>
+        {%- if promo_block.settings.image != blank -%}
+          {%- capture sizes -%}
+            (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 130 | divided_by: columns_desktop_number }}px, (min-width: 990px) calc((100vw - 130px) / {{ columns_desktop_number }}), (min-width: 750px) calc((100vw - 120px) / {{ columns_tablet | default: 3 }}), calc((100vw - 35px) / {{ columns_mobile | default: 2 }})
+          {%- endcapture -%}
+          {{
+            promo_block.settings.image
+            | image_url: width: 1420
+            | image_tag: loading: 'lazy', sizes: sizes, widths: '275, 550, 750, 1070, 1420', class: image_class
+          }}
+          {%- if promo_block.settings.mobile_image != blank -%}
+            {{
+              promo_block.settings.mobile_image
+              | image_url: width: 1200
+              | image_tag: loading: 'lazy', sizes: sizes, widths: '275, 550, 750', class: 'medium-hide large-up-hide'
+            }}
+          {%- endif -%}
+        {%- else -%}  
+          {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg placeholder w100 h100' }}
+        {%- endif -%}
+      </div>
+    </{{ promo_tag }}>
+    {%- if promo_block.settings.heading != blank or promo_block.settings.button_label != blank or promo_block.settings.text != blank -%}
+      <div class="collection-grid-promo__content collection-grid-promo__content--{{ section.id }}-{{ block.id }} flex w100 h100 justify-{{ promo_block.settings.text_alignment }} align-{{ promo_block.settings.content_position }}{% if promo_block.settings.keep_ltr and direction == 'rtl' %} direction-ltr{% endif %}{% if promo_block.settings.colors_overlay != blank and promo_block.settings.colors_overlay.alpha > 0 %} collection-grid-promo__content--has-overlay{% endif %}">
+        <div class="collection-grid-promo__content-inner break {{ promo_block.settings.text_alignment }}">
+          {%- if promo_block.settings.heading != blank -%}  
+            <h3 class="card__heading {{ promo_block.settings.heading_size }}{% if promo_block.settings.heading_uppercase %} uppercase{% endif %} font-heading-bold">
+              {%- if promo_block.settings.link != blank -%}
+                <a class="full-unstyled-link" href="{{ promo_block.settings.link }}">
+                  {{ promo_block.settings.heading }}
+                </a>
+              {%- else -%}
+                {{ promo_block.settings.heading }}  
+              {%- endif -%}
+            </h3>
+          {%- endif -%}
+          {%- if promo_block.settings.button_label != blank -%}
+            <a href="{{ promo_block.settings.link | default: '#' }}" class="collection-grid-promo__content__button button button--medium{% if promo_block.settings.heading != blank %} margin-top-1rem{% endif %}{% if promo_block.settings.button_pin_bottom and promo_block.settings.content_position != 'bottom' %} gallery__pin-button gallery__pin-button--{{ promo_block.settings.text_alignment }}{% endif %}"{% if promo_block.settings.link == blank %} data-no-instant{% endif %}>
+              <span>{{ promo_block.settings.button_label }}</span>
+              {%- if promo_block.settings.button_style == 'link' -%}{%- render 'icon-picker', icon: 'chevron_double_right', icon_width: 12 -%}{%- endif -%}
+            </a>
+          {%- endif -%}
+        </div>  
+      </div>
+    {%- endif -%}  
+    {%- if has_wrapper_link -%}
+      </a>
+    {%- endif -%}
+  </div>    
+</li>

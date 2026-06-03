@@ -1,0 +1,86 @@
+<button
+  type="submit"
+  class="
+      button button--{{ block.settings.style_class }} button--{{ block.settings.size }} button-font-scale
+    button--{{ block.settings.style_class }}--{{ block.id }}
+    {% unless block.settings.wrap_text %}nowrap{% endunless %}
+  "
+  style="--custom-font-scale:{{ block.settings.font_size_scale | divided_by: 100.0 }}"
+  {{ block.shopify_attributes }}
+>
+  <span>{{ block.settings.label }}</span>
+</button>
+
+
+{% schema %}
+{
+  "name": "t:names.submit_button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "t:settings.label",
+      "default": "t:text_defaults.submit"
+    },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "t:sections.all.button_style.label",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:sections.all.button_style.option_1.label"
+        },
+        {
+          "value": "secondary",
+          "label": "t:sections.all.button_style.option_2.label"
+        }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "range",
+      "id": "font_size_scale",
+      "min": 50,
+      "max": 150,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings_schema.typography.settings.heading_scale.label",
+      "default": 100
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "t:settings.size",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:options.extra_small"
+        },
+        {
+          "value": "medium",
+          "label": "t:options.small"
+        },
+        {
+          "value": "normal",
+          "label": "t:options.medium"
+        },
+        {
+          "value": "large",
+          "label": "t:options.large"
+        }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "checkbox",
+      "id": "wrap_text",
+      "label": "t:settings.wrap_text_in_button",
+      "info": "t:info.wrap_text_in_button",
+      "default": false
+    }
+  ],
+  "presets": []
+}
+{% endschema %}

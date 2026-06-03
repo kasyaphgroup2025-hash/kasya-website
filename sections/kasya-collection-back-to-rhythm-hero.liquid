@@ -1,0 +1,536 @@
+{% liquid
+  assign hero_overlay_opacity = section.settings.overlay_opacity | times: 0.01
+%}
+
+<section
+  class="kasya-btr-hero kasya-btr-hero--content-{{ section.settings.content_position | default: 'lower' }}"
+  data-section-id="{{ section.id }}"
+  style="
+    --kasya-btr-mobile-focal-x: {{ section.settings.mobile_focal_x }}%;
+    --kasya-btr-mobile-focal-y: {{ section.settings.mobile_focal_y }}%;
+    --kasya-btr-overlay-opacity: {{ hero_overlay_opacity }};
+  "
+>
+  {% if section.settings.enable_marquee and section.settings.top_strip_text != blank %}
+    <div class="kasya-btr-hero__strip" style="--kasya-btr-marquee-speed: {{ section.settings.marquee_speed }}s;" aria-label="{{ section.settings.top_strip_text | escape }}">
+      <div class="kasya-btr-hero__marquee" aria-hidden="true">
+        {% for repeat in (1..2) %}
+          <div class="kasya-btr-hero__marquee-group">
+            {% for item in (1..4) %}
+              <span>{{ section.settings.top_strip_text }}</span>
+              <span class="kasya-btr-hero__separator">•</span>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="kasya-btr-hero__strip-static">
+        {{ section.settings.top_strip_text }}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="kasya-btr-hero__media">
+    {% if section.settings.hero_image != blank %}
+      <img
+        src="{{ section.settings.hero_image | image_url: width: 1800 }}"
+        srcset="
+          {{ section.settings.hero_image | image_url: width: 750 }} 750w,
+          {{ section.settings.hero_image | image_url: width: 1100 }} 1100w,
+          {{ section.settings.hero_image | image_url: width: 1500 }} 1500w,
+          {{ section.settings.hero_image | image_url: width: 1800 }} 1800w
+        "
+        sizes="100vw"
+        alt="{{ section.settings.hero_image.alt | default: section.settings.heading | escape }}"
+        width="1800"
+        height="2200"
+        loading="eager"
+      >
+    {% else %}
+      <div class="kasya-btr-hero__placeholder" aria-hidden="true"></div>
+    {% endif %}
+  </div>
+
+  <div class="kasya-btr-hero__overlay" aria-hidden="true"></div>
+
+  <div class="kasya-btr-hero__content">
+    {% if section.settings.eyebrow != blank %}
+      <p class="kasya-btr-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+
+    {% if section.settings.heading != blank %}
+      <h1 class="kasya-btr-hero__heading">{{ section.settings.heading }}</h1>
+    {% endif %}
+
+    {% if section.settings.subheading != blank %}
+      <p class="kasya-btr-hero__subheading">{{ section.settings.subheading }}</p>
+    {% endif %}
+
+    <div class="kasya-btr-hero__actions">
+      {% if section.settings.primary_cta_text != blank %}
+        <a class="kasya-btr-hero__button kasya-btr-hero__button--primary" href="{{ section.settings.primary_cta_link | default: '#back-to-rhythm-products' }}">
+          {{ section.settings.primary_cta_text }}
+        </a>
+      {% endif %}
+
+      {% if section.settings.secondary_cta_text != blank %}
+        <a class="kasya-btr-hero__button kasya-btr-hero__button--secondary" href="{{ section.settings.secondary_cta_link | default: '#back-to-rhythm-looks' }}">
+          {{ section.settings.secondary_cta_text }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .kasya-btr-hero {
+    position: relative;
+    min-height: 94vh;
+    min-height: 94svh;
+    overflow: hidden;
+    background: #111;
+    color: #fff;
+    isolation: isolate;
+  }
+
+  .kasya-btr-hero * {
+    box-sizing: border-box;
+  }
+
+  .kasya-btr-hero__strip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9;
+    width: 100%;
+    overflow: hidden;
+    background: #000;
+    color: #fff;
+    white-space: nowrap;
+  }
+
+  .kasya-btr-hero__marquee {
+    display: flex;
+    width: max-content;
+    animation: kasya-btr-marquee var(--kasya-btr-marquee-speed, 24s) linear infinite;
+    will-change: transform;
+  }
+
+  .kasya-btr-hero__marquee-group {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    padding: 9px 0;
+  }
+
+  .kasya-btr-hero__marquee span,
+  .kasya-btr-hero__strip-static {
+    font-size: 10px;
+    line-height: 1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .kasya-btr-hero__marquee span {
+    padding-left: 22px;
+  }
+
+  .kasya-btr-hero__separator {
+    color: rgba(255, 255, 255, 0.86);
+  }
+
+  .kasya-btr-hero__strip-static {
+    display: none;
+    padding: 9px 18px;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+  }
+
+  @keyframes kasya-btr-marquee {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kasya-btr-hero__marquee {
+      display: none;
+      animation: none;
+    }
+
+    .kasya-btr-hero__strip-static {
+      display: block;
+    }
+  }
+
+  .kasya-btr-hero__media,
+  .kasya-btr-hero__media img,
+  .kasya-btr-hero__placeholder {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .kasya-btr-hero__media img {
+    object-fit: cover;
+    object-position: var(--kasya-btr-mobile-focal-x, 38%) var(--kasya-btr-mobile-focal-y, 48%);
+  }
+
+  .kasya-btr-hero__placeholder {
+    background:
+      linear-gradient(120deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
+      #202020;
+  }
+
+  .kasya-btr-hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    opacity: var(--kasya-btr-overlay-opacity, 0.78);
+    background:
+      linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.86) 28%, rgba(0, 0, 0, 0.36) 58%, rgba(0, 0, 0, 0.03) 88%),
+      linear-gradient(0deg, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.68) 30%, rgba(0, 0, 0, 0.14) 68%, rgba(0, 0, 0, 0) 100%),
+      radial-gradient(circle at 70% 36%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.08) 42%, rgba(0, 0, 0, 0.34) 100%);
+  }
+
+  .kasya-btr-hero__content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    min-height: 94vh;
+    min-height: 94svh;
+    width: min(100%, 1180px);
+    margin: 0 auto;
+    padding: 94px 18px 128px;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+
+  .kasya-btr-hero--content-top .kasya-btr-hero__content {
+    justify-content: center;
+    padding-bottom: 168px;
+  }
+
+  .kasya-btr-hero--content-middle .kasya-btr-hero__content {
+    justify-content: center;
+    padding-top: 132px;
+    padding-bottom: 108px;
+  }
+
+  .kasya-btr-hero--content-lower .kasya-btr-hero__content {
+    justify-content: flex-end;
+    padding-bottom: 118px;
+  }
+
+  .kasya-btr-hero__eyebrow {
+    margin: 0 0 12px;
+    max-width: min(58vw, 230px);
+    font-size: 10px;
+    line-height: 1;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .kasya-btr-hero__heading {
+    max-width: min(58vw, 242px);
+    margin: 0;
+    color: inherit;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(36px, 11.2vw, 48px);
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .kasya-btr-hero__subheading {
+    max-width: min(62vw, 252px);
+    margin: 15px 0 0;
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 15px;
+    line-height: 1.38;
+  }
+
+  .kasya-btr-hero__actions {
+    display: grid;
+    width: min(60vw, 250px);
+    gap: 7px;
+    margin-top: 18px;
+  }
+
+  .kasya-btr-hero__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 11px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+  }
+
+  .kasya-btr-hero__button--primary {
+    border-color: #fff;
+    background: #fff;
+    color: #111;
+  }
+
+  .kasya-btr-hero__button:hover {
+    background: #111;
+    border-color: #111;
+    color: #fff;
+  }
+
+  @media screen and (max-width: 749px) {
+    body:has(.kasya-btr-hero) .header-wrapper {
+      position: absolute !important;
+      top: 28px;
+      left: 0;
+      right: 0;
+      z-index: 8;
+      border: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      color: #fff !important;
+    }
+
+    body:has(.kasya-btr-hero) .header-wrapper .header,
+    body:has(.kasya-btr-hero) .header-wrapper .header__inner {
+      background: transparent !important;
+      color: #fff !important;
+    }
+
+    body:has(.kasya-btr-hero) .header-wrapper .header__heading-logo {
+      filter: brightness(0) invert(1);
+    }
+
+    body:has(.kasya-btr-hero) .header-wrapper .header__icon,
+    body:has(.kasya-btr-hero) .header-wrapper .header__heading-link,
+    body:has(.kasya-btr-hero) .header-wrapper summary,
+    body:has(.kasya-btr-hero) .header-wrapper button {
+      color: #fff !important;
+    }
+
+    body:has(.kasya-btr-hero) .header-wrapper svg,
+    body:has(.kasya-btr-hero) .header-wrapper svg path,
+    body:has(.kasya-btr-hero) .header-wrapper svg circle,
+    body:has(.kasya-btr-hero) .header-wrapper svg line,
+    body:has(.kasya-btr-hero) .header-wrapper svg polyline {
+      stroke: currentColor;
+    }
+
+    body:has(.kasya-btr-hero) .header-wrapper .header__account {
+      display: none !important;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .kasya-btr-hero,
+    .kasya-btr-hero__content {
+      min-height: min(820px, 88vh);
+    }
+
+    .kasya-btr-hero__media img {
+      object-position: center center;
+    }
+
+    .kasya-btr-hero__overlay {
+      background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.86) 0%, rgba(0, 0, 0, 0.5) 38%, rgba(0, 0, 0, 0.04) 82%),
+        linear-gradient(0deg, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.32) 30%, rgba(0, 0, 0, 0) 68%);
+    }
+
+    .kasya-btr-hero__strip {
+      letter-spacing: 0.18em;
+    }
+
+    .kasya-btr-hero__marquee-group {
+      padding: 10px 0;
+    }
+
+    .kasya-btr-hero__marquee span,
+    .kasya-btr-hero__strip-static {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+    }
+
+    .kasya-btr-hero__marquee span {
+      padding-left: 34px;
+    }
+
+    .kasya-btr-hero__content {
+      padding: 130px 56px 80px;
+    }
+
+    .kasya-btr-hero--content-top .kasya-btr-hero__content,
+    .kasya-btr-hero--content-middle .kasya-btr-hero__content,
+    .kasya-btr-hero--content-lower .kasya-btr-hero__content {
+      justify-content: flex-end;
+      padding-bottom: 96px;
+    }
+
+    .kasya-btr-hero__eyebrow {
+      font-size: 13px;
+    }
+
+    .kasya-btr-hero__heading {
+      font-size: clamp(58px, 7.2vw, 86px);
+    }
+
+    .kasya-btr-hero__subheading {
+      max-width: 390px;
+      font-size: 24px;
+    }
+
+    .kasya-btr-hero__actions {
+      width: 340px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Back to Rhythm Hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero image"
+    },
+    {
+      "type": "range",
+      "id": "mobile_focal_x",
+      "label": "Mobile image focal point X",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 38
+    },
+    {
+      "type": "range",
+      "id": "mobile_focal_y",
+      "label": "Mobile image focal point Y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 45,
+      "max": 95,
+      "step": 1,
+      "unit": "%",
+      "default": 78
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Mobile text position",
+      "default": "lower",
+      "options": [
+        {
+          "value": "top",
+          "label": "Higher"
+        },
+        {
+          "value": "middle",
+          "label": "Middle"
+        },
+        {
+          "value": "lower",
+          "label": "Lower"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "top_strip_text",
+      "label": "Marquee text",
+      "info": "Editorial marquee text shown at the top of the hero. It repeats with separator dots.",
+      "default": "Routine & Rhythm: Repetition, Refined • Designed for your everyday flow"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_marquee",
+      "label": "Enable marquee",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "marquee_speed",
+      "label": "Marquee speed",
+      "min": 16,
+      "max": 44,
+      "step": 2,
+      "unit": "s",
+      "default": 24
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "6.6 COLLECTION"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading text",
+      "default": "BACK TO RHYTHM"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading text",
+      "default": "Easy pieces for work, everyday, every you."
+    },
+    {
+      "type": "text",
+      "id": "primary_cta_text",
+      "label": "Primary CTA text",
+      "default": "SHOP COLLECTION"
+    },
+    {
+      "type": "text",
+      "id": "primary_cta_link",
+      "label": "Primary CTA link / anchor",
+      "default": "#back-to-rhythm-products"
+    },
+    {
+      "type": "text",
+      "id": "secondary_cta_text",
+      "label": "Secondary CTA text",
+      "default": "SHOP THE LOOKS"
+    },
+    {
+      "type": "text",
+      "id": "secondary_cta_link",
+      "label": "Secondary CTA link / anchor",
+      "default": "#back-to-rhythm-looks"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Back to Rhythm Hero"
+    }
+  ]
+}
+{% endschema %}

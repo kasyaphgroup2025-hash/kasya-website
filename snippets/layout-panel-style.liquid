@@ -1,0 +1,17 @@
+{%- liquid
+  comment
+    Intended for blocks and sections that provide values for all the referenced settings on dekstop in CSS.
+
+    Accepts:
+      local_settings: {block.settings || section.settings}
+  endcomment
+-%}
+--custom-gap: {{ local_settings.gap_mobile }}px;
+--custom-gap-desktop: {{ local_settings.gap_desktop }}px;
+{% if local_settings.content_direction_desktop == 'column' %}
+  --align-desktop: {{ local_settings.horizontal_alignment_flex_direction_column_desktop }};
+  --justify-desktop: flex-start;
+{% else %}
+  --justify-desktop: {{ local_settings.horizontal_alignment_desktop }};
+  --align-desktop: {{ local_settings.vertical_alignment_desktop }};
+{% endif %}  

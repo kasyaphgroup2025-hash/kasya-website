@@ -1,0 +1,226 @@
+{%- render 'discount-code', local_settings: block.settings, shopify_attributes: block.shopify_attributes, blur_code: false -%}
+
+{% schema %}
+{
+  "name": "t:names.discount_code",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:settings.layout",
+      "options": [
+        {
+          "value": "code_before_button",
+          "label": "t:options.code_before_button"
+        },
+        {
+          "value": "code_after_button",
+          "label": "t:options.code_after_button"
+        },
+        {
+          "value": "code_above_button",
+          "label": "t:options.code_above_button"
+        },
+        {
+          "value": "only_code",
+          "label": "t:options.only_code"
+        },
+        {
+          "value": "only_button",
+          "label": "t:options.only_button"
+        },
+        {
+          "value": "only_code_and_copy_icon",
+          "label": "t:options.only_code_and_copy_icon"
+        },
+        {
+          "value": "only_button_and_copy_icon",
+          "label": "t:options.only_button_and_copy_icon"
+        }
+      ],
+      "default": "code_before_button"
+    },
+    {
+      "type": "text",
+      "id": "code",
+      "label": "t:settings.code",
+      "default": "SALE50"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:settings.button_label",
+      "default": "t:text_defaults.copy_code",
+      "visible_if": "{{ block.settings.layout contains 'button' }}"
+    },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "t:sections.all.button_style.label",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:sections.all.button_style.option_1.label"
+        },
+        {
+          "value": "secondary",
+          "label": "t:sections.all.button_style.option_2.label"
+        }
+      ],
+      "default": "primary",
+      "visible_if": "{{ block.settings.layout contains 'button' }}"
+    },
+    {
+      "type": "text",
+      "id": "message",
+      "label": "t:settings.message_copied_successfully",
+      "default": "t:text_defaults.copied",
+      "visible_if": "{{ block.settings.layout != 'only_code' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:settings_schema.typography.name"
+    },
+    {
+      "type": "range",
+      "id": "font_size_scale",
+      "min": 50,
+      "max": 150,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings_schema.typography.settings.heading_scale.label",
+      "default": 100
+    },
+    {
+      "type": "select",
+      "id": "button_size",
+      "label": "t:settings.button_size",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:options.extra_small"
+        },
+        {
+          "value": "medium",
+          "label": "t:options.small"
+        },
+        {
+          "value": "normal",
+          "label": "t:options.medium"
+        },
+        {
+          "value": "large",
+          "label": "t:options.large"
+        }
+      ],
+      "default": "normal",
+      "visible_if": "{{ block.settings.layout contains 'button' }}"
+    },
+    {
+      "type": "select",
+      "id": "icon_size",
+      "label": "t:settings.icon_size",
+      "options": [
+        {
+          "value": "16",
+          "label": "t:options.small"
+        },
+        {
+          "value": "18",
+          "label": "t:options.medium"
+        },
+        {
+          "value": "20",
+          "label": "t:options.large"
+        }
+      ],
+      "default": "16",
+      "visible_if": "{{ block.settings.layout contains 'icon' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.code_appearance",
+      "visible_if": "{{ block.settings.layout contains 'code' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "t:settings.custom_background",
+      "default": false,
+      "visible_if": "{{ block.settings.layout contains 'code' }}"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background_color",
+      "alpha": true,
+      "default": "#00000026",
+      "visible_if": "{{ block.settings.background and block.settings.layout contains 'code' }}"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "t:settings.borders",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:options.solid"
+        },
+        {
+          "value": "dashed",
+          "label": "t:options.dashed"
+        }
+      ],
+      "default": "none",
+      "visible_if": "{{ block.settings.layout contains 'code' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "label": "t:settings.border_width",
+      "default": 1,
+      "visible_if": "{{ block.settings.border != 'none' and block.settings.layout contains 'code' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings.border_opacity",
+      "default": 100,
+      "visible_if": "{{ block.settings.border != 'none' and block.settings.layout contains 'code' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 5,
+      "visible_if": "{{ block.settings.layout contains 'code' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.discount_code",
+      "category": "t:categories.basic",
+      "settings": {
+        
+      }
+    }
+  ]
+}
+{% endschema %}

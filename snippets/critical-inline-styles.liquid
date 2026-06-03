@@ -1,0 +1,321 @@
+<style>
+	{%-liquid
+		echo body_font | font_face: font_display: 'swap'
+		if body_font_bold != body_font
+			echo body_font_bold | font_face: font_display: 'swap'
+		endif	
+		if body_font_italic != body_font and body_font_italic != body_font_bold
+			echo body_font_italic | font_face: font_display: 'swap'
+		endif	
+		if body_font_bold_italic != body_font_italic and body_font_bold_italic != body_font and body_font_bold_italic != body_font_bold
+			echo body_font_bold_italic | font_face: font_display: 'swap'
+		endif
+		if body_font != body_font_medium
+			echo body_font_medium | font_face: font_display: 'swap'
+		endif
+		if body_font != body_font_large and body_font_medium != body_font_large
+			echo body_font_large | font_face: font_display: 'swap'
+		endif
+		if heading_font != body_font and heading_font != body_font_bold
+			echo heading_font | font_face: font_display: 'swap'
+		endif
+		if heading_font_bold != heading_font and heading_font_bold != body_font and heading_font_bold != body_font_bold and heading_font_bold != body_font_medium and heading_font_bold != body_font_large
+			echo heading_font_bold | font_face: font_display: 'swap'
+		endif
+		if heading_font_medium != heading_font_bold and heading_font_medium != heading_font and heading_font_medium != body_font and heading_font_medium != body_font_bold and heading_font_medium != body_font_medium and heading_font_medium != body_font_large
+			echo heading_font_medium | font_face: font_display: 'swap'
+		endif
+		if heading_font_semi_bold != heading_font_medium and heading_font_semi_bold != heading_font_bold and heading_font_semi_bold != heading_font and heading_font_semi_bold != body_font and heading_font_semi_bold != body_font_bold and heading_font_semi_bold != body_font_medium and heading_font_semi_bold != body_font_large
+			echo heading_font_semi_bold | font_face: font_display: 'swap'
+		endif
+		if heading_font_bold_rte != heading_font_semi_bold and heading_font_bold_rte != heading_font_medium and heading_font_bold_rte != heading_font_bold and heading_font_bold_rte != heading_font and heading_font_bold_rte != body_font and heading_font_bold_rte != body_font_bold and heading_font_bold_rte != body_font_medium and heading_font_bold_rte != body_font_large
+			echo heading_font_bold_rte | font_face: font_display: 'swap'
+		endif
+	-%}
+	{%- for scheme in settings.color_schemes -%}
+		{% assign scheme_classes = scheme_classes | append: ', .color-' | append: scheme.id %}
+		{%- if settings.color_scheme_body == scheme -%}:root,{%- endif -%}.color-{{ scheme.id }} {
+			--color-foreground: {{ scheme.settings.text.red }}, {{ scheme.settings.text.green }}, {{ scheme.settings.text.blue }};
+			--color-background: {{ scheme.settings.background.red }}, {{ scheme.settings.background.green }}, {{ scheme.settings.background.blue }};
+			--gradient-background: {% if scheme.settings.gradient_background != blank %}{{ scheme.settings.gradient_background }}{% else %}{{ scheme.settings.background }}{% endif %};
+			--color-button-text: {{ scheme.settings.solid_button_label_primary.red }}, {{ scheme.settings.solid_button_label_primary.green }}, {{ scheme.settings.solid_button_label_primary.blue }};
+			--color-button: {{ scheme.settings.solid_button_background_primary.red }}, {{ scheme.settings.solid_button_background_primary.green }}, {{ scheme.settings.solid_button_background_primary.blue }};
+			--color-sale-off-price: {{ scheme.settings.sale_off_price.red }}, {{ scheme.settings.sale_off_price.green }}, {{ scheme.settings.sale_off_price.blue }};
+			--color-compare-at-price: {{ scheme.settings.compare_at_price.red }}, {{ scheme.settings.compare_at_price.green }}, {{ scheme.settings.compare_at_price.blue }};
+			--color-review-stars: {{ scheme.settings.review_stars.red }}, {{ scheme.settings.review_stars.green }}, {{ scheme.settings.review_stars.blue }};
+			--color-background-input: {{ scheme.settings.background_input.red }}, {{ scheme.settings.background_input.green }}, {{ scheme.settings.background_input.blue }};
+			{%- if settings.free_shipping_enable -%}--free-shipping-tracking-background: {%- if scheme.settings.free_shipping_tracking_gradient_background != blank -%}{{ scheme.settings.free_shipping_tracking_gradient_background }}{%- else -%}rgb(var(--color-foreground)){%- endif -%};{%- endif -%}
+			--color-text-message-success: {{ scheme.settings.text_message_success.red }}, {{ scheme.settings.text_message_success.green }}, {{ scheme.settings.text_message_success.blue }};
+			--color-background-message-success: {{ scheme.settings.background_message_success.red }}, {{ scheme.settings.background_message_success.green }}, {{ scheme.settings.background_message_success.blue }};
+			--color-text-message-warning: {{ scheme.settings.text_message_warning.red }}, {{ scheme.settings.text_message_warning.green }}, {{ scheme.settings.text_message_warning.blue }};
+			--color-background-message-warning: {{ scheme.settings.background_message_warning.red }}, {{ scheme.settings.background_message_warning.green }}, {{ scheme.settings.background_message_warning.blue }};
+			--color-text-message-error: {{ scheme.settings.text_message_error.red }}, {{ scheme.settings.text_message_error.green }}, {{ scheme.settings.text_message_error.blue }};
+			--color-background-message-error: {{ scheme.settings.background_message_error.red }}, {{ scheme.settings.background_message_error.green }}, {{ scheme.settings.background_message_error.blue }};	
+		}
+	{%- endfor -%}
+	:root {
+		--font-body-family: {{ body_font.family }}, {{ body_font.fallback_families }};
+		--font-body-style: {{ body_font.style }};
+		--font-body-weight: {{ body_font.weight }};
+		--font-body-weight-bold: {{ body_font_bold.weight }};
+		--font-body-weight-medium: {%- if body_font_medium -%}{{ body_font_medium.weight }}{%- else -%}{{ body_font.weight }}{%- endif -%};
+		--font-body-weight-large: {%- if body_font_large -%}{{ body_font_large.weight }}{%- else -%}{{ body_font.weight }}{%- endif -%};
+
+		--font-heading-family: {{ heading_font.family }}, {{ heading_font.fallback_families }};
+		--font-heading-style: {{ heading_font.style }};
+		--font-heading-weight: {{ heading_font.weight }};
+		--font-heading-weight-bold: {{ heading_font_bold.weight }};
+		--font-heading-weight-rte-bold: {{ heading_font_bold_rte.weight }};
+		--font-heading-weight-semi-bold: {%- if heading_font_semi_bold -%}{{ heading_font_semi_bold.weight }}{%- else -%}{{ heading_font.weight }}{%- endif -%};
+		--font-heading-weight-medium: {%- if heading_font_semi_bold -%}{{ heading_font_medium.weight }}{%- else -%}{{ heading_font.weight }}{%- endif -%};
+
+		--font-origin-body-scale: {{ settings.body_scale | divided_by: 100.0 }};
+		--font-origin-heading-scale: {{ settings.heading_scale | times: 1.0 | divided_by: settings.body_scale }};
+		--custom-font-scale: 1.0;
+
+		--font-body-scale: calc(var(--custom-font-scale) * var(--font-origin-body-scale));
+		--font-heading-scale: calc(var(--custom-font-scale) * var(--font-origin-heading-scale));
+
+		--color-global-shadow: {{ settings.color_scheme_body.settings.text.red }}, {{ settings.color_scheme_body.settings.text.green }}, {{ settings.color_scheme_body.settings.text.blue }};
+
+		--card-heading-product-weight: {% unless settings.card_heading_font_weight == 'thin' %}var(--font-heading-weight-{{ settings.card_heading_font_weight }}){% else %}var(--font-heading-weight){% endunless %};
+
+		{%- if settings.buttons_font == 'headings' -%}
+			--font-button-family: var(--font-heading-family);
+			--font-button-style: var(--font-heading-style);
+			--font-button-weight: var(--font-heading-weight);
+			--font-button-weight-medium: var(--font-heading-weight-medium);
+			--font-origin-button-scale: var(--font-origin-heading-scale);
+			--font-button-weight-bold: var(--font-heading-weight-semi-bold);
+		{%- else -%}
+			--font-button-family: var(--font-body-family);
+			--font-button-style: var(--font-body-style);
+			--font-button-weight: var(--font-body-weight);
+			--font-origin-button-scale: var(--font-origin-body-scale);
+			--font-button-weight-medium: var(--font-body-weight-medium);
+			--font-button-weight-bold: var(--font-body-weight-large);  
+		{%- endif -%}
+		--font-button-scale: calc(var(--custom-font-scale) * var(--font-origin-button-scale));
+		
+		--page-width: {{ settings.page_width | divided_by: 10 }}rem;
+		--page-width-margin: {% if settings.page_width == '1600' %}2{% else %}0{% endif %}rem;
+
+		--transform-direction: {% unless direction == 'rtl' %}-1{% else %}1{% endunless %};
+		--left-holder: {% unless direction == 'rtl' %}left{% else %}right{% endunless %};
+		--right-holder: {% unless direction == 'rtl' %}right{% else %}left{% endunless %};
+		--center-holder: center;
+
+		--product-card-text-alignment: var(--{{ settings.card_text_alignment }}-holder);
+		--product-card-border-opacity: {% if settings.card_show_border %}0.05{% else %}0{% endif %};
+		--product-card-padding: {% if settings.card_show_border %}2rem{% else %}0{% endif %};
+		--product-card-content-padding: {% if settings.card_show_border %}0{% else %}10px{% endif %};
+		--product-card-shadow-position: {% if settings.card_show_border %}-1px{% else %}-2rem{% endif %};
+		--product-card-shadow-opacity: {{ settings.card_box_shadow_opacity | divided_by: 100.00 }};
+		--product-card-border-radius: {{ settings.card_border_radius }}px;
+		{%- if settings.card_border_radius > 0 -%}
+			--product-card-border-radius-image: {% if settings.card_show_border %}{{ settings.card_border_radius | minus: 20 | at_least: 4 }}{% else %}{{ settings.card_border_radius }}{% endif %}px;
+		{%- else -%}	
+			--product-card-border-radius-image: 0px;
+		{%- endif -%}	
+		--product-card-shadow-distance: {% if settings.card_buttons == 'hover' %}8rem{% else %}1.5rem{% endif %};
+		
+		--collection-card-text-alignment: var(--{{ settings.collection_card_text_alignment }}-holder);
+		--collection-card-border-radius: {{ settings.collection_card_border_radius }}px;
+		
+		--color-sale-badge-foreground: {{ settings.sale_badge_text_color.red }}, {{ settings.sale_badge_text_color.green }}, {{ settings.sale_badge_text_color.blue }};
+		--color-sale-badge-background: {{ settings.sale_badge_background.red }}, {{ settings.sale_badge_background.green }}, {{ settings.sale_badge_background.blue }};
+		--color-sold-out-badge-foreground: {{ settings.sold_out_badge_text_color.red }}, {{ settings.sold_out_badge_text_color.green }}, {{ settings.sold_out_badge_text_color.blue }};
+		--color-sold-out-badge-background: {{ settings.sold_out_badge_background.red }}, {{ settings.sold_out_badge_background.green }}, {{ settings.sold_out_badge_background.blue }};
+		--color-custom-badge-1-foreground: {{ settings.custom_badge_text_color_1.red }}, {{ settings.custom_badge_text_color_1.green }}, {{ settings.custom_badge_text_color_1.blue }};
+		--color-custom-badge-1-background: {{ settings.custom_badge_background_1.red }}, {{ settings.custom_badge_background_1.green }}, {{ settings.custom_badge_background_1.blue }};
+		--color-custom-badge-2-foreground: {{ settings.custom_badge_text_color_2.red }}, {{ settings.custom_badge_text_color_2.green }}, {{ settings.custom_badge_text_color_2.blue }};
+		--color-custom-badge-2-background: {{ settings.custom_badge_background_2.red }}, {{ settings.custom_badge_background_2.green }}, {{ settings.custom_badge_background_2.blue }};
+		--color-custom-badge-3-foreground: {{ settings.custom_badge_text_color_3.red }}, {{ settings.custom_badge_text_color_3.green }}, {{ settings.custom_badge_text_color_3.blue }};
+		--color-custom-badge-3-background: {{ settings.custom_badge_background_3.red }}, {{ settings.custom_badge_background_3.green }}, {{ settings.custom_badge_background_3.blue }};
+		--color-custom-badge-4-foreground: {{ settings.custom_badge_text_color_4.red }}, {{ settings.custom_badge_text_color_4.green }}, {{ settings.custom_badge_text_color_4.blue }};
+		--color-custom-badge-4-background: {{ settings.custom_badge_background_4.red }}, {{ settings.custom_badge_background_4.green }}, {{ settings.custom_badge_background_4.blue }};
+		--color-custom-badge-5-foreground: {{ settings.custom_badge_text_color_5.red }}, {{ settings.custom_badge_text_color_5.green }}, {{ settings.custom_badge_text_color_5.blue }};
+		--color-custom-badge-5-background: {{ settings.custom_badge_background_5.red }}, {{ settings.custom_badge_background_5.green }}, {{ settings.custom_badge_background_5.blue }};
+		--color-blog-card-badge-foreground: {{ settings.blog_card_badge_text_color.red }}, {{ settings.blog_card_badge_text_color.green }}, {{ settings.blog_card_badge_text_color.blue }};
+		--color-blog-card-badge-background: {{ settings.blog_card_badge_background.red }}, {{ settings.blog_card_badge_background.green }}, {{ settings.blog_card_badge_background.blue }};
+
+		--spacing-sections-desktop: {{ settings.spacing_sections }}px;
+		--spacing-sections-mobile: {% if settings.spacing_sections < 24 %}{{ settings.spacing_sections }}{% else %}{{ settings.spacing_sections | times: 0.7 | round | at_least: 20 }}{% endif %}px;
+
+		--grid-desktop-vertical-spacing: {{ settings.spacing_grid_vertical }}px;
+		--grid-desktop-horizontal-spacing: {{ settings.spacing_grid_horizontal }}px;
+		--grid-mobile-vertical-spacing: {{ settings.spacing_grid_vertical | divided_by: 2 }}px;
+		--grid-mobile-horizontal-spacing: {{ settings.spacing_grid_horizontal | divided_by: 2 }}px;
+
+		--variants-pills-color-radius: {%- if settings.color_swatches_shape == 'circle' -%}50%{%- else -%}0.3rem{%- endif -%};
+		--card-product-color-radius: {%- if settings.color_swatches_shape == 'circle' -%}50%{%- else -%}0rem{%- endif -%};
+		{%- if request.page_type != 'index' and request.page_type != 'product' -%}
+			--color-page-heading-text: {{ settings.page_heading_color_text.red }}, {{ settings.page_heading_color_text.green }}, {{ settings.page_heading_color_text.blue }};
+		{%- endif -%}
+		--global-border-radius: {{ settings.global_border_radius }}px;
+		--buttons-radius: {{ settings.buttons_border_radius }}px;
+		--inputs-radius: {{ settings.form_field_radius }}px;
+
+		/* Deprecated variables - will be removed in the next version */
+		--font-body-weight-500: var(--font-body-weight-medium);
+	}
+
+	:root{{ scheme_classes }} {
+		--color-button-outline: var(--color-button-text);
+		--color-button-text-outline: var(--color-button);
+		--color-link: var(--color-foreground);
+		--color-line: rgb(var(--color-foreground), .3);
+		--color-card-hover: var(--color-foreground);
+		--color-accent-text: var(--color-highlight);
+		--color-price-foreground: var(--color-foreground);
+		--color-review-stars-foreground: var(--color-review-stars);
+		--color-highlight: var(--color-button);
+	}
+
+	body{{ scheme_classes }} {
+		color: rgb(var(--color-foreground));
+		background-color: rgb(var(--color-background));
+	}
+
+	{%- if direction == 'rtl' -%}
+		.icon-revert-in-rtl {
+			transform: rotate(180deg);
+		}
+	{%- endif -%}	
+
+	{%- if request.page_type == 'policy' -%}
+		.shopify-policy__container {
+			max-width: var(--page-width);
+		}
+		.shopify-policy__title {
+			text-align: start;
+		}
+		.shopify-policy__title h1 {
+			font-weight: var(--font-heading-weight-bold);
+		}
+
+		@media screen and (min-width: 750px) {
+			.shopify-policy__container {
+				padding: 0 5rem;
+			}
+		}
+	{%- endif -%}	
+
+	{%- unless only_variables -%}
+		*,
+		*::before,
+		*::after {
+			box-sizing: inherit;
+		}
+
+		html {
+			box-sizing: border-box;
+			font-size: calc(var(--font-body-scale) * 62.5%);
+			height: 100%;
+		}
+
+		body {
+			display: grid;
+			grid-template-rows: auto auto 1fr auto;
+			grid-template-columns: 100%;
+			min-height: 100%;
+			margin: 0;
+			font-size: 1.6rem;
+			line-height: calc(1 + 0.6 / var(--font-body-scale));
+			font-family: var(--font-body-family);
+			font-style: var(--font-body-style);
+			font-weight: var(--font-body-weight);
+		}
+	{%- endunless -%}
+	{%- if settings.card_show_border and settings.card_border_radius == 0 -%}
+		ul.grid.contains-card--product {
+			--grid-horizontal-spacing: 0rem;
+			--grid-mobile-vertical-spacing: 0rem;
+			--grid-desktop-vertical-spacing: 0rem;
+			row-gap: 0rem;
+		}
+	{%- endif -%}
+	{%- if settings.card_show_border -%}
+		.card-wrapper--product {
+			border: 1px solid rgb(var(--color-foreground), var(--product-card-border-opacity));
+		}
+	{%- else -%}	
+		ul.grid.contains-card--product {
+			--color-background-placeholder: var(--color-background);
+		}
+		.card-wrapper--color-scheme .media--placeholder {
+			background: rgb(var(--color-background-placeholder));
+		}
+	{%- endif -%}
+	{%- if settings.card_image_fit != 'cover' -%}
+		.card--product .media, .cart-item__media .media {
+  		background-color: transparent;
+  	}
+		.card--product .media > img, .cart-item__media .media > img {
+			object-fit: contain;
+		}
+	{%- endif -%}
+	{%- if settings.enable_appear_effect -%}
+		appear-animate-single:not(.appear) {
+			transform: scale(1.5);
+			opacity: 0;
+		}
+		.js .appear-animate-item-in-list:not(.done) {
+			transform: translateY(3rem);
+			opacity: 0;
+		}
+		@media(min-width: 750px) {
+			use-animate img {
+				opacity: 0;
+				transform: scale(1.1);
+			}
+		}
+		{%- if settings.card_show_border -%}
+			.js appear-animate-list:not(.start) .card-wrapper--product {
+				--product-card-border-opacity: 0;
+			}
+		{%- endif -%}
+	{%- else -%}
+	  .page-title--with-image appear-animate-single:not(.appear) {
+			transform: scale(1.5);
+			opacity: 0;
+		}	
+	{%- endif -%}
+	{%- if settings.card_truncate_heading > 0 -%}
+		.card__heading__product-title {
+			display: -webkit-box;
+			-webkit-line-clamp: {{ settings.card_truncate_heading }};
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+		}
+	{%- endif -%}
+	{%- unless settings.collection_show_text_below -%}
+		{%- if settings.collection_card_enable_overlay -%}
+			.card__heading--collection a:before {
+				content: "";
+			}
+		{%- endif -%}
+	{%- else -%}
+		.card--collection {
+			row-gap: 1.6rem;
+		}	
+	{%- endunless -%}	
+	{%- if settings.card_buttons == 'hover' -%}
+		@media(hover: hover) and (min-width: 990px) {
+			.card__quick-buttons {
+				position: absolute;
+				top: calc(100% + 1rem);
+				inset-inline: var(--product-card-padding);
+				opacity: 0;
+				visibility: hidden;
+				transition: opacity 300ms ease, top 300ms ease;
+			}
+
+			.card-wrapper--product:hover .card__quick-buttons {
+				opacity: 1;
+				top: calc(100% - 2rem - var(--product-card-shadow-position));
+				visibility: visible;
+			}
+		}
+	{%- endif -%}
+</style>

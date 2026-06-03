@@ -1,0 +1,13 @@
+<div class="product__price-varies price price--large">
+  {%-liquid
+  assign price_from = target.price | default: 1999
+  assign money_price_from = price_from | money
+  assign price_max = target.price_max | default: 5999
+  assign money_price_max = price_max | money
+  if settings.currency_code_enabled
+    assign money_price_from = price_from | money_with_currency
+    assign money_price_max = price_max | money_with_currency
+  endif
+  -%}
+  {{ 'products.product.price.varies_html' | t: price_from: money_price_from, price_to: money_price_max }}
+</div>

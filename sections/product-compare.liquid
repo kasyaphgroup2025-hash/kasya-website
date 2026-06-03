@@ -1,0 +1,370 @@
+<div class="assets">
+  {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
+  {{ 'component-price.css' | asset_url | stylesheet_tag }}
+
+  {{ 'component-rating.css' | asset_url | stylesheet_tag }}
+  
+  {%- if customer.b2b? -%}
+    {{ 'component-volume-pricing.css' | asset_url | stylesheet_tag }}
+  {%- endif -%}
+
+  <script src="{{ 'show-more.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'price-per-item.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
+
+  {%- if section.settings.enable_quick_add -%}
+    <link rel="stylesheet" href="{{ 'component-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
+  {%- endif -%}
+</div>
+{%- capture sizes -%}
+  (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 130 | divided_by: 4 }}px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)
+{%- endcapture -%}
+<div class="results" data-item-count="{{ search.results.size }}" data-item-ids="{{ search.results | map: 'id' | join: ',' }}" data-block-types="{{ section.blocks | map: 'type' | join: ',' }}" data-section="{{ section.id }}">
+  <div class="compare-popup no-js-hidden">
+    <table>
+      {%- for block in section.blocks -%}
+        {%- unless block.type == 'bulk_metafields' -%}
+          <tr class="compare-popup__row{% if block.type == 'metafields' %} compare-popup__row--metafields{% endif %}">
+            <th>{{ block.settings.title }}</th>
+            {%- for c_product in search.results -%}
+              {%-liquid
+                assign section_id = section.id | append: '-' | append: c_product.id
+                assign product_form_id = 'product-form-' | append: section_id
+                assign product_url = c_product.url | split: '?' | first
+              -%}
+              <td class="product-compare-{{ c_product.id }}{% if block.type == 'metafields' %} rte{% endif %}" id="{{ section_id }}-{{ block.type }}-{{ forloop.index }}">
+                {%- case block.type -%}
+                  {%- when 'featured_image' -%}
+                    <div class="compare-popup__media-wrapper">
+                      <a href="{{ product_url }}" class="media media--{{ block.settings.image_ratio }}" id="Featured-Media-{{ section_id }}" aria-labelledby="product-compare-title-{{ section.id }}-{{ c_product.id }}">
+                        {%- liquid
+                          assign product_image_url = c_product.featured_media.preview_image | image_url: width: 50
+                          assign srcset = product_image_url | append: ' 50w'
+                          if c_product.featured_media.preview_image.width >= 165
+                            assign product_image_url = c_product.featured_media.preview_image | image_url: width: 165
+                            assign srcset = srcset | append: ', ' | append: product_image_url | append: ' 165w'
+                          endif
+                          if c_product.featured_media.preview_image.width >= 360
+                            assign product_image_url = c_product.featured_media.preview_image | image_url: width: 360
+                            assign srcset = srcset | append: ', ' | append: product_image_url | append: ' 360w'
+                          endif
+                          if c_product.featured_media.preview_image.width >= 430
+                            assign product_image_url = c_product.featured_media.preview_image | image_url: width: 450
+                            assign srcset = srcset | append: ', ' | append: product_image_url | append: ' 450w'
+                          endif
+                        -%}
+                        {{ c_product.featured_media.preview_image | image_url: width: 300 | image_tag: sizes: sizes, srcset: srcset, width: c_product.featured_media.preview_image.width, height: c_product.featured_media.preview_image.height, class: 'motion-reduce', loading: 'lazy' }}
+                      </a>
+                      <compare-remove-button class="db margin-top-1rem">
+                        <a href="#" class="compare-popup__remove-link link flex justify-center align-center" data-product-id="{{ c_product.id }}" data-no-instant>
+                          <span class="underlined-link">{{ 'templates.compare.remove' | t }}</span>
+                        </a>
+                      </compare-remove-button>
+                    </div>
+                  {%- when 'vendor' -%}
+                    <a href="{{ c_product.vendor | url_for_vendor }}" class="link color-foreground db w100 link light">{{ 'products.product.by_vendor_html' | t: vendor: c_product.vendor }}</a>  
+                  {%- when 'title' -%}
+                    <a href="{{ product_url }}" class="h5 link" id="product-compare-title-{{ section.id }}-{{ c_product.id }}">{{ c_product.title }}</a>
+                  {%- when 'price' -%}
+                    <div class="no-js-hidden" id="price-{{ section_id }}" role="status">
+                      {%-liquid
+                        unless c_product.quantity_price_breaks_configured?
+                          render 'price', product: c_product, use_variant: true, show_badges: false, price_class: 'price--large flex align-center', show_in_card: false
+                        else
+                          render 'main-product-price-per-item', product: c_product, section_id: section_id, price_classes: 'price price--large flex align-center'  
+                        endunless
+                      -%}
+                    </div>
+                    {%- render 'main-product-volume-pricing-note', product: c_product, section_id: section_id, no_shadow: true -%}
+                  {%- when 'description' -%}
+                    <div class="compare-popup__description rte">{{ c_product.description }}</div>
+                  {%- when 'options' -%}
+                    {%- unless c_product.has_only_default_variant -%}
+                      <compare-variants data-url="{{ product_url }}" id="compare-variants-loader-{{ section_id }}" data-section="{{ section_id }}">
+                      </compare-variants>
+                    {%- endunless -%}  
+                  {%- when 'availability' -%}
+                    {%- render 'product-compare-item-inventory', section_id: section_id, product: c_product -%}
+                  {%- when 'add_to_cart' -%}
+                    <product-info id="ProductInfo-{{ section_id }}" data-section="{{ section_id }}" data-original-section="product-compare-item" data-url="{{ product_url }}" data-update-url="false" data-has-outside-elements="true" data-index="{{ forloop.index }}" data-option-size="{{ c_product.options.size }}">
+                      <product-form class="product-form">
+                        <div class="product-form__error-message-wrapper alert alert--error alert--small" role="alert" hidden>
+                          <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-error" viewBox="0 0 13 13">
+                            <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
+                            <circle cx="6.5" cy="6.5" r="5.5" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                            <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
+                            <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="currentColor" stroke-width="0.7">
+                          </svg>
+                          <span class="product-form__error-message"></span>
+                        </div>
+        
+                        {%- render 'product-compare-item-form', section_id: section_id, product: c_product, show_quantity_selector: block.settings.show_quantity_selector, product_form_id: product_form_id -%}
+                      </product-form>
+                    </product-info>
+                  {%- when 'rating' -%}
+                    <div class="rating rating--in-main flex align-center" role="img" aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: c_product.metafields.reviews.rating.value, rating_max: c_product.metafields.reviews.rating.value.scale_max }}">
+                      <div aria-hidden="true" class="rating-star flex por" style="--rating: {{ c_product.metafields.reviews.rating.value.rating | default: 0 }}; --rating-max: {{ c_product.metafields.reviews.rating.value.scale_max | default: 5 }}; --number-gap: {% if c_product.metafields.reviews.rating.value != blank %}{{ c_product.metafields.reviews.rating.value.scale_max | minus: c_product.metafields.reviews.rating.value.rating | minus: 1.00 | at_least: 0 | ceil }}{% else %}4{% endif %};">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M9 0.44043L11.7816 6.07563L18 6.97923L13.5 11.3652L14.562 17.5596L9 14.6352L3.438 17.5596L4.5 11.3652L0 6.97923L6.2184 6.07563L9 0.44043Z" fill="currentColor"/>
+                        </svg>
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M9 0.44043L11.7816 6.07563L18 6.97923L13.5 11.3652L14.562 17.5596L9 14.6352L3.438 17.5596L4.5 11.3652L0 6.97923L6.2184 6.07563L9 0.44043Z" fill="currentColor"/>
+                        </svg>
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M9 0.44043L11.7816 6.07563L18 6.97923L13.5 11.3652L14.562 17.5596L9 14.6352L3.438 17.5596L4.5 11.3652L0 6.97923L6.2184 6.07563L9 0.44043Z" fill="currentColor"/>
+                        </svg>
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M9 0.44043L11.7816 6.07563L18 6.97923L13.5 11.3652L14.562 17.5596L9 14.6352L3.438 17.5596L4.5 11.3652L0 6.97923L6.2184 6.07563L9 0.44043Z" fill="currentColor"/>
+                        </svg>
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M9 0.44043L11.7816 6.07563L18 6.97923L13.5 11.3652L14.562 17.5596L9 14.6352L3.438 17.5596L4.5 11.3652L0 6.97923L6.2184 6.07563L9 0.44043Z" fill="currentColor"/>
+                        </svg>
+                      </div>
+                    </div>
+                  {%- when 'metafields' -%}
+                    {%- liquid
+                      if block.settings.namespace_key != blank
+                        assign metafield_parts = block.settings.namespace_key | split: '.'
+                        if metafield_parts.size >= 2 and c_product.metafields[metafield_parts[0]][metafield_parts[1]] != blank
+                          if metafield_parts.size == 2
+                              echo c_product.metafields[metafield_parts[0]][metafield_parts[1]] | metafield_tag
+                          elsif metafield_parts.size == 3
+                            echo c_product.metafields[metafield_parts[0]][metafield_parts[1]] | metafield_tag: field: metafield_parts[2]
+                          endif
+                        endif
+                      endif
+                    -%}
+                {%- endcase -%}  
+              </td>
+            {%- endfor -%}  
+          </tr>
+        {%- elsif block.settings.namespace_key != blank -%}
+          {%- liquid
+            assign metafields_array = block.settings.namespace_key | newline_to_br | replace: '<br />', ',' | strip_newlines | split: ','
+          -%}
+          {%- for field in metafields_array -%}
+            {%- liquid
+              assign splits = field | split: ':'
+              if splits.size == 1
+                assign pair = field | replace: ' ', '' | split: '.'
+              else
+                assign pair = splits[1] | replace: ' ', '' | split: '.'
+              endif
+
+              assign namespace = pair[0] | strip
+              assign key = pair[1] | strip
+              if splits.size == 1
+                assign item_label = key | replace: '_', ' ' | capitalize
+              else
+                assign item_label = splits[0] | strip
+              endif
+            -%}
+            <tr class="compare-popup__row compare-popup__row--metafields">
+              <th>{{ item_label }}</th>
+              {%- for c_product in search.results -%}
+                {%- assign section_id = section.id | append: '-' | append: c_product.id -%}
+                <td
+                  class="product-compare-{{ c_product.id }} rte"
+                  id="{{ section_id }}-{{ block.type }}-{{ forloop.index }}"
+                >
+                  {%- liquid
+                    if c_product.metafields[namespace][key] != blank
+                      if pair.size == 2
+                        echo c_product.metafields[namespace][key] | metafield_tag
+                      elsif pair.size == 3
+                        echo c_product.metafields[namespace][key] | metafield_tag: field: pair[2]
+                      endif
+                    endif
+                  -%}
+                </td>
+              {%- endfor -%}
+            </tr>
+          {%- endfor -%}
+        {%- endunless -%}
+      {%- endfor -%}
+    </table>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.product-compare.name",
+  "tag": "section",
+  "class": "section hidden",
+  "blocks": [
+    {
+      "type": "featured_image",
+      "name": "t:sections.product-compare.blocks.featured_image.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.product-compare.blocks.all.settings.row_name.label",
+          "default": "Featured image"
+        },
+        {
+          "type": "select",
+          "id": "image_ratio",
+          "label": "t:sections.all.image_ratio.label",
+          "options": [
+            {
+              "value": "square",
+              "label": "t:sections.all.image_ratio.option_2.label"
+            },
+            {
+              "value": "portrait",
+              "label": "t:sections.all.image_ratio.option_3.label"
+            },
+            {
+              "value": "landscape",
+              "label": "t:sections.all.image_ratio.option_4.label"
+            }
+          ],
+          "default": "square"
+        }
+      ],
+      "limit": 1
+    },
+    {
+      "type": "vendor",
+      "name": "t:sections.product-compare.blocks.vendor.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.product-compare.blocks.all.settings.row_name.label",
+          "default": "Vendor"
+        }
+      ],
+      "limit": 1
+    },
+    {
+      "type": "title",
+      "name": "t:sections.product-compare.blocks.title.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.product-compare.blocks.all.settings.row_name.label",
+          "default": "Product name"
+        }
+      ],
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "t:sections.product-compare.blocks.price.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.product-compare.blocks.all.settings.row_name.label",
+          "default": "Price"
+        }
+      ],
+      "limit": 1
+    },
+    {
+      "type": "description",
+      "name": "t:sections.product-compare.blocks.description.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.product-compare.blocks.all.settings.row_name.label",
+          "default": "Description"
+        }
+      ],
+      "limit": 1
+    },
+    {
+      "type": "options",
+      "name": "t:sections.product-compare.blocks.options.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.product-compare.blocks.all.settings.row_name.label",
+          "default": "Options"
+        }
+      ],
+      "limit": 1
+    },
+    {
+      "type": "availability",
+      "name": "t:sections.product-compare.blocks.availability.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.product-compare.blocks.all.settings.row_name.label",
+          "default": "Availability"
+        }
+      ],
+      "limit": 1
+    },
+    {
+      "type": "rating",
+      "name": "t:sections.product-compare.blocks.rating.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.product-compare.blocks.all.settings.row_name.label",
+          "default": "Rating"
+        }
+      ],
+      "limit": 1
+    },
+    {
+      "type": "add_to_cart",
+      "name": "t:sections.product-compare.blocks.add_to_cart.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.product-compare.blocks.all.settings.row_name.label",
+          "default": "Add to cart"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_quantity_selector",
+          "label": "t:sections.product-compare.blocks.add_to_cart.settings.show_quantity_selector.label",
+          "default": true
+        }
+      ],
+      "limit": 1
+    },
+    {
+      "type": "metafields",
+      "name": "t:sections.product-compare.blocks.metafields.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.product-compare.blocks.all.settings.row_name.label",
+          "default": "Row name"
+        },
+        {
+          "type": "text",
+          "id": "namespace_key",
+          "label": "t:sections.product-compare.blocks.metafields.settings.namespace_key.label",
+          "info": "t:sections.product-compare.blocks.metafields.settings.namespace_key.info"
+        }
+      ]
+    },
+    {
+      "type": "bulk_metafields",
+      "name": "t:sections.product-compare.blocks.bulk_metafields.name",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "namespace_key",
+          "label": "t:sections.product-compare.blocks.bulk_metafields.settings.namespace_key.label",
+          "info": "t:sections.product-compare.blocks.bulk_metafields.settings.namespace_key.info"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,82 @@
+{%- doc -%}
+  Intended for use in a block similar to the Image or Media banner block.
+
+  @param {object} block - The block
+  @param {string} [wrapper_class] - The HTML Class of the wrapper tag
+  @param {boolean} [inherit_ratio] - Reuse the ratio from parent element
+  @param {string} [custom_image_class] - the HTML Class of the image tag
+{%- enddoc -%}
+
+{% liquid
+  assign media_width_desktop = '100vw'
+  assign media_width_mobile = '100vw'
+  assign sizes = 'auto, (min-width: 750px) ' | append: media_width_desktop | append: ', ' | append: media_width_mobile
+  assign widths = '300, 450, 600, 750, 900, 1050, 1200, 1350, 1500, 1650, 1800, 1950, 2000, 2500, 3000, 3500, 4000, 5000'
+  unless inherit_ratio
+    assign ratio = 1
+
+    case block.settings.aspect_ratio
+      when 'landscape'
+        assign ratio = '16 / 9'
+      when 'portrait'
+        assign ratio = '4 / 5'
+      when 'adapt'
+        assign ratio = block.settings.image.aspect_ratio
+    endcase
+
+    if ratio == 0 or ratio == null
+      assign ratio = 1
+    endif
+  endunless
+%}
+
+{%- if block.settings.image -%}
+  {%-liquid
+    assign image_class = 'image-block__image'
+    unless inherit_ratio
+      assign image_class = image_class | append: ' aspect-ratio'
+    endunless
+    if custom_image_class
+      assign image_class = image_class | append: ' ' | append: custom_image_class
+    endif
+  -%}
+  <use-animate class="media media--transparent{% if block.settings.image_mobile != blank %} small-hide{% endif %}{% if wrapper_class %} {{ wrapper_class }}{% endif %}"{% unless inherit_ratio %} style="--aspect-ratio:{{ ratio }};"{% endunless %}>
+  {{
+    block.settings.image
+    | image_url: width: 3840
+    | image_tag:
+      width: block.settings.image.width,
+      widths: widths,
+      height: block.settings.image.height,
+      class: image_class,
+      sizes: sizes
+  }}
+  </use-animate>
+  {%- if block.settings.image_mobile != blank -%}
+    <use-animate class="media medium-hide large-up-hide media--transparent{% if wrapper_class %} {{ wrapper_class }}{% endif %}"{% unless inherit_ratio %} style="--aspect-ratio:{% if block.settings.aspect_ratio == 'adapt' %}{{ block.settings.image_mobile.aspect_ratio }}{% else %}{{ ratio }}{% endif %}"{% endunless %}>
+      {{
+        block.settings.image_mobile
+        | image_url: width: 1200
+        | image_tag:
+          width: block.settings.image_mobile.width,
+          widths: '300, 450, 600, 750, 900',
+          height: block.settings.image_mobile.height,
+          class: image_class,
+          sizes: '100vw'
+      }}
+    </use-animate>
+  {%- endif -%}
+{%- else -%}
+  {%-liquid
+    assign image_class = 'placeholder-svg placeholder'
+    unless inherit_ratio
+      assign image_class = image_class | append: ' aspect-ratio'
+    endunless
+    if custom_image_class
+      assign image_class = image_class | append: ' ' | append: custom_image_class
+    endif
+  -%}
+  <div class="media media--transparent{% if wrapper_class %} {{ wrapper_class }}{% endif %}"{% unless inherit_ratio %} style="--aspect-ratio:{{ ratio }}"{% endunless %}>
+    {{ 'detailed-apparel-1' | placeholder_svg_tag: image_class }}
+  </div>
+{%- endif -%}

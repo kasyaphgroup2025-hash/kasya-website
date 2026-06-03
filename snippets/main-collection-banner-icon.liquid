@@ -1,0 +1,29 @@
+<div class="flex collection-icon__item por"{% if icon_collection != blank %} aria-label="{{ icon_collection.title | escape }}"{% endif %}>
+  {%- if custom_icon != blank -%}
+    {%- assign image_width = icon_size | times: 2 -%}
+    {{
+      custom_icon
+      | image_url: width: image_width, height: image_width
+      | image_tag: class: 'collection-icon__item__custom-icon', loading: 'lazy'
+    }}
+  {%- elsif icon -%}
+    {%- render 'icon-picker', icon: icon, icon_width: icon_size -%}
+  {%- endif -%}
+  <div class="flex flex-column collection-icon__item__info">
+    {%- if icon_collection != blank -%}
+      <a href="{{ icon_collection.url }}" class="full-unstyled-link full-link lh1 font-body-bold break">{{ icon_collection.title }}</a>
+      {%- if section.settings.show_number_of_products and products_count -%}
+        <span class="text-small light lh1">
+          {{ 'products.facets.product_count_simple' | t: count: products_count }}
+        </span>
+      {%- endif -%}
+    {%- else -%}
+      <div class="lh1 font-body-bold break">{{ icon_collection.title }}{{ 'onboarding.collection_title' | t }}</div>
+      {%- if section.settings.show_number_of_products -%}
+        <span class="text-small light lh1">
+          {{ 'products.facets.product_count_simple' | t: count: 0 }}  
+        </span>
+      {%- endif -%}
+    {%- endif -%}  
+  </div>  
+</div>  

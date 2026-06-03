@@ -1,0 +1,8 @@
+<span class="gift-wrapping-bubble caption">
+  {%- if gift_wrapping_cart_items != nil -%}
+    {%- assign gift_wrapping_in_cart_quantity = gift_wrapping_cart_items | sum: 'quantity' -%}
+    {%- if gift_wrapping_in_cart_quantity != nil and gift_wrapping_in_cart_quantity > 0 -%}
+      {{- 'products.product.quantity.in_cart_html' | t: quantity: gift_wrapping_in_cart_quantity -}}
+    {%- endif -%}
+  {%- endif -%}
+</span>

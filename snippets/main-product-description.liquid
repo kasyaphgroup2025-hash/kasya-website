@@ -1,0 +1,14 @@
+{%- if product.description != blank -%}
+  <div
+    {% unless no_shopify_attributes %}
+      {{ block.shopify_attributes }}
+    {% endunless %}
+  >
+    {%- render 'truncate-text',
+        text: product.description,
+        length: block.settings.truncate_description,
+        button_text: block.settings.read_more_button,
+        class: 'product__description'
+    -%}
+  </div>
+{%- endif -%}

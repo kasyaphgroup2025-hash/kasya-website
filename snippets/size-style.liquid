@@ -1,0 +1,34 @@
+{%- comment -%}
+  Intended for blocks and sections that provide values for all the referenced settings.
+  Accepts:
+     local_settings: {block.settings || section.settings}
+{%- endcomment -%}
+{%- if local_settings.width_desktop == 'custom' -%}
+  --size-style-width-desktop:
+  {{- local_settings.custom_width_desktop }}%;
+{%- elsif local_settings.width_desktop == 'fill' -%}
+  --size-style-width-desktop: 100%;
+{%- else -%}
+  --size-style-width-desktop: {{ local_settings.width_desktop }};
+{%- endif -%}
+
+{% if local_settings.width_mobile == 'custom' %}
+  --size-style-width-mobile:
+  {{- local_settings.custom_width_mobile }}%; --size-style-width-mobile-min:
+  {{- local_settings.custom_width_mobile }}%;
+{%- elsif local_settings.width_mobile == 'fill' -%}
+  --size-style-width-mobile: 100%; --size-style-width-mobile-min: 5rem;
+{%- elsif local_settings.width_mobile == 'fit-content' -%}
+  --size-style-width-mobile: {{ local_settings.width_mobile }}; --size-style-width-mobile-min: {{ local_settings.width_mobile }};
+{%- endif -%}
+
+{%- if local_settings.width_tablet -%}
+  {%- if local_settings.width_tablet == 'custom' -%}
+    --size-style-width-tablet:
+    {{- local_settings.custom_width_tablet }}%;
+  {%- elsif local_settings.width_tablet == 'fill' -%}
+    --size-style-width-tablet: 100%;
+  {%- else -%}
+    --size-style-width-tablet: {{ local_settings.width_tablet }};
+  {%- endif -%}
+{%- endif -%}  

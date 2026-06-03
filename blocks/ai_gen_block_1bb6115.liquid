@@ -1,0 +1,636 @@
+{% doc %}
+  @prompt
+    A magazine-style editorial layout for my 7 collections, Can you make it like halloween style with pumpkin and spder web and orange shadow blur anything just look like halloween please include also the button in items , Can you add the black background or anything color but its must dark color like Halloween color style., Can you make it 2 items in a row? , Please input also this in mobile view 2 items in a arow
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-halloween-editorial-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.section_padding }}px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-halloween-editorial-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 30%, {{ block.settings.glow_color_1 }} 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, {{ block.settings.glow_color_2 }} 0%, transparent 40%),
+      radial-gradient(circle at 50% 50%, {{ block.settings.glow_color_1 }} 0%, transparent 50%);
+    opacity: 0.3;
+    pointer-events: none;
+    filter: blur(60px);
+  }
+
+  .ai-halloween-editorial__container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .ai-halloween-editorial__header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .ai-halloween-editorial__title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 16px;
+    font-family: {{ block.settings.title_font.family }}, {{ block.settings.title_font.fallback_families }};
+    font-weight: {{ block.settings.title_font.weight }};
+    text-shadow: 0 0 20px {{ block.settings.glow_color_1 }};
+  }
+
+  .ai-halloween-editorial__subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.subtitle_color }};
+    margin: 0;
+  }
+
+  .ai-halloween-editorial__grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+    margin-bottom: 40px;
+  }
+
+  .ai-halloween-editorial__item-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ block.settings.border_radius }}px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .ai-halloween-editorial__item-{{ ai_gen_id }}:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(255, 102, 0, 0.3);
+  }
+
+  .ai-halloween-editorial__image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+  }
+
+  .ai-halloween-editorial__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-halloween-editorial__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-halloween-editorial__image-placeholder-{{ ai_gen_id }} svg {
+    width: 80px;
+    height: 80px;
+    opacity: 0.3;
+  }
+
+  .ai-halloween-editorial__overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 60%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 30px;
+  }
+
+  .ai-halloween-editorial__decoration-{{ ai_gen_id }} {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  .ai-halloween-editorial__pumpkin-{{ ai_gen_id }} {
+    top: 10px;
+    right: 10px;
+    font-size: 40px;
+    filter: drop-shadow(0 0 10px {{ block.settings.glow_color_2 }});
+  }
+
+  .ai-halloween-editorial__spider-{{ ai_gen_id }} {
+    top: 10px;
+    left: 10px;
+    font-size: 30px;
+  }
+
+  .ai-halloween-editorial__content-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 2;
+  }
+
+  .ai-halloween-editorial__collection-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.collection_title_size }}px;
+    color: {{ block.settings.collection_title_color }};
+    margin: 0 0 8px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  }
+
+  .ai-halloween-editorial__collection-desc-{{ ai_gen_id }} {
+    font-size: {{ block.settings.collection_desc_size }}px;
+    color: {{ block.settings.collection_desc_color }};
+    margin: 0 0 16px;
+    line-height: 1.5;
+  }
+
+  .ai-halloween-editorial__button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 12px 28px;
+    background-color: {{ block.settings.button_bg_color }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_font_size }}px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid {{ block.settings.button_border_color }};
+    box-shadow: 0 0 20px {{ block.settings.glow_color_2 }};
+  }
+
+  .ai-halloween-editorial__button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_bg_color }};
+    color: {{ block.settings.button_hover_text_color }};
+    transform: scale(1.05);
+    box-shadow: 0 0 30px {{ block.settings.glow_color_1 }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-halloween-editorial__grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .ai-halloween-editorial__title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_size }}px * 0.6);
+    }
+
+    .ai-halloween-editorial__subtitle-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.subtitle_size }}px * 0.8);
+    }
+
+    .ai-halloween-editorial__header-{{ ai_gen_id }} {
+      margin-bottom: 30px;
+    }
+
+    .ai-halloween-editorial__image-wrapper-{{ ai_gen_id }} {
+      min-height: 250px;
+    }
+
+    .ai-halloween-editorial__overlay-{{ ai_gen_id }} {
+      padding: 15px;
+    }
+
+    .ai-halloween-editorial__collection-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.collection_title_size }}px * 0.6);
+      margin-bottom: 4px;
+    }
+
+    .ai-halloween-editorial__collection-desc-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.collection_desc_size }}px * 0.8);
+      margin-bottom: 10px;
+    }
+
+    .ai-halloween-editorial__button-{{ ai_gen_id }} {
+      padding: 8px 16px;
+      font-size: calc({{ block.settings.button_font_size }}px * 0.85);
+    }
+
+    .ai-halloween-editorial__pumpkin-{{ ai_gen_id }} {
+      font-size: 28px;
+      top: 5px;
+      right: 5px;
+    }
+
+    .ai-halloween-editorial__spider-{{ ai_gen_id }} {
+      font-size: 20px;
+      top: 5px;
+      left: 5px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-halloween-editorial-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-halloween-editorial__container-{{ ai_gen_id }}">
+    {% if block.settings.section_title != blank or block.settings.section_subtitle != blank %}
+      <div class="ai-halloween-editorial__header-{{ ai_gen_id }}">
+        {% if block.settings.section_title != blank %}
+          <h2 class="ai-halloween-editorial__title-{{ ai_gen_id }}">{{ block.settings.section_title }}</h2>
+        {% endif %}
+        {% if block.settings.section_subtitle != blank %}
+          <p class="ai-halloween-editorial__subtitle-{{ ai_gen_id }}">{{ block.settings.section_subtitle }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="ai-halloween-editorial__grid-{{ ai_gen_id }}">
+      {% for i in (1..7) %}
+        {% liquid
+          assign collection_key = 'collection_' | append: i
+          assign collection = block.settings[collection_key]
+          assign button_text_key = 'button_text_' | append: i
+          assign button_text = block.settings[button_text_key]
+        %}
+
+        <div class="ai-halloween-editorial__item-{{ ai_gen_id }}">
+          <div class="ai-halloween-editorial__image-wrapper-{{ ai_gen_id }}">
+            {% if collection != blank and collection.image %}
+              <img
+                src="{{ collection.image | image_url: width: 1200 }}"
+                alt="{{ collection.image.alt | escape }}"
+                loading="lazy"
+                width="{{ collection.image.width }}"
+                height="{{ collection.image.height }}"
+                class="ai-halloween-editorial__image-{{ ai_gen_id }}"
+              >
+            {% else %}
+              <div class="ai-halloween-editorial__image-placeholder-{{ ai_gen_id }}">
+                {{ 'collection-1' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+
+            {% if block.settings.show_decorations %}
+              <div class="ai-halloween-editorial__decoration-{{ ai_gen_id }} ai-halloween-editorial__pumpkin-{{ ai_gen_id }}">
+                🎃
+              </div>
+              {% if i == 1 or i == 3 or i == 5 or i == 7 %}
+                <div class="ai-halloween-editorial__decoration-{{ ai_gen_id }} ai-halloween-editorial__spider-{{ ai_gen_id }}">
+                  🕷️
+                </div>
+              {% endif %}
+            {% endif %}
+
+            <div class="ai-halloween-editorial__overlay-{{ ai_gen_id }}">
+              <div class="ai-halloween-editorial__content-{{ ai_gen_id }}">
+                {% if collection != blank %}
+                  <h3 class="ai-halloween-editorial__collection-title-{{ ai_gen_id }}">
+                    {{ collection.title }}
+                  </h3>
+                  {% if collection.description != blank %}
+                    <div class="ai-halloween-editorial__collection-desc-{{ ai_gen_id }}">
+                      {{ collection.description | strip_html | truncate: 100 }}
+                    </div>
+                  {% endif %}
+                  <a 
+                    href="{{ collection.url }}" 
+                    class="ai-halloween-editorial__button-{{ ai_gen_id }}"
+                  >
+                    {% if button_text != blank %}
+                      {{ button_text }}
+                    {% else %}
+                      {{ block.settings.default_button_text }}
+                    {% endif %}
+                  </a>
+                {% else %}
+                  <h3 class="ai-halloween-editorial__collection-title-{{ ai_gen_id }}">
+                    Collection {{ i }}
+                  </h3>
+                  <div class="ai-halloween-editorial__collection-desc-{{ ai_gen_id }}">
+                    Add a collection to showcase your products
+                  </div>
+                  <span class="ai-halloween-editorial__button-{{ ai_gen_id }}">
+                    {% if button_text != blank %}
+                      {{ button_text }}
+                    {% else %}
+                      {{ block.settings.default_button_text }}
+                    {% endif %}
+                  </span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Halloween collections",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Title",
+      "default": "Spooky Collections"
+    },
+    {
+      "type": "text",
+      "id": "section_subtitle",
+      "label": "Subtitle",
+      "default": "Discover our haunting Halloween collection"
+    },
+    {
+      "type": "font_picker",
+      "id": "title_font",
+      "label": "Title font",
+      "default": "playfair_n4"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 48
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#FF6600"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#CCCCCC"
+    },
+    {
+      "type": "header",
+      "content": "Collections"
+    },
+    {
+      "type": "collection",
+      "id": "collection_1",
+      "label": "Collection 1"
+    },
+    {
+      "type": "text",
+      "id": "button_text_1",
+      "label": "Button text 1"
+    },
+    {
+      "type": "collection",
+      "id": "collection_2",
+      "label": "Collection 2"
+    },
+    {
+      "type": "text",
+      "id": "button_text_2",
+      "label": "Button text 2"
+    },
+    {
+      "type": "collection",
+      "id": "collection_3",
+      "label": "Collection 3"
+    },
+    {
+      "type": "text",
+      "id": "button_text_3",
+      "label": "Button text 3"
+    },
+    {
+      "type": "collection",
+      "id": "collection_4",
+      "label": "Collection 4"
+    },
+    {
+      "type": "text",
+      "id": "button_text_4",
+      "label": "Button text 4"
+    },
+    {
+      "type": "collection",
+      "id": "collection_5",
+      "label": "Collection 5"
+    },
+    {
+      "type": "text",
+      "id": "button_text_5",
+      "label": "Button text 5"
+    },
+    {
+      "type": "collection",
+      "id": "collection_6",
+      "label": "Collection 6"
+    },
+    {
+      "type": "text",
+      "id": "button_text_6",
+      "label": "Button text 6"
+    },
+    {
+      "type": "collection",
+      "id": "collection_7",
+      "label": "Collection 7"
+    },
+    {
+      "type": "text",
+      "id": "button_text_7",
+      "label": "Button text 7"
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "text",
+      "id": "default_button_text",
+      "label": "Default button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Background color",
+      "default": "#FF6600"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Border color",
+      "default": "#FF6600"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Hover background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text color",
+      "default": "#FF6600"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Collection card style"
+    },
+    {
+      "type": "range",
+      "id": "collection_title_size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 28
+    },
+    {
+      "type": "color",
+      "id": "collection_title_color",
+      "label": "Title color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "collection_desc_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Description size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "collection_desc_color",
+      "label": "Description color",
+      "default": "#DDDDDD"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "label": "Container width",
+      "default": 1440
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Grid gap",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Halloween theme"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#0D0D0D"
+    },
+    {
+      "type": "color",
+      "id": "glow_color_1",
+      "label": "Glow color 1",
+      "default": "#FF6600"
+    },
+    {
+      "type": "color",
+      "id": "glow_color_2",
+      "label": "Glow color 2",
+      "default": "#8B00FF"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_decorations",
+      "label": "Show pumpkin and spider decorations",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Halloween collections"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,809 @@
+{% doc %}
+  @prompt
+    Create a minimalist, elegant holiday landing page for KasyaPH titled “The Holiday Gift Collection.”
+    This page should highlight one single collection only.
+    
+    Inside this collection, customers can choose between two curated gift bundles:
+    
+    Bundle of 3 – Simple Gift Set
+    
+    Bundle of 15 – The Grand Collection (Choose Your Own)
+    
+    The landing page should be subtle, premium, and uncluttered.
+    Use a soft holiday theme (white + gold accents). Avoid loud sales language.
+    
+    Layout requirements:
+    – Hero section introducing “The Holiday Gift Collection”
+    – Short refined copy about thoughtful, curated gifting
+    – A clean section that showcases the single collection
+    – When customers click the collection, they will see the two bundle products inside
+    – Keep the tone calm, luxurious, and understated., can you add animation like snow effects and clickable collection, can you add animation christmas theme, can you remove the balls and change it to snow effect 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-holiday-landing-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+    background: {{ block.settings.background_color }};
+  }
+
+  .ai-holiday-canvas-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .ai-holiday-stars-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .ai-holiday-star-{{ ai_gen_id }} {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: {{ block.settings.accent_color }};
+    border-radius: 50%;
+    animation: ai-holiday-twinkle-{{ ai_gen_id }} 3s ease-in-out infinite;
+  }
+
+  @keyframes ai-holiday-twinkle-{{ ai_gen_id }} {
+    0%, 100% {
+      opacity: 0.3;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.5);
+    }
+  }
+
+  .ai-holiday-content-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 3;
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+    padding: {{ block.settings.section_padding }}px 20px;
+  }
+
+  .ai-holiday-hero-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: {{ block.settings.hero_spacing }}px;
+  }
+
+  .ai-holiday-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.accent_color }};
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    font-weight: 400;
+  }
+
+  .ai-holiday-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 24px;
+    font-weight: 300;
+    line-height: 1.2;
+  }
+
+  .ai-holiday-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_size }}px;
+    color: {{ block.settings.text_color }};
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+    opacity: 0.9;
+  }
+
+  .ai-holiday-collection-wrapper-{{ ai_gen_id }} {
+    margin-top: {{ block.settings.collection_spacing }}px;
+  }
+
+  .ai-holiday-collection-card-{{ ai_gen_id }} {
+    position: relative;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    cursor: pointer;
+    background: {{ block.settings.card_background }};
+    border: 1px solid {{ block.settings.card_border_color }};
+  }
+
+  .ai-holiday-collection-card-{{ ai_gen_id }}:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
+  }
+
+  .ai-holiday-collection-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    padding-bottom: {{ block.settings.image_aspect_ratio }}%;
+    overflow: hidden;
+  }
+
+  .ai-holiday-collection-image-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+
+  .ai-holiday-collection-card-{{ ai_gen_id }}:hover .ai-holiday-collection-image-{{ ai_gen_id }} {
+    transform: scale(1.05);
+  }
+
+  .ai-holiday-collection-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.3) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .ai-holiday-collection-card-{{ ai_gen_id }}:hover .ai-holiday-collection-overlay-{{ ai_gen_id }} {
+    opacity: 1;
+  }
+
+  .ai-holiday-sparkle-{{ ai_gen_id }} {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  .ai-holiday-sparkle-{{ ai_gen_id }}::before,
+  .ai-holiday-sparkle-{{ ai_gen_id }}::after {
+    content: '';
+    position: absolute;
+    background: {{ block.settings.accent_color }};
+  }
+
+  .ai-holiday-sparkle-{{ ai_gen_id }}::before {
+    width: 2px;
+    height: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .ai-holiday-sparkle-{{ ai_gen_id }}::after {
+    width: 100%;
+    height: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .ai-holiday-collection-info-{{ ai_gen_id }} {
+    padding: {{ block.settings.card_padding }}px;
+    text-align: center;
+  }
+
+  .ai-holiday-collection-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.collection_title_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 12px;
+    font-weight: 400;
+  }
+
+  .ai-holiday-collection-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.collection_description_size }}px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.8;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .ai-holiday-collection-cta-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 32px;
+    background: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    border: 1px solid {{ block.settings.accent_color }};
+    border-radius: {{ block.settings.button_border_radius }}px;
+    text-decoration: none;
+    font-size: {{ block.settings.button_text_size }}px;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+  }
+
+  .ai-holiday-collection-cta-{{ ai_gen_id }}:hover {
+    background: {{ block.settings.button_hover_background }};
+    color: {{ block.settings.button_hover_text_color }};
+    transform: translateX(4px);
+  }
+
+  .ai-holiday-collection-cta-icon-{{ ai_gen_id }} {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-holiday-collection-cta-{{ ai_gen_id }}:hover .ai-holiday-collection-cta-icon-{{ ai_gen_id }} {
+    transform: translateX(4px);
+  }
+
+  .ai-holiday-empty-state-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 60px 20px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.6;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-holiday-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_size }}px * 0.6);
+    }
+
+    .ai-holiday-subtitle-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.subtitle_size }}px * 0.8);
+    }
+
+    .ai-holiday-description-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.description_size }}px * 0.9);
+    }
+
+    .ai-holiday-collection-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.collection_title_size }}px * 0.8);
+    }
+  }
+{% endstyle %}
+
+<holiday-landing-{{ ai_gen_id }} class="ai-holiday-landing-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.enable_snow_effect %}
+    <canvas class="ai-holiday-canvas-{{ ai_gen_id }}" id="ai-holiday-canvas-{{ ai_gen_id }}"></canvas>
+  {% endif %}
+
+  {% if block.settings.enable_stars %}
+    <div class="ai-holiday-stars-{{ ai_gen_id }}" id="ai-holiday-stars-{{ ai_gen_id }}"></div>
+  {% endif %}
+
+  <div class="ai-holiday-content-{{ ai_gen_id }}">
+    <div class="ai-holiday-hero-{{ ai_gen_id }}">
+      {% if block.settings.subtitle != blank %}
+        <div class="ai-holiday-subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</div>
+      {% endif %}
+
+      {% if block.settings.title != blank %}
+        <h1 class="ai-holiday-title-{{ ai_gen_id }}">{{ block.settings.title }}</h1>
+      {% endif %}
+
+      {% if block.settings.description != blank %}
+        <div class="ai-holiday-description-{{ ai_gen_id }}">{{ block.settings.description }}</div>
+      {% endif %}
+    </div>
+
+    <div class="ai-holiday-collection-wrapper-{{ ai_gen_id }}">
+      {% if block.settings.featured_collection != blank %}
+        {% assign collection = block.settings.featured_collection %}
+        <a href="{{ collection.url }}" class="ai-holiday-collection-card-{{ ai_gen_id }}" id="ai-holiday-collection-card-{{ ai_gen_id }}">
+          <div class="ai-holiday-collection-image-wrapper-{{ ai_gen_id }}">
+            {% if collection.featured_image %}
+              <img
+                src="{{ collection.featured_image | image_url: width: 1400 }}"
+                alt="{{ collection.featured_image.alt | escape }}"
+                class="ai-holiday-collection-image-{{ ai_gen_id }}"
+                loading="lazy"
+                width="{{ collection.featured_image.width }}"
+                height="{{ collection.featured_image.height }}"
+              >
+            {% else %}
+              <div class="ai-holiday-collection-image-{{ ai_gen_id }}">
+                {{ 'collection-1' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+            <div class="ai-holiday-collection-overlay-{{ ai_gen_id }}"></div>
+          </div>
+
+          <div class="ai-holiday-collection-info-{{ ai_gen_id }}">
+            <h2 class="ai-holiday-collection-title-{{ ai_gen_id }}">{{ collection.title }}</h2>
+            
+            {% if block.settings.collection_description != blank %}
+              <div class="ai-holiday-collection-description-{{ ai_gen_id }}">
+                {{ block.settings.collection_description }}
+              </div>
+            {% endif %}
+
+            <span class="ai-holiday-collection-cta-{{ ai_gen_id }}">
+              {{ block.settings.button_text }}
+              <svg class="ai-holiday-collection-cta-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </span>
+          </div>
+        </a>
+      {% else %}
+        <div class="ai-holiday-empty-state-{{ ai_gen_id }}">
+          <p>Select a collection to showcase your holiday gift bundles</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</holiday-landing-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class HolidayLanding{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.canvas = this.querySelector('#ai-holiday-canvas-{{ ai_gen_id }}');
+        this.starsContainer = this.querySelector('#ai-holiday-stars-{{ ai_gen_id }}');
+        this.collectionCard = this.querySelector('#ai-holiday-collection-card-{{ ai_gen_id }}');
+        this.snowEnabled = {{ block.settings.enable_snow_effect }};
+        this.starsEnabled = {{ block.settings.enable_stars }};
+        this.sparklesEnabled = {{ block.settings.enable_sparkles }};
+      }
+
+      connectedCallback() {
+        if (this.snowEnabled && this.canvas) {
+          this.initSnowEffect();
+        }
+
+        if (this.starsEnabled && this.starsContainer) {
+          this.initStars();
+        }
+
+        if (this.sparklesEnabled && this.collectionCard) {
+          this.initSparkles();
+        }
+      }
+
+      initSnowEffect() {
+        const ctx = this.canvas.getContext('2d');
+        let snowflakes = [];
+        const maxSnowflakes = {{ block.settings.snow_density }};
+        const snowOpacity = {{ block.settings.snow_opacity | divided_by: 10.0 }};
+
+        const resizeCanvas = () => {
+          this.canvas.width = this.offsetWidth;
+          this.canvas.height = this.offsetHeight;
+        };
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Snowflake {
+          constructor(canvas) {
+            this.canvas = canvas;
+            this.reset();
+          }
+
+          reset() {
+            this.x = Math.random() * this.canvas.width;
+            this.y = Math.random() * -this.canvas.height;
+            this.radius = Math.random() * {{ block.settings.snow_size | divided_by: 10.0 }} + 1;
+            this.speed = Math.random() * 1 + 0.5;
+            this.wind = Math.random() * 0.5 - 0.25;
+            this.opacity = Math.random() * snowOpacity + 0.2;
+          }
+
+          update() {
+            this.y += this.speed;
+            this.x += this.wind;
+
+            if (this.y > this.canvas.height) {
+              this.reset();
+            }
+
+            if (this.x > this.canvas.width || this.x < 0) {
+              this.x = Math.random() * this.canvas.width;
+            }
+          }
+
+          draw(ctx) {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+            ctx.fill();
+          }
+        }
+
+        for (let i = 0; i < maxSnowflakes; i++) {
+          snowflakes.push(new Snowflake(this.canvas));
+        }
+
+        const animate = () => {
+          ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+          snowflakes.forEach(snowflake => {
+            snowflake.update();
+            snowflake.draw(ctx);
+          });
+
+          requestAnimationFrame(animate);
+        };
+
+        animate();
+      }
+
+      initStars() {
+        const starCount = {{ block.settings.star_count }};
+        for (let i = 0; i < starCount; i++) {
+          const star = document.createElement('div');
+          star.className = 'ai-holiday-star-{{ ai_gen_id }}';
+          star.style.left = `${Math.random() * 100}%`;
+          star.style.top = `${Math.random() * 100}%`;
+          star.style.animationDelay = `${Math.random() * 3}s`;
+          star.style.animationDuration = `${2 + Math.random() * 2}s`;
+
+          this.starsContainer.appendChild(star);
+        }
+      }
+
+      initSparkles() {
+        this.collectionCard.addEventListener('mousemove', (e) => {
+          if (Math.random() > 0.8) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'ai-holiday-sparkle-{{ ai_gen_id }}';
+            
+            const rect = this.collectionCard.getBoundingClientRect();
+            sparkle.style.left = `${e.clientX - rect.left}px`;
+            sparkle.style.top = `${e.clientY - rect.top}px`;
+            sparkle.style.opacity = '0';
+            sparkle.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            sparkle.style.transform = 'scale(0) rotate(0deg)';
+
+            this.collectionCard.appendChild(sparkle);
+
+            setTimeout(() => {
+              sparkle.style.opacity = '1';
+              sparkle.style.transform = 'scale(1) rotate(180deg)';
+            }, 10);
+
+            setTimeout(() => {
+              sparkle.style.opacity = '0';
+              sparkle.style.transform = 'scale(0) rotate(360deg)';
+            }, 300);
+
+            setTimeout(() => {
+              sparkle.remove();
+            }, 900);
+          }
+        });
+      }
+    }
+
+    customElements.define('holiday-landing-{{ ai_gen_id }}', HolidayLanding{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Holiday gift collection",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero section"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Holiday 2025"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "The Holiday Gift Collection"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Thoughtfully curated gifts for those who matter most. Choose from our elegant bundles, each designed to bring joy and warmth this season."
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Description size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "hero_spacing",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Spacing below hero",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Collection"
+    },
+    {
+      "type": "collection",
+      "id": "featured_collection",
+      "label": "Featured collection"
+    },
+    {
+      "type": "textarea",
+      "id": "collection_description",
+      "label": "Collection description",
+      "default": "Explore our curated bundles: Bundle of 3 for simple elegance, or Bundle of 15 to create your own grand collection."
+    },
+    {
+      "type": "range",
+      "id": "collection_title_size",
+      "min": 18,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Collection title size",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "collection_description_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Collection description size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "collection_spacing",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Spacing above collection",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "image_aspect_ratio",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Image aspect ratio",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Explore Collection"
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Button text size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Snow effects"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_snow_effect",
+      "label": "Enable snow",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "snow_density",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "label": "Snow density",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "snow_size",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "label": "Snow size",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "snow_opacity",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "label": "Snow opacity",
+      "default": 6
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_stars",
+      "label": "Enable twinkling stars",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "star_count",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "label": "Star count",
+      "default": 20
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sparkles",
+      "label": "Enable hover sparkles",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 800,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "label": "Container width",
+      "default": 1000
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Card padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d4af37"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Button hover background",
+      "default": "#d4af37"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Button hover text",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Holiday gift collection"
+    }
+  ]
+}
+{% endschema %}

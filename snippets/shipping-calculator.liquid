@@ -1,0 +1,69 @@
+<shipping-calculator class="shipping-calculator{% if add_classes %} {{ add_classes }}{% endif %}" data-delivery-date-one="{{ 'general.shipping_calculator.delivery_date_one' | t: count: '[count]' | escape }}" data-delivery-date-many="{{ 'general.shipping_calculator.delivery_date_many' | t: count: '[count]' | escape }}" data-delivery-date-range="{{ 'general.shipping_calculator.delivery_date_range' | t: minimum: '[minimum]', maximum: '[maximum]' | escape }}" data-do-not-ship-message="{{ 'general.shipping_calculator.do_not_ship' | t | escape }}">
+  <div>
+    <label for="AddressCountryCalculator" class="field__label text-small font-body-bold uppercase">
+      {{ 'customer.addresses.country' | t }}
+    </label>
+    <div class="select">
+      <select
+        id="AddressCountryCalculator"
+        name="address[country]"
+        data-address-country-select
+        data-default="{{ localization.country }}"
+        autocomplete="country"
+        class="select__select"
+      >
+        {%- if settings.shipping_calculator_country_list == 'all' -%}
+          {{ all_country_option_tags }}
+        {%- else -%}
+          {{ country_option_tags }}
+        {%- endif -%}
+      </select>
+      {% render 'icon-caret' %}
+    </div>
+  </div>
+  <div id="AddressProvinceContainerCalculator" style="display:none;" class="element-small-margin-top">
+    <label for="AddressProvinceCalculator" class="field__label text-small font-body-bold uppercase">
+      {{ 'customer.addresses.province' | t }}
+    </label>
+    <div class="select">
+      <select
+        id="AddressProvinceCalculator"
+        name="address[province]"
+        data-default="{{ form.province }}"
+        autocomplete="address-level1"
+        class="select__select"
+      >
+      </select>
+      {% render 'icon-caret' %}
+    </div>
+  </div>
+  <div class="field element-small-margin-top">
+    <label for="AddressZipCalculator" class="field__label text-small font-body-bold uppercase">{{ 'customer.addresses.zip' | t }}</label>
+    <input type="text" id="AddressZipCalculator" name="address[zip]" value="{{ form.zip }}" autocapitalize="characters" autocomplete="postal-code" placeholder="{{ 'customer.addresses.zip' | t }}" class="field__input">
+  </div>
+  <div class="element-small-margin-top">
+    <button type="button" class="button button--secondary">
+      <span>{{ 'general.shipping_calculator.button' | t }}</span>
+      <div class="loading-overlay__spinner hidden">
+        {%- render 'icon-cart-loading' -%}
+      </div>
+    </button>
+  </div>
+
+  <div class="element-small-margin-top shipping-calculator__results hidden">
+    <div class="form__message margin-bottom-1rem">
+      <span class="caption-large text-body w100 db" role="alert" tabindex="-1">
+        <span class="shipping-calculator__error-heading alert alert--error alert--small w100 db">
+          {% render 'icon-error' %}
+          {{ 'general.shipping_calculator.errors_heading' | t }}
+        </span>
+        <span class="shipping-calculator__success-heading alert alert--success alert--small w100 db">
+          {% render 'icon-success' %}
+          {{ 'general.shipping_calculator.carriers' | t }}
+        </span>
+      </span>
+    </div>
+    <ul class="form-status-list caption-large shipping-calculator__results-list" role="list">
+    </ul>
+  </div>
+</shipping-calculator>

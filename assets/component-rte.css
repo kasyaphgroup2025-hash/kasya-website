@@ -1,0 +1,90 @@
+.rte {
+  word-break: break-word;
+}
+
+.rte:after {
+  clear: both;
+  content: '';
+  display: block;
+}
+
+.rte h1,.rte h2,.rte h3,.rte h4,.rte h5,.rte h6 {
+  margin-block: 0.25em;
+}
+
+.rte p {
+  margin-block: 0.5em;
+}
+
+.rte > *:first-child {
+  margin-top: 0;
+}
+
+.rte > *:last-child {
+  margin-bottom: 0;
+}
+
+.rte table,
+.rte table:not([class]) {
+  table-layout: inherit;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+@media screen and (min-width: 750px) {
+  .rte table td {
+    padding-inline: 1.2rem;
+  }
+}
+
+.rte ul, .rte ol {
+  padding-inline-start: 2rem;
+}
+
+.rte li {
+  list-style: inherit;
+}
+
+.rte li:last-child {
+  margin-bottom: 0;
+}
+
+.rte a {
+  color: rgba(var(--color-link), var(--alpha-link));
+  text-decoration: underlined;
+  text-underline-offset: 0.3rem;
+  text-decoration-thickness: 0.1rem;
+  transition: text-decoration-thickness 100ms ease;
+}
+
+.rte a:hover {
+  color: rgb(var(--color-link));
+  text-decoration-thickness: 0.2rem;
+}
+
+.rte blockquote {
+  display: inline-flex;
+}
+
+.rte blockquote > * {
+  margin: -0.5rem 0 -0.5rem 0;
+}
+
+.rte iframe {
+  max-width: 100%;
+}
+
+.rte iframe:not([height]) {
+  height: auto;
+}
+
+.rte :is(iframe[src*="youtube"], iframe[src*="youtu.be"], iframe[src*="vimeo"]) {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  height: auto;
+}
+
+.rte ul:not(:has(li:not(:empty))), .rte ol:not(:has(li:not(:empty))), .rte li:empty {
+  display: none;
+}

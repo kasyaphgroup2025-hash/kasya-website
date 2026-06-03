@@ -1,0 +1,60 @@
+{%- if section.settings.enable -%}
+	<script src="{{ 'cookies-banner.js' | asset_url }}" defer="defer"></script>
+  
+	<cookies-banner class="cookies-banner" id="cookies-banner">
+		{%- if template.suffix == 'ajax' or request.design_mode -%}
+      <div class="cookies-banner__inner color-{{ section.settings.color_scheme }}">
+        {{ 'section-cookies-banner.css' | asset_url | stylesheet_tag }}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="h3 font-heading-extra-bold margin0">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.content != blank -%}
+          <div class="cookies-banner__content rte text-small">
+            {{ section.settings.content }}
+          </div>
+        {%- endif -%}
+        <hr class="cookies-banner__line">
+        <div class="cookies-banner__buttons small-margin-top flex justify-right">
+          <button type="button" class="button cookies-banner__button cookies-banner__button--accept button--medium">
+            <span>{{ 'sections.cookies_banner.accept' | t }}</span>
+          </button>
+          <button type="button" class="button button--secondary cookies-banner__button cookies-banner__button--decline button--medium">
+            <span>{{ 'sections.cookies_banner.decline' | t }}</span>
+          </button>
+        </div>
+      </div>
+		{%- endif -%}	
+	</cookies-banner>
+{%- endif -%}	
+{% schema %}
+{
+  "name": "t:sections.cookies-banner.name",
+  "tag": "section",
+  "class": "section cookies-banner-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable",
+      "label": "t:sections.cookies-banner.settings.enable.label",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "We value your privacy",
+      "label": "t:sections.cookies-banner.settings.heading.label"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "t:sections.cookies-banner.settings.content.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "inverse",
+      "label": "t:sections.all.colors.label"
+    }
+  ]
+}
+{% endschema %}

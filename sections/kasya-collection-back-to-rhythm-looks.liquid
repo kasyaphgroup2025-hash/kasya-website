@@ -1,0 +1,377 @@
+<section id="back-to-rhythm-looks" class="kasya-btr-looks" data-section-id="{{ section.id }}">
+  <div class="kasya-btr-looks__inner">
+    {% if section.settings.heading != blank %}
+      <h2 class="kasya-btr-looks__heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="kasya-btr-looks__track" data-looks-track>
+      {% for block in section.blocks %}
+        <article class="kasya-btr-look" {{ block.shopify_attributes }}>
+          <div class="kasya-btr-look__media">
+            {% if block.settings.image != blank %}
+              <img
+                src="{{ block.settings.image | image_url: width: 900 }}"
+                srcset="
+                  {{ block.settings.image | image_url: width: 520 }} 520w,
+                  {{ block.settings.image | image_url: width: 720 }} 720w,
+                  {{ block.settings.image | image_url: width: 900 }} 900w
+                "
+                sizes="(min-width: 990px) 520px, 82vw"
+                alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+                width="900"
+                height="560"
+                loading="lazy"
+              >
+            {% else %}
+              <div class="kasya-btr-look__placeholder">Upload look image</div>
+            {% endif %}
+          </div>
+
+          <div class="kasya-btr-look__overlay" aria-hidden="true"></div>
+
+          <div class="kasya-btr-look__content">
+            {% if block.settings.title != blank %}
+              <h3>{{ block.settings.title }}</h3>
+            {% endif %}
+
+            {% if block.settings.description != blank %}
+              <p>{{ block.settings.description }}</p>
+            {% endif %}
+
+            {% if block.settings.cta_text != blank %}
+              <a href="{{ block.settings.cta_link | default: '#' }}">{{ block.settings.cta_text }}</a>
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    {% if section.blocks.size > 1 %}
+      <div class="kasya-btr-looks__dots" data-looks-dots>
+        {% for block in section.blocks %}
+          <button
+            type="button"
+            class="kasya-btr-looks__dot {% if forloop.first %}is-active{% endif %}"
+            aria-label="Go to look {{ forloop.index }}"
+            data-look-dot="{{ forloop.index0 }}"
+          ></button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .kasya-btr-looks {
+    background: #f7f6f4;
+    color: #111;
+    padding: 8px 0 42px;
+  }
+
+  .kasya-btr-looks * {
+    box-sizing: border-box;
+  }
+
+  .kasya-btr-looks__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .kasya-btr-looks__heading {
+    margin: 0 0 12px;
+    padding: 0 20px;
+    color: #111;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 25px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .kasya-btr-looks__track {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 0 20px 4px;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .kasya-btr-looks__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .kasya-btr-look {
+    position: relative;
+    min-width: min(82vw, 580px);
+    overflow: hidden;
+    border-radius: 8px;
+    background: #1b1b1b;
+    color: #fff;
+    scroll-snap-align: center;
+  }
+
+  .kasya-btr-look__media {
+    aspect-ratio: 16 / 10;
+    min-height: 190px;
+  }
+
+  .kasya-btr-look__media img,
+  .kasya-btr-look__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .kasya-btr-look__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .kasya-btr-look__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.64), rgba(0, 0, 0, 0.12) 68%);
+    pointer-events: none;
+  }
+
+  .kasya-btr-look__content {
+    position: absolute;
+    left: 18px;
+    bottom: 18px;
+    z-index: 2;
+    max-width: 210px;
+  }
+
+  .kasya-btr-look__content h3 {
+    margin: 0;
+    color: inherit;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.08;
+    letter-spacing: 0;
+  }
+
+  .kasya-btr-look__content p {
+    margin: 7px 0 13px;
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .kasya-btr-look__content a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    padding: 10px 16px;
+    background: #fff;
+    color: #111;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .kasya-btr-looks__dots {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .kasya-btr-looks__dot {
+    width: 12px;
+    height: 12px;
+    border: 0;
+    border-radius: 999px;
+    background: #d2d2d2;
+    padding: 0;
+  }
+
+  .kasya-btr-looks__dot.is-active {
+    background: #111;
+  }
+
+  @media screen and (min-width: 750px) {
+    .kasya-btr-looks {
+      padding: 12px 0 58px;
+    }
+
+    .kasya-btr-looks__heading {
+      margin-bottom: 18px;
+      font-size: 31px;
+    }
+
+    .kasya-btr-looks__track {
+      padding: 0 32px 4px;
+      gap: 18px;
+    }
+
+    .kasya-btr-look {
+      min-width: min(56vw, 680px);
+    }
+
+    .kasya-btr-look__media {
+      min-height: 330px;
+    }
+
+    .kasya-btr-look__content {
+      left: 30px;
+      bottom: 30px;
+      max-width: 270px;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const section = document.querySelector('[data-section-id="{{ section.id }}"]');
+    if (!section) return;
+
+    const track = section.querySelector('[data-looks-track]');
+    const dots = section.querySelector('[data-looks-dots]');
+    if (!track || !dots) return;
+
+    const updateDots = () => {
+      const cards = Array.from(track.querySelectorAll('.kasya-btr-look'));
+      if (!cards.length) return;
+
+      const trackCenter = track.scrollLeft + track.clientWidth / 2;
+      let activeIndex = 0;
+      let closestDistance = Infinity;
+
+      cards.forEach((card, index) => {
+        const cardCenter = card.offsetLeft + card.clientWidth / 2;
+        const distance = Math.abs(trackCenter - cardCenter);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          activeIndex = index;
+        }
+      });
+
+      dots.querySelectorAll('[data-look-dot]').forEach((dot, index) => {
+        dot.classList.toggle('is-active', index === activeIndex);
+      });
+    };
+
+    track.addEventListener('scroll', () => {
+      window.requestAnimationFrame(updateDots);
+    });
+
+    dots.addEventListener('click', event => {
+      const dot = event.target.closest('[data-look-dot]');
+      if (!dot) return;
+
+      const card = track.querySelectorAll('.kasya-btr-look')[Number(dot.dataset.lookDot)];
+      if (!card) return;
+
+      track.scrollTo({
+        left: card.offsetLeft - (track.clientWidth - card.clientWidth) / 2,
+        behavior: 'smooth'
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Back to Rhythm Looks",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading text",
+      "default": "SHOP THE LOOKS"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "look",
+      "name": "Look card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Morning Loop"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Short description",
+          "default": "For the early starts and everything ahead."
+        },
+        {
+          "type": "text",
+          "id": "cta_text",
+          "label": "CTA text",
+          "default": "SHOP THIS LOOK"
+        },
+        {
+          "type": "text",
+          "id": "cta_link",
+          "label": "CTA link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Back to Rhythm Looks",
+      "blocks": [
+        {
+          "type": "look",
+          "settings": {
+            "title": "Morning Loop",
+            "description": "For the early starts and everything ahead.",
+            "cta_text": "SHOP THIS LOOK"
+          }
+        },
+        {
+          "type": "look",
+          "settings": {
+            "title": "Urban Routine",
+            "description": "Easy moves for your everyday flow.",
+            "cta_text": "SHOP THIS LOOK"
+          }
+        },
+        {
+          "type": "look",
+          "settings": {
+            "title": "Office Rhythm",
+            "description": "Polished without feeling stiff.",
+            "cta_text": "SHOP THIS LOOK"
+          }
+        },
+        {
+          "type": "look",
+          "settings": {
+            "title": "After Hours Ease",
+            "description": "Soft, refined, and ready for the rest of your day.",
+            "cta_text": "SHOP THIS LOOK"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,156 @@
+{% liquid
+  assign filter_label_downcase = filter.label | downcase
+  assign total_active_values = total_active_values | plus: filter.active_values.size
+  assign presentation = filter.presentation | default: 'text'
+
+  assign sorted_values = filter.values
+  # Keep the selected values grouped together when operator is AND
+  if filter.operator == 'AND'
+    assign active_filter_values = filter.values | where: 'active', true
+    assign inactive_filter_values = filter.values | where: 'active', false
+    assign sorted_values = active_filter_values | concat: inactive_filter_values
+  endif
+
+  if presentation == 'image'
+    assign show_more_number = 12
+  else
+    assign show_more_number = 10
+  endif
+  unless filter_type == 'horizontal'
+    assign facet_tag = 'details-accordion'
+  else
+    assign facet_tag = 'div'
+  endunless
+%}
+<{{ facet_tag }} class="db facets__item-filter" data-ignore-setup-event="true">
+  <details id="Details-{{ filter.param_name | escape | handleize }}-{{ suffix_id }}{{ section.id }}" class="facets__details facets__details--{{ filter_type }} {% if filter_type == 'horizontal' %}disclosure-has-popup por facets__disclosure{% else %} facets__accordion{% endif %} js-filter"{% if section.settings.filter_collapse == 'expand' and filter_type != 'horizontal' %} open{% endif %}>
+    <summary class="facets__summary facets__summary--{{ filter_type }}{% if filter_type == 'vertical' or filter_type == 'drawer' %} h6 font-heading-bold{% elsif filter_type == 'horizontal' %} font-body-semi-bold text-small background-input{% if filter.active_values.size > 0 %} facets__summary--has-actives{% endif %}{% endif %}{% if summary_classes %} {{ summary_classes }}{% endif %} summary-accordion" aria-label="{{ filter.label }} ({{ 'products.facets.filters_selected.one' | t: count: filter.active_values.size }})"
+      {% unless filter_type == 'horizontal' %} onclick="return this.closest('details-accordion').toggleContent();"{% if section.settings.filter_collapse == 'expand' %} aria-expanded="true"{% endif %}{% endunless %}>
+      <div class="flex align-center justify-space-between facets__label-wrapper">
+        <span class="flex align-center facets__summary__label">{{ filter.label | escape }}{%- if filter.active_values.size > 0 -%}<span class="facets__selected facet-checkbox__content__count flex justify-center align-center lh1 no-js-hidden">{{ filter.active_values.size }}</span>{% endif %}</span>
+        {% render 'facets-heading-icon', filter_type: filter_type %}
+      </div>
+    </summary>
+    <div id="Facet-{{ filter.param_name | escape | handleize }}-{{ suffix_id }}{{ section.id }}" class="parent-display facets__display facets__display--{{ filter_type }}">
+      <fieldset class="facets-wrap parent-wrap facets-wrap--{{ filter_type }} margin0">
+        <legend class="visually-hidden">{{ filter.label | escape }}</legend>
+        {%- if filter_type == 'horizontal' -%}
+          <div class="facets__header flex justify-space-between align-center">
+            <div>
+              <span class="facets__selected-str no-js-hidden">
+                {{- 'products.facets.filters_selected' | t: count: filter.active_values.size -}}
+              </span>
+            </div>
+            <facet-remove>
+              <a href="{{ filter.url_to_remove }}" class="facets__reset flex align-center text-small facets__button button button--secondary" data-no-instant>
+                <span>{{ 'products.facets.reset' | t }}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M3 9L9 3M3 3L9 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </facet-remove>
+          </div>
+        {%- endif -%}
+        <ul class="{% if filter_type != 'vertical' %} facets__list{% endif %} list-unstyled{% if filter.values.size > show_more_number and filter_type == 'vertical' %} no-js-hidden{% endif %}{% if presentation == 'image' %} facets__image-grid flex{% endif %}" role="list">
+          {%- for value in sorted_values -%}
+            <li class="facets__item flex align-center{% if forloop.index > 10 and filter_type == 'vertical' %} show-more-item hidden{% endif %}{% if presentation == 'image' %} facets__item--image{% endif %}">
+              <label for="Filter-{{ suffix_id }}{{ filter.param_name | handleize }}-{{ forloop.index }}" class="facet-checkbox flex-grow-1 por flex align-center{% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %}">
+                <input type="checkbox"
+                  name="{{ value.param_name }}"
+                  value="{{ value.value }}"
+                  id="Filter-{{ suffix_id }}{{ filter.param_name | handleize }}-{{ forloop.index }}"
+                  {% if value.active %}checked{% endif %}
+                  {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                  class="facets__checkbox-value{% if color_name_array contains filter_label_downcase or presentation == 'swatch' %} facets__checkbox-value--color{% endif %}"
+                >
+                {% liquid
+                  if presentation == 'swatch'
+                    assign visual_style = ''
+                    if value.swatch.image
+                      assign color_image_url = value.swatch.image | image_url: width: 100
+                      assign visual_style = '--background-image:url(' | append: color_image_url | append: ');'
+                      if value.swatch.image.presentation.focal_point
+                        assign visual_style = visual_style | append: '--background-position:' | append: value.swatch.image.presentation.focal_point | append: ';'
+                      endif
+                    elsif value.swatch.color
+                      assign visual_style = '--color-swatch-background:' | append: value.swatch.color.red | append: ',' | append: value.swatch.color.green | append: ',' | append: value.swatch.color.blue
+                    endif
+                  endif
+                %}
+                {%- unless presentation == 'image' -%}
+                  <span class="flex justify-center align-center facet-checkbox__box{% if color_name_array contains filter_label_downcase or presentation == 'swatch' %} facet-checkbox__box--color{% endif %}"
+                    {% if color_name_array contains filter_label_downcase %} data-color="{{ value.value | handleize }}"{% endif %}
+                    {% if presentation == 'swatch' %} style="{{ visual_style }}"{% if color_name != filter_label_downcase and value.swatch.image %} data-color="{{ value.value | handleize }}"{% endif %}{% endif %}
+                  >
+                    <svg class="facet-checkbox__box__icon icon icon-checkmark{% if presentation == 'swatch' %} facet-checkbox__box__icon--visual{% endif %}" width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M1.5 4.00002L3.83333 6.33335L8.5 1.66669" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+
+                  <span aria-hidden="true" class="flex facet-checkbox__content flex-grow-1 justify-space-between align-center"><span class="facet-checkbox__content__label caption-large">{{ value.label | escape }}</span><span class="facet-checkbox__content__count flex justify-center align-center lh1">{{ value.count }}</span></span>
+                {%- else -%}
+                  <div class="facets__image-wrapper flex flex-column w100 por">
+                    <div class="facets__image-inner">
+                      {%- if value.image -%}
+                        <div class="facets__image media media--square">
+                          {{
+                            value.image
+                            | image_url: width: 150
+                            | image_tag: class: 'facets__image', alt: value.alt
+                          }}
+                        </div>
+                      {%- else -%}
+                        <span class="facets__image media media--square placeholder db"></span> 
+                      {%- endif -%}
+                    </div>
+                    <span aria-hidden="true" class="flex-grow-1 center"><span class="facets__image-label caption font-body-semi-bold">{{ value.label | escape }}</span></span>
+                    <span class="facets__image-count flex justify-center align-center lh1 font-body-semi-bold">{{ value.count }}</span>
+                  </div>  
+                {%- endunless -%}
+                <span class="visually-hidden">{{ value.label | escape }} ({% if value.count == 1 %}{{ 'products.facets.product_count_simple.one' | t: count: value.count }}{% else %}{{ 'products.facets.product_count_simple.other' | t: count: value.count }}{% endif %})</span>
+              </label>
+            </li> 
+          {%- endfor -%}
+        </ul>
+        {% comment %} No show more for no JS {% endcomment %}
+        {% if filter.values.size > show_more_number and filter_type == 'vertical' %}
+          <noscript>
+            <ul class="{% if filter_type != 'vertical' %} facets__list{% endif %} no-js-list list-unstyled no-js" role="list">
+              {%- for value in filter.values -%}
+                <li class="facets__item flex align-center">
+                  <label for="Filter-{{ suffix_id }}{{ filter.param_name | handleize }}-{{ forloop.index }}" class="facet-checkbox flex-grow-1 por flex align-center{% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %}">
+                    <input type="checkbox"
+                      name="{{ value.param_name }}"
+                      value="{{ value.value }}"
+                      id="Filter-{{ suffix_id }}{{ filter.param_name | handleize }}-{{ forloop.index }}"
+                      {% if value.active %}checked{% endif %}
+                      {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                      class="facets__checkbox-value{% if color_name_array contains filter_label_downcase %} facets__checkbox-value--color{% endif %}"
+                    >
+
+                    <span class="flex justify-center align-center facet-checkbox__box{% if color_name_array contains filter_label_downcase %} facet-checkbox__box--color{% endif %}"{% if color_name_array contains filter_label_downcase %} data-color="{{ value.value | handleize }}"{% endif %}>
+                      <svg class="facet-checkbox__box__icon icon icon-checkmark" width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1.5 4.00002L3.83333 6.33335L8.5 1.66669" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </span>
+
+                    <span aria-hidden="true" class="flex facet-checkbox__content flex-grow-1 justify-space-between align-center"><span class="facet-checkbox__content__label caption-large">{{ value.label | escape }}</span><span class="facet-checkbox__content__count flex justify-center align-center lh1">{{ value.count }}</span></span>
+                    <span class="visually-hidden">{{ value.label | escape }} ({% if value.count == 1 %}{{ 'products.facets.product_count_simple.one' | t: count: value.count }}{% else %}{{ 'products.facets.product_count_simple.other' | t: count: value.count }}{% endif %})</span>
+                  </label>
+                </li> 
+              {%- endfor -%}
+            </ul>
+          </noscript>
+        {%- endif -%}
+      </fieldset>
+      {%- if filter.values.size > show_more_number and filter_type == 'vertical' -%}
+        <show-more-button>
+          <button class="button-show-more link underlined-link no-js-hidden no-control-menu" id="Show-More-{{ suffix_id }}{{ forloop.index }}-{{ section.id }}" type="button">
+            <span class="label-show-more label-text"><span aria-hidden="true">+ </span>{{ 'products.facets.show_more' | t }}</span>
+            <span class="label-show-less label-text hidden"><span aria-hidden="true">- </span>{{ 'products.facets.show_less' | t }}</span>
+          </button>
+        </show-more-button>
+      {%- endif %}
+    </div>
+  </details>
+</{{ facet_tag }}>

@@ -1,0 +1,9 @@
+<div class="item-list">
+	{%-liquid
+		if recommendations.performed and recommendations.products_count > 0
+			for recommendation in recommendations.products
+				render 'cart-drawer-product-recommendation-item', card_product: recommendation
+			endfor
+		endif
+	-%}
+</div>

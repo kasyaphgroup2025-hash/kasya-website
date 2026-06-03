@@ -1,0 +1,340 @@
+{%- capture section_content -%}{%- content_for 'blocks' -%}{%- endcapture -%}
+{%- assign items = section_content | strip | split: '<!--RICH_SLIDESHOW_ITEM-->' -%}
+{%- if items.size > 0 -%}
+  {%-liquid
+    assign need_preload = section.settings.preload
+    if section.index == 1 and section.location != 'footer'
+      assign need_preload = true
+    endif
+  -%}
+  {{ 'section-image-banner.css' | asset_url | stylesheet_tag: preload: need_preload }}
+  {{ 'component-rich-slideshow.css' | asset_url | stylesheet_tag: preload: need_preload }}
+  <style>
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+
+    @media screen and (min-width: 750px) {
+      #shopify-section-{{ section.id }} {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+  </style>
+  {%- capture slideshow_style -%}
+    {%- if section.settings.slide_height != 'adapt' -%}
+      --slide-height-custom-desktop: {{ section.settings.custom_slider_height }}px;
+    {%- endif -%}
+    {%- if section.settings.slide_height_mobile != 'adapt-mobile' -%}
+      --slide-height-custom-mobile: {{ section.settings.custom_slider_height_mobile }}px;
+    {%- endif -%}
+  {%- endcapture -%}
+  <slideshow-component class="slideshow-component-{{ section.id }} por flex flex-column slider-mobile-gutter{% if section.settings.layout contains 'grid' %} page-width{% if section.settings.layout == 'stretched_grid' %}--full{% endif %}{% endif %} slider-component-full-width"
+    role="region"
+    aria-roledescription="{{ 'sections.slideshow.carousel' | t }}"
+    aria-label="{{ section.settings.accessibility_info | escape }}"
+    data-item-selector=".rich-slideshow__slide"
+    {% if slideshow_style != '' %}
+      style="{{ slideshow_style }}"
+    {% endif %}
+  >
+    <div class="por">  
+      <div class="slideshow rich-slideshow rich-slideshow--{{ section.settings.slide_height }}-desktop rich-slideshow--{{ section.settings.slide_height_mobile }} grid grid--1-col slider slider--desktop slider--tablet slider--mobile slider--everywhere grid--gapless"
+        id="Slider-{{ section.id }}"
+        aria-live="polite"
+        aria-atomic="true"
+        data-autoplay="{{ section.settings.auto_rotate }}"
+        data-speed="{{ section.settings.change_slides_speed }}"
+      >
+        {{ section_content }}
+      </div>
+      
+      {%- if section.settings.enable_pagination_desktop or section.settings.enable_navigation_desktop or section.settings.enable_pagination_mobile or section.settings.enable_navigation_mobile or section.settings.auto_rotate -%}
+        <div class="slideshow__controls slideshow__controls--{{ section.id }} slider-buttons no-js-hidden flex align-center gradient slider-buttons--has-background card-radius">
+          {%- if section.settings.enable_navigation_desktop or section.settings.enable_navigation_mobile -%}
+            <button type="button" class="slider-button slider-button--large slider-button--slideshow slider-button--transparent flex flex-column justify-center align-center slider-button--prev{% unless section.settings.enable_navigation_desktop %} medium-hide large-up-hide{% endunless %}{% unless section.settings.enable_navigation_mobile %} small-hide{% endunless %}" name="previous" aria-label="{{ 'sections.slideshow.previous_slideshow' | t }}" aria-controls="Slider-{{ section.id }}">{% render 'icon-caret-slider-prev', stroke_width: 2 %}</button>
+          {%- endif -%}
+
+          {%- if section.settings.enable_pagination_desktop or section.settings.enable_pagination_mobile -%}
+            <div class="slideshow__control-wrapper flex align-center{% unless section.settings.enable_pagination_desktop %} medium-hide large-up-hide{% endunless %}{% unless section.settings.enable_pagination_mobile %} small-hide{% endunless %}">
+              {%- assign item_size = items.size -%}
+              {%- for i in (1..item_size) -%}
+                <button type="button" class="slider-counter__link slider-counter__link--dots flex justify-center align-center" aria-label="{{ 'sections.slideshow.load_slide' | t }} {{ forloop.index }} {{ 'general.slider.of' | t }} {{ forloop.length }}" aria-controls="Slider-{{ section.id }}">
+                  <span class="dot"></span>
+                </button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}  
+
+          {%- if section.settings.enable_navigation_desktop or section.settings.enable_navigation_mobile -%}
+            <button type="button" class="slider-button slider-button--large slider-button--slideshow slider-button--transparent flex flex-column justify-center align-center slider-button--next{% unless section.settings.enable_navigation_desktop %} medium-hide large-up-hide{% endunless %}{% unless section.settings.enable_navigation_mobile %} small-hide{% endunless %}" name="next" aria-label="{{ 'sections.slideshow.next_slideshow' | t }}" aria-controls="Slider-{{ section.id }}">{% render 'icon-caret-slider-next', stroke_width: 2 %}</button>
+          {%- endif -%}
+
+          {%- if section.settings.auto_rotate -%}
+            <button type="button" class="slider__autoplay slideshow__autoplay slideshow__autoplay--{{ section.id }} slider-button slider-button--transparent flex flex-column justify-center align-center no-js-hidden{% if section.settings.auto_rotate == false %} slider__autoplay--paused slideshow__autoplay--paused{% endif %}" aria-label="{{ 'sections.slideshow.pause_slideshow' | t }}" style="--speed:{{ section.settings.change_slides_speed }}s;">
+              {%- render 'icon-pause' -%}
+              {%- render 'icon-play' -%}
+              <svg aria-hidden="true" class="slideshow__progress" width="32" height="32" viewBox="0 0 70 70">
+                <path class="slideshow__progress__path" d="m35,2.5c17.955803,0 32.5,14.544199 32.5,32.5c0,17.955803 -14.544197,32.5 -32.5,32.5c-17.955803,0 -32.5,-14.544197 -32.5,-32.5c0,-17.955801 14.544197,-32.5 32.5,-32.5z" pathLength="1"></path>
+              </svg>
+            </button>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>  
+  </slideshow-component>
+  {%- unless request.design_mode -%}
+    <script src="{{ 'slideshow.js' | asset_url }}" defer="defer"></script>
+  {%- endunless -%}
+  {{ 'video-section.css' | asset_url | stylesheet_tag }}
+  {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
+  {{ 'block-media-banner.css' | asset_url | stylesheet_tag }}
+  <link rel="stylesheet" href="{{ 'component-slideshow-controls.css' | asset_url }}" media="print" onload="this.media='all'">
+{%- endif -%}
+{% schema %}
+{
+  "name": "t:names.rich_slideshow",
+  "tag": "section",
+  "class": "section section-slideshow",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "full_bleed",
+          "label": "t:sections.all.grid_layout.options_1.label"
+        },
+        {
+          "value": "stretched_grid",
+          "label": "t:sections.all.grid_layout.options_2.label"
+        },
+        {
+          "value": "grid",
+          "label": "t:sections.all.grid_layout.options_3.label"
+        }
+      ],
+      "default": "full_bleed",
+      "label": "t:sections.all.grid_layout.label"
+    },
+    {
+      "type": "select",
+      "id": "slide_height",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:options.adapt"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.custom"
+        }
+      ],
+      "default": "custom",
+      "label": "t:sections.slideshow.settings.slide_height.label"
+    },
+    {
+      "type": "range",
+      "id": "custom_slider_height",
+      "label": "t:settings.custom_slider_height",
+      "min": 300,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "default": 700,
+      "visible_if": "{{ section.settings.slide_height == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "slide_height_mobile",
+      "options": [
+        {
+          "value": "adapt-mobile",
+          "label": "t:options.adapt"
+        },
+        {
+          "value": "custom-mobile",
+          "label": "t:options.custom"
+        }
+      ],
+      "default": "custom-mobile",
+      "label": "t:sections.slideshow.settings.slide_height_mobile.label"
+    },
+    {
+      "type": "range",
+      "id": "custom_slider_height_mobile",
+      "label": "t:settings.custom_slider_height",
+      "min": 200,
+      "max": 900,
+      "step": 50,
+      "unit": "px",
+      "default": 500,
+      "visible_if": "{{ section.settings.slide_height_mobile == 'custom-mobile' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_rotate",
+      "label": "t:sections.slideshow.settings.auto_rotate.label",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "change_slides_speed",
+      "min": 3,
+      "max": 9,
+      "step": 2,
+      "unit": "s",
+      "label": "t:sections.slideshow.settings.change_slides_speed.label",
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_pagination_desktop",
+      "label": "t:sections.slideshow.settings.enable_pagination.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_navigation_desktop",
+      "label": "t:sections.slideshow.settings.enable_navigation.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "preload",
+      "label": "t:sections.slideshow.settings.preload.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.slideshow.settings.mobile.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_pagination_mobile",
+      "label": "t:sections.slideshow.settings.enable_pagination.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_navigation_mobile",
+      "label": "t:sections.slideshow.settings.enable_navigation.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.slideshow.settings.accessibility.content"
+    },
+    {
+      "type": "text",
+      "id": "accessibility_info",
+      "label": "t:sections.slideshow.settings.accessibility.label",
+      "info": "t:sections.slideshow.settings.accessibility.info",
+      "default": "Slideshow about our brand"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_slide"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.rich_slideshow",
+      "category": "t:categories.banners",
+      "blocks": {
+        "slide_1": {
+          "type": "_slide",
+          "name": "t:names.image",
+          "blocks": {
+            "group-content-banner": {
+              "type": "_content-box",
+              "static": true,
+              "blocks": {
+                "basic-group": {
+                  "type": "_basic-group",
+                  "blocks": {
+                    "heading": {
+                      "type": "text",
+                      "settings": {
+                        "html_tag": "h1",
+                        "text": "Heading"
+                      }
+                    },
+                    "rich-text": {
+                      "type": "rich-text"
+                    },
+                    "button": {
+                      "type": "button"
+                    }
+                  },
+                  "block_order": ["heading", "rich-text", "button"]
+                }
+              },
+              "block_order": ["basic-group"]
+            }
+          }
+        },
+        "slide_2": {
+          "type": "_slide",
+          "name": "t:names.image",
+          "blocks": {
+            "group-content-banner": {
+              "type": "_content-box",
+              "static": true,
+              "blocks": {
+                "basic-group": {
+                  "type": "_basic-group",
+                  "blocks": {
+                    "heading": {
+                      "type": "text",
+                      "settings": {
+                        "html_tag": "h1",
+                        "text": "Heading"
+                      }
+                    },
+                    "rich-text": {
+                      "type": "rich-text"
+                    },
+                    "button": {
+                      "type": "button"
+                    }
+                  },
+                  "block_order": ["heading", "rich-text", "button"]
+                }
+              },
+              "block_order": ["basic-group"]
+            }
+          }
+        }
+      },
+      "block_order": ["slide_1", "slide_2"]
+    }
+  ]
+}
+{% endschema %}

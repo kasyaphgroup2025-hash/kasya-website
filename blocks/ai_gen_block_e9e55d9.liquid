@@ -1,0 +1,896 @@
+{% doc %}
+  @prompt
+    Create a clean, conversion-focused website section that combines Trust Badges and an FAQ in a single section.
+    
+    Layout requirements:
+    
+    Split the section into two columns on desktop
+    
+    Left side: Trust badges
+    
+    Right side: FAQ accordion
+    
+    On mobile view, stack vertically with:
+    
+    Trust badges displayed first
+    
+    FAQ accordion below
+    
+    Trust badge content:
+    
+    Secure checkout
+    
+    Cash on Delivery available
+    
+    Fast local shipping
+    
+    Easy returns
+    
+    Customer support assistance
+    
+    FAQ requirements:
+    
+    Use an accordion style for clarity and space efficiency
+    
+    Include common questions such as:
+    
+    Return policy
+    
+    Shipping time
+    
+    Order follow-up / delivery inquiries
+    
+    Accepted payment methods
+    
+    Clean typography, minimal icons, and ample spacing for readability
+    
+    Design style:
+    
+    Modern, minimal, and professional
+    
+    Neutral color palette
+    
+    Mobile-first spacing and tap-friendly accordion buttons
+    
+    Optimized for conversion and trust-building
+    
+    The section should look polished, balanced, and easy to scan on both desktop and mobile devices.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-trust-faq-section-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: {{ block.settings.padding_top }}px 20px {{ block.settings.padding_bottom }}px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-trust-faq-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-trust-faq-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: {{ block.settings.column_gap }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-trust-faq-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .ai-trust-badges-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.badge_spacing }}px;
+  }
+
+  .ai-trust-badge-{{ ai_gen_id }} {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: {{ block.settings.badge_padding }}px;
+    background-color: {{ block.settings.badge_background }};
+    border-radius: {{ block.settings.badge_border_radius }}px;
+    transition: transform 0.2s ease;
+  }
+
+  .ai-trust-badge-{{ ai_gen_id }}:hover {
+    transform: translateY(-2px);
+  }
+
+  .ai-trust-badge-icon-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: {{ block.settings.icon_color }};
+  }
+
+  .ai-trust-badge-icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .ai-trust-badge-content-{{ ai_gen_id }} {
+    flex-grow: 1;
+  }
+
+  .ai-trust-badge-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.badge_title_size }}px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 4px 0;
+    line-height: 1.3;
+  }
+
+  .ai-trust-badge-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.badge_description_size }}px;
+    color: {{ block.settings.text_color_secondary }};
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .ai-faq-section-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.faq_spacing }}px;
+  }
+
+  .ai-faq-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.faq_heading_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 {{ block.settings.faq_spacing }}px 0;
+    line-height: 1.2;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }} {
+    border: 1px solid {{ block.settings.faq_border_color }};
+    border-radius: {{ block.settings.faq_border_radius }}px;
+    overflow: hidden;
+    background-color: {{ block.settings.faq_background }};
+  }
+
+  .ai-faq-question-{{ ai_gen_id }} {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: {{ block.settings.faq_padding }}px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: {{ block.settings.faq_question_size }}px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    transition: background-color 0.2s ease;
+    gap: 16px;
+    min-height: 48px;
+  }
+
+  .ai-faq-question-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.faq_hover_background }};
+  }
+
+  .ai-faq-question-text-{{ ai_gen_id }} {
+    flex-grow: 1;
+    line-height: 1.4;
+  }
+
+  .ai-faq-icon-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: {{ block.settings.icon_color }};
+    transition: transform 0.3s ease;
+  }
+
+  .ai-faq-icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.active .ai-faq-icon-{{ ai_gen_id }} {
+    transform: rotate(180deg);
+  }
+
+  .ai-faq-answer-{{ ai_gen_id }} {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.active .ai-faq-answer-{{ ai_gen_id }} {
+    max-height: 500px;
+    padding: 0 {{ block.settings.faq_padding }}px {{ block.settings.faq_padding }}px;
+  }
+
+  .ai-faq-answer-content-{{ ai_gen_id }} {
+    font-size: {{ block.settings.faq_answer_size }}px;
+    color: {{ block.settings.text_color_secondary }};
+    line-height: 1.6;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-trust-faq-section-{{ ai_gen_id }} {
+      padding: {{ block.settings.padding_top_mobile }}px 16px {{ block.settings.padding_bottom_mobile }}px;
+    }
+
+    .ai-trust-faq-grid-{{ ai_gen_id }} {
+      gap: {{ block.settings.column_gap_mobile }}px;
+    }
+
+    .ai-faq-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.faq_heading_size | times: 0.85 }}px;
+    }
+
+    .ai-trust-badge-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.badge_title_size | times: 0.9 }}px;
+    }
+
+    .ai-faq-question-{{ ai_gen_id }} {
+      font-size: {{ block.settings.faq_question_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<trust-faq-section-{{ ai_gen_id }} class="ai-trust-faq-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-trust-faq-container-{{ ai_gen_id }}">
+    <div class="ai-trust-faq-grid-{{ ai_gen_id }}">
+      <div class="ai-trust-badges-{{ ai_gen_id }}">
+        {% if block.settings.show_secure_checkout %}
+          <div class="ai-trust-badge-{{ ai_gen_id }}">
+            <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </div>
+            <div class="ai-trust-badge-content-{{ ai_gen_id }}">
+              <h3 class="ai-trust-badge-title-{{ ai_gen_id }}">{{ block.settings.secure_checkout_title }}</h3>
+              <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.secure_checkout_description }}</p>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if block.settings.show_cod %}
+          <div class="ai-trust-badge-{{ ai_gen_id }}">
+            <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="1" x2="12" y2="23"></line>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+              </svg>
+            </div>
+            <div class="ai-trust-badge-content-{{ ai_gen_id }}">
+              <h3 class="ai-trust-badge-title-{{ ai_gen_id }}">{{ block.settings.cod_title }}</h3>
+              <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.cod_description }}</p>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if block.settings.show_fast_shipping %}
+          <div class="ai-trust-badge-{{ ai_gen_id }}">
+            <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="3" width="15" height="13"></rect>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+              </svg>
+            </div>
+            <div class="ai-trust-badge-content-{{ ai_gen_id }}">
+              <h3 class="ai-trust-badge-title-{{ ai_gen_id }}">{{ block.settings.fast_shipping_title }}</h3>
+              <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.fast_shipping_description }}</p>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if block.settings.show_easy_returns %}
+          <div class="ai-trust-badge-{{ ai_gen_id }}">
+            <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="1 4 1 10 7 10"></polyline>
+                <polyline points="23 20 23 14 17 14"></polyline>
+                <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+              </svg>
+            </div>
+            <div class="ai-trust-badge-content-{{ ai_gen_id }}">
+              <h3 class="ai-trust-badge-title-{{ ai_gen_id }}">{{ block.settings.easy_returns_title }}</h3>
+              <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.easy_returns_description }}</p>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if block.settings.show_customer_support %}
+          <div class="ai-trust-badge-{{ ai_gen_id }}">
+            <div class="ai-trust-badge-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </div>
+            <div class="ai-trust-badge-content-{{ ai_gen_id }}">
+              <h3 class="ai-trust-badge-title-{{ ai_gen_id }}">{{ block.settings.customer_support_title }}</h3>
+              <p class="ai-trust-badge-description-{{ ai_gen_id }}">{{ block.settings.customer_support_description }}</p>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="ai-faq-section-{{ ai_gen_id }}">
+        {% if block.settings.faq_heading != blank %}
+          <h2 class="ai-faq-heading-{{ ai_gen_id }}">{{ block.settings.faq_heading }}</h2>
+        {% endif %}
+
+        {% if block.settings.faq_1_question != blank %}
+          <div class="ai-faq-item-{{ ai_gen_id }}" data-faq-item>
+            <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+              <span class="ai-faq-question-text-{{ ai_gen_id }}">{{ block.settings.faq_1_question }}</span>
+              <span class="ai-faq-icon-{{ ai_gen_id }}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </button>
+            <div class="ai-faq-answer-{{ ai_gen_id }}">
+              <div class="ai-faq-answer-content-{{ ai_gen_id }}">{{ block.settings.faq_1_answer }}</div>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if block.settings.faq_2_question != blank %}
+          <div class="ai-faq-item-{{ ai_gen_id }}" data-faq-item>
+            <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+              <span class="ai-faq-question-text-{{ ai_gen_id }}">{{ block.settings.faq_2_question }}</span>
+              <span class="ai-faq-icon-{{ ai_gen_id }}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </button>
+            <div class="ai-faq-answer-{{ ai_gen_id }}">
+              <div class="ai-faq-answer-content-{{ ai_gen_id }}">{{ block.settings.faq_2_answer }}</div>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if block.settings.faq_3_question != blank %}
+          <div class="ai-faq-item-{{ ai_gen_id }}" data-faq-item>
+            <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+              <span class="ai-faq-question-text-{{ ai_gen_id }}">{{ block.settings.faq_3_question }}</span>
+              <span class="ai-faq-icon-{{ ai_gen_id }}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </button>
+            <div class="ai-faq-answer-{{ ai_gen_id }}">
+              <div class="ai-faq-answer-content-{{ ai_gen_id }}">{{ block.settings.faq_3_answer }}</div>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if block.settings.faq_4_question != blank %}
+          <div class="ai-faq-item-{{ ai_gen_id }}" data-faq-item>
+            <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+              <span class="ai-faq-question-text-{{ ai_gen_id }}">{{ block.settings.faq_4_question }}</span>
+              <span class="ai-faq-icon-{{ ai_gen_id }}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </button>
+            <div class="ai-faq-answer-{{ ai_gen_id }}">
+              <div class="ai-faq-answer-content-{{ ai_gen_id }}">{{ block.settings.faq_4_answer }}</div>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if block.settings.faq_5_question != blank %}
+          <div class="ai-faq-item-{{ ai_gen_id }}" data-faq-item>
+            <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+              <span class="ai-faq-question-text-{{ ai_gen_id }}">{{ block.settings.faq_5_question }}</span>
+              <span class="ai-faq-icon-{{ ai_gen_id }}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </button>
+            <div class="ai-faq-answer-{{ ai_gen_id }}">
+              <div class="ai-faq-answer-content-{{ ai_gen_id }}">{{ block.settings.faq_5_answer }}</div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</trust-faq-section-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class TrustFaqSection{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.faqItems = this.querySelectorAll('[data-faq-item]');
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.faqItems.forEach((item) => {
+          const button = item.querySelector('.ai-faq-question-{{ ai_gen_id }}');
+          
+          button.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+            
+            if (isActive) {
+              item.classList.remove('active');
+              button.setAttribute('aria-expanded', 'false');
+            } else {
+              item.classList.add('active');
+              button.setAttribute('aria-expanded', 'true');
+            }
+          });
+        });
+      }
+    }
+
+    customElements.define('trust-faq-section-{{ ai_gen_id }}', TrustFaqSection{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Trust badges and FAQ",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 800,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "label": "Container width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Column gap (desktop)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "column_gap_mobile",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Column gap (mobile)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding top (desktop)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding bottom (desktop)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding top (mobile)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding bottom (mobile)",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "text_color_secondary",
+      "label": "Secondary text",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Trust badges"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secure_checkout",
+      "label": "Show secure checkout",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "secure_checkout_title",
+      "label": "Secure checkout title",
+      "default": "Secure checkout"
+    },
+    {
+      "type": "text",
+      "id": "secure_checkout_description",
+      "label": "Secure checkout description",
+      "default": "Your payment information is processed securely"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cod",
+      "label": "Show cash on delivery",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cod_title",
+      "label": "Cash on delivery title",
+      "default": "Cash on delivery"
+    },
+    {
+      "type": "text",
+      "id": "cod_description",
+      "label": "Cash on delivery description",
+      "default": "Pay when you receive your order"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_fast_shipping",
+      "label": "Show fast shipping",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "fast_shipping_title",
+      "label": "Fast shipping title",
+      "default": "Fast local shipping"
+    },
+    {
+      "type": "text",
+      "id": "fast_shipping_description",
+      "label": "Fast shipping description",
+      "default": "Quick delivery within Metro Manila and nearby areas"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_easy_returns",
+      "label": "Show easy returns",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "easy_returns_title",
+      "label": "Easy returns title",
+      "default": "Easy returns"
+    },
+    {
+      "type": "text",
+      "id": "easy_returns_description",
+      "label": "Easy returns description",
+      "default": "Hassle-free returns within 7 days"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_customer_support",
+      "label": "Show customer support",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "customer_support_title",
+      "label": "Customer support title",
+      "default": "Customer support"
+    },
+    {
+      "type": "text",
+      "id": "customer_support_description",
+      "label": "Customer support description",
+      "default": "We're here to help with any questions"
+    },
+    {
+      "type": "range",
+      "id": "badge_spacing",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Badge spacing",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "badge_padding",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Badge padding",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "badge_background",
+      "label": "Badge background",
+      "default": "#fafafa"
+    },
+    {
+      "type": "range",
+      "id": "badge_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Badge border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 20,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "badge_title_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Title size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "badge_description_size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Description size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "FAQ"
+    },
+    {
+      "type": "text",
+      "id": "faq_heading",
+      "label": "FAQ heading",
+      "default": "Frequently asked questions"
+    },
+    {
+      "type": "range",
+      "id": "faq_heading_size",
+      "min": 18,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "faq_spacing",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "FAQ spacing",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "faq_padding",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "FAQ padding",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "faq_background",
+      "label": "FAQ background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "faq_hover_background",
+      "label": "FAQ hover background",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "faq_border_color",
+      "label": "FAQ border",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "range",
+      "id": "faq_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "FAQ border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "faq_question_size",
+      "min": 13,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Question size",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "faq_answer_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Answer size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "FAQ 1"
+    },
+    {
+      "type": "text",
+      "id": "faq_1_question",
+      "label": "Question",
+      "default": "What is your return policy?"
+    },
+    {
+      "type": "textarea",
+      "id": "faq_1_answer",
+      "label": "Answer",
+      "default": "We offer hassle-free returns within 7 days of delivery. Items must be unused and in original packaging."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 2"
+    },
+    {
+      "type": "text",
+      "id": "faq_2_question",
+      "label": "Question",
+      "default": "How long does shipping take?"
+    },
+    {
+      "type": "textarea",
+      "id": "faq_2_answer",
+      "label": "Answer",
+      "default": "Orders within Metro Manila are delivered within 2-3 business days. Provincial deliveries take 5-7 business days."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 3"
+    },
+    {
+      "type": "text",
+      "id": "faq_3_question",
+      "label": "Question",
+      "default": "How can I track my order?"
+    },
+    {
+      "type": "textarea",
+      "id": "faq_3_answer",
+      "label": "Answer",
+      "default": "Once your order ships, you'll receive a tracking number via email. You can use this to track your delivery status."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 4"
+    },
+    {
+      "type": "text",
+      "id": "faq_4_question",
+      "label": "Question",
+      "default": "What payment methods do you accept?"
+    },
+    {
+      "type": "textarea",
+      "id": "faq_4_answer",
+      "label": "Answer",
+      "default": "We accept credit/debit cards, GCash, PayMaya, bank transfers, and cash on delivery for your convenience."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 5"
+    },
+    {
+      "type": "text",
+      "id": "faq_5_question",
+      "label": "Question",
+      "default": "Do you offer international shipping?"
+    },
+    {
+      "type": "textarea",
+      "id": "faq_5_answer",
+      "label": "Answer",
+      "default": "Currently, we only ship within the Philippines. We're working on expanding to international shipping soon."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust badges and FAQ"
+    }
+  ]
+}
+{% endschema %}

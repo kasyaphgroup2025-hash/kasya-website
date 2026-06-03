@@ -1,0 +1,101 @@
+.blog-articles {
+  display: grid;
+  gap: 2.4rem;
+}
+
+.blog-articles .card-wrapper {
+  width: 100%;
+}
+
+.article__actions {
+  z-index: 1;
+}
+
+@media screen and (max-width: 749px) {
+  .article--large .article-card__image--small .ratio::before {
+    padding-bottom: 16rem;
+  }
+  
+  .article--large .article-card__image--medium .ratio::before {
+    padding-bottom: 27rem;
+  }
+  
+  .article--large .article-card__image--large .ratio::before {
+    padding-bottom: 38rem;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .blog-articles {
+    grid-template-columns: 1fr 1fr;
+    gap: 3.4rem;
+  }
+
+  .blog-articles--stacked {
+    grid-template-columns: 1fr;
+  }
+
+  .article--large {
+    grid-column: span 2;
+  }
+
+  .article--large .article-card--standard {
+    flex-direction: row;
+  }
+
+  .article--large .article-card--standard h2 {
+    line-height: 1;
+  }
+
+  .blog-articles__article:not(.article--large) .card-wrapper {
+    height: 100%;
+  } 
+
+  .blog-articles__article:not(.article--large) .article-card--standard .article-card__standard-content {
+    flex-grow: 1;
+  }
+
+  .blog-articles__article:not(.article--large) .article-card--standard .article__actions {
+    margin-top: auto;
+  }
+
+  .article--large .article-card__image {
+    width: 53%;
+    min-width: 53%;
+  }
+
+  .article--large .article-card__image--small .ratio::before {
+    padding-bottom: 22rem;
+  }
+
+  .article--large .article-card__image--medium .ratio::before {
+    padding-bottom: 44rem;
+  }
+
+  .article--large .article-card__image--large .ratio::before {
+    padding-bottom: 66rem;
+  }
+}
+
+@media screen and (min-width: 1366px) {
+  .blog-articles {
+    gap: 6rem;
+  }
+  
+  .article--large .article-card__image--small .ratio .ratio::before {
+    padding-bottom: 27.5rem;
+  }
+
+  .article--large .article-card__image--medium .ratio::before {
+    padding-bottom: 55rem;
+  }
+
+  .article--large .article-card__image--large .ratio::before {
+    padding-bottom: 82.5rem;
+  }
+
+  .article--large .article-card__image {
+    width: 60%;
+    min-width: 60%;
+  }
+}

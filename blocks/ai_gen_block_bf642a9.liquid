@@ -1,0 +1,1152 @@
+{% doc %}
+  @prompt
+    Create a clean and modern landing page section for KasyaPH featuring our NEW RELEASE items: the Silk Skirt and the Wideleg Pants in Teal.
+    Highlight elegance, premium fabric quality, and comfort for everyday wear.
+    Use soft lighting, minimalistic layout, and a premium fashion boutique feel.
+    Show the Silk Skirt as flowy, lightweight, and flattering for all body types.
+    Show the Wideleg Pants (Teal) as classy, breathable, and versatile for work or casual outfits.
+    Include stylish Filipino women in their 30s–40s wearing the pieces confidently.
+    Use warm tones and neutral backgrounds so the Teal and Silk fabric texture stands out.
+    The vibe should feel premium, modern, and aspirational — perfect for a new collection launch, can you add more 2 proudct and make clickable , can you add 1  more product then add color variants but the photo is still clickable 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-new-release-hero-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    background: {{ block.settings.background_color }};
+    padding: {{ block.settings.section_padding_top }}px 0 {{ block.settings.section_padding_bottom }}px;
+  }
+
+  .ai-new-release-container-{{ ai_gen_id }} {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-new-release-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .ai-new-release-badge-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 8px 20px;
+    background: {{ block.settings.badge_background }};
+    color: {{ block.settings.badge_text_color }};
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  .ai-new-release-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 16px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .ai-new-release-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.text_color }};
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .ai-new-release-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+    margin-bottom: 40px;
+  }
+
+  .ai-new-release-product-card-{{ ai_gen_id }} {
+    position: relative;
+    background: {{ block.settings.card_background }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .ai-new-release-product-card-{{ ai_gen_id }}:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-new-release-image-link-{{ ai_gen_id }} {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .ai-new-release-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    padding-bottom: {{ block.settings.image_aspect_ratio }}%;
+    overflow: hidden;
+    background: {{ block.settings.image_placeholder_bg }};
+  }
+
+  .ai-new-release-image-wrapper-{{ ai_gen_id }} img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-new-release-image-placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: {{ block.settings.image_placeholder_bg }};
+  }
+
+  .ai-new-release-image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-new-release-product-badge-{{ ai_gen_id }} {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    padding: 6px 14px;
+    background: {{ block.settings.product_badge_bg }};
+    color: {{ block.settings.product_badge_text }};
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 4px;
+    z-index: 2;
+  }
+
+  .ai-new-release-content-{{ ai_gen_id }} {
+    padding: 32px 24px;
+  }
+
+  .ai-new-release-product-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.product_title_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 12px;
+    font-weight: 500;
+  }
+
+  .ai-new-release-product-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.product_description_size }}px;
+    color: {{ block.settings.text_color }};
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .ai-new-release-features-{{ ai_gen_id }} {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .ai-new-release-feature-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-new-release-feature-icon-{{ ai_gen_id }} {
+    width: 16px;
+    height: 16px;
+    color: {{ block.settings.feature_icon_color }};
+  }
+
+  .ai-new-release-color-swatches-{{ ai_gen_id }} {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .ai-new-release-color-swatch-{{ ai_gen_id }} {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .ai-new-release-color-swatch-{{ ai_gen_id }}:hover {
+    border-color: {{ block.settings.heading_color }};
+    transform: scale(1.1);
+  }
+
+  .ai-new-release-color-swatch-{{ ai_gen_id }}.active {
+    border-color: {{ block.settings.heading_color }};
+    box-shadow: 0 0 0 2px {{ block.settings.card_background }}, 0 0 0 4px {{ block.settings.heading_color }};
+  }
+
+  .ai-new-release-price-{{ ai_gen_id }} {
+    font-size: {{ block.settings.price_size }}px;
+    color: {{ block.settings.heading_color }};
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+
+  .ai-new-release-cta-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 14px 32px;
+    background: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    border: 2px solid {{ block.settings.button_background }};
+  }
+
+  .ai-new-release-cta-{{ ai_gen_id }}:hover {
+    background: {{ block.settings.button_hover_background }};
+    color: {{ block.settings.button_hover_text_color }};
+    border-color: {{ block.settings.button_hover_background }};
+    transform: translateY(-2px);
+  }
+
+  .ai-new-release-footer-{{ ai_gen_id }} {
+    text-align: center;
+    padding-top: 40px;
+  }
+
+  .ai-new-release-footer-text-{{ ai_gen_id }} {
+    font-size: 14px;
+    color: {{ block.settings.text_color }};
+    margin-bottom: 20px;
+  }
+
+  .ai-new-release-collection-cta-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 16px 40px;
+    background: transparent;
+    color: {{ block.settings.heading_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    border: 2px solid {{ block.settings.heading_color }};
+  }
+
+  .ai-new-release-collection-cta-{{ ai_gen_id }}:hover {
+    background: {{ block.settings.heading_color }};
+    color: {{ block.settings.background_color }};
+  }
+
+  @media screen and (max-width: 1199px) {
+    .ai-new-release-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-new-release-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ai-new-release-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.7);
+    }
+
+    .ai-new-release-subtitle-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.subtitle_size }}px * 0.9);
+    }
+
+    .ai-new-release-header-{{ ai_gen_id }} {
+      margin-bottom: 40px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-new-release-hero-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_top | times: 0.6 }}px 0 {{ block.settings.section_padding_bottom | times: 0.6 }}px;
+    }
+
+    .ai-new-release-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    .ai-new-release-content-{{ ai_gen_id }} {
+      padding: 24px 20px;
+    }
+
+    .ai-new-release-product-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.product_title_size }}px * 0.9);
+    }
+  }
+{% endstyle %}
+
+<div class="ai-new-release-hero-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-new-release-container-{{ ai_gen_id }}">
+    <div class="ai-new-release-header-{{ ai_gen_id }}">
+      {% if block.settings.show_badge %}
+        <div class="ai-new-release-badge-{{ ai_gen_id }}">{{ block.settings.badge_text }}</div>
+      {% endif %}
+      
+      {% if block.settings.heading != blank %}
+        <h2 class="ai-new-release-title-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+      {% endif %}
+      
+      {% if block.settings.subtitle != blank %}
+        <div class="ai-new-release-subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</div>
+      {% endif %}
+    </div>
+
+    <div class="ai-new-release-grid-{{ ai_gen_id }}">
+      {% for i in (1..5) %}
+        {% liquid
+          assign image_key = 'product_' | append: i | append: '_image'
+          assign badge_key = 'product_' | append: i | append: '_badge'
+          assign title_key = 'product_' | append: i | append: '_title'
+          assign description_key = 'product_' | append: i | append: '_description'
+          assign feature_1_key = 'product_' | append: i | append: '_feature_1'
+          assign feature_2_key = 'product_' | append: i | append: '_feature_2'
+          assign feature_3_key = 'product_' | append: i | append: '_feature_3'
+          assign price_key = 'product_' | append: i | append: '_price'
+          assign link_key = 'product_' | append: i | append: '_link'
+          assign color_1_key = 'product_' | append: i | append: '_color_1'
+          assign color_2_key = 'product_' | append: i | append: '_color_2'
+          assign color_3_key = 'product_' | append: i | append: '_color_3'
+          assign color_4_key = 'product_' | append: i | append: '_color_4'
+
+          assign product_image = block.settings[image_key]
+          assign product_badge = block.settings[badge_key]
+          assign product_title = block.settings[title_key]
+          assign product_description = block.settings[description_key]
+          assign product_feature_1 = block.settings[feature_1_key]
+          assign product_feature_2 = block.settings[feature_2_key]
+          assign product_feature_3 = block.settings[feature_3_key]
+          assign product_price = block.settings[price_key]
+          assign product_link = block.settings[link_key]
+          assign product_color_1 = block.settings[color_1_key]
+          assign product_color_2 = block.settings[color_2_key]
+          assign product_color_3 = block.settings[color_3_key]
+          assign product_color_4 = block.settings[color_4_key]
+        %}
+
+        <div class="ai-new-release-product-card-{{ ai_gen_id }}">
+          {% if product_link != blank %}
+            <a href="{{ product_link }}" class="ai-new-release-image-link-{{ ai_gen_id }}">
+          {% else %}
+            <div class="ai-new-release-image-link-{{ ai_gen_id }}">
+          {% endif %}
+            <div class="ai-new-release-image-wrapper-{{ ai_gen_id }}">
+              {% if product_image %}
+                <img
+                  src="{{ product_image | image_url: width: 800 }}"
+                  alt="{{ product_image.alt | escape }}"
+                  loading="lazy"
+                  width="800"
+                  height="{{ 800 | times: block.settings.image_aspect_ratio | divided_by: 100 }}"
+                >
+              {% else %}
+                <div class="ai-new-release-image-placeholder-{{ ai_gen_id }}">
+                  {{ 'product-1' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+              
+              {% if block.settings.show_product_badges and product_badge != blank %}
+                <div class="ai-new-release-product-badge-{{ ai_gen_id }}">{{ product_badge }}</div>
+              {% endif %}
+            </div>
+          {% if product_link != blank %}
+            </a>
+          {% else %}
+            </div>
+          {% endif %}
+
+          <div class="ai-new-release-content-{{ ai_gen_id }}">
+            {% if product_title != blank %}
+              <h3 class="ai-new-release-product-title-{{ ai_gen_id }}">{{ product_title }}</h3>
+            {% endif %}
+
+            {% if product_description != blank %}
+              <div class="ai-new-release-product-description-{{ ai_gen_id }}">{{ product_description }}</div>
+            {% endif %}
+
+            {% if block.settings.show_features %}
+              <div class="ai-new-release-features-{{ ai_gen_id }}">
+                {% if product_feature_1 != blank %}
+                  <div class="ai-new-release-feature-{{ ai_gen_id }}">
+                    <svg class="ai-new-release-feature-icon-{{ ai_gen_id }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>{{ product_feature_1 }}</span>
+                  </div>
+                {% endif %}
+
+                {% if product_feature_2 != blank %}
+                  <div class="ai-new-release-feature-{{ ai_gen_id }}">
+                    <svg class="ai-new-release-feature-icon-{{ ai_gen_id }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>{{ product_feature_2 }}</span>
+                  </div>
+                {% endif %}
+
+                {% if product_feature_3 != blank %}
+                  <div class="ai-new-release-feature-{{ ai_gen_id }}">
+                    <svg class="ai-new-release-feature-icon-{{ ai_gen_id }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>{{ product_feature_3 }}</span>
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            {% if block.settings.show_color_swatches %}
+              {% liquid
+                assign has_colors = false
+                if product_color_1 != blank or product_color_2 != blank or product_color_3 != blank or product_color_4 != blank
+                  assign has_colors = true
+                endif
+              %}
+
+              {% if has_colors %}
+                <div class="ai-new-release-color-swatches-{{ ai_gen_id }}">
+                  {% if product_color_1 != blank %}
+                    <div class="ai-new-release-color-swatch-{{ ai_gen_id }} active" style="background-color: {{ product_color_1 }};"></div>
+                  {% endif %}
+                  {% if product_color_2 != blank %}
+                    <div class="ai-new-release-color-swatch-{{ ai_gen_id }}" style="background-color: {{ product_color_2 }};"></div>
+                  {% endif %}
+                  {% if product_color_3 != blank %}
+                    <div class="ai-new-release-color-swatch-{{ ai_gen_id }}" style="background-color: {{ product_color_3 }};"></div>
+                  {% endif %}
+                  {% if product_color_4 != blank %}
+                    <div class="ai-new-release-color-swatch-{{ ai_gen_id }}" style="background-color: {{ product_color_4 }};"></div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            {% endif %}
+
+            {% if product_price != blank %}
+              <div class="ai-new-release-price-{{ ai_gen_id }}">{{ product_price }}</div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if block.settings.show_footer_cta %}
+      <div class="ai-new-release-footer-{{ ai_gen_id }}">
+        {% if block.settings.footer_text != blank %}
+          <div class="ai-new-release-footer-text-{{ ai_gen_id }}">{{ block.settings.footer_text }}</div>
+        {% endif %}
+        
+        {% if block.settings.collection_link != blank %}
+          <a href="{{ block.settings.collection_link }}" class="ai-new-release-collection-cta-{{ ai_gen_id }}">
+            {{ block.settings.collection_button_text }}
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "New release hero",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "New Release"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Introducing Our Latest Collection"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Discover premium pieces crafted for elegance, comfort, and everyday versatility"
+    },
+    {
+      "type": "header",
+      "content": "Product 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "product_1_badge",
+      "label": "Badge text",
+      "default": "New"
+    },
+    {
+      "type": "text",
+      "id": "product_1_title",
+      "label": "Title",
+      "default": "Silk Skirt"
+    },
+    {
+      "type": "textarea",
+      "id": "product_1_description",
+      "label": "Description",
+      "default": "Flowy, lightweight, and flattering for all body types."
+    },
+    {
+      "type": "text",
+      "id": "product_1_feature_1",
+      "label": "Feature 1",
+      "default": "Premium silk"
+    },
+    {
+      "type": "text",
+      "id": "product_1_feature_2",
+      "label": "Feature 2",
+      "default": "Flattering fit"
+    },
+    {
+      "type": "text",
+      "id": "product_1_feature_3",
+      "label": "Feature 3",
+      "default": "Breathable"
+    },
+    {
+      "type": "color",
+      "id": "product_1_color_1",
+      "label": "Color variant 1"
+    },
+    {
+      "type": "color",
+      "id": "product_1_color_2",
+      "label": "Color variant 2"
+    },
+    {
+      "type": "color",
+      "id": "product_1_color_3",
+      "label": "Color variant 3"
+    },
+    {
+      "type": "color",
+      "id": "product_1_color_4",
+      "label": "Color variant 4"
+    },
+    {
+      "type": "text",
+      "id": "product_1_price",
+      "label": "Price",
+      "default": "₱1,299"
+    },
+    {
+      "type": "url",
+      "id": "product_1_link",
+      "label": "Product link"
+    },
+    {
+      "type": "header",
+      "content": "Product 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "product_2_badge",
+      "label": "Badge text",
+      "default": "New"
+    },
+    {
+      "type": "text",
+      "id": "product_2_title",
+      "label": "Title",
+      "default": "Wideleg Pants in Teal"
+    },
+    {
+      "type": "textarea",
+      "id": "product_2_description",
+      "label": "Description",
+      "default": "Classy, breathable, and versatile for work or casual."
+    },
+    {
+      "type": "text",
+      "id": "product_2_feature_1",
+      "label": "Feature 1",
+      "default": "Versatile"
+    },
+    {
+      "type": "text",
+      "id": "product_2_feature_2",
+      "label": "Feature 2",
+      "default": "Breathable"
+    },
+    {
+      "type": "text",
+      "id": "product_2_feature_3",
+      "label": "Feature 3",
+      "default": "All-day wear"
+    },
+    {
+      "type": "color",
+      "id": "product_2_color_1",
+      "label": "Color variant 1"
+    },
+    {
+      "type": "color",
+      "id": "product_2_color_2",
+      "label": "Color variant 2"
+    },
+    {
+      "type": "color",
+      "id": "product_2_color_3",
+      "label": "Color variant 3"
+    },
+    {
+      "type": "color",
+      "id": "product_2_color_4",
+      "label": "Color variant 4"
+    },
+    {
+      "type": "text",
+      "id": "product_2_price",
+      "label": "Price",
+      "default": "₱1,499"
+    },
+    {
+      "type": "url",
+      "id": "product_2_link",
+      "label": "Product link"
+    },
+    {
+      "type": "header",
+      "content": "Product 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "product_3_badge",
+      "label": "Badge text",
+      "default": "New"
+    },
+    {
+      "type": "text",
+      "id": "product_3_title",
+      "label": "Title",
+      "default": "Linen Dress"
+    },
+    {
+      "type": "textarea",
+      "id": "product_3_description",
+      "label": "Description",
+      "default": "Effortlessly elegant and comfortable for any occasion."
+    },
+    {
+      "type": "text",
+      "id": "product_3_feature_1",
+      "label": "Feature 1",
+      "default": "Premium linen"
+    },
+    {
+      "type": "text",
+      "id": "product_3_feature_2",
+      "label": "Feature 2",
+      "default": "Elegant cut"
+    },
+    {
+      "type": "text",
+      "id": "product_3_feature_3",
+      "label": "Feature 3",
+      "default": "All-season"
+    },
+    {
+      "type": "color",
+      "id": "product_3_color_1",
+      "label": "Color variant 1"
+    },
+    {
+      "type": "color",
+      "id": "product_3_color_2",
+      "label": "Color variant 2"
+    },
+    {
+      "type": "color",
+      "id": "product_3_color_3",
+      "label": "Color variant 3"
+    },
+    {
+      "type": "color",
+      "id": "product_3_color_4",
+      "label": "Color variant 4"
+    },
+    {
+      "type": "text",
+      "id": "product_3_price",
+      "label": "Price",
+      "default": "₱1,799"
+    },
+    {
+      "type": "url",
+      "id": "product_3_link",
+      "label": "Product link"
+    },
+    {
+      "type": "header",
+      "content": "Product 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_4_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "product_4_badge",
+      "label": "Badge text",
+      "default": "New"
+    },
+    {
+      "type": "text",
+      "id": "product_4_title",
+      "label": "Title",
+      "default": "Wide Pants"
+    },
+    {
+      "type": "textarea",
+      "id": "product_4_description",
+      "label": "Description",
+      "default": "Modern silhouette with timeless appeal."
+    },
+    {
+      "type": "text",
+      "id": "product_4_feature_1",
+      "label": "Feature 1",
+      "default": "Relaxed fit"
+    },
+    {
+      "type": "text",
+      "id": "product_4_feature_2",
+      "label": "Feature 2",
+      "default": "Soft fabric"
+    },
+    {
+      "type": "text",
+      "id": "product_4_feature_3",
+      "label": "Feature 3",
+      "default": "Easy care"
+    },
+    {
+      "type": "color",
+      "id": "product_4_color_1",
+      "label": "Color variant 1"
+    },
+    {
+      "type": "color",
+      "id": "product_4_color_2",
+      "label": "Color variant 2"
+    },
+    {
+      "type": "color",
+      "id": "product_4_color_3",
+      "label": "Color variant 3"
+    },
+    {
+      "type": "color",
+      "id": "product_4_color_4",
+      "label": "Color variant 4"
+    },
+    {
+      "type": "text",
+      "id": "product_4_price",
+      "label": "Price",
+      "default": "₱1,399"
+    },
+    {
+      "type": "url",
+      "id": "product_4_link",
+      "label": "Product link"
+    },
+    {
+      "type": "header",
+      "content": "Product 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_5_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "product_5_badge",
+      "label": "Badge text",
+      "default": "New"
+    },
+    {
+      "type": "text",
+      "id": "product_5_title",
+      "label": "Title",
+      "default": "Linen Top"
+    },
+    {
+      "type": "textarea",
+      "id": "product_5_description",
+      "label": "Description",
+      "default": "Casual elegance meets everyday comfort."
+    },
+    {
+      "type": "text",
+      "id": "product_5_feature_1",
+      "label": "Feature 1",
+      "default": "Soft linen"
+    },
+    {
+      "type": "text",
+      "id": "product_5_feature_2",
+      "label": "Feature 2",
+      "default": "Relaxed fit"
+    },
+    {
+      "type": "text",
+      "id": "product_5_feature_3",
+      "label": "Feature 3",
+      "default": "Versatile"
+    },
+    {
+      "type": "color",
+      "id": "product_5_color_1",
+      "label": "Color variant 1"
+    },
+    {
+      "type": "color",
+      "id": "product_5_color_2",
+      "label": "Color variant 2"
+    },
+    {
+      "type": "color",
+      "id": "product_5_color_3",
+      "label": "Color variant 3"
+    },
+    {
+      "type": "color",
+      "id": "product_5_color_4",
+      "label": "Color variant 4"
+    },
+    {
+      "type": "text",
+      "id": "product_5_price",
+      "label": "Price",
+      "default": "₱999"
+    },
+    {
+      "type": "url",
+      "id": "product_5_link",
+      "label": "Product link"
+    },
+    {
+      "type": "header",
+      "content": "Footer call to action"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_footer_cta",
+      "label": "Show footer CTA",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "footer_text",
+      "label": "Footer text",
+      "default": "Explore the complete collection"
+    },
+    {
+      "type": "url",
+      "id": "collection_link",
+      "label": "Collection link"
+    },
+    {
+      "type": "text",
+      "id": "collection_button_text",
+      "label": "Button text",
+      "default": "View All New Arrivals"
+    },
+    {
+      "type": "header",
+      "content": "Display options"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_badges",
+      "label": "Show product badges",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_features",
+      "label": "Show features",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_color_swatches",
+      "label": "Show color swatches",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "image_aspect_ratio",
+      "min": 80,
+      "max": 150,
+      "step": 5,
+      "unit": "%",
+      "label": "Image aspect ratio",
+      "default": 125
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Grid gap",
+      "default": 28
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#fafafa"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "badge_background",
+      "label": "Badge background",
+      "default": "#f0fdf4"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge text",
+      "default": "#16a34a"
+    },
+    {
+      "type": "color",
+      "id": "product_badge_bg",
+      "label": "Product badge background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "product_badge_text",
+      "label": "Product badge text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "feature_icon_color",
+      "label": "Feature icon",
+      "default": "#16a34a"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Button hover background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Button hover text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "image_placeholder_bg",
+      "label": "Image placeholder",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "product_title_size",
+      "min": 18,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Product title size",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "product_description_size",
+      "min": 13,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Product description size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "min": 16,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "label": "Price size",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "New release hero"
+    }
+  ]
+}
+{% endschema %}

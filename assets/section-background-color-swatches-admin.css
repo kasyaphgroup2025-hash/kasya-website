@@ -1,0 +1,68 @@
+.background-color-swatches__inner {
+	position: fixed;
+	top: 0;
+	inset-inline: 0;
+	transform: translateY(100%);
+	transition: transform 300ms ease, opacity 100ms;
+	opacity: 0;
+	z-index: -1;
+}
+.background-color-swatches__inner.open {
+	transform: translateY(0);
+	z-index: 3;
+	height: 100vh;
+	overflow-y: auto;
+	opacity: 1;
+}
+button.background-color-swatches__button {
+	width: 3.5rem;
+	height: 3.5rem;
+	padding: 1rem;
+	position: fixed;
+	border: none;
+	display: flex;
+	inset-inline-start: 1.5rem;
+	bottom: 1.5rem;
+	-webkit-box-shadow: 0px 0px 3px 0px rgb(var(--color-foreground)); 
+	box-shadow: 0px 0px 3px 0px rgb(var(--color-foreground));
+	z-index: 3;
+	transition: transform 300ms ease;
+	border-radius: 50%;
+	cursor: pointer;
+}
+.background-color-swatches__button--close {
+	transform: translateY(calc(100% + 1.5rem));
+}
+.background-color-swatches__button--open {
+	transform: translateY(0);
+}
+.background-color-swatches__inner.open + button + .background-color-swatches__button--open {
+	transform: translateY(calc(100% + 1.5rem));
+}
+.background-color-swatches__inner.open + .background-color-swatches__button--close {
+	transform: translateY(0);
+}
+.color-item-background {
+  min-width: 3rem;
+	height: 3rem;
+	border-radius: var(--variants-pills-color-radius);
+	margin-inline-end: .5rem;
+}
+.color-item-background--border {
+	border: 1px solid rgb(var(--color-foreground), .1);
+}
+.preview-colors {
+	padding: 3rem 0 6rem;
+}
+.color-item-background__icon {
+	color: rgb(var(--color-check, var(--color-foreground)));
+}
+.background-color-swatches__group-item {
+	margin-bottom: 2rem;
+	padding: 1.5rem;
+	border: 1px dashed rgb(var(--color-foreground));
+	border-radius: 0.5rem;
+}
+.background-color-swatches__group-item__heading {
+	margin-top: 0;
+}

@@ -1,0 +1,99 @@
+{%- liquid
+  assign volume_pricing_array = product.selected_or_first_available_variant.quantity_price_breaks | sort: 'quantity' | reverse
+  assign cart_qty = cart | item_count_for_variant: product.selected_or_first_available_variant.id
+  assign current_qty_for_volume_pricing = cart_qty | plus: product.selected_or_first_available_variant.quantity_rule.min
+  if cart_qty > 0
+    assign current_qty_for_volume_pricing = cart_qty | plus: product.selected_or_first_available_variant.quantity_rule.increment
+  endif
+  assign variant_price_compare = product.selected_or_first_available_variant.compare_at_price
+  unless suffix_id
+    assign price_tag = 'price-per-item'
+  else
+    assign price_tag = 'div'  
+  endunless
+-%}
+<{{ price_tag }}
+  id="Price-Per-Item-{{ section_id | default: section.id }}{% if suffix_id %}{{ suffix_id }}{% endif %}"
+  data-section-id="{{ section_id | default: section.id }}"
+  data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+  class="price-per-item-wrapper{% if price_classes %} price price--large{% endif %}{% if variant_price_compare and variant_price_compare > 0 %} price--on-sale{% endif %}"
+>
+  {%- if product.selected_or_first_available_variant.quantity_price_breaks.size > 0 -%}
+    <div class="price-per-item{% if variant_price_compare and variant_price_compare > 0 %} price__sale{% endif %}">
+      {%- if variant_price_compare and variant_price_compare > 0 -%}
+        <dl class="price-per-item--current margin0">
+          <dt class="visually-hidden">
+            {{ 'products.product.price.regular_price' | t }}
+          </dt>
+          <dd class="margin0">
+            <s class="variant-item__old-price price-item--regular">
+              {%- render 'price-format', price: variant_price_compare -%}
+            </s>
+          </dd>
+        </dl>
+      {%- endif -%}
+      {%- if current_qty_for_volume_pricing < volume_pricing_array.last.minimum_quantity -%}
+        {%-liquid
+          assign variant_price = product.selected_or_first_available_variant.price | money
+          if settings.currency_code_enabled
+            assign variant_price = product.selected_or_first_available_variant.price | money_with_currency
+          endif
+        -%}
+        <span class="price-per-item--current{% if variant_price_compare and variant_price_compare > 0 %} price-item--sale{% endif %}">
+          {{- 'products.product.volume_pricing.price_at_each' | t: price: variant_price -}}
+        </span>
+      {%- else -%}
+        {%- for price_break in volume_pricing_array -%}
+          {%- if current_qty_for_volume_pricing >= price_break.minimum_quantity -%}
+            {%-liquid
+              assign price_break_price = price_break.price | money
+              if settings.currency_code_enabled
+                assign price_break_price = price_break.price | money_with_currency
+              endif
+            -%}
+            <span class="price-per-item--current">
+              {{-
+                'products.product.volume_pricing.price_at_each'
+                | t: price: price_break_price
+              -}}
+            </span>
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  {%- else -%}
+    {%-liquid
+      assign variant_price = product.selected_or_first_available_variant.price | money
+      if settings.currency_code_enabled
+        assign variant_price = product.selected_or_first_available_variant.price | money_with_currency
+      endif
+    -%}
+    <div class="price-per-item">
+      {%- if variant_price_compare and variant_price_compare > 0 -%}
+        <dl class="price-per-item--current margin0 price__sale">
+          <dt class="visually-hidden">
+            {{ 'products.product.price.regular_price' | t }}
+          </dt>
+          <dd class="margin0">
+            <s class="variant-item__old-price price-item--regular">
+              {%- render 'price-format', price: variant_price_compare -%}
+            </s>
+          </dd>
+          <dt class="visually-hidden">
+            {{ 'products.product.price.sale_price' | t }}
+          </dt>
+          <dd class="margin0">
+            <span class="price-per-item--current price-item--sale">
+              {{- 'products.product.volume_pricing.price_at_each' | t: price: variant_price -}}
+            </span>
+          </dd>
+        </dl>
+      {%- else -%}
+        <span class="price-per-item--current">
+          {{- 'products.product.volume_pricing.price_at_each' | t: price: variant_price -}}
+        </span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</{{ price_tag }}>

@@ -1,0 +1,15 @@
+.recommended-collections--list {
+  --custom-gap:12px;
+  --aspect-ratio:1;
+  --icon-width:5rem;
+  gap: 10px;
+}
+
+.recommended-collections__list-item {
+  display: grid;
+  grid-template-columns: 5rem 1fr 16px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  min-height: 6rem;
+  box-shadow: 0px 1px 3px 0px rgba(var(--color-foreground), 0.10), 0px 1px 2px 0px rgba(var(--color-foreground), 0.06);
+}

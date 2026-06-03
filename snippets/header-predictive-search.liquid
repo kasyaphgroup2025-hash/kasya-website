@@ -1,0 +1,16 @@
+{%- if settings.predictive_search_enabled -%}
+  {%- unless localization.language.iso_code == 'ar' or localization.language.iso_code == 'ja' or localization.language.iso_code == 'ko' or localization.language.iso_code == 'th' or localization.language.iso_code == 'zh-CN' or localization.language.iso_code == 'zh-TW' -%}
+    <predictive-search class="db por predictive-search">
+      {%- render 'header-search-form', suffix_id: suffix_id -%}
+      <div data-predictive-search{% unless section.settings.logo_position == 'top-left' and section.settings.expand_search_box == false %} class="predictive-search__full"{% endunless %} tabindex="-1">
+        <div class="predictive-search__results"></div>
+        <div class="predictive-search__loading-state"></div>
+      </div>
+      <div class="predictive-search__overlay"></div>
+    </predictive-search>
+  {%- else -%}
+    {%- render 'header-search-form', suffix_id: suffix_id -%}  
+  {%- endunless -%}
+{%- else -%}
+  {%- render 'header-search-form', suffix_id: suffix_id -%}
+{%- endif -%}

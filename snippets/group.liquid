@@ -1,0 +1,47 @@
+{%- doc -%}
+  Renders block content for all blocks that extend the group block.
+
+  @param {string} children - The DOM content of the group block.
+  @param {object} local_settings - The settings of the group block.
+  @param {string} shopify_attributes - String with Shopify attributes for the editor.
+  @param {string} [class] - Custom classes for the group block.
+  @param {string} [style_wrapper] - Custom inline styles for the group block.
+  @param {string} [class_inner] - Custom classes for the group block content.
+  @param {string} [style_inner] - Custom inline styles for the group block content.
+
+  @example
+  {% render 'group', children: children, local_settings: block.settings, shopify_attributes: block.shopify_attributes %}
+{%- enddoc -%}
+
+<div
+  class="
+    group-block
+    border-style
+    size-style
+    {{ class }}
+  "
+  style="
+  {% render 'border-override', local_settings: local_settings %}
+  {% render 'size-style', local_settings: local_settings %}
+  {% render 'layout-panel-style', local_settings: local_settings %}
+  {{ style_wrapper }}
+"
+  {{ shopify_attributes }}
+>
+  <div
+    class="
+      group-block-content spacing-style{% if local_settings.background %} gradient{% endif %}
+      {% if local_settings.inherit_color_scheme == false %} color-{{ local_settings.color_scheme }}{% endif %}
+      {% if request.design_mode %}group-block-content--design-mode{% endif %}
+      {% render 'layout-panel-classes', local_settings: local_settings %}
+      {{ class_inner }}
+    "
+    style="
+    {% render 'spacing-style', local_settings: local_settings %}
+    {% render 'background-style', local_settings: local_settings %}
+    {{ style_inner }}
+  "
+  >
+    {{- children -}}
+  </div>
+</div>

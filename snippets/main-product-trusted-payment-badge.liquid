@@ -1,0 +1,53 @@
+{%- liquid 
+  assign has_payment_badge = false
+-%}
+{%- capture payment_badge -%}
+  {%- unless block.settings.payment_badge != blank -%}
+    {%- if shop.enabled_payment_types != empty or block.settings.payment_icons != blank -%}
+      {%- assign has_payment_badge = true -%} 
+      <ul class="list-unstyled trusted-payment-badges flex flex-wrap">
+        {%- unless block.settings.payment_icons != blank -%}
+          {%- for type in shop.enabled_payment_types -%}
+            <li class="trusted-payment-badge">
+              {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+            </li>
+          {%- endfor -%}
+        {%- else -%}
+          {% assign enabled_payment_types = block.settings.payment_icons | remove: ' ' | split: ',' %}
+          {%- for type in enabled_payment_types -%}
+            <li class="trusted-payment-badge">
+              {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+            </li>
+          {%- endfor -%}
+        {%- endunless -%}
+      </ul>
+    {%- endif -%}
+  {%- else -%}
+    {%- assign has_payment_badge = true -%}
+    <div class="media ratio w100" style="--ratio-percent: {{ 1 | divided_by: block.settings.payment_badge.aspect_ratio | times: 100 }}%">
+      <img
+         srcset="{%- if block.settings.payment_badge.width >= 360 -%}{{ block.settings.payment_badge | image_url: width: 360 }} 360w,{%- endif -%}{%- if block.settings.payment_badge.width >= 550 -%}{{ block.settings.payment_badge | image_url: width: 550 }} 550w,{%- endif -%}
+          {%- if block.settings.payment_badge.width >= 720 -%}{{ block.settings.payment_badge | image_url: width: 720 }} 720w,{%- endif -%}
+          {%- if block.settings.payment_badge.width >= 990 -%}{{ block.settings.payment_badge | image_url: width: 990 }} 990w,{%- endif -%}
+          {%- if block.settings.payment_badge.width >= 1100 -%}{{ block.settings.payment_badge | image_url: width: 1100 }} 1100w,{%- endif -%}
+          {%- if block.settings.payment_badge.width >= 1500 -%}{{ block.settings.payment_badge | image_url: width: 1500 }} 1500w,{%- endif -%}
+          {%- if block.settings.payment_badge.width >= 2200 -%}{{ block.settings.payment_badge | image_url: width: 2200 }} 2200w,{%- endif -%}
+          {%- if block.settings.payment_badge.width >= 3000 -%}{{ block.settings.payment_badge | image_url: width: 3000 }} 3000w,{%- endif -%}
+          {{ block.settings.payment_badge | image_url }} {{ block.settings.payment_badge.width }}w"
+        src="{{ block.settings.payment_badge | image_url: width: 150 }}"
+        sizes="(min-width: 750px) 50vw, 100vw"
+        alt="{{ block.settings.payment_badge.alt | escape }}"
+        loading="lazy"
+        width="{{ block.settings.payment_badge.width }}"
+        height="{{ block.settings.payment_badge.height }}"
+      >
+    </div>
+  {%- endunless -%}
+{%- endcapture -%}
+<div {{ block.shopify_attributes }}>
+  {%- if has_payment_badge -%}
+    {{ payment_badge }}
+  {%- elsif request.design_mode -%}
+    {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg placeholder w100 h100 trusted-payment-badge-holder' }}
+  {%- endif -%}
+</div>

@@ -1,0 +1,114 @@
+.testimonial {
+  padding-bottom: 1.5rem;
+}
+
+.testimonial__user {
+  padding: 3.4rem 1rem;
+  row-gap: 1.6rem;
+  min-width: 17rem;
+  max-width: calc(100% - 4.8rem);
+  border-radius: 1rem;
+  background: rgb(var(--color-background));
+  box-shadow: 0px 10px 10px -5px rgba(var(--color-foreground), 0.04), 0px 20px 25px -5px rgba(var(--color-foreground), 0.10);
+  z-index: 1;
+}
+
+.testimonial__user-info {
+  row-gap: 0.6rem;
+}
+
+.testimonial__avatar {
+  width: 8rem;
+  height: 8rem;
+}
+
+.testimonial__content {
+  padding: 2.4rem;
+  gap: 1.6rem;
+  border-radius: 1rem;
+}
+
+.testimonial__stars {
+  gap: 0.1rem;
+}
+
+.testimonial__star--rating-color {
+  color: rgb(var(--color-review-stars-foreground));
+}
+
+.testimonial__user__icon {
+  width: 5rem;
+  height: 5rem;
+  margin: auto;
+  inset-inline-start: 50%;
+  top: 50%;
+  transform: translate(calc(var(--transform-direction) * 50%), -50%);
+  position: absolute;
+}
+
+.testimonial__quote {
+  position: absolute;
+  bottom: -2.4rem;
+}
+
+.testimonials__slide {
+  padding-bottom: 1.8rem;
+}
+
+@media screen and (max-width: 749px) {
+  .testimonial {
+    flex-direction: column;
+  }
+
+  .testimonial__content {
+    align-items: center;
+  }
+
+  .testimonial__user:not(:empty) + .testimonial__content {
+    margin-top: -6.8rem;
+    padding: 9.7rem 2.4rem 5.6rem 2.4rem;
+  }
+
+  .testimonial__user--no-avatar:not(:empty) + .testimonial__content {
+    margin-top: -3.4rem;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .testimonial--has-avatar {
+    margin-inline-start: 1.5rem;
+  }
+  
+  .testimonial__user {
+    max-width: 17.7rem;
+  }
+
+  .testimonial__avatar {
+    width: 10rem;
+    height: 10rem;
+  }
+
+  .testimonial__content {
+    align-items: flex-start;
+    padding: 6.4rem;
+  }
+
+  .testimonial__user:not(:empty) + .testimonial__content {
+    margin-inline-start: -8.8rem;
+    padding-block: 6.4rem;
+    padding-inline-start: 14rem;
+    padding-inline-end: 8rem;
+  }
+
+  .testimonial__quote {
+    inset-inline-end: 1.6rem;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .testimonial__user:not(:empty) + .testimonial__content {
+    padding-block: 8rem;
+    padding-inline-start: 14rem;
+    padding-inline-end: 8rem;
+  }
+}

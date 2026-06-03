@@ -1,0 +1,13 @@
+<compare-add-button class="flex por">
+  <button type="button" class="compare-add-button product__sale-box__footer-button font-body-semi-bold flex justify-right align-center text-body unstyled-button por" data-product-id="{{ product.id | escape }}">
+    <span class="por flex align-center">
+      {%- render 'icon-compare', icon_width: 16 -%}
+      <span class="compare-added-check compare-added-check--main flex justify-center align-center">
+        <svg class="icon icon-checkmark" width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1.5 4.00002L3.83333 6.33335L8.5 1.66669" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </span>
+    </span>
+    <span class="text-small caption-large">{{ 'templates.compare.add_to_compare' | t }}</span>
+  </button>
+</compare-add-button>

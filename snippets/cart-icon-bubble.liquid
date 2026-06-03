@@ -1,0 +1,15 @@
+<div class="header__cart-inner flex justify-center align-center">
+  <div class="por flex">
+    {%- render 'icon-cart', add_classes: 'icon-open-state' -%}
+    <div class="cart-count-bubble flex justify-center align-center header__count-bubble font-body-semi-bold{% if cart.item_count >= 100 %} visually-hidden{% endif %}">
+      {%- if cart.item_count < 100 -%}
+        <span aria-hidden="true" class="flex justify-center align-center">{{ cart.item_count }}</span>
+      {%- endif -%}
+      <span class="visually-hidden flex justify-center align-center">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+    </div>
+  </div>
+  <div class="flex header__cart-total flex-column small-hide medium-hide">
+    <span class="flex align-center small-hide medium-hide light header__cart-total__label caption lh1">{{ 'sections.cart.subtotal' | t }}</span>
+    <span class="font-body-bold header__cart-total__price lh1 price">{%- render 'price-format', price: cart.total_price -%}</span>
+  </div>
+</div>

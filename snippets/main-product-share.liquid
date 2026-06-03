@@ -1,0 +1,84 @@
+{% comment %}
+    Renders share buttons.
+
+    Accepts:
+    - share_url: {String} the absolute URL you want to share.
+	- title: {String} product title or article title.
+    - block: {Object} Block object when browse section.blocks array.
+    - featured_media: {Object} the featured media of the product, selected variant or article.
+
+    Usage:
+    {% render 'main-product-share', share_url: share_url, title: title, block: block, featured_media: featured_media %}
+{% endcomment %}
+{%- liquid
+	if block.settings.enable_floating_layout
+		assign tooltip_pos = 'left'
+	else
+		assign tooltip_pos = 'top'	
+	endif	
+-%}
+{{ 'component-share-button.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="{{ 'component-tooltip.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript>{{ 'component-tooltip.css' | asset_url | stylesheet_tag }}</noscript>
+<share-button id="Share-{{ section.id }}" class="share-button{% if block.settings.enable_floating_layout %} share-button--floating margin0{% endif %} flex quick-add-hidden" {{ block.shopify_attributes }}>
+	<input type="hidden"
+		id="url"
+		value="{{ share_url }}"
+		>
+	<button class="share-button__button flex align-center large-up-hide button button--small{% if block.settings.enable_floating_layout %} bt-tooltip share-button__button--floating share-button__button--circle{% endif %}">
+		{% render 'icon-share' %}
+		{%- if block.settings.enable_floating_layout -%}
+			<span class="bt-tooltip__inner bt-tooltip__inner--left">{{ block.settings.share_label | escape }}</span>
+		{%- else -%}
+			<span>{{ block.settings.share_label | escape }}</span>	
+		{%- endif -%}
+	</button>
+	<div class="share-button__network{% if block.settings.enable_floating_layout %} share-button__network--floating{% endif %} flex small-hide medium-hide">
+		{%- unless block.settings.enable_floating_layout -%}
+			<span class="share-button__label information__label text-small">{{ block.settings.share_label | escape }}</span>
+		{%- endunless -%}
+		<ul role="list" class="share-button__network__list{% if block.settings.enable_floating_layout %} share-button__network__list--floating justify-center{% endif %} list-unstyled flex flex-wrap align-center">
+			{%- if block.settings.share_on_facebook -%}
+				<li>
+					<a target="_blank" href="//www.facebook.com/sharer.php?u={{ share_url | url_encode }}" rel="nofollow" class="bt-tooltip share-button__network__link tap-area-icon flex align-center justify-center" aria-label="{{ 'general.social.alt_text.share_on_facebook' | t | escape }}" data-no-instant>
+						{%- render 'icon-facebook', icon_width: 20 -%}
+						<span class="bt-tooltip__inner bt-tooltip__inner--{{ tooltip_pos }}">{{ 'general.social.alt_text.share_on_facebook' | t | escape }}</span>
+					</a>
+				</li>
+			{%- endif -%}
+			{%- if block.settings.share_on_twitter -%}
+				<li>
+					<a target="_blank" href="//twitter.com/intent/tweet?text={{ title | url_param_escape }}&amp;url={{ share_url | url_encode }}" rel="nofollow" class="bt-tooltip share-button__network__link tap-area-icon flex align-center justify-center" aria-label="{{ 'general.social.alt_text.share_on_twitter' | t | escape }}" data-no-instant>
+						{%- render 'icon-twitter', icon_width: 20 -%}
+						<span class="bt-tooltip__inner bt-tooltip__inner--{{ tooltip_pos }}">{{ 'general.social.alt_text.share_on_twitter' | t | escape }}</span>
+					</a>
+				</li>
+			{%- endif -%}
+			{%- if block.settings.share_on_pinterest -%}
+				<li>
+					<a target="_blank" href="//pinterest.com/pin/create/button/?{% if featured_media %}media={{ featured_media.preview_image | image_url: width: 1024, height: 1024 | url_encode }}&amp;{% endif %}description={{ title | url_param_escape }}&amp;url={{ share_url | url_encode }}" rel="nofollow" class="bt-tooltip share-button__network__link tap-area-icon flex align-center justify-center" aria-label="{{ 'general.social.alt_text.share_on_pinterest' | t | escape }}" data-no-instant>
+						{%- render 'icon-pinterest', icon_width: 20 -%}
+						<span class="bt-tooltip__inner bt-tooltip__inner--{{ tooltip_pos }}">{{ 'general.social.alt_text.share_on_pinterest' | t | escape }}</span>
+					</a>
+				</li>
+			{%- endif -%}
+			{%- if block.settings.share_on_email -%}
+				<li>
+					<a target="_blank" href="mailto:?subject={{ title }}&amp;body={{ share_url | url_encode }}" rel="nofollow" class="bt-tooltip share-button__network__link tap-area-icon flex align-center justify-center" aria-label="{{ 'general.social.alt_text.share_by_email' | t | escape }}" data-no-instant>
+						{%- render 'icon-email', icon_width: 20 -%}
+						<span class="bt-tooltip__inner bt-tooltip__inner--{{ tooltip_pos }}">{{ 'general.social.alt_text.share_by_email' | t | escape }}</span>
+					</a>
+				</li>
+			{%- endif -%}
+			{%- if block.settings.share_link -%}
+				<li>
+					<button type="button" class="bt-tooltip share-button__network__link tap-area-icon share-button__network__link--copy flex align-center justify-center" aria-label="{{ 'general.share.copy_to_clipboard' | t | escape }}" data-no-instant>
+						{%- render 'icon-link', icon_width: 20 -%}
+						<span class="bt-tooltip__inner bt-tooltip__inner--{{ tooltip_pos }}">{{ 'general.share.copy_to_clipboard' | t | escape }}</span>
+					</button>
+				</li>
+			{%- endif -%}
+		</ul>
+	</div>
+</share-button>
+<script src="{{ 'share.js' | asset_url }}" defer="defer"></script>

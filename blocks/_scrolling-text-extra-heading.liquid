@@ -1,0 +1,47 @@
+{%- render 'scrolling-text-block', block: block, item_type: 'extra_bold_heading_text', hide_when_empty_content: true -%}
+{% schema %}
+{
+  "name": "t:sections.scrolling-text.blocks.extra_bold_heading_text.name",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Your text content",
+      "label": "t:sections.scrolling-text.blocks.all.settings.title.label"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:sections.scrolling-text.blocks.all.settings.link.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_outline_text",
+      "default": false,
+      "label": "t:sections.scrolling-text.blocks.all.settings.use_outline_text.label"
+    },
+    {
+      "type": "range",
+      "id": "text_stroke",
+      "label": "t:sections.scrolling-text.blocks.all.settings.text_stroke.label",
+      "info": "t:sections.scrolling-text.blocks.all.settings.text_stroke.info",
+      "min": 1,
+      "max": 7,
+      "unit": "px",
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "color_background",
+      "id": "gradient_color",
+      "label": "t:sections.scrolling-text.blocks.all.settings.gradient_color.label"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.scrolling-text.blocks.extra_bold_heading_text.name"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,15 @@
+{%- comment -%}
+    Renders a price based on the currency format
+
+    Accepts:
+    - price: Integeror float
+
+    Usage:
+    {% render 'price-format', price: price %}
+{%- endcomment -%}
+{%- liquid
+assign money_price = price | money
+if settings.currency_code_enabled
+  assign money_price = price | money_with_currency
+endif
+-%}{{ money_price }}

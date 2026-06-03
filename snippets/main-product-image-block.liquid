@@ -1,0 +1,52 @@
+{%-liquid
+  assign should_display = true
+  if block.settings.image == blank and request.design_mode == false
+    assign should_display = false
+  endif
+-%}
+{%- if should_display -%}
+  {% capture class %}
+    image-block size-style size-style--tablet
+    {% if block.settings.image != blank %}
+      {% if block.settings.width_desktop == 'fit-content' %}fit-desktop{% endif %}
+      {% if block.settings.width_tablet == 'fit-content' %}fit-tablet{% endif %}
+      {% if block.settings.width_mobile == 'fit-content' %}fit-mobile{% endif %}
+    {% endif %}
+    {% if block.settings.border_radius > 0 %}
+      overflow-hidden
+    {% endif %}    
+  {% endcapture %}
+
+  {% capture style %}
+    {% render 'size-style', local_settings: block.settings %}
+    {% if block.settings.image != blank %}
+      {% if block.settings.width_desktop == 'fit-content' or block.settings.width_tablet == 'fit-content' %}
+        --max-width-tablet-up: {{ block.settings.image.width }}px;
+      {% endif %}
+      {% if block.settings.width_mobile == 'fit-content' %}
+        --max-width-mobile: {% if block.settings.image_mobile != blank %}{{ block.settings.image_mobile.width }}px{% else %}{{ block.settings.image.width }}px{% endif %};
+      {%- endif -%}  
+    {% endif %}  
+    {% if block.settings.border_radius > 0 %}
+      border-radius: {{ block.settings.border_radius }}px;
+    {% endif %}  
+  {% endcapture %}
+  {% if block.settings.link == blank %}
+    <div
+      class="{{ class }}"
+      style="{{ style }}"
+      {{ block.shopify_attributes }}
+    >
+      {%- render 'image', block: block -%}
+    </div>
+  {% else %}
+    <a
+      href="{{ block.settings.link }}"
+      class="db {{ class }}"
+      style="{{ style }}"
+      {{ block.shopify_attributes }}
+    >
+      {%- render 'image', block: block -%}
+    </a>
+  {% endif %}
+{%- endif -%}

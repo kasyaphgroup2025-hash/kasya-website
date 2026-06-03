@@ -1,0 +1,185 @@
+<section class="kasya-btr-story" data-section-id="{{ section.id }}">
+  <div class="kasya-btr-story__inner">
+    <div class="kasya-btr-story__image-wrap">
+      {% if section.settings.image != blank %}
+        <img
+          src="{{ section.settings.image | image_url: width: 1200 }}"
+          srcset="
+            {{ section.settings.image | image_url: width: 650 }} 650w,
+            {{ section.settings.image | image_url: width: 900 }} 900w,
+            {{ section.settings.image | image_url: width: 1200 }} 1200w
+          "
+          sizes="(min-width: 750px) 50vw, 100vw"
+          alt="{{ section.settings.image.alt | default: section.settings.heading | escape }}"
+          width="1200"
+          height="900"
+          loading="lazy"
+        >
+      {% else %}
+        <div class="kasya-btr-story__placeholder">Upload story image</div>
+      {% endif %}
+    </div>
+
+    <div class="kasya-btr-story__content">
+      {% if section.settings.heading != blank %}
+        <h2>{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      {% if section.settings.paragraph_1 != blank %}
+        <p>{{ section.settings.paragraph_1 }}</p>
+      {% endif %}
+
+      {% if section.settings.paragraph_2 != blank %}
+        <p>{{ section.settings.paragraph_2 }}</p>
+      {% endif %}
+
+      {% if section.settings.paragraph_3 != blank %}
+        <p>{{ section.settings.paragraph_3 }}</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .kasya-btr-story {
+    background: #121719;
+    color: #fff;
+  }
+
+  .kasya-btr-story * {
+    box-sizing: border-box;
+  }
+
+  .kasya-btr-story__inner {
+    display: grid;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .kasya-btr-story__image-wrap {
+    position: relative;
+    min-height: 290px;
+    overflow: hidden;
+    background: #252b2d;
+  }
+
+  .kasya-btr-story__image-wrap::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(18, 23, 25, 0.24));
+    pointer-events: none;
+  }
+
+  .kasya-btr-story__image-wrap img,
+  .kasya-btr-story__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 290px;
+    object-fit: cover;
+  }
+
+  .kasya-btr-story__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .kasya-btr-story__content {
+    padding: 34px 24px 40px;
+  }
+
+  .kasya-btr-story__content h2 {
+    margin: 0 0 20px;
+    color: inherit;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .kasya-btr-story__content p {
+    max-width: 420px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.84);
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .kasya-btr-story__content p + p {
+    margin-top: 16px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .kasya-btr-story__inner {
+      grid-template-columns: minmax(0, 1fr) minmax(360px, 0.82fr);
+      align-items: stretch;
+    }
+
+    .kasya-btr-story__image-wrap,
+    .kasya-btr-story__image-wrap img,
+    .kasya-btr-story__placeholder {
+      min-height: 460px;
+    }
+
+    .kasya-btr-story__content {
+      display: flex;
+      padding: 54px 56px;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .kasya-btr-story__content h2 {
+      font-size: 36px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Routine Refined Story",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "ROUTINE, REFINED"
+    },
+    {
+      "type": "textarea",
+      "id": "paragraph_1",
+      "label": "Paragraph 1",
+      "default": "Back to Rhythm is built for the quiet return to structure - the meetings, the movement, the moments in between."
+    },
+    {
+      "type": "textarea",
+      "id": "paragraph_2",
+      "label": "Paragraph 2",
+      "default": "Pieces that work as hard as you do and feel good on repeat."
+    },
+    {
+      "type": "textarea",
+      "id": "paragraph_3",
+      "label": "Paragraph 3",
+      "default": "Designed to move with your day. Made to be part of your rhythm."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Routine Refined Story"
+    }
+  ]
+}
+{% endschema %}

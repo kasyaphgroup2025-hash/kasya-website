@@ -1,0 +1,89 @@
+.drawer {
+  background-color: rgba(var(--color-overlay), 0.5);
+  transition: opacity 600ms ease;
+}
+
+.drawer.start-closing {
+  opacity: 0;
+}
+
+.drawer.active,
+.drawer.closing {
+  visibility: visible;
+}
+
+.drawer__inner {
+  width: calc(100vw - 4rem);
+  height: 100%;
+  background-color: rgb(var(--color-background));
+  overflow: auto;
+  display: flex;
+  row-gap: 1.5rem;
+  flex-direction: column;
+  transform: translateX(calc(var(--transform-direction) * (-100%)));
+  transition: transform 300ms ease;
+}
+
+.drawer__inner > * {
+  padding: 0 2rem;
+}
+
+.drawer.active .drawer__inner {
+  transform: translateX(0);
+}
+
+.drawer__header {
+  padding-inline-end: 0.5rem;
+  border-bottom: 1px solid rgb(var(--color-foreground),.05);
+  box-shadow: 0px 1px 2px 0px rgba(var(--color-foreground), 0.03);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.drawer__close {
+  padding: 0;
+  min-width: 4.4rem;
+  min-height: 4.4rem;
+  box-shadow: 0 0 0 0.2rem rgba(var(--color-button), 0);
+  color: rgb(var(--color-foreground));
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.drawer__close svg {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.drawer__contents {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+@media(min-width: 750px) {
+  .drawer__inner {
+    width: 50rem;
+    max-width: calc(100vw - 3rem);
+  }
+}
+
+@media(min-width: 990px) {
+  .drawer__inner--medium {
+    width: 60rem;
+  }
+
+  .drawer__inner--large {
+    width: 70rem;
+  }
+}
+
+div.drawer__overlay:empty {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  inset-inline: 0;
+  display: block;
+  cursor: pointer;
+}

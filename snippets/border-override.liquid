@@ -1,0 +1,7 @@
+{%- comment -%}
+  Renders border override CSS
+{%- endcomment -%}
+
+--border-width: {{ local_settings.border_width }}px; --border-style: {{ local_settings.border }}; --border-color: rgb(var(--color-foreground),{{ local_settings.border_opacity | divided_by: 100.0 }}); --border-radius:
+  {{ local_settings.border_radius }}px; {% if local_settings.border_radius > 0 %} overflow: hidden; {% endif %}
+  

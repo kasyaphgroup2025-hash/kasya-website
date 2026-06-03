@@ -1,0 +1,12 @@
+{%- doc -%}
+  Renders a wrapper section
+
+  @param {section} section_object - The section object
+  @param {string} children - The children of the section
+{%- enddoc -%}
+
+<div
+  class="custom-section__content {% render 'layout-panel-classes', local_settings: section_object.settings %}"
+>
+  {{- children -}}
+</div>

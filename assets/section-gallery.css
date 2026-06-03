@@ -1,0 +1,97 @@
+.gallery__item__content--inside {
+	--color-background-opacity: var(--color-background-opacity-block);
+	--horizontal-padding: 3rem;
+	--vertical-padding: 2rem;
+  position: absolute;
+	top: 0;
+	inset-inline-start: 0;
+	padding: var(--vertical-padding) var(--horizontal-padding);
+	background-color: rgb(var(--color-background), var(--color-background-opacity));
+	box-sizing: border-box;
+	transition: background-color 300ms ease;
+}
+
+.gallery__item__inner--flex {
+	display: flex;
+	flex-direction: column-reverse;
+}
+
+.gallery__item__caption {
+	--color-foreground: var(--color-caption);
+}
+
+.card-wrapper:hover .gallery__item__content--inside {
+	--color-background-opacity: 0;
+}
+
+a.gallery__pin-button {
+	position: absolute;
+	bottom: var(--horizontal-padding);
+}
+
+.gallery__pin-button--left {
+	inset-inline-start: var(--horizontal-padding);
+}
+
+.gallery__pin-button--right {
+	inset-inline-end: var(--horizontal-padding);
+}
+
+.gallery__pin-button--center {
+	inset-inline-start: 50%;
+	transform: translateX(calc(var(--transform-direction) * 50%));
+}
+
+.gallery__item__line {
+	width: 3.5rem;
+	height: 0.2rem;
+	background-color: rgb(var(--color-foreground));
+	margin-block: 2rem;
+}
+
+.gallery__item__line--left {
+	margin-inline-start: 0;
+	margin-inline-end: auto;
+}
+
+.gallery__item__line--center {
+	margin-inline: auto;
+}
+
+.gallery__item__line--right {
+	margin-inline-start: auto;
+	margin-inline-end: 0;
+}
+
+.gallery__item__lightbox-btn {
+	z-index: 2;
+	cursor: pointer;
+	border-radius: 8px;
+	background: rgb(var(--color-background), 0.70);
+	box-shadow: 1px 1px 3px 0px rgb(var(--color-foreground), 0.10);
+	backdrop-filter: blur(6px);
+	padding: 6px;
+	transition: background 300ms ease;
+}
+
+.gallery__item__lightbox-btn:hover {
+	background: rgb(var(--color-background));
+}
+
+a.gallery__item__full-link {
+	display: block;
+}
+
+@media screen and (min-width: 750px) and (max-width: 989px) {
+	.gallery__item__content--inside-small-tablet {
+		--horizontal-padding: 1.5rem;
+		--vertical-padding: 1.5rem;
+	}
+}
+
+@media screen and (min-width: 900px) {
+	.gallery__item__content--inside-small-desktop {
+		--horizontal-padding: 1.5rem;
+		--vertical-padding: 1.5rem;
+	}
+}

@@ -1,0 +1,23 @@
+.template-search__article:not(.template-search__article--empty) {
+  display: grid;
+  grid-template-columns: min(30vw, 15rem) 1fr;
+  gap: 1.5rem;
+}
+
+.template-search__article__footer {
+  gap: 2.5rem;
+}
+
+.template-search__article__footer-icon {
+  margin-inline-end: 0.5rem;
+}
+
+@media(min-width: 750px) {
+  .template-search__article:not(.template-search__article--empty) {
+    gap: 3rem;
+  }
+  
+  .template-search__item__title {
+    font-size: 1.8rem;
+  }
+}

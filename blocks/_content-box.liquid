@@ -1,0 +1,364 @@
+{%- doc -%}
+  Intended for use in a block similar to the media banner block.
+
+  @param {string} parent_id - the id of the media banner block.
+  @param {boolean} [use_appear_animate] - whether to use appear animate.
+{%- enddoc -%}
+{%-liquid
+  assign css_class = ''
+  assign directions = block.settings.content_position | split: '-'
+  unless block.settings.show_text_below_media
+    assign directions_mobile = block.settings.mobile_content_position | split: '-'
+    assign css_class = 'align-' | append: directions_mobile[0] | append: ' justify-' | append: directions_mobile[1]
+  endunless
+  assign has_desktop_background = false
+  assign box_inner_tag = 'div'
+  if use_appear_animate
+    assign box_inner_tag = 'use-animate'
+  endif
+-%}
+<div class="media-banner__content-box w100 h100 flex media-banner__content-box--{{ parent_id }}-{{ block.id }} justify-desktop align-desktop{% if block.settings.show_text_below_media %} media-banner__content-box--text-below-mobile{% endif %} {{ css_class }}" style="
+   --justify-desktop: {{ directions[1] | replace: 'left', 'flex-start' | replace: 'right', 'flex-end' }};
+   --align-desktop: {{ directions[0] | replace: 'top', 'flex-start' | replace: 'middle', 'center' | replace: 'bottom', 'flex-end' }};
+  "
+>
+  <div class="page-width w100 media-banner__content-box__page-width flex">
+    <{{ box_inner_tag }} class="media-banner__content-box__inner size-style size-style--tablet media-banner__content-box__inner--{{ parent_id }}-{{ block.id }}" style="
+      --size-style-width-desktop: {{ block.settings.width_desktop }}%;
+      --size-style-width-tablet: {{ block.settings.width_tablet }}%;
+      --size-style-width-mobile: {% if block.settings.show_text_below_media %}100%{% else %}{{ block.settings.width_mobile }}%{% endif %};
+      --border-radius-mobile: {% if block.settings.show_text_below_media %}0{% else %}{{ block.settings.border_radius_mobile }}px{% endif %};
+      --border-radius-desktop: {{ block.settings.border_radius_desktop }}px;
+      "
+      {{ block.shopify_attributes }}
+    >
+      {%- content_for 'blocks' -%}
+    </{{ box_inner_tag }}>
+  </div>
+</div>
+<style>
+  {%- capture colors_desktop -%}
+    --color-foreground: {{ block.settings.color_text.red }}, {{ block.settings.color_text.green }}, {{ block.settings.color_text.blue }};
+    --color-background-input: {{ block.settings.background_input.red }}, {{ block.settings.background_input.green }}, {{ block.settings.background_input.blue }};
+    --color-button-text: {{ block.settings.color_button_text.red }}, {{ block.settings.color_button_text.green }}, {{ block.settings.color_button_text.blue }};
+    --color-button: {{ block.settings.color_button.red }}, {{ block.settings.color_button.green }}, {{ block.settings.color_button.blue }};
+    --color-button-text-outline: {{ block.settings.color_button.red }}, {{ block.settings.color_button.green }}, {{ block.settings.color_button.blue }};
+    --color-button-outline: {{ block.settings.color_button_text.red }}, {{ block.settings.color_button_text.green }}, {{ block.settings.color_button_text.blue }};
+    {%- if block.settings.background.alpha > 0 -%}
+      --color-background: {{ block.settings.background.red }}, {{ block.settings.background.green }}, {{ block.settings.background.blue }};
+      {%- assign has_desktop_background = true -%}
+      {%- unless block.settings.gradient_background != blank -%}
+        background: {{ block.settings.background }};
+      {%- endunless -%}
+    {%- endif -%}
+    {%- if block.settings.gradient_background != blank -%}
+      background: {{ block.settings.gradient_background }};
+      {%- assign has_desktop_background = true -%}
+    {%- endif -%}
+  {%- endcapture -%}
+    
+  {%- if block.settings.show_text_below_media -%}
+    @media (max-width: 749px) {
+      .media-banner__content-box__inner--{{ parent_id }}-{{ block.id }} {
+        --color-foreground: {{ block.settings.color_text_mobile.red }}, {{ block.settings.color_text_mobile.green }}, {{ block.settings.color_text_mobile.blue }};
+        --color-background-input: {{ block.settings.background_input_mobile.red }}, {{ block.settings.background_input_mobile.green }}, {{ block.settings.background_input_mobile.blue }};
+        --color-button-text: {{ block.settings.color_button_text_mobile.red }}, {{ block.settings.color_button_text_mobile.green }}, {{ block.settings.color_button_text_mobile.blue }};
+        --color-button: {{ block.settings.color_button_mobile.red }}, {{ block.settings.color_button_mobile.green }}, {{ block.settings.color_button_mobile.blue }};
+        --color-button-text-outline: {{ block.settings.color_button_mobile.red }}, {{ block.settings.color_button_mobile.green }}, {{ block.settings.color_button_mobile.blue }};
+        --color-button-outline: {{ block.settings.color_button_text_mobile.red }}, {{ block.settings.color_button_text_mobile.green }}, {{ block.settings.color_button_text_mobile.blue }};
+        {%- if block.settings.background_mobile.alpha > 0 or block.settings.gradient_background_mobile != blank -%}
+          --color-background: {{ block.settings.background_mobile.red }}, {{ block.settings.background_mobile.green }}, {{ block.settings.background_mobile.blue }};
+          {%- unless block.settings.gradient_background_mobile != blank -%}
+            background: {{ block.settings.background_mobile }};
+          {%- endunless -%}
+          {%- if block.settings.gradient_background_mobile != blank -%}
+            background: {{ block.settings.gradient_background_mobile }};
+          {%- endif -%}
+          padding: 15px;
+        {%- else -%}
+          padding-top: 15px;  
+        {%- endif -%}
+      }
+    }
+
+    @media (min-width: 750px) {
+      .media-banner__content-box__inner--{{ parent_id }}-{{ block.id }} {
+        {{ colors_desktop }}
+        padding: 30px;
+      }
+    }
+  {%- else -%}
+    .media-banner__content-box__inner--{{ parent_id }}-{{ block.id }} {
+      {{ colors_desktop }}
+      padding: 15px;
+    }
+    @media (min-width: 750px) {
+      .media-banner__content-box__inner--{{ parent_id }}-{{ block.id }} {
+        padding: {% if has_desktop_background %}30px{% else %}0{% endif %};
+      }
+    }
+  {%- endif -%}  
+  
+</style>
+{% schema %}
+{
+  "name": "t:names.content_box",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_basic-group"
+    }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "content_position",
+      "options": [
+        {
+          "value": "top-left",
+          "label": "t:sections.image-banner.settings.desktop_content_position.options__1.label"
+        },
+        {
+          "value": "top-center",
+          "label": "t:sections.image-banner.settings.desktop_content_position.options__2.label"
+        },
+        {
+          "value": "top-right",
+          "label": "t:sections.image-banner.settings.desktop_content_position.options__3.label"
+        },
+        {
+          "value": "middle-left",
+          "label": "t:sections.image-banner.settings.desktop_content_position.options__4.label"
+        },
+        {
+          "value": "middle-center",
+          "label": "t:sections.image-banner.settings.desktop_content_position.options__5.label"
+        },
+        {
+          "value": "middle-right",
+          "label": "t:sections.image-banner.settings.desktop_content_position.options__6.label"
+        },
+        {
+          "value": "bottom-left",
+          "label": "t:sections.image-banner.settings.desktop_content_position.options__7.label"
+        },
+        {
+          "value": "bottom-center",
+          "label": "t:sections.image-banner.settings.desktop_content_position.options__8.label"
+        },
+        {
+          "value": "bottom-right",
+          "label": "t:sections.image-banner.settings.desktop_content_position.options__9.label"
+        }
+      ],
+      "default": "middle-center",
+      "label": "t:sections.image-banner.settings.desktop_content_position.label"
+    },
+    {
+      "type": "range",
+      "id": "width_desktop",
+      "label": "t:settings.width_desktop",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "width_tablet",
+      "label": "t:settings.width_tablet",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "border_radius_desktop",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "checkbox",
+      "id": "show_text_below_media",
+      "default": true,
+      "label": "t:settings.show_text_below_media_on_mobile"
+    },
+    {
+      "type": "range",
+      "id": "width_mobile",
+      "label": "t:settings.width_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 90,
+      "visible_if": "{{ block.settings.show_text_below_media == false }}"
+    },
+    {
+      "type": "select",
+      "id": "mobile_content_position",
+      "label": "t:settings.mobile_content_position",
+      "options": [
+        {
+          "value": "start-left",
+          "label": "t:sections.image-banner.settings.desktop_content_position.options__1.label"
+        },
+        {
+          "value": "start-center",
+          "label": "t:sections.image-banner.settings.desktop_content_position.options__2.label"
+        },
+        {
+          "value": "start-right",
+          "label": "t:sections.image-banner.settings.desktop_content_position.options__3.label"
+        },
+        {
+          "value": "center-left",
+          "label": "t:sections.image-banner.settings.desktop_content_position.options__4.label"
+        },
+        {
+          "value": "center-center",
+          "label": "t:sections.image-banner.settings.desktop_content_position.options__5.label"
+        },
+        {
+          "value": "center-right",
+          "label": "t:sections.image-banner.settings.desktop_content_position.options__6.label"
+        },
+        {
+          "value": "end-left",
+          "label": "t:sections.image-banner.settings.desktop_content_position.options__7.label"
+        },
+        {
+          "value": "end-center",
+          "label": "t:sections.image-banner.settings.desktop_content_position.options__8.label"
+        },
+        {
+          "value": "end-right",
+          "label": "t:sections.image-banner.settings.desktop_content_position.options__9.label"
+        }
+      ],
+      "default": "center-center",
+      "visible_if": "{{ block.settings.show_text_below_media == false }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius_mobile",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 10,
+      "visible_if": "{{ block.settings.show_text_below_media == false }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.colors_on_desktop",
+      "visible_if": "{{ block.settings.show_text_below_media == true }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.colors",
+      "visible_if": "{{ block.settings.show_text_below_media == false }}"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "default": "#fff",
+      "label": "t:settings.text"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "t:settings.background_color",
+      "alpha": true
+    },
+    {
+      "type": "color_background",
+      "id": "gradient_background",
+      "label": "t:settings_schema.colors.settings.gradient_background.label"
+    },
+    {
+      "type": "color",
+      "id": "background_input",
+      "default": "#171717",
+      "label": "t:settings_schema.colors.settings.background_input.label",
+      "info": "t:info.blur_background_in_discount_code"
+    },
+    {
+      "type": "color",
+      "id": "color_button_text",
+      "default": "#fff",
+      "label": "t:settings.button_label"
+    },
+    {
+      "type": "color",
+      "id": "color_button",
+      "default": "#2563EB",
+      "label": "t:settings.button_background",
+      "info": "t:sections.image-banner.settings.color_button_1.info"
+    },
+    {
+      "type": "header",
+      "content": "t:content.colors_on_mobile",
+      "visible_if": "{{ block.settings.show_text_below_media == true }}"
+    },
+    {
+      "type": "color",
+      "id": "color_text_mobile",
+      "default": "#000",
+      "label": "t:settings.text",
+      "visible_if": "{{ block.settings.show_text_below_media == true }}"
+    },
+    {
+      "type": "color",
+      "id": "background_mobile",
+      "default": "#f5f5f5",
+      "label": "t:settings.background_color",
+      "alpha": true,
+      "visible_if": "{{ block.settings.show_text_below_media == true }}"
+    },
+    {
+      "type": "color_background",
+      "id": "gradient_background_mobile",
+      "label": "t:settings_schema.colors.settings.gradient_background.label",
+      "visible_if": "{{ block.settings.show_text_below_media == true }}"
+    },
+    {
+      "type": "color",
+      "id": "background_input_mobile",
+      "default": "#F8FAFC",
+      "label": "t:settings_schema.colors.settings.background_input.label",
+      "info": "t:info.blur_background_in_discount_code",
+      "visible_if": "{{ block.settings.show_text_below_media == true }}"
+    },
+    {
+      "type": "color",
+      "id": "color_button_text_mobile",
+      "default": "#fff",
+      "label": "t:settings.button_label",
+      "visible_if": "{{ block.settings.show_text_below_media == true }}"
+    },
+    {
+      "type": "color",
+      "id": "color_button_mobile",
+      "default": "#2563EB",
+      "label": "t:settings.button_background",
+      "info": "t:sections.image-banner.settings.color_button_1.info",
+      "visible_if": "{{ block.settings.show_text_below_media == true }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.content_box",
+      "category": "t:categories.layout"
+    }
+  ]
+}
+{% endschema %}

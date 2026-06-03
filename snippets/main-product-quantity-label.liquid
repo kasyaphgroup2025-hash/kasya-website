@@ -1,0 +1,11 @@
+<label class="quantity__label caption" for="Quantity-{{ section_id }}">
+  {{ 'products.product.quantity.label' | t }}
+  <div class="quantity__label__loading loading__spinner hidden">
+    {%- render 'icon-cart-loading' -%}
+  </div>
+  <span class="quantity__rules-cart{% if cart_qty == 0 %} hidden{% endif %}">
+    <span class="quantity__rules-cart__number background-input"
+      >{{- 'products.product.quantity.in_cart_html' | t: quantity: cart_qty -}}</span
+    >
+  </span>
+</label>

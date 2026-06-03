@@ -1,0 +1,100 @@
+.collapsible-content {
+  position: relative;
+  z-index: 0;
+}
+
+.collapsible-content__media {
+  --border-radius: 30px;
+}
+
+.collapsible-content__media--shadow {
+  box-shadow: 0 4px 6px rgb(0,0,0,.5);
+}
+
+.collapsible-content__media--small {
+  height: 19.4rem;
+}
+
+.collapsible-content__media--large {
+  height: 43.5rem;
+}
+
+.collapsible-content__heading-line {
+  margin-bottom: 3rem;
+}
+
+@media screen and (max-width: 749px) {
+  .collapsible-content__image:not(.small-hide) + .grid__item .accordion:first-child {
+    margin-top: 2.5rem;
+  }
+
+  .accordion-wrapper--bleed {
+    padding-inline: 1.5rem;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .collapsible-content__media--small {
+    height: 31.4rem;
+  }
+
+  .collapsible-content__media--large {
+    height: 69.5rem;
+  }
+
+  .collapsible-content__grid--reverse {
+    flex-direction: row-reverse;
+  }
+
+  .collapsible-content__grid-item {
+    position: sticky;
+    top: 1.5rem;
+    height: fit-content;
+  }
+
+  .collapsible-content__content-heading-wrapper__text {
+    text-align: end;
+  }
+
+  .collapsible-content__heading-line {
+    margin-bottom: 6rem;
+  }
+
+  .collapsible-content__grid--bleed-image-first {
+    margin-inline-end: max(calc(50vw - (var(--page-width)/2) + 5rem), 5rem);
+  }
+
+  .collapsible-content__grid--bleed-image-second {
+    margin-inline-start: max(calc(50vw - (var(--page-width)/2) + 5rem), 5rem);
+  }
+
+  .accordion-wrapper--bleed {
+    padding-block: 10rem 5rem;
+  }
+}
+
+.collapsible-content__header {
+  word-break: break-word;
+}
+
+.caption-with-letter-spacing + h2 {
+  margin-top: 1rem;
+}
+
+/* check for flexbox gap in older Safari versions */
+@supports not (inset: 10px) {
+  @media screen and (min-width: 750px) {
+    .collapsible-content__grid:not(.collapsible-content__grid--reverse) .grid__item:last-child,
+    .collapsible-content__grid--reverse .collapsible-content__grid-item {
+      padding-inline-start: 5rem;
+      padding-inline-end: 0;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .collapsible-content__grid:not(.collapsible-content__grid--reverse) .grid__item:last-child,
+    .collapsible-content__grid--reverse .collapsible-content__grid-item {
+      padding-inline-start: 7rem;
+    }
+  }
+}

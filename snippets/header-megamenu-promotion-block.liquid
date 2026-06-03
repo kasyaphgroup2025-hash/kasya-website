@@ -1,0 +1,94 @@
+{%- liquid
+  assign ratio = 1
+  if block.settings.image_ratio == 'portrait'
+    assign ratio = 0.8
+  elsif block.settings.image_ratio == 'landscape'
+    assign ratio = 1.5
+  elsif block.settings.image_ratio == 'wide'
+    assign ratio = 1.7  
+  elsif block.settings.image_ratio == 'adapt'
+    assign ratio = block.settings.image.aspect_ratio
+  endif
+  if ratio == 0 or ratio == nil
+    assign ratio = 1
+  endif
+-%}
+{%- capture sizes -%}(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 130 | divided_by: 4 }}px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2){%- endcapture -%}
+<div class="mega-menu__column__item{% if add_classes %} {{ add_classes }}{% endif %}"{% unless no_block_attributes %} {{ block.shopify_attributes }}{% endunless %}>
+  <div class="card-wrapper contains-card--collection card-radius por card--shadow overflow-hidden">
+    <div class="card card--media">
+      <div class="card__inner">
+        <div class="card__media">
+          <div class="media media--hover-effect w100 ratio" style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;">
+            {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
+            {%- if block.settings.image != blank -%}
+              {%- liquid
+                assign start_height = block.settings.image.width | divided_by: ratio
+              -%}
+              {{ block.settings.image | image_url: width: 1000 | image_tag: sizes: sizes, width: block.settings.image.width, height: start_height, widths: '165,360,533,720,940,1066', class: 'motion-reduce', loading: 'lazy' }}
+            {%- else -%}
+              {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg w100 h100' }}
+            {%- endif -%}
+            {% comment %}theme-check-enable ImgLazyLoading{% endcomment %}
+          </div>
+        </div>
+        {%- if block.settings.overlay_text_enable -%}
+          <div class="card__content card__content--overlay-text mega-menu__overlay color-{{ block.settings.color_scheme }} align-{% if block.settings.text_position == '1' %}start{% elsif block.settings.text_position == '2' %}center{% else %}end{% endif %}" style="--overlay-opacity:{{ block.settings.overlay_opacity | divided_by: 100.00 }}">
+            <div class="card__information {{ block.settings.text_align }} mega-menu__promotion-info" style="--text-position:{{ block.settings.text_position }};">
+              {%- if block.settings.caption != blank -%}
+                <div class="caption-large">{{ block.settings.caption | escape }}</div>
+              {%- endif -%}
+              <div class="mega-menu__heading-promo h3 card__heading font-heading-bold">
+                <a href="{{ block.settings.link }}" class="full-unstyled-link">
+                  {{ block.settings.heading_text | escape }}
+                </a>
+              </div>
+              {%- if block.settings.subheading != blank -%}
+                <div class="subtitle subtitle--medium">{{ block.settings.subheading | escape }}</div>
+              {%- endif -%}
+              {%- if block.settings.button_label != blank -%}
+                <div class="mega-menu__promotion-info__action por{% if block.settings.button_style != 'link' %} mega-menu__promotion-info__button{% endif %}">
+                  <a href="{{ block.settings.link }}" class="{% unless block.settings.button_style == 'link' %}button button--small button--{{ block.settings.button_style }}{% else %}link underlined-link{% endunless %}" title="{{ block.settings.button_label | escape }}">
+                    {%- unless block.settings.button_style == 'link' -%}
+                      <span>{{ block.settings.button_label | escape }}</span>
+                    {%- else -%}
+                      {{ block.settings.button_label | escape }}
+                    {%- endunless -%}  
+                  </a>
+                </div>  
+              {%- endif -%}    
+            </div>
+          </div>
+        {%- endif -%}  
+      </div>
+      {%- unless block.settings.overlay_text_enable -%}
+        <div class="card__content">
+          <div class="card__information {{ block.settings.text_align }} mega-menu__promotion-info">
+            {%- if block.settings.caption != blank -%}
+              <div class="caption-large">{{ block.settings.caption | escape }}</div>
+            {%- endif -%}
+            <div class="h4 card__heading font-heading-bold">
+              <a href="{{ block.settings.link }}" class="full-unstyled-link">
+                {{ block.settings.heading_text | escape }}
+              </a>
+            </div>
+            {%- if block.settings.subheading != blank -%}
+              <div class="subtitle subtitle--medium">{{ block.settings.subheading | escape }}</div>
+            {%- endif -%}
+            {%- if block.settings.button_label != blank -%}
+              <div{% if block.settings.button_style != 'link' %} class="mega-menu__promotion-info__button"{% endif %}>
+                <a href="{{ block.settings.link }}" class="mega-menu__promotion-info__button-link {% unless block.settings.button_style == 'link' %}button button--small button--{{ block.settings.button_style }}{% else %}link underlined-link{% endunless %}" title="{{ block.settings.button_label | escape }}">
+                  {%- unless block.settings.button_style == 'link' -%}
+                    <span>{{ block.settings.button_label | escape }}</span>
+                  {%- else -%}
+                    {{ block.settings.button_label | escape }}
+                  {%- endunless -%}
+                </a>
+              </div>  
+            {%- endif -%}    
+          </div>
+        </div>
+      {%- endunless -%}  
+    </div>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="product-form__quantity-rules quantity__rules caption flex flex-wrap" id="Quantity-Rules-{{ section_id }}">
+  {%- if product.selected_or_first_available_variant.quantity_rule.increment > 1 -%}
+    <span class="divider quantity__rules__divider por">
+      {{-
+        'products.product.quantity.multiples_of'
+        | t: quantity: product.selected_or_first_available_variant.quantity_rule.increment
+      -}}
+    </span>
+  {%- endif -%}
+  {%- if product.selected_or_first_available_variant.quantity_rule.min > 1 -%}
+    <span class="divider quantity__rules__divider por">
+      {{-
+        'products.product.quantity.minimum_of'
+        | t: quantity: product.selected_or_first_available_variant.quantity_rule.min
+      -}}
+    </span>
+  {%- endif -%}
+  {%- if product.selected_or_first_available_variant.quantity_rule.max != null -%}
+    <span class="divider quantity__rules__divider por">
+      {{-
+        'products.product.quantity.maximum_of'
+        | t: quantity: product.selected_or_first_available_variant.quantity_rule.max
+      -}}
+    </span>
+  {%- endif -%}
+</div>

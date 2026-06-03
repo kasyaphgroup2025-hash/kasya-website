@@ -1,0 +1,42 @@
+<div class="grid__item product-attributes__table__specifications" {{ block.shopify_attributes }}>
+  <div class="product-attributes__table-item">
+    <div class="flex w100 align-center">
+      <h3 class="margin0 product-attributes__table-item__title--specifications flex align-center">
+        {{ block.settings.title }}
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M8.00016 2.49994V13M8.00016 13L12.6668 8.33335M8.00016 13L3.3335 8.33335" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </h3>
+      <hr class="margin0 flex-grow-1">
+    </div>
+    <div class="product-attributes__table-item__content product-attributes__table-item__content--specifications text-medium">
+      <ul class="product-attributes__table-item__specifications-list grid grid--1-col grid--2-col-tablet grid--3-col-desktop">
+        {%- content_for 'blocks' -%}
+      </ul>
+    </div>	
+  </div>	
+</div>	
+{% schema %}
+{
+  "name": "t:names.specifications_group",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:settings.group_heading",
+      "default": "t:text_defaults.group_heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_product-attribute-specification"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.specifications_group"
+    }
+  ]
+}
+{% endschema %}

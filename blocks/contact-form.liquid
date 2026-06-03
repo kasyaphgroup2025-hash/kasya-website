@@ -1,0 +1,273 @@
+{{ 'section-contact-form.css' | asset_url | stylesheet_tag }}
+<div
+  class="
+    size-style
+    spacing-style
+    {% if block.settings.inherit_color_scheme == false %} color-{{ block.settings.color_scheme }}{% endif %}
+  "
+  style="
+  {% render 'size-style', local_settings: block.settings %}
+  {% render 'spacing-style', local_settings: block.settings %}
+"
+  {{ block.shopify_attributes }}
+>
+  {% assign form_id = block.id | default: section.id | prepend: 'ContactForm-' %}
+  {%- form 'contact', id: form_id, class: 'contact' -%}
+    {%- if form.posted_successfully? -%}
+      <h2 class="form__message alert alert--success alert--small small-margin-bottom" tabindex="-1">
+        {% render 'icon-success' %}
+        {{ 'templates.contact.form.post_success' | t }}
+      </h2>
+    {%- elsif form.errors -%}
+      <div class="alert alert--error aler--small small-margin-bottom">
+        <div class="form__message">
+          <h2 class="form-status text-small text-body" role="alert" tabindex="-1">
+            {% render 'icon-error' %}
+            {{ 'templates.contact.form.error_heading' | t }}
+          </h2>
+        </div>
+        <ul class="form-status-list text-small" role="list">
+          <li>
+            <a href="#ContactForm-email-{{ form_id }}" class="link underlined-link" data-no-instant>
+              {{ form.errors.translated_fields.email | capitalize }}
+              {{ form.errors.messages.email }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    {%- endif -%}
+    <div class="contact__fields">
+      <div class="field">
+        <label class="field__label text-small font-body-semi-bold uppercase" for="ContactForm-name-{{ form_id }}">
+          {{- 'templates.contact.form.name' | t -}}
+        </label>
+        <input
+          class="field__input"
+          autocomplete="name"
+          type="text"
+          id="ContactForm-name-{{ form_id }}"
+          name="contact[{{ 'templates.contact.form.name' | t }}]"
+          value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+          placeholder="{{ 'templates.contact.form.name' | t }}"
+        >
+      </div>
+      <div class="field field--with-error">
+        <label class="field__label text-small font-body-semi-bold uppercase" for="ContactForm-email-{{ form_id }}">
+          {{- 'templates.contact.form.email' | t }}
+          <span aria-hidden="true">*</span></label
+        >
+        <input
+          autocomplete="email"
+          type="email"
+          id="ContactForm-email-{{ form_id }}"
+          class="field__input"
+          name="contact[email]"
+          spellcheck="false"
+          autocapitalize="off"
+          value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+          aria-required="true"
+          {% if form.errors contains 'email' %}
+            aria-invalid="true"
+            aria-describedby="ContactForm-email-error"
+          {% endif %}
+          placeholder="{{ 'templates.contact.form.email' | t }}"
+          required="required"
+        >
+        {%- if form.errors contains 'email' -%}
+          <small
+            class="contact__field-error alert alert--error alert--small flex margin-top-1rem"
+            id="ContactForm-email-error-{{ form_id }}"
+          >
+            <span class="visually-hidden">{{ 'accessibility.error' | t }}</span>
+            <span class="form__message">
+              {%- render 'icon-error' -%}
+              {{- form.errors.translated_fields.email | capitalize }}
+              {{ form.errors.messages.email -}}
+            </span>
+          </small>
+        {%- endif -%}
+      </div>
+      <div class="field">
+        <label class="field__label text-small font-body-semi-bold uppercase" for="ContactForm-phone-{{ form_id }}">
+          {{- 'templates.contact.form.phone' | t -}}
+        </label>
+        <input
+          type="tel"
+          id="ContactForm-phone-{{ form_id }}"
+          class="field__input"
+          autocomplete="tel"
+          name="contact[{{ 'templates.contact.form.phone' | t }}]"
+          pattern="[0-9\-]*"
+          value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+          placeholder="{{ 'templates.contact.form.phone' | t }}"
+        >
+      </div>
+      <div class="field field--full">
+        <label class="field__label text-small font-body-semi-bold uppercase" for="ContactForm-body-{{ form_id }}">
+          {{- 'templates.contact.form.comment' | t -}}
+        </label>
+        <textarea
+          rows="10"
+          id="ContactForm-body-{{ form_id }}"
+          class="text-area field__input"
+          name="contact[{{ 'templates.contact.form.comment' | t }}]"
+          placeholder="{{ 'templates.contact.form.comment' | t }}"
+        >
+          {{- form.body -}}
+        </textarea>
+      </div>
+    </div>
+    {%- if block.settings.attach_product_url != nil -%}
+      <input type="hidden" name="contact[Product URL]" value="{{ request.origin | append: block.settings.attach_product_url.url }}">
+    {%- endif -%}  
+    <div class="left">
+      {%- content_for 'block', type: 'submit-button', id: 'submit-button' -%}
+    </div>
+  {%- endform -%}  
+</div>
+{% schema %}
+{
+  "name": "t:names.contact_form",
+  "tag": null,
+  "settings": [
+    {
+      "type": "product",
+      "id": "attach_product_url",
+      "label": "t:settings.attach_product_url",
+      "info": "t:info.attach_product_url"
+    },
+    {
+      "type": "select",
+      "id": "width_desktop",
+      "label": "t:settings.width_desktop",
+      "options": [
+        {
+          "value": "fit-content",
+          "label": "t:options.fit_content"
+        },
+        {
+          "value": "fill",
+          "label": "t:options.fill"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.custom"
+        }
+      ],
+      "default": "fit-content"
+    },
+    {
+      "type": "range",
+      "id": "custom_width_desktop",
+      "label": "t:settings.width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.width_desktop == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "width_mobile",
+      "label": "t:settings.width_mobile",
+      "options": [
+        {
+          "value": "fit-content",
+          "label": "t:options.fit_content"
+        },
+        {
+          "value": "fill",
+          "label": "t:options.fill"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.custom"
+        }
+      ],
+      "default": "fit-content"
+    },
+    {
+      "type": "range",
+      "id": "custom_width_mobile",
+      "label": "t:settings.width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.width_mobile == 'custom' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "t:settings.inherit_color_scheme",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1",
+      "visible_if": "{{ block.settings.inherit_color_scheme == false }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:options.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:options.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:options.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:options.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.contact_form",
+      "category": "t:categories.forms"
+    },
+    {
+      "name": "t:names.ask_about_product",
+      "category": "t:categories.forms",
+      "settings": {
+        "attach_product_url": "{{ closest.product }}"
+      }
+    }
+  ]
+}
+{% endschema %}

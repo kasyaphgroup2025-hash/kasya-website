@@ -1,0 +1,5 @@
+{%- unless settings.section_heading_line == 'none' -%}
+  {%- if settings.section_heading_line == 'solid' -%}
+    <hr class="title__line flex-grow-1 margin0{% if add_classes %} {{ add_classes }}{% endif %}">
+  {%- endif -%}
+{%- endunless -%}

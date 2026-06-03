@@ -1,0 +1,40 @@
+{%- doc -%}
+  Intended for use in a block similar to the text block.
+
+  @param {string} text - the text to display
+  @param {number} length - the height of the truncate text. Unit: pixel.
+  @param {string} [button_text] - the Read more button label
+  @param {string} [class] - custom class to define in addition to text-block classes
+{%- enddoc -%}
+
+<truncate-text
+  class="db{% if class %} {{ class }}{% endif %}"
+  {% if length > 0 %}
+    style="--truncate-text-length:{{ length }}px;"
+  {% else %}
+    data-ignore="true"
+  {% endif %}
+>
+  <div class="truncate-text__content-wrapper">
+    <div class="truncate-text__content rte">
+      {{ text }}
+    </div>
+  </div>
+  {% if length > 0 %}
+    <div class="center truncate-text__button-wrapper element-small-margin-top por flex justify-center hidden overflow-hidden">
+      <hr class="margin0 flex-grow-1">
+      <button
+        class="button--truncate-text-js button button--medium button--truncate-text ignore-effect"
+        type="button"
+      >
+        {% if button_text != blank %}
+          <span class="light">{{ button_text }}</span>
+        {% endif %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none" class="light">
+          <path d="M10.25 4.875L6.5 8.625L2.75 4.875" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <hr class="margin0 flex-grow-1">
+    </div>
+  {% endif %}
+</truncate-text>

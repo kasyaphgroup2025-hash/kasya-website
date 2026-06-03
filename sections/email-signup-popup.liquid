@@ -1,0 +1,232 @@
+{%- if section.settings.enable -%}
+  {%- unless request.design_mode == false and section.settings.disable_account_holder and shop.customer_accounts_enabled and customer -%}
+    {%-liquid
+      assign desktop_height = 35
+      if section.settings.image != blank
+        assign desktop_height = desktop_height | plus: 15
+      endif
+    -%}
+    <script src="{{ 'email-signup-popup.js' | asset_url }}" defer="defer"></script>
+    <email-signup-popup class="email-signup-popup{% if section.settings.image != blank %} email-signup-popup--has-image{% endif %} popup-modal no-js-hidden db color-{{ section.settings.color_scheme }}{% if request.design_mode %} loaded{% endif %}" 
+      id="PopupModal-{{ section.id }}"
+      data-section-id="{{ section.id }}"
+      data-delay-time="{{ section.settings.delay_time | times: 1000 }}"
+      data-expiration-time="{{ section.settings.expiration_time }}"
+      style="--desktop-height: {{ desktop_height }}rem;"
+    >
+      <div role="dialog" aria-label="{{ section.settings.accessibility_info | escape }}" aria-modal="true" class="popup-modal__content" tabindex="-1">
+        <button id="ModalClose-{{ section.id }}" type="button" class="popup-modal__toggle" aria-label="{{ 'accessibility.close' | t }}">{% render 'icon-close' %}</button>
+        {%- if template.suffix == 'ajax' or request.design_mode -%}
+          <div class="popup-modal__content-info email-signup-popup__grid{% if section.settings.image != blank %} email-signup-popup__grid--has-image{% endif %}">
+            {%- if section.settings.image != blank -%}
+              <div class="email-signup-popup__media media h100">
+                {%- capture sizes -%}(min-width: {{ settings.page_width }}px) {{ settings.page_width | divided_by: 3 | times: 2 | at_least: 1100 }}px, (min-width: 750px) calc(100vw * 0.67), 100vw{%- endcapture -%}
+                {%-liquid
+                  assign image_class = ''
+                  if section.settings.image_mobile != blank
+                    assign image_class = "small-hide"
+                  endif
+                -%}
+                {{ section.settings.image | image_url: width: 1500 | image_tag:
+                  loading: 'lazy',
+                  sizes: sizes,
+                  widths: '165, 360, 535, 700, 875, 1070, 1500',
+                  class: image_class
+                }}
+                {%- if section.settings.image_mobile != blank -%}
+                  {{ section.settings.image_mobile | image_url: width: 1500 | image_tag:
+                    loading: 'lazy',
+                    sizes: '100vw',
+                    widths: '165, 360, 535, 700, 875',
+                    class: 'medium-hide large-up-hide'
+                  }}
+                {%- endif -%}
+              </div>
+            {%- endif -%}  
+            <div class="email-signup-popup__content-wrapper email-signup-popup__content-wrapper--{{ section.settings.content_position }} por">
+              <div class="email-signup-popup__content w100 h100 flex flex-column justify-space-between">
+                <div>
+                  {%- if section.settings.heading != blank -%}
+                    <h2 class="email-signup-popup__content__heading font-heading-extra-bold">{{ section.settings.heading }}</h2>
+                  {%- endif -%}
+                  {%- if section.settings.description != blank -%}
+                    <div class="email-signup-popup__text rte small-margin-top">
+                      {{ section.settings.description }}
+                    </div>
+                  {%- endif -%}
+                </div>
+                {%- form 'customer', id: 'ContactPopup', class: 'email-signup-popup__newsletter element-small-margin-top' -%}
+                  <input type="hidden" name="contact[tags]" value="newsletter">
+                  {%- if form.posted_successfully? -%}
+                    <h3 class="form__message alert alert--success" id="ContactPopup-success" tabindex="-1">{% render 'icon-success' %}{{ 'newsletter.success' | t }}</h3>
+                  {%- endif -%}
+                  {%- if form.errors -%}
+                    <small class="email-signup-popup__newsletter__error-message form__message" id="ContactPopup-error">{% render 'icon-error' %}{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}</small>
+                  {%- endif -%}
+                  <div class="newsletter__form-field-wrapper flex justify-space-between">
+                    <div class="field flex-grow-1">
+                      <input
+                        id="NewsletterForm--{{ section.id }}"
+                        type="email"
+                        name="contact[email]"
+                        class="newsletter__input field__input"
+                        value="{{ form.email }}"
+                        aria-required="true"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        autocomplete="email"
+                        {% if form.errors %}
+                          autofocus
+                          aria-invalid="true"
+                          aria-describedby="ContactPopup-error"
+                        {% elsif form.posted_successfully? %}
+                          aria-describedby="ContactPopup-success"
+                        {% endif %}
+                        placeholder="{{ section.settings.email_placeholder | escape }}"
+                        required
+                      >
+                      <label class="visually-hidden" for="NewsletterForm--{{ section.id }}">
+                        {{ 'newsletter.label' | t }}
+                      </label>
+                    </div>
+                    <button type="submit" class="button newsletter__button email-signup-popup__submit-button" name="commit" id="ContactPopupSubscribe" aria-label="{{ 'newsletter.button_label' | t }}">
+                      {%- render 'icon-arrow', custom_classes: 'icon-revert-in-rtl' -%}
+                    </button>
+                  </div>
+                {%- endform -%}
+                <div class="email-signup-popup__checkbox-wrapper flex margin-top-1rem">
+                  <div class="por email-signup-popup__checkbox-inner virtual-checkbox">
+                    <input type="checkbox" class="email-signup-popup__checkbox margin0 virtual-checkbox__checkbox" id="email-signup-popup-checkbox-{{ section.id }}"{% if section.settings.tick_notification_by_default %} checked="checked"{% endif %}>
+                    <label for="email-signup-popup-checkbox-{{ section.id }}" class="email-signup-popup__label text-small db virtual-checkbox__label">
+                      <svg class="email-signup-popup__icon-checkmark icon icon-checkmark virtual-checkbox__icon-checkmark" width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1.5 4.00002L3.83333 6.33335L8.5 1.66669" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      <span>{{ section.settings.notification_text | escape }}</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {%- endif -%}	
+      </div>
+    </email-signup-popup>
+    {%- if template.suffix == 'ajax' or request.design_mode -%}
+    <div class="section-styles">  
+      {{ 'component-newsletter.css' | asset_url | stylesheet_tag }}
+      {{ 'section-email-signup-popup.css' | asset_url | stylesheet_tag }}
+      {{ 'component-virtual-checkbox.css' | asset_url | stylesheet_tag }}
+    </div>  
+    {%- endif -%}
+  {%- endunless -%}
+{%- endif -%}	
+{% schema %}
+{
+  "name": "t:sections.email-signup-popup.name",
+  "tag": "div",
+  "class": "section email-signup-popup-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable",
+      "label": "t:sections.email-signup-popup.settings.enable.label",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.email-signup-popup.settings.image.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "t:sections.email-signup-popup.settings.image_mobile.label"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.email-signup-popup.settings.heading.label",
+      "default": "Signup for our newsletter"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:sections.email-signup-popup.settings.description.label"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "t:sections.email-signup-popup.settings.email_placeholder.label",
+      "default": "Enter your email here"
+    },
+    {
+      "type": "text",
+      "id": "notification_text",
+      "label": "t:sections.email-signup-popup.settings.notification_text.label",
+      "default": "Don't show this popup again."
+    },
+    {
+      "type": "checkbox",
+      "id": "tick_notification_by_default",
+      "label": "t:sections.email-signup-popup.settings.tick_notification_by_default.label",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "t:sections.email-signup-popup.settings.content_position.label",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.email-signup-popup.settings.content_position.options__1.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.email-signup-popup.settings.content_position.options__2.label"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "range",
+      "id": "delay_time",
+      "label": "t:sections.email-signup-popup.settings.delay_time.label",
+      "min": 0,
+      "max": 15,
+      "step": 1,
+      "unit": "sec",
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_account_holder",
+      "label": "t:sections.email-signup-popup.settings.disable_account_holder.label",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "expiration_time",
+      "label": "t:sections.email-signup-popup.settings.expiration_time.label",
+      "info": "t:sections.email-signup-popup.settings.expiration_time.info",
+      "min": 1,
+      "max": 7,
+      "step": 1,
+      "unit": "day",
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "accessibility_info",
+      "label": "t:sections.email-signup-popup.settings.accessibility.label",
+      "info": "t:sections.email-signup-popup.settings.accessibility.info",
+      "default": "Signup newsletter popup"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "inverse",
+      "label": "t:sections.all.colors.label"
+    }
+  ]
+}
+{% endschema %}

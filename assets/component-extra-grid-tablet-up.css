@@ -1,0 +1,11 @@
+@media (max-width: 989px) {
+  .grid--extra-equal .grid__item--extra-tablet {
+    width: calc(50% - var(--grid-horizontal-spacing) / 2);
+  }
+}
+
+@media (min-width: 990px) {
+  .grid--extra-equal .grid__item--extra-desktop {
+    width: calc(50% - var(--grid-horizontal-spacing) / 2);
+  }
+}

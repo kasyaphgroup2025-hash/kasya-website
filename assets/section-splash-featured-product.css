@@ -1,0 +1,64 @@
+.splash-featured-product {
+  --banner-gap: 1.6rem;
+}
+
+@media only screen and (min-width: 750px) and (max-width: 989px) {
+  .splash-featured-product.banner--content-align-mobile-right .banner__box {
+    text-align: end;
+  }
+
+  .splash-featured-product.banner--content-align-mobile-left .banner__box {
+    text-align: start;
+  }
+}
+
+@media only screen and (max-width: 989px) {
+  .banner__content.banner__content--splash {
+    padding: 2.4rem;
+  }
+
+  .banner__content--splash .banner__box {
+    margin-top: auto;
+    max-width: none;
+  }
+
+  .splash-featured-product.banner--small-mobile {
+    min-height: 35rem;
+  }
+
+  .splash-featured-product.banner--medium-mobile {
+    min-height: 55rem;
+  }
+
+  .splash-featured-product.banner--large-mobile {
+    min-height: 75rem;
+  }
+}
+
+@media only screen and (min-width: 990px) {
+  .splash-featured-product {
+    --banner-gap: 2.4rem;
+  }
+
+  .splash-featured-product.banner--small {
+    min-height: 70rem;
+  }
+
+  .splash-featured-product.banner--medium {
+    min-height: 110rem;
+  }
+
+  .splash-featured-product.banner--large {
+    min-height: 150rem;
+  }
+
+  .banner__content--splash .banner__box {
+    width: 41rem;
+  }
+
+  .card-product-special--splash {
+    padding: 3.2rem;
+    border-start-start-radius: var(--card-border-radius-desktop);
+    border-end-end-radius: var(--card-border-radius-desktop);
+  }
+}

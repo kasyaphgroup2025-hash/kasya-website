@@ -1,0 +1,48 @@
+{%- doc -%}
+  Intended for use in a block similar to the button block.
+
+  @param {string} link - link to render
+  @param {object} [block] - The block
+
+  @example
+  {% render 'button', link: '/collections/all' %}
+{%- enddoc -%}
+
+<a
+  {% if link == blank %}
+    role="link"
+    aria-disabled="true"
+  {% else %}
+    href="{{ link }}"
+  {% endif %}
+  class="
+    {% if block.settings.style_class != 'link' %}
+      button button--{{ block.settings.style_class }} button--{{ block.settings.size }} button-font-scale
+    {% else %}
+      link underlined-link text-body text-scale
+    {% endif %}
+    button--{{ block.settings.style_class }}--{{ block.id }}
+    {% unless block.settings.wrap_text %}nowrap{% endunless %}
+  "
+  style="
+    --custom-font-scale:{{ block.settings.font_size_scale | divided_by: 100.0 }};
+    {% if block.settings.custom_color %}
+      {% if block.settings.style_class == 'primary' %}
+        --color-button: {{ block.settings.custom_color_background.rgb | replace: ' ', ',' }};
+        --color-button-text: {{ block.settings.custom_color_label.rgb | replace: ' ', ',' }};
+      {% elsif block.settings.style_class == 'secondary' %}
+        --color-button-outline: {{ block.settings.custom_color_label.rgb | replace: ' ', ',' }};
+        --color-button-text-outline: {{ block.settings.custom_color_background.rgb | replace: ' ', ',' }};
+      {% else %}
+        --color-link: {{ block.settings.custom_color_background.rgb | replace: ' ', ',' }};
+      {% endif %}
+    {% endif %}
+  "
+  {%- if block.settings.open_in_new_tab -%}
+    target="_blank"
+    rel="noopener noreferrer"
+  {%- endif -%}
+  {{ block.shopify_attributes }}
+>
+  <span>{{ block.settings.label }}</span>
+</a>

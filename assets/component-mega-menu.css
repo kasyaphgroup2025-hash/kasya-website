@@ -1,0 +1,200 @@
+.mega-menu__content {
+  background-color: rgb(var(--color-background));
+  border-inline-start: 0;
+  border-inline-end: 0;
+  border-radius: 0;
+  inset-inline: 0;
+  overflow-y: auto;
+  padding-bottom: 2.4rem;
+  padding-top: 2.4rem;
+  transition: opacity 500ms cubic-bezier(.38,.65,.33,1), transform 500ms cubic-bezier(.38,.65,.33,1);
+}
+
+@media screen and (min-width: 990px) {
+  .mega-menu__content.outside-viewport {
+    max-height: calc(100vh - var(--header-bottom-position-desktop, 20rem) - 4rem);
+  }
+}
+
+.header-wrapper--border-bottom .mega-menu__content {
+  border-top: 0;
+}
+
+.js .mega-menu[open].closing > summary + *, .js .header__submenu__last[open].closing > summary + * {
+  opacity: 0;
+  transform: translateY(-1.5rem);
+}
+
+.mega-menu__content__inner {
+  --column-gap: 3rem;
+  --row-gap: 3rem;
+  gap: var(--row-gap) var(--column-gap);
+}
+
+.mega-menu__column--span1 {
+  --total-columns: 1;
+}
+
+.mega-menu__column--span1 > li {
+  grid-column: span 1;
+}
+
+.mega-menu__column--span2 {
+  --total-columns: 2;
+}
+
+.mega-menu__column--span3 {
+  --total-columns: 3;
+}
+
+.mega-menu__column--span4 {
+  --total-columns: 4;
+}
+
+.mega-menu__column--span5 {
+  --total-columns: 5;
+}
+
+.mega-menu__column--span6 {
+  --total-columns: 6;
+}
+
+.mega-menu__column {
+  display: grid;
+  grid-template-columns: repeat(var(--total-columns), 1fr);
+  width: calc((25% * var(--total-columns)) - (var(--column-gap) / 2));
+  height: fit-content;
+  gap: var(--row-gap);
+}
+
+.mega-menu__column--allow-full {
+  grid-template-columns: 1fr;
+}
+
+.mega-menu__overlay {
+  background: rgb(var(--color-background), var(--overlay-opacity));
+  z-index: 0;
+}
+
+.mega-menu__list {
+  display: grid;
+  gap: var(--row-gap) var(--column-gap);
+  grid-template-columns: repeat(var(--total-columns), minmax(0, 1fr));
+  list-style: none;
+  padding: 0;
+  grid-template-rows: min-content;
+}
+
+.mega-menu__list--center {
+  flex: 1;
+}
+
+.mega-menu__list .list-menu__item--level2 {
+  padding: 0;
+}
+
+.mega-menu__link {
+  display: inline-block;
+  padding-bottom: 0.6rem;
+  padding-top: 0.6rem;
+  text-decoration: none;
+  word-wrap: break-word;
+}
+
+.mega-menu__link:hover .mega-menu__small-image {
+  border-color: rgb(var(--color-foreground));
+}
+
+.mega-menu__link--title {
+  padding-top: 0;
+  color: rgb(var(--color-foreground));
+  margin-bottom: 1.5rem;
+}
+
+.mega-menu__link--level-2 {
+  font-size: 1.4rem;
+}
+
+.mega-menu__link--level-2:not(:only-child) {
+  margin-bottom: 0.8rem;
+}
+
+.mega-menu .mega-menu__list--condensed {
+  display: block;
+}
+
+.mega-menu__list--condensed .mega-menu__link {
+  font-weight: var(--font-heading-weight-medium);
+}
+
+.mega-menu__column__item .card__inner .card__content--overlay-text {
+  position: absolute;
+  inset-block: 0;
+  inset-inline: 0;
+}
+
+div.mega-menu__promotion-info {
+  padding: 1rem;
+  grid-row-start: var(--text-position);
+}
+
+.mega-menu__promotion-info > * + * {
+  margin-top: 1rem;
+}
+
+.mega-menu__promotion-info > * + .mega-menu__promotion-info__button {
+  margin-top: 1.5rem;
+}
+
+.mega-menu__promotion-info__action {
+  z-index: 1;
+}
+
+.mega-menu__heading-promo {
+  margin-top: 0;
+}
+
+.mega-menu__link--has-small-image {
+  display: flex;
+}
+
+.mega-menu__small-image {
+  min-width: 5rem;
+  width: 5rem;
+  border: 1px solid rgb(var(--color-foreground), .1);
+  padding: 0.3rem;
+  margin-inline-end: 1rem;
+  transition: border-color .5s ease;
+}
+
+.mega-menu__small-image--circle {
+  border-radius: 50%;
+}
+
+.menu-drawer__menu-labels {
+  padding: 16px 24px;
+  border: 1px solid rgb(var(--color-foreground), 0.05);
+  border-radius: 0.8rem;
+}
+
+.menu-drawer__menu-labels__list {
+  gap: 1rem 1.5rem;
+}
+
+.menu-drawer__menu-labels__item-gap {
+  gap: 0.8rem;
+}
+
+.mega-menu__splitting-span {
+  grid-column: span var(--total-columns);
+}
+
+.mega-menu__list--splitting {
+  --row-gap: 0px;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(var(--total-rows), min-content);
+}
+
+.mega-menu__promotion-info__button-link {
+  z-index: 1;
+}

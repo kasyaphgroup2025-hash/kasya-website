@@ -1,0 +1,60 @@
+{%-liquid
+  assign has_item_background = false
+  if block.settings.item_background != 'none'
+    if block.settings.item_background == 'blur'
+      assign has_item_background = true
+    elsif block.settings.item_background_color != blank and block.settings.item_background_color.alpha > 0
+      assign has_item_background = true
+    endif
+  endif
+  assign image_size_mobile = block.settings.image_size_mobile | plus: 30
+  assign image_size_tablet = block.settings.image_size_tablet | plus: 30
+  assign image_size_desktop = block.settings.image_size_desktop | plus: 30
+  assign widths = image_size_mobile | append: ',' | append: image_size_tablet | append: ',' | append: image_size_desktop | split: ',' | uniq | sort | join: ','
+-%}
+{% capture image_sizes %}(min-width: 990px) {{ image_size_desktop }}px, (min-width: 750px) {{ image_size_tablet }}px, {{ image_size_mobile }}px{%- endcapture -%}  
+{%- capture icons -%}
+  {%- for i in (1..6) -%}
+    {%-liquid
+      assign image_index = 'image_item_' | append: i
+      assign title_index = 'title_item_' | append: i
+      assign subtitle_index = 'subtitle_item_' | append: i
+    -%}
+    {%- if block.settings[image_index] != blank or block.settings[title_index] != blank -%}
+      <div class="product-text-icons__item flex align-{{ block.settings.content_position }}{% if has_item_background %} product-text-icons__item--has-bkg {% if block.settings.item_background == 'blur' %}{% unless section.settings.use_background_input %}background-input{% else %}product-text-icons__item--use-color-background{% endunless %}{% else %}gradient{% endif %}{% endif %} {% cycle 'odd', 'even' %}">
+        {%- if block.settings[image_index] != blank -%}
+          <div class="product-text-icons__item__media" style="--ratio-percent: {{ 1 | divided_by: block.settings[image_index].aspect_ratio | times: 100 }}%;">
+            <div class="media ratio media--transparent">
+              {{ block.settings[image_index] | image_url: width: 160 | image_tag: sizes: image_sizes, loading: 'lazy', widths: widths}}
+            </div>
+          </div>
+        {%- endif -%}
+        {%- if block.settings[title_index] != blank -%}
+          <div class="product-text-icons__item__details flex flex-column">
+            <span class="product-text-icons__item__title heading-font font-heading-bold lh1">{{ block.settings[title_index] }}</span>
+            {%- if block.settings[subtitle_index] != blank -%}
+              <span class="product-text-icons__item__subtitle caption">{{ block.settings[subtitle_index] }}</span>
+            {%- endif -%}
+          </div>
+        {%- endif -%}  
+      </div>
+    {%- endif -%}  
+  {%- endfor -%}  
+{%- endcapture -%}
+{%- if icons and icons != '' -%}
+  <div class="product-text-icons{% if block.settings.expand_last_item %} product-text-icons--expand-last-item{% endif %}"
+    style="--items-per-row-mobile:{{ block.settings.items_per_row_mobile }};
+    --items-per-row-tablet:{{ block.settings.items_per_row_tablet }};
+    --items-per-row-desktop:{{ block.settings.items_per_row_desktop }};
+    --item-media-size-desktop: {{ block.settings.image_size_desktop }}px;
+    --item-media-size-tablet: {{ block.settings.image_size_tablet }}px;
+    --item-media-size-mobile: {{ block.settings.image_size_mobile }}px;
+    --item-corder-radius: {{ block.settings.item_corner_radius }}px;
+    {% if block.settings.item_background == 'custom' and block.settings.item_background_color != blank %}--gradient-background:{{ block.settings.item_background_color }};{% endif %}
+    "
+    {{ block.shopify_attributes }}
+  >
+    {{- icons -}}
+  </div>
+  {{ 'main-product-text-icons.css' | asset_url | stylesheet_tag }}
+{%- endif -%}  

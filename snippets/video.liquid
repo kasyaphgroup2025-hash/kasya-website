@@ -1,0 +1,192 @@
+{%- doc -%}
+  Renders a video element, from a video object (<video> element) or a video URL (<iframe> element)
+
+  Shared parameters:
+
+  @param {boolean} [video_autoplay] - Whether the video should autoplay
+  @param {boolean} [video_loop] - Whether the video should loop
+  @param {string} [video_class] - Additional classes for the deferred media element
+  @param {string} [button_class] - Additional classes for the button element
+  @param {object} [preview_image] - Preview image to show before video plays
+  @param {string} [sizes] - Responsive sizes
+  @param {string} [loading] - Loading attribute
+  @param {string} [additional_attributes] - Any additional HTML attributes
+  @param {string} [video_type] - 'youtube' or 'vimeo'
+  @param {boolean} [enable_controls] - Whether to enable controls. If false, only play/pause will be usable.
+  @param {object} video - The Shopify video object or a string containing a YouTube ID or Vimeo ID
+  @param {boolean} [is_full_width] - Display the video in fullwidth or not
+  @param {boolean} [enable_sound] - Whether the sound is enabled
+  @param {boolean} [no_need_button] - Whether the button is used
+  @param {boolean} [use_pause_icon] - Whether the pause icon is used
+  @param {string} [playing_class] - Additional classes for the video or iframe element
+
+  Video from URL:
+
+  @param {boolean} [video_from_url] - Set to true to use a video from URL instead of a Shopify video object
+  @param {string} [video_alt] - The video alt text
+
+  @example
+  {% render 'video', video: section.settings.video, video_autoplay: true, video_loop: true, section_id: section.id %}
+{%- enddoc -%}
+
+{%- liquid
+  assign cover_image = preview_image | default: video.preview_image
+  if video != nil
+    assign deferred_media_tag = 'deferred-media'
+  else
+    assign deferred_media_tag = 'div'
+  endif
+  assign video_alt = video_alt | default: video.alt
+  assign muted = '1'
+  assign boolean_muted = true
+  if enable_sound and video_autoplay == false
+    assign muted = '0'
+    assign boolean_muted = false
+  endif
+  assign use_native_button = true
+  if video != blank and video_autoplay == false and preview_image == blank
+    if video_from_url
+      assign use_native_button = false
+    elsif video.host == 'youtube' or video.host == 'vimeo'
+      assign use_native_button = false
+    endif
+  endif
+-%}
+<{{ deferred_media_tag }} class="video-section__media media deferred-media no-js-hidden global-media-settings use-aspect-ratio media--transparent{% if is_full_width %} global-media-settings--full-width{% endif %} {{ video_class }}"
+  data-media-id="{{ video.id }}"
+  {% if video_autoplay %} data-autoplay="true"{% endif %}
+  {% unless enable_controls %} data-no-controls="true"{% endunless %}
+  {% if video != blank and video_autoplay == false and preview_image == blank %}data-loaded="true"{% endif %}
+  {{ additional_attributes }}
+>
+  {%- unless no_need_button -%}
+    <button
+      id="Deferred-Poster-Modal-{{ video.id }}"
+      class="media deferred-media__poster video-section__poster zoom{% unless video != blank and video_autoplay == false and preview_image == blank %} use-aspect-ratio{% endunless %}{% unless use_native_button %} hidden{% endunless %} {{ button_class }}"
+      type="button"
+      aria-label="{{ 'sections.video.load_video' | t: description: video_alt | escape }}"
+    >
+      {%- if cover_image != blank -%}
+        {%- capture sizes -%}{% if is_full_width %}100vw{% else %}(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 }}px, (min-width: 750px) calc(100vw - 10rem), 100vw{% endif %}{%- endcapture -%}
+        {%- assign alt = 'sections.video.load_video' | t: description: video_alt | escape -%}
+        {{ cover_image | image_url: width: 3840 | image_tag:
+          loading: loading,
+          sizes: sizes,
+          widths: '375, 750, 1100, 1500, 1780, 2000, 3000, 3840',
+          alt: alt,
+          class: 'aspect-ratio'
+        }}
+      {%- else -%}
+        {{ 'collection-apparel-2' | placeholder_svg_tag: 'placeholder-svg placeholder aspect-ratio w100 h100' }}
+      {%- endif -%}
+      <span class="deferred-media__poster-button motion-reduce">
+        {%- render 'icon-play' -%}
+        {%- if use_pause_icon -%}
+          {%- render 'icon-pause' -%}
+        {%- endif -%}
+      </span>
+    </button>
+  {%- endunless -%}
+  {%- capture template_content -%}
+  <template>
+    {% if video_from_url %}
+      {% liquid
+        if video_type == 'youtube'
+          assign video_src = 'https://www.youtube.com/embed/VIDEO_ID?' | replace: 'VIDEO_ID', video
+    
+          if video_autoplay == false and preview_image != blank
+            assign video_src = video_src | append: '&autoplay=1'
+          endif
+    
+          if video_autoplay
+            assign video_src = video_src | append: '&autoplay=1'
+          endif
+    
+          if video_loop
+            assign video_src = video_src | append: '&playlist=' | append: video | append: '&loop=1'
+          endif
+          unless enable_controls
+            assign video_src = video_src | append: '&controls=0'
+            assign video_src = video_src | append: '&enablejsapi=1'
+          endunless
+          assign video_src = video_src | append: '&mute=' | append: muted
+          assign class = 'js-youtube'
+        else
+          assign video_src = 'https://player.vimeo.com/video/VIDEO_ID?' | replace: 'VIDEO_ID', video
+    
+          if video_autoplay == false and preview_image != blank
+            assign video_src = video_src | append: '&autoplay=1'
+          endif
+    
+          if video_autoplay
+            assign video_src = video_src | append: '&autoplay=1'
+          endif
+          if video_loop
+            assign video_src = video_src | append: '&loop=1'
+          endif
+          unless enable_controls
+            assign video_src = video_src | append: '&controls=0'
+            assign video_src = video_src | append: '&api=1'
+          endunless
+          assign video_src = video_src | append: '&muted=' | append: muted
+          assign class = 'js-vimeo'
+        endif
+      %}
+      {% capture video_iframe %}
+          <iframe
+            src="{{ video_src }}"
+            class="{{ class }} aspect-ratio{% if playing_class %} {{ playing_class }}{% endif %}"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+            title="{{ video_alt | escape }}"
+          ></iframe>
+      {% endcapture %}
+    {% else %}
+      {% liquid
+        unless enable_controls
+          assign controls = false
+          assign enable_js_api = true
+        else
+          assign controls = true
+          assign enable_js_api = false
+        endunless
+        assign video_tag_class = 'aspect-ratio'
+        if playing_class
+          assign video_tag_class = video_tag_class | append: ' ' | append: playing_class
+        endif
+      %}
+      {% capture video_tag %}
+        {% if video.host == 'youtube' %}
+          {{
+            video
+            | external_video_url: autoplay: video_autoplay, loop: video_loop, playlist: video.external_id, mute: muted, controls: controls, enablejsapi: enable_js_api
+            | external_video_tag: data-video-type: 'youtube', class: video_tag_class
+          }}
+        {% elsif video.host == 'vimeo' %}
+          {{
+            video
+            | external_video_url: autoplay: video_autoplay, loop: video_loop, muted: muted, controls: controls, api: enable_js_api
+            | external_video_tag: data-video-type: 'vimeo', class: video_tag_class
+          }}
+        {% else %}
+          {{ video | video_tag: image_size: '2500x', autoplay: video_autoplay, loop: video_loop, muted: boolean_muted, controls: controls, class: video_tag_class }}
+        {% endif %}
+      {% endcapture %}
+    {% endif %}
+    {% if video_from_url %}
+      {{ video_iframe }}
+    {% else %}
+      {{ video_tag }}
+    {% endif %}
+  </template>
+  {%- endcapture -%}
+  {% if video != blank and video_autoplay == false and preview_image == blank %}
+    {% if video_from_url %}
+      {{ video_iframe }}
+    {% else %}
+      {{ video_tag }}
+    {% endif %}
+  {%- else -%}
+    {{ template_content }}
+  {% endif %}
+</{{ deferred_media_tag }}>

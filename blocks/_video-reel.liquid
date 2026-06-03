@@ -1,0 +1,189 @@
+{%-liquid
+  assign video_ratio = '9 / 16'
+  assign has_content = false
+  if block.settings.video != nil
+    assign has_content = true
+  endif
+  if block.settings.aspect_ratio == 'portrait'
+    assign video_ratio = '4 / 5'
+  elsif block.settings.aspect_ratio == 'square'
+    assign video_ratio = '1 / 1'
+  elsif block.settings.aspect_ratio == 'landscape'
+    assign video_ratio = '16 / 9'  
+  elsif block.settings.aspect_ratio == 'adapt'
+    if block.settings.video != nil
+      assign video_ratio = block.settings.video.aspect_ratio
+    elsif block.settings.cover_image != blank
+      assign video_ratio = block.settings.cover_image.aspect_ratio
+    endif  
+  endif
+%}
+{%- if has_content or request.design_mode -%}
+  <div id="Slide-{{ block.id }}" class="grid__item por shoppable-reels__itemSLIDE_HOLDER_CLASS" {{ block.shopify_attributes }}>
+    <video-reel class="db por{% unless block.settings.inherit_color_scheme %} color-{{ block.settings.color_scheme }} media--transparent{% endunless %}"{% if block.settings.product %} data-product-url="{{ block.settings.product.url }}"{% endif %}
+      style="--aspect-ratio: {{ video_ratio }};"
+      {% unless block.settings.inherit_color_scheme %}
+        data-color-scheme="{{ block.settings.color_scheme }}"
+      {% endunless %}
+      {% if block.settings.video != nil %}
+        data-has-video="true"
+      {% endif %}
+      data-popup-fit-mode="{{ block.settings.popup_fit_mode }}"
+      {% if block.settings.video_autoplay %}data-ignore-hover="true"{% endif %}
+    >
+      <div class="por">
+        {% render 'video',
+          video_from_url: false,
+          video: block.settings.video,
+          video_autoplay: block.settings.video_autoplay,
+          enable_sound: false,
+          video_loop: true,
+          enable_controls: false,
+          preview_image: block.settings.cover_image,
+          button_class: 'reuse',
+          video_class: 'reel-video',
+          use_pause_icon: true,
+          playing_class: 'video--background'
+        %}
+        <div class="shoppable-reels__item__text">
+          {%- content_for 'block', type: 'text', id: 'video-reel-text' -%}
+        </div>
+      </div>
+      {% if block.settings.product != nil %}
+        {% render 'video-reel-product', card_product: block.settings.product %}
+      {% endif %}
+      {% if block.settings.popup_fit_mode == 'contain' %}
+        {% assign background_image = block.settings.cover_image | default: block.settings.video.preview_image %}
+        {% if background_image != blank %}
+          <template class="reels-item__blur-tpl">
+            <img 
+              src="{{ background_image | image_url: width: 750 }}" 
+              srcset="
+                {{ background_image | image_url: width: 375 }} 375w,
+                {{ background_image | image_url: width: 750 }} 750w,
+                {{ background_image | image_url: width: 1100 }} 1100w,
+                {{ background_image | image_url: width: 1500 }} 1500w,
+                {{ background_image | image_url: width: 2000 }} 2000w
+              " 
+              sizes="100vw"
+              alt="{{ background_image.alt | escape }}"
+              class="reels-item__blur-bg zoom w100 h100"
+              width="{{ background_image.width }}"
+              height="{{ background_image.height }}"
+            />
+          </template>
+        {% endif %}
+      {% endif %}
+    </video-reel>
+  </div>
+  <!--VIDEO_REEL_BLOCK-->
+{%- endif -%}
+{% schema %}
+{
+  "name": "t:names.video_reel",
+  "tag": null,
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "t:settings.product"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "t:sections.video.settings.video_hosted.label"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "t:settings.aspect_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:options.auto"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.all.image_ratio.option_2.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.all.image_ratio.option_3.label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.all.image_ratio.option_4.label"
+        },
+        {
+          "value": "9:16",
+          "label": "9:16"
+        }
+      ],
+      "default": "9:16"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_autoplay",
+      "label": "t:sections.video.settings.autoplay.label",
+      "info": "t:info.video_autoplay",
+      "default": false,
+      "visible_if": "{{ block.settings.video != blank }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "cover_image",
+      "label": "t:sections.video.settings.cover_image.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "t:settings.inherit_color_scheme",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "background-1",
+      "label": "t:sections.all.colors.label",
+      "visible_if": "{{ block.settings.inherit_color_scheme == false }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.appearance_in_popup"
+    },
+    {
+      "type": "select",
+      "id": "popup_fit_mode",
+      "label": "t:settings.fit_mode",
+      "options": [
+        {
+          "value": "cover",
+          "label": "t:options.cover"
+        },
+        {
+          "value": "contain",
+          "label": "t:options.contain_with_blurred_background"
+        }
+      ],
+      "default": "cover"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.video",
+      "category": "t:categories.basic",
+      "blocks": {
+        "video-reel-text": {
+          "type": "text",
+          "static": true,
+          "settings": {
+            "color": "custom",
+            "custom_color": "#fff",
+            "custom_line_height": "1.2"
+          }
+        }
+      }
+    }
+  ]
+}
+{% endschema %}

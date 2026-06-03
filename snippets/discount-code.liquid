@@ -1,0 +1,42 @@
+{%- doc -%}
+  Intended for use in a block or section.
+
+  @param {object} [local_settings] - The block or section settings
+  @param {string} [shopify_attributes] - String with Shopify attributes for the editor.
+  @param {boolean} [blur_code] - Set the code is blur or not.
+
+  @example
+  {% render 'discount-code', local_settings: block.settings %}
+{%- enddoc -%}
+
+{%- if local_settings.code != blank -%}
+  <discount-code class="discount-code flex{% if local_settings.layout == 'code_above_button' %} flex-column{% endif %} custom-gap"
+    style="--custom-gap:10px;{% if local_settings.layout == 'code_after_button' %}flex-direction:row-reverse;{% endif %}"
+    data-code="{{ local_settings.code | escape }}"
+    data-message="{{ local_settings.message | escape }}"
+    {{ shopify_attributes }}
+  >
+    {%- if local_settings.layout contains 'code' -%}
+      <div class="discount-code__code custom-gap border-style lh1 flex align-center text-scale color-foreground flex-grow-1 background-input" style="--custom-font-scale:{{ local_settings.font_size_scale | divided_by: 100.0 }};padding:14px 20px;{% render 'border-override', local_settings: local_settings %}{% if local_settings.background and local_settings.background_color %}--color-background-input:{{ local_settings.background_color.rgba }};{% endif %}">
+        <span class="text-small lh1{% if blur_code %} light{% endif %}">{{ local_settings.code }}</span>
+        {%- if local_settings.layout contains 'copy_icon' -%}
+          {%- unless local_settings.layout contains 'code' -%}
+            {%- render 'icon-picker', icon: 'clipboard_copy', icon_width: local_settings.icon_size -%}
+          {%- else -%}
+            <button type="button" class="unstyled-button tap-area-icon flex justify-center align-center" data-code="{{ local_settings.code | escape }}" style="cursor:pointer;">
+              {%- render 'icon-picker', icon: 'clipboard_copy', icon_width: local_settings.icon_size -%}
+            </button>
+          {%- endunless -%}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+    {%- if local_settings.layout contains 'button' -%}
+    <button class="discount-code__button button button--{{ local_settings.style_class }} button--{{ local_settings.button_size }} button-font-scale" style="--custom-font-scale:{{ local_settings.font_size_scale | divided_by: 100.0 }};">
+      <span>{{ local_settings.button_label }}</span>
+      {%- if local_settings.layout contains 'copy_icon' -%}
+        {%- render 'icon-picker', icon: 'clipboard_copy', icon_width: local_settings.icon_size -%}
+      {%- endif -%}
+    </button>
+    {%- endif -%}
+  </discount-code>
+{%- endif -%}

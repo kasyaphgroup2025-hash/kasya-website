@@ -1,0 +1,120 @@
+
+{% render 'button', link: block.settings.link, block: block %}
+
+{% schema %}
+{
+  "name": "t:names.button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "t:settings.label",
+      "default": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:settings.link"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "t:sections.all.open_link_in_new_tab.label",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "t:sections.all.button_style.label",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:sections.all.button_style.option_1.label"
+        },
+        {
+          "value": "secondary",
+          "label": "t:sections.all.button_style.option_2.label"
+        },
+        {
+          "value": "link",
+          "label": "t:sections.all.button_style.option_3.label"
+        }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "range",
+      "id": "font_size_scale",
+      "min": 50,
+      "max": 150,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings_schema.typography.settings.heading_scale.label",
+      "default": 100
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "t:settings.size",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:options.extra_small"
+        },
+        {
+          "value": "medium",
+          "label": "t:options.small"
+        },
+        {
+          "value": "normal",
+          "label": "t:options.medium"
+        },
+        {
+          "value": "large",
+          "label": "t:options.large"
+        }
+      ],
+      "default": "normal",
+      "visible_if": "{{ block.settings.style_class != 'link' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "wrap_text",
+      "label": "t:settings.wrap_text_in_button",
+      "info": "t:info.wrap_text_in_button",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_color",
+      "label": "t:settings.color_custom",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "custom_color_label",
+      "label": "t:settings.button_label",
+      "default": "#fff",
+      "visible_if": "{{ block.settings.custom_color }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_color_background",
+      "label": "t:settings.button_background",
+      "default": "#000",
+      "info": "t:sections.image-banner.settings.color_button_1.info",
+      "visible_if": "{{ block.settings.custom_color }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.button",
+      "category": "t:categories.basic",
+      "settings": {
+        "link": "shopify://collections/all"
+      }
+    }
+  ]
+}
+{% endschema %}

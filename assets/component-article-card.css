@@ -1,0 +1,189 @@
+.card--article {
+  --content-position: 1.5rem;
+  background: transparent;
+}
+
+.card--article-layout-inside:not(.card--text):before {
+  content: "";
+  background: linear-gradient(180deg, rgba(var(--color-background), 0.00) 0%, rgba(var(--color-background), 0.70) 100%);
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.card--article-layout-below {
+  row-gap: 1.6rem;
+}
+
+.article-card__image--small .ratio::before {
+  padding-bottom: 11rem;
+}
+
+.article-card__image--medium .ratio::before {
+  padding-bottom: 22rem;
+}
+
+.article-card__image--large .ratio::before {
+  padding-bottom: 33rem;
+}
+
+.article-card__image-wrapper.full-link:after {
+  z-index: 2;
+}
+
+.article-card-radius {
+  --border-radius: max(0.6rem, var(--global-border-radius));
+  border-radius: var(--border-radius);
+}
+
+.article-card__line {
+  background-color: rgba(var(--color-foreground));
+}
+
+.article-card__line--inside {
+  opacity: 0.25;
+}
+
+.article-card__line--below {
+  opacity: 0.1;
+}
+
+.card--article.card--text {
+  justify-content: flex-end;
+}
+
+.card__content-article {
+  z-index: 1;
+}
+
+.card--article-layout-inside .article-card__image-wrapper + .card__content-article {
+  position: absolute;
+  bottom: var(--content-position);
+  inset-inline: var(--content-position);
+}
+
+.article-card__footer {
+  gap: 1.5rem;
+}
+
+.article-card__footer__item {
+  gap: 0.8rem;
+}
+
+.article__actions__link {
+  padding: 0.9rem 1.3rem;
+  gap: 0.8rem;
+}
+
+.article-card--standard {
+  --content-padding: 2.4rem;
+  --content-gap: 1.6rem;
+  --line-gap: -0.4rem;
+}
+
+.article-card__standard-content {
+  padding: var(--content-padding);
+  gap: var(--content-gap);
+}
+
+.article-card__standard-line {
+  margin: var(--line-gap) 0;
+}
+
+.article-card-radius .full-link:focus::after, .article-card-radius .full-link:focus-visible::after {
+  border-radius: calc(var(--border-radius) - 0.5rem);
+}
+
+.article-card__badge {
+  --color-badge-foreground: var(--color-blog-card-badge-foreground);
+  --color-badge-background: var(--color-blog-card-badge-background);
+  --position: 1.6rem;
+  --padding: 0.9rem 1.4rem;
+  --badge-corner-radius: 0.6rem;
+  border: none;
+  top: var(--position);
+  inset-inline-start: var(--position);
+  box-shadow: 0px 1px 2px 0px rgb(var(--color-foreground), 0.05);
+  padding: var(--padding);
+  font-size: calc(1.2rem * var(--font-body-scale));
+  z-index: 3;
+  transition: color, background 500ms ease;
+  text-transform: capitalize;
+}
+
+.article-card__badge--beside {
+  --padding: 0.6rem 0.8rem;
+  --position: 0.6rem;
+  font-size: calc(1.1rem * var(--font-body-scale));
+}
+
+.article-card__badge:hover {
+  --color-badge-foreground: var(--color-blog-card-badge-background);
+  --color-badge-background: var(--color-blog-card-badge-foreground);
+}
+
+@media screen and (min-width: 750px) {
+  .article-card-radius {
+    --border-radius: calc(var(--global-border-radius) + 4px);
+  }
+
+  .article-card__image--small .ratio::before {
+    padding-bottom: 14.3rem;
+  }
+
+  .article-card__image--medium .ratio::before {
+    padding-bottom: 21.9rem;
+  }
+
+  .article-card__image--large .ratio::before {
+    padding-bottom: 27.5rem;
+  }
+
+  .article-card--standard {
+    --content-padding: 4.4rem;
+    --content-gap: 2.4rem;
+    --line-gap: -0.8rem;
+  }
+
+  .article-card__badge {
+    --position: 2rem;
+  }
+
+  .article-card__badge--beside {
+    --position: 0.8rem;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .article-card-radius {
+    --border-radius: calc(var(--global-border-radius) + 8px);
+  }
+
+  .article-card__image--small .ratio::before {
+    padding-bottom: 17.7rem;
+  }
+
+  .article-card__image--medium .ratio::before {
+    padding-bottom: 30.7rem;
+  }
+
+  .article-card__image--large .ratio::before {
+    padding-bottom: 40.7rem;
+  }
+
+  .card--article {
+    --content-position: 2.5rem;
+  }
+
+  .article-card__badge:not(.article-card__badge--beside) {
+    --position: 2.4rem;
+  }
+}
+
+@media(min-width: 1366px) {
+  .article-card__footer--standard {
+    column-gap: 2.5rem;
+  }
+}

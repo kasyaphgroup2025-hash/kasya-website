@@ -1,0 +1,91 @@
+{%-liquid
+  assign hide_block = false
+  if hide_when_empty_content
+    unless request.design_mode
+      assign hide_block = true
+      if item_type == 'icon' or block.settings.title != blank or block.settings.image != blank
+        assign hide_block = false
+      endif
+    endunless
+  endif
+-%}
+{%- unless hide_block -%}
+  <li class="scrolling-text__li" {{ block.shopify_attributes }}>
+  {%- if item_type contains 'text' -%}
+    {%-liquid
+      unless block.settings.link != blank
+        assign title_tag = 'span'
+      else  
+        assign title_tag = 'a'
+      endunless
+    -%}
+    <{{ title_tag }} class="scrolling-text__item scrolling-text__item--{{ section.id }} scrolling-text__item--{{ section.id }}-{{ block.id }}
+      {% if item_type == 'extra_bold_heading_text' %} heading-font{% endif %}
+      {% if item_type == 'extra_bold_heading_text' %} font-heading-extra-bold{% endif %}
+      scrolling-text__item--{{ item_type }}
+      {% if block.settings.use_outline_text %} scrolling-text__item--outline{% endif %}
+      {% if block.settings.gradient_color != blank %} scrolling-text__item--gradient{% endif %}
+      {% if block.settings.link != blank %} full-link full-unstyled-link por{% endif %}"
+      {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %}
+      style="
+        --text-stroke: {{ block.settings.text_stroke }}px;
+        {% if block.settings.gradient_color != blank %}
+          --gradient-text: {{ block.settings.gradient_color }};
+        {% endif %}  
+      "
+    >
+      {{ block.settings.title }}
+    </{{ title_tag }}>
+  {%- elsif item_type == 'icon' -%}
+    <div class="flex align-center scrolling-text__item scrolling-text__item--{{ section.id }}-{{ block.id }}{% if block.settings.custom_svg_icon != blank %} custom-svg-icon color-foreground{% endif %}"
+      {% if block.settings.icon_color != blank or block.settings.custom_svg_icon != blank %}
+        style="
+        {% if block.settings.icon_color != blank %}
+          --color-foreground: {{ block.settings.icon_color.red }}, {{ block.settings.icon_color.green }}, {{ block.settings.icon_color.blue }};
+        {% endif %}
+        {% if block.settings.custom_svg_icon != blank %}
+          --icon-width: {{ block.settings.size }}px;
+        {% endif %}
+        "
+      {% endif %}
+    >
+      {%- unless block.settings.custom_svg_icon != blank -%}
+        {%- render 'icon-picker', icon: block.settings.icon, icon_width: block.settings.size, add_classes: 'color-foreground' -%}
+      {%- else -%}
+        {{ block.settings.custom_svg_icon }}
+      {%- endunless -%}
+    </div>
+  {%- else -%}
+    <div class="flex align-center scrolling-text__item scrolling-text__item--thumbnail scrolling-text__item--{{ section.id }}-{{ block.id }}">
+      {%- liquid
+        assign ratio = 1
+        if thumbnail_ratio == 'adapt' and block.settings.image != blank
+          assign ratio = block.settings.image.aspect_ratio
+          if ratio == 0 or ratio == null
+            assign ratio = 1
+          endif
+        endif
+        unless block.settings.link != blank
+          assign image_tag = 'div'
+        else  
+          assign image_tag = 'a'
+        endunless
+      -%}
+      <{{ image_tag }} class="media w100 media--transparent media--{{ thumbnail_ratio }}{% if thumbnail_ratio == 'adapt' %} ratio{% endif %}{% unless thumbnail_ratio == 'circle' %} card-radius{% endunless %}"
+        {% if thumbnail_ratio == 'adapt' and block.settings.image != blank %}style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"{% endif %}
+        {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %}
+      >       
+        {%- if block.settings.image != blank -%}
+          {{ block.settings.image | image_url: width: 1420 | image_tag:
+            loading: 'lazy',
+            sizes: "(min-width: 990px) 12rem, 10rem",
+            widths: '100, 275'
+          }}
+        {%- else -%}  
+          {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg w100 h100' }}
+        {%- endif -%}  
+      </{{ image_tag }}>
+    </div>
+  {%- endif -%}  
+  </li>
+{%- endunless -%}

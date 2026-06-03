@@ -1,0 +1,19 @@
+{%- if settings.enable_product_compare or settings.back_to_top_button_enable -%}
+	{%- if settings.back_to_top_button_enable -%}
+		<script src="{{ 'back-to-top.js' | asset_url }}" async></script>
+		<back-to-top class="floating-element{% if settings.enable_product_compare %} floating-element--back-to-top-has-compare{% endif %}">
+			<button class="button floating-button" type="button" aria-label="{{ 'general.floating_bar.back_to_top' | t | escape }}">
+				{%- render 'icon-caret' -%}
+			</button>
+		</back-to-top>
+	{%- endif -%}	
+	{%- if settings.enable_product_compare -%}
+		<modal-opener data-modal="#Compare-Modal" class="compare-button-floating floating-element medium-hide large-up-hide{% unless settings.back_to_top_button_enable %} always-visible{% endunless %}">
+      <button class="button floating-button" aria-label="{{ 'templates.compare.header_icon' | t | escape }}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon icon-compare">
+					<path d="M1 4.66667L4.66642 5.88889M4.66642 5.88889L1 16.8889C3.16628 18.5186 6.16802 18.5186 8.3343 16.8889M4.66642 5.88889L8.33292 16.8889M4.66642 5.88889L11.9993 3.44444M19.3321 5.88889L22.9985 4.66667M19.3321 5.88889L15.6657 16.8889C17.832 18.5186 20.8337 18.5186 23 16.8889M19.3321 5.88889L22.9986 16.8889M19.3321 5.88889L11.9993 3.44444M11.9993 1V3.44444M11.9993 23V3.44444M11.9993 23H8.33285M11.9993 23H15.6657" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
+      </button>
+    </modal-opener>
+	{%- endif -%}
+{%- endif -%}

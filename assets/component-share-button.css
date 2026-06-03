@@ -1,0 +1,81 @@
+/* Button - social share */
+
+.share-button--floating {
+	position: absolute;
+	inset-inline-end: 0;
+	top: -4rem;
+}
+
+@media(min-width: 750px) {
+	.share-button--floating {
+		top: -1.5rem;
+	}
+}
+
+.share-button__network__list {
+	gap: 2.8rem;
+	margin-inline-start: 1rem;
+}
+
+.share-button__network__list--floating {
+	margin-inline-start: 0;
+}
+
+.share-button__button--circle {
+	width: 4.4rem;
+	height: 4.4rem;
+	padding: 0;
+	--buttons-radius: 50%;
+	border-radius: var(--buttons-radius);
+	box-shadow: 0px 1px 2px rgb(var(--color-highlight), 0.05);
+}
+
+.share-button__button--circle:before, .share-button__button--circle:after {
+	border-radius: var(--buttons-radius);
+}
+
+.share-button__button--circle svg {
+	transition: transform 300ms cubic-bezier(.03,.93,.97,1);
+}
+
+.share-button__button--circle.open svg {
+	transform: rotate(90deg);
+}
+
+.share-button__network--floating {
+	position: absolute;
+	inset-inline-start: 50%;
+	top: 5rem;
+	opacity: 0;
+	visibility: hidden;
+	background-color: rgb(var(--color-background));
+	padding: 1rem 0;
+	border-radius: 0.5rem;
+	transition: opacity 300ms ease, visibility 300ms ease;
+	box-shadow: 0px 4px 6px -1px rgb(var(--color-foreground), 0.1), 0px 2px 4px -1px rgb(var(--color-foreground), 0.06);
+	z-index: 1;
+	width: 5.2rem;
+	transform: translateX(calc(var(--transform-direction) * 50%));
+}
+
+.share-button__network__link {
+	color: rgb(var(--color-foreground), 0.6);
+	cursor: pointer;
+	border: none;
+	background: none;
+	padding: 0;
+}
+
+.share-button__network__link .icon-email {
+	width: 2.5rem;
+	height: 2.5rem;
+}
+
+.share-button__button--floating.open + .share-button__network--floating {
+	opacity: 1;
+	visibility: visible;
+}
+
+.share-button__network__link:hover {
+	color: rgb(var(--color-foreground));
+}

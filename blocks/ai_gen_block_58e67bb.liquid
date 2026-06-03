@@ -1,0 +1,855 @@
+{% doc %}
+  @prompt
+    Create a collection showcase section for KasyaPH’s Radiance Collection, matching the same elegant black-and-white minimalist theme from the 11.11 hero banner.
+    Design should feel premium, modern, and editorial — clean background, balanced spacing, and subtle lighting that highlights the products.
+    Use black background with soft radiant glow behind each product image to keep the “Radiance” concept consistent.
+    Typography: serif for titles, sans serif for price or details.
+    Layout direction:
+    
+    2 to 3 columns per row for desktop, single column for mobile
+    
+    Center-aligned collection title: “The Radiance Collection”
+    
+    Subheading: “Discover timeless pieces that shine in every moment.”
+    
+    Product cards with white borders or soft shadow for depth
+    
+    “Shop the Collection” button below, white with black text
+    
+    Optional animation: gentle fade-in or slide-up effect on scroll for each product card., Add cohesive hover and button animations inspired by the Radiance theme.
+    For product cards:
+    
+    On hover, apply a soft white glow or subtle outer ring of light effect to emphasize the “Radiance” concept.
+    
+    Add a gentle zoom-in on the product image (3–5% scale) to make it feel more dynamic but still refined.
+    
+    Product name and price should slightly fade in or move upward on hover for elegant motion.
+    
+    For buttons (“Shop the Collection”):
+    
+    Use a white background with thin black border and black text.
+    
+    On hover, invert the colors (black background, white text) with a smooth fade transition (0.3–0.4s).
+    
+    Optional: add a subtle glow or light trail effect behind the button when hovered, echoing the Radiance glow.
+    
+    Ensure all animations are smooth and minimalist — no harsh shadows or flashy motion. Keep the editorial, high-fashion tone consistent throughout the section., can you make the picture also clickable 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .radiance-collection-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.section_padding_top }}px 0 {{ block.settings.section_padding_bottom }}px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .radiance-collection-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .radiance-collection-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: {{ block.settings.header_spacing }}px;
+  }
+
+  .radiance-collection-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.title_font.family }}, {{ block.settings.title_font.fallback_families }};
+    font-weight: {{ block.settings.title_font.weight }};
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 {{ block.settings.title_spacing }}px;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+  }
+
+  .radiance-collection-subtitle-{{ ai_gen_id }} {
+    font-family: {{ block.settings.subtitle_font.family }}, {{ block.settings.subtitle_font.fallback_families }};
+    font-weight: {{ block.settings.subtitle_font.weight }};
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.subtitle_color }};
+    margin: 0;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .radiance-collection-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat({{ block.settings.columns_desktop }}, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+    margin-bottom: {{ block.settings.button_spacing }}px;
+  }
+
+  .radiance-product-card-{{ ai_gen_id }} {
+    position: relative;
+    background-color: {{ block.settings.card_background }};
+    border: {{ block.settings.card_border_width }}px solid {{ block.settings.card_border_color }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .radiance-product-card-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: radial-gradient(circle at center, {{ block.settings.glow_color }}, transparent 70%);
+    opacity: 0;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    z-index: -1;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+
+  .radiance-product-card-{{ ai_gen_id }}:hover {
+    transform: translateY(-6px);
+    border-color: {{ block.settings.glow_color }};
+    box-shadow: 
+      0 0 20px rgba(255, 255, 255, 0.15),
+      0 0 40px rgba(255, 255, 255, 0.1),
+      0 12px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .radiance-product-card-{{ ai_gen_id }}:hover::before {
+    opacity: 0.3;
+  }
+
+  .radiance-product-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    padding-bottom: {{ block.settings.image_aspect_ratio }}%;
+    overflow: hidden;
+    background: radial-gradient(circle at center, {{ block.settings.glow_color }} 0%, transparent 70%);
+  }
+
+  .radiance-product-image-link-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .radiance-product-image-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .radiance-product-card-{{ ai_gen_id }}:hover .radiance-product-image-{{ ai_gen_id }} {
+    transform: scale(1.04);
+  }
+
+  .radiance-product-info-{{ ai_gen_id }} {
+    padding: {{ block.settings.card_padding }}px;
+    text-align: center;
+  }
+
+  .radiance-product-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.product_title_font.family }}, {{ block.settings.product_title_font.fallback_families }};
+    font-weight: {{ block.settings.product_title_font.weight }};
+    font-size: {{ block.settings.product_title_size }}px;
+    color: {{ block.settings.product_title_color }};
+    margin: 0 0 8px;
+    line-height: 1.4;
+    transition: all 0.3s ease;
+  }
+
+  .radiance-product-card-{{ ai_gen_id }}:hover .radiance-product-title-{{ ai_gen_id }} {
+    transform: translateY(-3px);
+    opacity: 0.9;
+  }
+
+  .radiance-product-title-link-{{ ai_gen_id }} {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .radiance-product-price-{{ ai_gen_id }} {
+    font-family: {{ block.settings.product_price_font.family }}, {{ block.settings.product_price_font.fallback_families }};
+    font-weight: {{ block.settings.product_price_font.weight }};
+    font-size: {{ block.settings.product_price_size }}px;
+    color: {{ block.settings.product_price_color }};
+    margin: 0;
+    transition: all 0.3s ease;
+  }
+
+  .radiance-product-card-{{ ai_gen_id }}:hover .radiance-product-price-{{ ai_gen_id }} {
+    transform: translateY(-3px);
+    opacity: 0.9;
+  }
+
+  .radiance-cta-wrapper-{{ ai_gen_id }} {
+    text-align: center;
+  }
+
+  .radiance-cta-button-{{ ai_gen_id }} {
+    position: relative;
+    display: inline-block;
+    padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    font-family: {{ block.settings.button_font.family }}, {{ block.settings.button_font.fallback_families }};
+    font-weight: {{ block.settings.button_font.weight }};
+    font-size: {{ block.settings.button_font_size }}px;
+    text-decoration: none;
+    border: {{ block.settings.button_border_width }}px solid {{ block.settings.button_border_color }};
+    border-radius: {{ block.settings.button_border_radius }}px;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .radiance-cta-button-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, {{ block.settings.glow_color }} 0%, transparent 70%);
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    transition: all 0.5s ease;
+    z-index: -1;
+  }
+
+  .radiance-cta-button-{{ ai_gen_id }}::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: {{ block.settings.button_hover_background }};
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
+  }
+
+  .radiance-cta-button-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.button_hover_text_color }};
+    border-color: {{ block.settings.button_hover_background }};
+    transform: translateY(-3px);
+    box-shadow: 
+      0 0 30px rgba(255, 255, 255, 0.2),
+      0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  .radiance-cta-button-{{ ai_gen_id }}:hover::before {
+    width: 300px;
+    height: 300px;
+    opacity: 0.15;
+  }
+
+  .radiance-cta-button-{{ ai_gen_id }}:hover::after {
+    transform: scaleX(1);
+  }
+
+  .radiance-product-placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at center, {{ block.settings.glow_color }} 0%, transparent 70%);
+  }
+
+  .radiance-product-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .radiance-empty-state-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 60px 20px;
+    color: {{ block.settings.subtitle_color }};
+    font-family: {{ block.settings.subtitle_font.family }}, {{ block.settings.subtitle_font.fallback_families }};
+    font-size: 16px;
+  }
+
+  @media screen and (max-width: 989px) {
+    .radiance-collection-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_tablet }}, 1fr);
+    }
+
+    .radiance-collection-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_size }}px * 0.8);
+    }
+
+    .radiance-collection-subtitle-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.subtitle_size }}px * 0.9);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .radiance-collection-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_mobile }}, 1fr);
+    }
+
+    .radiance-collection-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_size }}px * 0.7);
+    }
+
+    .radiance-collection-subtitle-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.subtitle_size }}px * 0.85);
+    }
+
+    .radiance-collection-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_top | times: 0.6 }}px 0 {{ block.settings.section_padding_bottom | times: 0.6 }}px;
+    }
+
+    .radiance-product-info-{{ ai_gen_id }} {
+      padding: {{ block.settings.card_padding | times: 0.7 }}px;
+    }
+
+    .radiance-product-card-{{ ai_gen_id }}:hover {
+      transform: translateY(-3px);
+    }
+
+    .radiance-cta-button-{{ ai_gen_id }}:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .radiance-product-card-{{ ai_gen_id }},
+    .radiance-product-image-{{ ai_gen_id }},
+    .radiance-product-title-{{ ai_gen_id }},
+    .radiance-product-price-{{ ai_gen_id }},
+    .radiance-cta-button-{{ ai_gen_id }},
+    .radiance-cta-button-{{ ai_gen_id }}::before,
+    .radiance-cta-button-{{ ai_gen_id }}::after {
+      transition: none;
+    }
+  }
+
+  {% if block.settings.enable_animations %}
+    @keyframes radianceFadeUp-{{ ai_gen_id }} {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .radiance-product-card-{{ ai_gen_id }} {
+      opacity: 0;
+      animation: radianceFadeUp-{{ ai_gen_id }} 0.6s ease forwards;
+    }
+
+    {% for i in (1..12) %}
+      .radiance-product-card-{{ ai_gen_id }}:nth-child({{ i }}) {
+        animation-delay: {{ i | times: 0.1 }}s;
+      }
+    {% endfor %}
+  {% endif %}
+{% endstyle %}
+
+<radiance-collection-{{ ai_gen_id }} class="radiance-collection-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="radiance-collection-container-{{ ai_gen_id }}">
+    <div class="radiance-collection-header-{{ ai_gen_id }}">
+      {% if block.settings.title != blank %}
+        <h2 class="radiance-collection-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+      {% endif %}
+      {% if block.settings.subtitle != blank %}
+        <p class="radiance-collection-subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</p>
+      {% endif %}
+    </div>
+
+    {% if block.settings.collection != blank %}
+      <div class="radiance-collection-grid-{{ ai_gen_id }}">
+        {% for product in block.settings.collection.products limit: block.settings.products_to_show %}
+          <div class="radiance-product-card-{{ ai_gen_id }}">
+            <div class="radiance-product-image-wrapper-{{ ai_gen_id }}">
+              <a href="{{ product.url }}" class="radiance-product-image-link-{{ ai_gen_id }}" aria-label="{{ product.title | escape }}">
+                {% if product.featured_image %}
+                  <img
+                    src="{{ product.featured_image | image_url: width: 800 }}"
+                    alt="{{ product.featured_image.alt | escape }}"
+                    class="radiance-product-image-{{ ai_gen_id }}"
+                    loading="lazy"
+                    width="800"
+                    height="{{ 800 | divided_by: product.featured_image.aspect_ratio | round }}"
+                  >
+                {% else %}
+                  <div class="radiance-product-placeholder-{{ ai_gen_id }}">
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+              </a>
+            </div>
+            <div class="radiance-product-info-{{ ai_gen_id }}">
+              <h3 class="radiance-product-title-{{ ai_gen_id }}">
+                <a href="{{ product.url }}" class="radiance-product-title-link-{{ ai_gen_id }}">
+                  {{ product.title }}
+                </a>
+              </h3>
+              <p class="radiance-product-price-{{ ai_gen_id }}">
+                {{ product.price | money }}
+              </p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if block.settings.show_button and block.settings.button_text != blank %}
+        <div class="radiance-cta-wrapper-{{ ai_gen_id }}">
+          <a href="{{ block.settings.collection.url }}" class="radiance-cta-button-{{ ai_gen_id }}">
+            {{ block.settings.button_text }}
+          </a>
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="radiance-empty-state-{{ ai_gen_id }}">
+        <p>Select a collection to showcase your Radiance products</p>
+      </div>
+    {% endif %}
+  </div>
+</radiance-collection-{{ ai_gen_id }}>
+
+{% schema %}
+{
+  "name": "Radiance Collection",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Collection"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "label": "Products to show",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "The Radiance Collection"
+    },
+    {
+      "type": "font_picker",
+      "id": "title_font",
+      "label": "Title font",
+      "default": "playfair_display_n4"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 48
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "title_spacing",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Title spacing",
+      "default": 16
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Discover timeless pieces that shine in every moment."
+    },
+    {
+      "type": "font_picker",
+      "id": "subtitle_font",
+      "label": "Subtitle font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#cccccc"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "label": "Container width",
+      "default": 1440
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Columns desktop",
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "columns_tablet",
+      "label": "Columns tablet",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns mobile",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 16,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Grid gap",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Header spacing",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Product cards"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "card_border_width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Border color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Card padding",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "image_aspect_ratio",
+      "min": 80,
+      "max": 150,
+      "step": 5,
+      "unit": "%",
+      "label": "Image aspect ratio",
+      "default": 125
+    },
+    {
+      "type": "color",
+      "id": "glow_color",
+      "label": "Glow color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Product details"
+    },
+    {
+      "type": "font_picker",
+      "id": "product_title_font",
+      "label": "Product title font",
+      "default": "playfair_display_n4"
+    },
+    {
+      "type": "range",
+      "id": "product_title_size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Product title size",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "product_title_color",
+      "label": "Product title color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "font_picker",
+      "id": "product_price_font",
+      "label": "Product price font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "product_price_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Product price size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "product_price_color",
+      "label": "Product price color",
+      "default": "#cccccc"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop the Collection"
+    },
+    {
+      "type": "font_picker",
+      "id": "button_font",
+      "label": "Button font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Button font size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Button hover background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Button hover text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Button border width",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Button border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Button vertical padding",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "min": 20,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Button horizontal padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "button_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Button spacing",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 80
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animations",
+      "label": "Enable scroll animations",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Radiance Collection"
+    }
+  ]
+}
+{% endschema %}

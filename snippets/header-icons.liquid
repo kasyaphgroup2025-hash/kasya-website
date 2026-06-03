@@ -1,0 +1,37 @@
+<div class="header__icons flex align-center">
+  {%- if section.settings.logo_position == 'top-left' -%}
+    <div class="header__search small-hide medium-hide{% if section.settings.logo_position == 'top-left' and has_supported_region == false %} header__search--distance-right{% endif %}">
+      {%- render 'header-predictive-search', suffix_id: 'Inline' -%}  
+    </div>
+  {%- endif -%}
+
+  {%- liquid
+    if has_supported_region
+      if section.settings.logo_position == 'top-left' or section.settings.logo_position == 'middle-left-navigation-left'
+        render 'header-customer-support-desktop', supported_region_blocks: supported_region_blocks
+      endif
+    endif
+
+    render 'header-search-modal'
+  -%}
+
+  {%-liquid
+    if section.settings.mobile_logo_position == 'center'
+      render 'header-account', class: 'small-hide medium-hide', position: 'end'
+    else
+      render 'header-account', position: 'end'
+    endif
+  -%}
+
+  {%- if settings.enable_product_compare -%}
+    <modal-opener data-modal="#Compare-Modal" class="small-hide">
+      <button class="header__icon header__icon--compare link flex justify-center align-center por unstyled-button header__button-icon" aria-label="{{ 'templates.compare.header_icon' | t | escape }}">
+        {%- render 'compare-icon-bubble' -%}
+      </button>
+    </modal-opener>
+  {%- endif -%}
+
+  <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart link flex justify-center align-center por header__button-icon" id="cart-icon-bubble" data-no-instant>
+    {%- render 'cart-icon-bubble' -%}
+  </a>
+</div>

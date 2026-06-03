@@ -1,0 +1,13 @@
+.text-icons__card__icon {
+  transition: transform .5s ease;
+}
+
+.text-icons__card:hover .text-icons__card__icon {
+	transform: translate(calc(var(--transform-direction) * 50%), -50%) scale(1.1);
+}
+
+.text-icons__card__heading-box {
+  box-shadow: 0px 1px 2px 0px rgb(var(--color-foreground),.05);
+  border-radius: 0.8rem;
+  background: rgb(var(--color-background-input));
+}

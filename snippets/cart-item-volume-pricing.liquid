@@ -1,0 +1,109 @@
+{%- liquid
+  assign has_qty_rules = false
+  if item.variant.quantity_rule.increment > 1 or item.variant.quantity_rule.min > 1 or item.variant.quantity_rule.max != null
+    assign has_qty_rules = true
+  endif
+
+  assign has_vol_pricing = false
+  if item.variant.quantity_price_breaks.size > 0
+    assign has_vol_pricing = true
+  endif
+-%}
+{%- if has_qty_rules or has_vol_pricing -%}
+  <details-disclosure class="flex align-center no-js-hidden" data-ignore-hover="true">
+    <details class="disclosure por disclosure--volume-pricing">
+      <summary
+        class="flex align-center{% if show_note %} disclosure__button background-input text-small lh1 por w100 volume-pricing-note volume-pricing-note--small volume-pricing-note--with-icon{% endif %}{% unless in_drawer %} justify-center header__button-icon{% endunless %}"
+        aria-expanded="false"
+        {% unless show_note %}aria-label="{% if has_vol_pricing %}{{ 'products.product.volume_pricing.note' | t | escape }}{% elsif has_qty_rules %}{{ 'products.product.quantity.note' | t | escape }}{% endif %}"{% endunless %}
+      >
+        {% render 'icon-info' %}
+        {%- if show_note -%}
+          <span>
+            {%- if has_vol_pricing -%}
+              {{ 'products.product.volume_pricing.note' | t }}
+            {%- elsif has_qty_rules -%}
+              {{ 'products.product.quantity.note' | t }}
+            {%- endif -%}
+          </span>
+        {%- endif -%}
+      </summary>
+      <div class="disclosure__list-wrapper disclosure__list-wrapper--bottom product-volume-pricing product-volume-pricing--popup overflow-hidden {% if in_drawer %}product-volume-pricing--drawer{% else %}product-volume-pricing--cart-page{% endif %}">
+        <div class="product-volume-pricing__popup-heading volume-pricing-note--with-icon flex justify-space-between align-center">
+          {%- unless has_qty_rules -%}
+            <span class="disclosure__volume-pricing-note volume-pricing-label">
+              {{- 'products.product.volume_pricing.title' | t -}}
+            </span>
+          {%- else -%}  
+            <div class="disclosure__volume-pricing-note quantity__rules flex flex-column product-volume-pricing__popup-heading__quantity-rules">
+              {%- if item.variant.quantity_rule.increment > 1 -%}
+                <span class="divider">
+                  {{-
+                    'products.product.quantity.multiples_of'
+                    | t: quantity: item.variant.quantity_rule.increment
+                  -}}
+                </span>
+              {%- endif -%}
+              {%- if item.variant.quantity_rule.min > 1 or item.variant.quantity_rule.max != null -%}
+                <div>
+                  {%- if item.variant.quantity_rule.min > 1 -%}
+                    <span class="divider quantity__rules__divider">
+                      {{-
+                        'products.product.quantity.min_of'
+                        | t: quantity: item.variant.quantity_rule.min
+                      -}}
+                    </span>
+                  {%- endif -%}
+                  {%- if item.variant.quantity_rule.max != null -%}
+                    <span class="divider quantity__rules__divider">
+                      {{-
+                        'products.product.quantity.max_of'
+                        | t: quantity: item.variant.quantity_rule.max
+                      -}}
+                    </span>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endunless -%}
+          <button type="button" class="unstyled-button disclosure__close-button product-volume-pricing__close-button flex justify-center align-center tap-area-icon por" aria-label="{{ "accessibility.close" | t | escape }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
+              <path d="M4.66663 12L12.6666 4M4.66663 4L12.6666 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        {%- if has_vol_pricing -%}
+          <volume-pricing class="disclosure__volume-pricing-list background-input db caption-large font-body-semi-bold parent-display">
+            <ul class="list-unstyled">
+              <li class="product-volume-pricing__list__item flex justify-space-between align-center odd">
+                <span>{{ item.variant.quantity_rule.min }}+</span>
+                {%-liquid
+                  assign item_variant_price = item.variant.price | money
+                  if settings.currency_code_enabled
+                    assign item_variant_price = item.variant.price | money_with_currency
+                  endif
+                -%}
+                <span>{{ 'products.product.volume_pricing.price_at_each' | t: price: item_variant_price }}</span>
+              </li>
+              {%- for price_break in item.variant.quantity_price_breaks -%}
+                {%-liquid
+                  assign money_price = price_break.price | money
+                  if settings.currency_code_enabled
+                    assign money_price = price_break.price | money_with_currency
+                  endif
+                -%}
+                <li class="product-volume-pricing__list__item flex justify-space-between align-center {% cycle "even", "odd" %}{% if forloop.index >= 3 %} show-more-item hidden{% endif %}">
+                  <span>
+                    {{- price_break.minimum_quantity -}}
+                    <span aria-hidden="true">+</span></span
+                  >
+                  <span>{{ 'products.product.volume_pricing.price_at_each' | t: price: money_price }}</span>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </volume-pricing>
+        {%- endif -%}
+      </div>
+    </details>
+  </details-disclosure>
+{%- endif -%}

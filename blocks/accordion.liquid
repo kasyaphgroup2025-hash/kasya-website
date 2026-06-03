@@ -1,0 +1,311 @@
+<div
+  class="accordion-wrapper accordion-wrapper--{{ block.id }} size-style border-style{% if block.settings.dividers %} accordion-wrapper--dividers{% endif %}"
+  style="
+    {% render 'border-override', local_settings: block.settings %}
+    {% render 'size-style', local_settings: block.settings %}
+  "
+  {{ block.shopify_attributes }}
+>
+  <div class="spacing-style{% unless block.settings.inherit_color_scheme %} color-{{ block.settings.color_scheme }}{% endunless %}" style="--accordion-distance-setting:{{ block.settings.row_spacing }}px;{% render 'spacing-style', local_settings: block.settings %}">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:names.accordion",
+  "tag": null,
+  "class": "accordion",
+  "blocks": [
+    {
+      "type": "_accordion-row"
+    }
+  ],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "dividers",
+      "label": "t:settings.dividers",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "row_spacing",
+      "label": "t:settings.row_spacing",
+      "min": 10,
+      "max": 50,
+      "default": 15,
+      "unit": "px",
+      "step": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "t:settings.inherit_color_scheme",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "background-1",
+      "label": "t:sections.all.colors.label",
+      "visible_if": "{{ block.settings.inherit_color_scheme == false }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.desktop_layout"
+    },
+    {
+      "type": "select",
+      "id": "width_desktop",
+      "label": "t:settings.width",
+      "options": [
+        {
+          "value": "fit-content",
+          "label": "t:options.fit_content"
+        },
+        {
+          "value": "fill",
+          "label": "t:options.fill"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.custom"
+        }
+      ],
+      "default": "fill"
+    },
+    {
+      "type": "range",
+      "id": "custom_width_desktop",
+      "label": "t:settings.custom_width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.width_desktop == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile_layout"
+    },
+    {
+      "type": "select",
+      "id": "width_mobile",
+      "label": "t:settings.width",
+      "options": [
+        {
+          "value": "fit-content",
+          "label": "t:options.fit_content"
+        },
+        {
+          "value": "fill",
+          "label": "t:options.fill"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.custom"
+        }
+      ],
+      "default": "fill"
+    },
+    {
+      "type": "range",
+      "id": "custom_width_mobile",
+      "label": "t:settings.custom_width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.width_mobile == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.borders"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "t:settings.style",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:options.solid"
+        },
+        {
+          "value": "dashed",
+          "label": "t:options.dashed"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:settings.thickness",
+      "default": 1,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings.border_opacity",
+      "default": 100,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:options.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:options.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:options.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:options.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.accordion",
+      "category": "t:categories.layout",
+      "blocks": {
+        "row-1": {
+          "type": "_accordion-row",
+          "settings": {
+            "open_by_default": true,
+            "heading": "What is the return policy?"
+          },
+          "blocks": {
+            "text-1": {
+              "type": "rich-text",
+              "settings": {
+                "text": "<p>Our goal is for every customer to be totally satisfied with their purchase. If this isn't the case, let us know and we'll do our best to work with you to make it right.</p>"
+              }
+            }
+          },
+          "block_order": ["text-1"]
+        },
+        "row-2": {
+          "type": "_accordion-row",
+          "settings": {
+            "heading": "Are any purchases final sale?"
+          },
+          "blocks": {
+            "text-1": {
+              "type": "rich-text",
+              "settings": {
+                "text": "<p>We are unable to accept returns on certain items. These will be carefully marked before purchase.</p>"
+              }
+            }
+          },
+          "block_order": ["text-1"]
+        },
+        "row-3": {
+          "type": "_accordion-row",
+          "settings": {
+            "heading": "When will I get my order?"
+          },
+          "blocks": {
+            "text-1": {
+              "type": "rich-text",
+              "settings": {
+                "text": "<p>We will work quickly to ship your order as soon as possible. Once your order has shipped, you will receive an email with further information. Delivery times vary depending on your location.</p>"
+              }
+            }
+          },
+          "block_order": ["text-1"]
+        },
+        "row-4": {
+          "type": "_accordion-row",
+          "settings": {
+            "heading": "Where are your products manufactured?"
+          },
+          "blocks": {
+            "text-1": {
+              "type": "rich-text",
+              "settings": {
+                "text": "<p>Our products are manufactured both locally and globally. We carefully select our manufacturing partners to ensure our products are high quality and a fair value.</p>"
+              }
+            }
+          },
+          "block_order": ["text-1"]
+        },
+        "row-5": {
+          "type": "_accordion-row",
+          "settings": {
+            "heading": "How much does shipping cost?"
+          },
+          "blocks": {
+            "text-1": {
+              "type": "rich-text",
+              "settings": {
+                "text": "<p>Shipping is calculated based on your location and the items in your order. You will always know the shipping price before you purchase.</p>"
+              }
+            }
+          },
+          "block_order": ["text-1"]
+        }
+      },
+      "block_order": ["row-1", "row-2", "row-3", "row-4", "row-5"]
+    }
+  ]
+}
+{% endschema %}

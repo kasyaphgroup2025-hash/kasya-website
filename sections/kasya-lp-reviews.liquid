@@ -1,0 +1,419 @@
+{% comment %}
+  KasyaPH Product Landing Reviews
+  Manual editable review section for acquisition pages.
+{% endcomment %}
+
+<section id="kasya-lp-reviews" class="kasya-lp-reviews" style="--kasya-reviews-bg: {{ section.settings.background_color }};">
+  <div class="kasya-lp-reviews__inner">
+    <div class="kasya-lp-reviews__card">
+      <header class="kasya-lp-reviews__header">
+        {% if section.settings.heading != blank %}
+          <h2 class="kasya-lp-reviews__heading">
+            {{ section.settings.heading }}
+          </h2>
+        {% endif %}
+
+        <div class="kasya-lp-reviews__average">
+          {% if section.settings.show_average_stars %}
+            <span class="kasya-lp-reviews__stars" aria-hidden="true">★★★★★</span>
+          {% endif %}
+
+          {% if section.settings.average_rating_text != blank %}
+            <span class="kasya-lp-reviews__average-text">
+              {{ section.settings.average_rating_text }}
+            </span>
+          {% endif %}
+        </div>
+      </header>
+
+      {% if section.blocks.size > 0 %}
+        <div class="kasya-lp-reviews__list">
+          {% for block in section.blocks %}
+            {% liquid
+              assign rating = block.settings.rating | default: 5
+            %}
+
+            <article class="kasya-lp-reviews__review" {{ block.shopify_attributes }}>
+              <div class="kasya-lp-reviews__review-top">
+                <div>
+                  {% if block.settings.title != blank %}
+                    <h3 class="kasya-lp-reviews__title">
+                      {{ block.settings.title }}
+                    </h3>
+                  {% endif %}
+
+                  {% if block.settings.name != blank %}
+                    <p class="kasya-lp-reviews__name">
+                      {{ block.settings.name }}
+                    </p>
+                  {% endif %}
+                </div>
+
+                <div class="kasya-lp-reviews__rating" aria-label="{{ rating }} out of 5 stars">
+                  {% for index in (1..5) %}
+                    <span class="{% if index <= rating %}is-active{% endif %}">★</span>
+                  {% endfor %}
+                </div>
+              </div>
+
+              {% if block.settings.size_text != blank or block.settings.fit_text != blank or block.settings.date_text != blank %}
+                <div class="kasya-lp-reviews__meta">
+                  {% if block.settings.size_text != blank %}
+                    <span>Size: {{ block.settings.size_text }}</span>
+                  {% endif %}
+
+                  {% if block.settings.fit_text != blank %}
+                    <span>{{ block.settings.fit_text }}</span>
+                  {% endif %}
+
+                  {% if block.settings.date_text != blank %}
+                    <span>{{ block.settings.date_text }}</span>
+                  {% endif %}
+                </div>
+              {% endif %}
+
+              {% if block.settings.comment != blank %}
+                <p class="kasya-lp-reviews__comment">
+                  {{ block.settings.comment }}
+                </p>
+              {% endif %}
+
+              {% if block.settings.photo != blank %}
+                <div class="kasya-lp-reviews__photo">
+                  <img
+                    src="{{ block.settings.photo | image_url: width: 900 }}"
+                    alt="{{ block.settings.title | default: block.settings.name | escape }}"
+                    width="900"
+                    height="900"
+                    loading="lazy"
+                  >
+                </div>
+              {% endif %}
+            </article>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_view_more and section.settings.view_more_text != blank %}
+        <div class="kasya-lp-reviews__footer">
+          <a class="kasya-lp-reviews__view-more" href="{{ section.settings.view_more_link | default: '#' }}">
+            {{ section.settings.view_more_text }}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .kasya-lp-reviews {
+    background: #ffffff;
+    color: #111111;
+    font-family: inherit;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .kasya-lp-reviews * {
+    box-sizing: border-box;
+  }
+
+  .kasya-lp-reviews__inner {
+    padding: 18px 14px 34px;
+  }
+
+  .kasya-lp-reviews__card {
+    background: var(--kasya-reviews-bg);
+    border: 1px solid rgba(0, 0, 0, 0.07);
+    border-radius: 8px;
+    padding: 18px 16px 16px;
+  }
+
+  .kasya-lp-reviews__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .kasya-lp-reviews__heading {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 850;
+    letter-spacing: 0.02em;
+    line-height: 1;
+  }
+
+  .kasya-lp-reviews__average {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .kasya-lp-reviews__stars,
+  .kasya-lp-reviews__rating span.is-active {
+    color: #d8a300;
+  }
+
+  .kasya-lp-reviews__stars {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+  }
+
+  .kasya-lp-reviews__average-text {
+    color: #3b3b3b;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .kasya-lp-reviews__review {
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .kasya-lp-reviews__review:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .kasya-lp-reviews__review-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  .kasya-lp-reviews__title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 850;
+    line-height: 1.2;
+  }
+
+  .kasya-lp-reviews__name {
+    margin: 4px 0 0;
+    color: #565656;
+    font-size: 13px;
+    line-height: 1.25;
+  }
+
+  .kasya-lp-reviews__rating {
+    display: flex;
+    gap: 2px;
+    color: #d8d8d8;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .kasya-lp-reviews__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    margin-top: 10px;
+    color: #6b6b6b;
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  .kasya-lp-reviews__comment {
+    margin: 10px 0 0;
+    color: #222222;
+    font-size: 14px;
+    line-height: 1.48;
+  }
+
+  .kasya-lp-reviews__photo {
+    overflow: hidden;
+    margin-top: 12px;
+    border-radius: 6px;
+    background: #f3f0eb;
+  }
+
+  .kasya-lp-reviews__photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 320px;
+    object-fit: cover;
+  }
+
+  .kasya-lp-reviews__footer {
+    padding-top: 14px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    text-align: center;
+  }
+
+  .kasya-lp-reviews__view-more {
+    color: #111111;
+    font-size: 13px;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  @media screen and (min-width: 680px) {
+    .kasya-lp-reviews__inner {
+      padding: 24px 26px 44px;
+    }
+
+    .kasya-lp-reviews__card {
+      padding: 22px 22px 20px;
+    }
+
+    .kasya-lp-reviews__heading {
+      font-size: 28px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Kasya LP Reviews",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Reviews"
+    },
+    {
+      "type": "text",
+      "id": "average_rating_text",
+      "label": "Average rating text",
+      "default": "(4.8)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_average_stars",
+      "label": "Show average stars",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#fbf8f4"
+    },
+    {
+      "type": "text",
+      "id": "view_more_text",
+      "label": "View more text",
+      "default": "View more"
+    },
+    {
+      "type": "url",
+      "id": "view_more_link",
+      "label": "View more link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_more",
+      "label": "Show view more",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Reviewer name",
+          "default": "Angelo B."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Review title",
+          "default": "Comfortable"
+        },
+        {
+          "type": "textarea",
+          "id": "comment",
+          "label": "Review comment",
+          "default": "Love the pants, super versatile, can pair it with any top."
+        },
+        {
+          "type": "image_picker",
+          "id": "photo",
+          "label": "Reviewer photo"
+        },
+        {
+          "type": "text",
+          "id": "date_text",
+          "label": "Date text"
+        },
+        {
+          "type": "text",
+          "id": "size_text",
+          "label": "Size text",
+          "default": "Large"
+        },
+        {
+          "type": "text",
+          "id": "fit_text",
+          "label": "Fit text",
+          "default": "Wideleg Fit"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Kasya LP Reviews",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Comfortable",
+            "name": "Angelo B.",
+            "size_text": "Large",
+            "fit_text": "Wideleg Fit",
+            "comment": "Love the pants, super versatile, can pair it with any top."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Versatile",
+            "name": "Jojima F.",
+            "size_text": "Medium",
+            "fit_text": "True to size",
+            "comment": "Sobrang comfortable po talaga."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "rating": 4,
+            "title": "Good",
+            "name": "Mary L.",
+            "size_text": "XL",
+            "fit_text": "Size smaller",
+            "comment": "Experienced some shrinkage, but still loved the product nonetheless."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

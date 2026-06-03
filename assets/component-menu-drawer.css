@@ -1,0 +1,279 @@
+.header__icon--menu {
+  position: initial;
+}
+
+.js menu-drawer > details > summary::before,
+.js menu-drawer > details[open]:not(.menu-opening) > summary::before {
+  content: '';
+  position: absolute;
+  cursor: default;
+  width: 100%;
+  height: calc(100vh - 100%);
+  height: calc(
+    var(--viewport-height, 100vh) - (var(--header-bottom-position, 100%) - 0.1rem)
+  );
+  top: 100%;
+  inset-inline-start: 0;
+  background: rgba(var(--color-foreground), 0.5);
+  opacity: 0;
+  visibility: hidden;
+  z-index: 2;
+  transition: opacity 0s, visibility 0s;
+}
+
+menu-drawer > details[open] > summary::before {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 300ms ease,
+    visibility 300ms ease;
+}
+
+.menu-drawer {
+  --margin-block: 1.5rem;
+  position: absolute;
+  transform: translateX(calc(var(--transform-direction) * 100%));
+  visibility: hidden;
+  z-index: 3;
+  inset-inline-start: 0;
+  top: 100%;
+  width: 100vw;
+  padding: 0;
+  background-color: rgb(var(--color-background));
+  overflow-x: hidden;
+}
+
+.js .menu-drawer {
+  height: calc(100dvh - 100%);
+  height: calc(
+    var(--viewport-height, 100dvh) - (var(--header-bottom-position, 100%))
+  );
+}
+
+.js details[open] > .menu-drawer,
+.js details[open] > .menu-drawer__submenu {
+  transition: transform 500ms ease, visibility 300ms ease;
+}
+
+.no-js details[open] > .menu-drawer,
+.js details[open].menu-opening > .menu-drawer,
+details[open].menu-opening > .menu-drawer__submenu {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+.back-button-menu {
+  inset-inline-end: 1.5rem;
+  transition: opacity 300ms ease, visibility 300ms ease, transform 500ms ease;
+  z-index: 4;
+}
+
+.back-button-menu button {
+  width: 5rem;
+  height: 5rem;
+  padding: 0;
+}
+
+.section-header.menu-open ~ .back-button-menu, .open-submenu-mobile .back-button-menu {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.js .menu-drawer__navigation .submenu-open {
+  visibility: hidden; /* hide menus from screen readers when hidden by submenu */
+}
+
+@media screen and (min-width: 750px) {
+  .menu-drawer {
+    width: 40rem;
+  }
+
+  .no-js .menu-drawer {
+    height: auto;
+  }
+}
+
+.menu-drawer__navigation-container {
+  overflow-y: auto;
+  background-color: rgb(var(--color-background));
+}
+
+.menu-drawer__block {
+  margin: var(--margin-block);
+}
+
+.menu-drawer__background {
+  background-color: rgb(var(--color-background-input));
+  border-radius: 1rem;
+}
+
+.menu-drawer__block + .menu-drawer__block {
+  margin-top: 0;
+}
+
+.menu-drawer__inner-submenu {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.no-js .menu-drawer__navigation {
+  padding: 0;
+}
+
+.no-js .menu-drawer__navigation > ul > li {
+  border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.04);
+}
+
+.no-js .menu-drawer__submenu ul > li {
+  border-top: 0.1rem solid rgba(var(--color-foreground), 0.04);
+}
+
+.menu-drawer__menu li {
+  border-bottom: 1px solid rgb(var(--color-background));
+}
+
+.menu-drawer__menu li:last-child {
+  border-bottom: none;
+}
+
+.menu-drawer__menu-item {
+  padding: 2rem 3.2rem;
+  text-decoration: none;
+}
+
+.no-js .menu-drawer__menu-item {
+  font-size: 1.6rem;
+}
+
+.no-js .menu-drawer__submenu .menu-drawer__menu-item {
+  padding: 1.2rem 5.2rem 1.2rem 6rem;
+}
+
+.no-js .menu-drawer__submenu .menu-drawer__submenu .menu-drawer__menu-item {
+  padding-inline-start: 9rem;
+}
+
+.menu-drawer summary.menu-drawer__menu-item {
+  padding-inline-end: 7rem;
+}
+
+.no-js .menu-drawer__menu-item .icon-caret {
+  inset-inline-end: 3rem;
+}
+
+.menu-drawer__menu-item--active,
+.header__menu-item--top-highlight-drawer,
+.menu-drawer__menu-item:focus,
+.menu-drawer__close-button:focus,
+.menu-drawer__menu-item:not(.mega-menu__column__item):hover,
+.menu-drawer__close-button:hover {
+  background-color: rgba(var(--color-foreground), 0.05);
+}
+
+.menu-drawer__menu-item--active:hover {
+  background-color: rgba(var(--color-foreground), 0.08);
+}
+
+.menu-drawer__menu-item.first {
+  --menu-item-radius: 1rem 1rem 0 0;
+  --menu-highlight-radius: 1rem 0 0 0;
+}
+
+.menu-drawer__menu-item.last {
+  --menu-item-radius: 0 0 1rem 1rem;
+  --menu-highlight-radius: 0 0 0 1rem;
+}
+
+.menu-drawer__menu-item--active, .header__menu-item--top-highlight-drawer {
+  position: relative;
+  border-radius: var(--menu-item-radius, 0);
+}
+
+.menu-drawer__menu-item--active:before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  bottom: 0;
+  border-inline-start: 1rem solid rgb(var(--color-highlight));
+  border-radius: var(--menu-highlight-radius, 0);
+}
+
+.js .menu-drawer__menu-item:not(.mega-menu__column__item) .icon-caret {
+  --size: 3rem;
+  transform: translateY(-50%) rotate(calc(var(--transform-direction) * 90deg));
+  top: 50%;
+  width: var(--size);
+  height: var(--size);
+  padding: 0.8rem;
+  background: rgb(var(--color-background));
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.js .menu-drawer__menu-item--active:not(.mega-menu__column__item) .icon-caret {
+  color: rgb(var(--color-button-text));
+  background: rgb(var(--color-button));
+}
+
+.menu-drawer__submenu {
+  border-radius: 1rem;
+}
+
+.js .menu-drawer__submenu .menu-drawer__submenu {
+  --margin-block: 0;
+}
+
+.js .menu-drawer__submenu {
+  position: absolute;
+  top: var(--margin-block);
+  bottom: var(--margin-block);
+  inset-inline: var(--margin-block);
+  z-index: 1;
+  transform: translateX(calc(var(--transform-direction) * (-100%)));
+  visibility: hidden;
+}
+
+.js .menu-drawer__submenu .menu-drawer__submenu {
+  overflow-y: auto;
+  z-index: 2;
+}
+
+.menu-drawer__close-button {
+  padding: 1.2rem 2.6rem;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-size: 1.4rem;
+  width: 100%;
+  background-color: transparent;
+  font-family: var(--font-body-family);
+  font-style: var(--font-body-style);
+  text-align: start;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  border-bottom: 1px solid rgb(var(--color-background));
+}
+
+.no-js .menu-drawer__close-button {
+  display: none;
+}
+
+.menu-drawer__close-button .icon-arrow {
+  margin-inline-end: 1rem;
+}
+
+.menu-drawer__utility-links {
+  padding: 2rem 2.7rem;
+}
+
+.menu-drawer__localization .localization-form__select {
+  padding-inline-start: 2.7rem;
+  padding-inline-end: 4.7rem;
+}
+
+.menu-drawer__localization .localization-form__select .icon-caret {
+  inset-inline-end: 2rem;
+}

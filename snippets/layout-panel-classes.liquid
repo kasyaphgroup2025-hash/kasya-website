@@ -1,0 +1,16 @@
+{%- liquid
+  comment
+    Intended for blocks and sections that provide values for all the referenced settings in HTML Classes.
+
+    Accepts:
+      local_settings: {block.settings || section.settings}
+  endcomment
+-%}
+flex custom-gap custom-gap-desktop
+{% if local_settings.content_direction_mobile == 'column' %}
+  flex-column align-{{ local_settings.horizontal_alignment_flex_direction_column_mobile }}
+{% else %}
+  justify-{{ local_settings.horizontal_alignment_mobile }} align-{{ local_settings.vertical_alignment_mobile }}
+{% endif %}
+{% if local_settings.content_direction_desktop != local_settings.content_direction_mobile %} flex-{{ local_settings.content_direction_desktop }}-desktop{% endif %}
+justify-desktop align-desktop

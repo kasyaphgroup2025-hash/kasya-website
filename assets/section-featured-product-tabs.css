@@ -1,0 +1,10 @@
+.fpt__bottom-actions {
+  gap: 1.5rem;
+  margin-top: 1.8rem;
+}
+
+@media (min-width: 750px) {
+  .fpt__bottom-actions {
+    margin-top: 3rem;
+  }
+}

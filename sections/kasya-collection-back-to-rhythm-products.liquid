@@ -1,0 +1,432 @@
+<section id="back-to-rhythm-products" class="kasya-btr-products" data-section-id="{{ section.id }}">
+  <div class="kasya-btr-products__inner">
+    {% if section.settings.heading != blank %}
+      <h2 class="kasya-btr-products__heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    {% liquid
+      assign rendered_products = 0
+      assign use_collection_products = false
+
+      if collection != blank and collection.products.size > 0
+        assign use_collection_products = true
+      endif
+    %}
+
+    <div class="kasya-btr-products__grid">
+      {% if use_collection_products %}
+        {% for card_product in collection.products limit: 4 %}
+          <article class="kasya-btr-product-card">
+            <a class="kasya-btr-product-card__media" href="{{ card_product.url }}" aria-label="{{ card_product.title | escape }}">
+              {% if card_product.featured_image != blank %}
+                <img
+                  src="{{ card_product.featured_image | image_url: width: 700 }}"
+                  srcset="
+                    {{ card_product.featured_image | image_url: width: 360 }} 360w,
+                    {{ card_product.featured_image | image_url: width: 520 }} 520w,
+                    {{ card_product.featured_image | image_url: width: 700 }} 700w
+                  "
+                  sizes="(min-width: 750px) 460px, 50vw"
+                  alt="{{ card_product.featured_image.alt | default: card_product.title | escape }}"
+                  width="700"
+                  height="540"
+                  loading="lazy"
+                >
+              {% else %}
+                <div class="kasya-btr-product-card__placeholder">Product image</div>
+              {% endif %}
+            </a>
+
+            <div class="kasya-btr-product-card__body">
+              <h3 class="kasya-btr-product-card__title">
+                <a href="{{ card_product.url }}">{{ card_product.title }}</a>
+              </h3>
+
+              <div class="kasya-btr-product-card__bottom">
+                <div class="kasya-btr-product-card__swatches" aria-label="Available colors">
+                  {% if section.settings.show_color_swatches %}
+                    {% assign color_values = blank %}
+                    {% for option in card_product.options_with_values %}
+                      {% assign option_name = option.name | downcase %}
+                      {% if option_name contains 'color' or option_name contains 'colour' %}
+                        {% assign color_values = option.values %}
+                      {% endif %}
+                    {% endfor %}
+
+                    {% if color_values != blank %}
+                      {% for color_value in color_values limit: 5 %}
+                        {% assign normalized_color = color_value | downcase | strip %}
+                        {% assign swatch_color = '#111111' %}
+                        {% if normalized_color contains 'white' or normalized_color contains 'cream' %}
+                          {% assign swatch_color = '#f4efe8' %}
+                        {% elsif normalized_color contains 'gray' or normalized_color contains 'grey' %}
+                          {% assign swatch_color = '#7a7a7a' %}
+                        {% elsif normalized_color contains 'brown' or normalized_color contains 'choco' %}
+                          {% assign swatch_color = '#7a4a2a' %}
+                        {% elsif normalized_color contains 'navy' %}
+                          {% assign swatch_color = '#101e4a' %}
+                        {% elsif normalized_color contains 'blue' %}
+                          {% assign swatch_color = '#2f5d9c' %}
+                        {% elsif normalized_color contains 'beige' or normalized_color contains 'nude' or normalized_color contains 'sand' %}
+                          {% assign swatch_color = '#d8bea2' %}
+                        {% elsif normalized_color contains 'taupe' %}
+                          {% assign swatch_color = '#b8a38e' %}
+                        {% elsif normalized_color contains 'olive' or normalized_color contains 'green' %}
+                          {% assign swatch_color = '#5f6f3a' %}
+                        {% elsif normalized_color contains 'rose' or normalized_color contains 'pink' %}
+                          {% assign swatch_color = '#c98c8c' %}
+                        {% elsif normalized_color contains 'red' or normalized_color contains 'maroon' %}
+                          {% assign swatch_color = '#8b0000' %}
+                        {% endif %}
+                        <span class="kasya-btr-product-card__swatch" style="--swatch: {{ swatch_color }};" title="{{ color_value | escape }}"></span>
+                      {% endfor %}
+
+                      {% if color_values.size > 5 %}
+                        <span class="kasya-btr-product-card__more">+{{ color_values.size | minus: 5 }}</span>
+                      {% endif %}
+                    {% endif %}
+                  {% endif %}
+                </div>
+
+                <a class="kasya-btr-product-card__button" href="{{ card_product.url }}">
+                  {{ section.settings.button_text }}
+                </a>
+              </div>
+            </div>
+          </article>
+          {% assign rendered_products = rendered_products | plus: 1 %}
+        {% endfor %}
+      {% else %}
+        {% for block in section.blocks %}
+          {% assign card_product = block.settings.product %}
+          {% if card_product != blank %}
+            <article class="kasya-btr-product-card" {{ block.shopify_attributes }}>
+              <a class="kasya-btr-product-card__media" href="{{ card_product.url }}" aria-label="{{ card_product.title | escape }}">
+                {% if card_product.featured_image != blank %}
+                  <img
+                    src="{{ card_product.featured_image | image_url: width: 700 }}"
+                    srcset="
+                      {{ card_product.featured_image | image_url: width: 360 }} 360w,
+                      {{ card_product.featured_image | image_url: width: 520 }} 520w,
+                      {{ card_product.featured_image | image_url: width: 700 }} 700w
+                    "
+                    sizes="(min-width: 750px) 460px, 50vw"
+                    alt="{{ card_product.featured_image.alt | default: card_product.title | escape }}"
+                    width="700"
+                    height="540"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="kasya-btr-product-card__placeholder">Product image</div>
+                {% endif %}
+              </a>
+
+              <div class="kasya-btr-product-card__body">
+                <h3 class="kasya-btr-product-card__title">
+                  <a href="{{ card_product.url }}">{{ card_product.title }}</a>
+                </h3>
+
+                <div class="kasya-btr-product-card__bottom">
+                  <div class="kasya-btr-product-card__swatches" aria-label="Available colors">
+                    {% if section.settings.show_color_swatches %}
+                      {% assign color_values = blank %}
+                      {% for option in card_product.options_with_values %}
+                        {% assign option_name = option.name | downcase %}
+                        {% if option_name contains 'color' or option_name contains 'colour' %}
+                          {% assign color_values = option.values %}
+                        {% endif %}
+                      {% endfor %}
+
+                      {% if color_values != blank %}
+                        {% for color_value in color_values limit: 5 %}
+                          {% assign normalized_color = color_value | downcase | strip %}
+                          {% assign swatch_color = '#111111' %}
+                          {% if normalized_color contains 'white' or normalized_color contains 'cream' %}
+                            {% assign swatch_color = '#f4efe8' %}
+                          {% elsif normalized_color contains 'gray' or normalized_color contains 'grey' %}
+                            {% assign swatch_color = '#7a7a7a' %}
+                          {% elsif normalized_color contains 'brown' or normalized_color contains 'choco' %}
+                            {% assign swatch_color = '#7a4a2a' %}
+                          {% elsif normalized_color contains 'navy' %}
+                            {% assign swatch_color = '#101e4a' %}
+                          {% elsif normalized_color contains 'blue' %}
+                            {% assign swatch_color = '#2f5d9c' %}
+                          {% elsif normalized_color contains 'beige' or normalized_color contains 'nude' or normalized_color contains 'sand' %}
+                            {% assign swatch_color = '#d8bea2' %}
+                          {% elsif normalized_color contains 'taupe' %}
+                            {% assign swatch_color = '#b8a38e' %}
+                          {% elsif normalized_color contains 'olive' or normalized_color contains 'green' %}
+                            {% assign swatch_color = '#5f6f3a' %}
+                          {% elsif normalized_color contains 'rose' or normalized_color contains 'pink' %}
+                            {% assign swatch_color = '#c98c8c' %}
+                          {% elsif normalized_color contains 'red' or normalized_color contains 'maroon' %}
+                            {% assign swatch_color = '#8b0000' %}
+                          {% endif %}
+                          <span class="kasya-btr-product-card__swatch" style="--swatch: {{ swatch_color }};" title="{{ color_value | escape }}"></span>
+                        {% endfor %}
+
+                        {% if color_values.size > 5 %}
+                          <span class="kasya-btr-product-card__more">+{{ color_values.size | minus: 5 }}</span>
+                        {% endif %}
+                      {% endif %}
+                    {% endif %}
+                  </div>
+
+                  <a class="kasya-btr-product-card__button" href="{{ card_product.url }}">
+                    {{ section.settings.button_text }}
+                  </a>
+                </div>
+              </div>
+            </article>
+            {% assign rendered_products = rendered_products | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    {% if rendered_products == 0 %}
+      <div class="kasya-btr-products__empty">
+        Add products to this collection, or choose fallback products in this section's settings.
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .kasya-btr-products {
+    background: #f7f6f4;
+    color: #111;
+    padding: 26px 14px 34px;
+  }
+
+  .kasya-btr-products * {
+    box-sizing: border-box;
+  }
+
+  .kasya-btr-products__inner {
+    max-width: 980px;
+    margin: 0 auto;
+  }
+
+  .kasya-btr-products__heading {
+    margin: 0 0 14px;
+    color: #111;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 25px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .kasya-btr-products__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .kasya-btr-product-card {
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  .kasya-btr-product-card__media {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 1.28 / 1;
+    background: #e9e9e9;
+  }
+
+  .kasya-btr-product-card__media img,
+  .kasya-btr-product-card__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .kasya-btr-product-card__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .kasya-btr-product-card__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    padding: 8px 8px 10px;
+  }
+
+  .kasya-btr-product-card__title {
+    margin: 0;
+    color: #111;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .kasya-btr-product-card__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .kasya-btr-product-card__bottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(86px, 0.95fr);
+    align-items: center;
+    gap: 8px;
+  }
+
+  .kasya-btr-product-card__swatches {
+    display: flex;
+    min-height: 16px;
+    align-items: center;
+    gap: 5px;
+    overflow: hidden;
+  }
+
+  .kasya-btr-product-card__swatch {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 auto;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 999px;
+    background: var(--swatch, #111);
+  }
+
+  .kasya-btr-product-card__more {
+    color: #555;
+    font-size: 10px;
+    line-height: 1;
+  }
+
+  .kasya-btr-product-card__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 8px 9px;
+    border: 1px solid #111;
+    color: #111;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .kasya-btr-products__empty {
+    margin-top: 12px;
+    padding: 16px;
+    border: 1px dashed rgba(0, 0, 0, 0.22);
+    border-radius: 8px;
+    color: #555;
+    font-size: 13px;
+    text-align: center;
+  }
+
+  @media screen and (min-width: 750px) {
+    .kasya-btr-products {
+      padding: 34px 32px 48px;
+    }
+
+    .kasya-btr-products__heading {
+      margin-bottom: 18px;
+      font-size: 31px;
+    }
+
+    .kasya-btr-products__grid {
+      gap: 14px;
+    }
+
+    .kasya-btr-product-card__body {
+      grid-template-columns: minmax(0, 1fr);
+      padding: 12px 12px 14px;
+    }
+
+    .kasya-btr-product-card__title {
+      font-size: 15px;
+    }
+
+    .kasya-btr-product-card__button {
+      min-height: 36px;
+      font-size: 11px;
+    }
+  }
+
+  @media screen and (max-width: 360px) {
+    .kasya-btr-products__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Back to Rhythm Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading text",
+      "default": "THE COLLECTION"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_color_swatches",
+      "label": "Show color swatches",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "QUICK SHOP"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Fallback product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Used only when the current collection has no products in preview."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Back to Rhythm Products",
+      "blocks": [
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

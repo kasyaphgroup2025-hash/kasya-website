@@ -1,0 +1,38 @@
+{%- doc -%}
+  Renders a divider line, used to visually separate content.
+
+  @param {string} id - A unique ID for the divider, linking it to a block or section.
+  @param {object} local_settings - An object containing style settings for the divider.
+
+  @param {string} [local_settings.alignment_horizontal] - The horizontal alignment of the divider ('left', 'center', or
+  'right'). Defaults to 'center'.
+  @param {number} [local_settings.thickness] - The thickness of the divider line in pixels.
+  @param {string} [local_settings.corner_radius] - The corner radius of the divider, e.g., 'rounded'.
+  @param {number} [local_settings.width_percent] - The width of the divider as a percentage of its container.
+
+  @param {boolean} [full_width] - When `true`, the divider spans the full width of its container.
+  @param {boolean} [attributes] - When `true`, render block.shopify_attributes on the divider container.
+  @param {object} [block] - The block
+{%- enddoc -%}
+
+<div
+  class="divider divider-{{ id }} spacing-style justify-{{ local_settings.alignment_horizontal | default: 'center' }} w100 flex align-center"
+  style="
+    {% render 'spacing-style', local_settings: local_settings %}
+  "
+  {% if attributes %}
+    {{- block.shopify_attributes -}}
+  {% endif %}
+>
+  <span
+    class="divider__line"
+    style="
+      --divider-border-thickness: {{ local_settings.thickness }}px;
+      --divider-border-opacity: {{ local_settings.border_opacity | divided_by: 100.0 }};
+      {% unless full_width %}
+        --divider-border-rounded: {% if local_settings.corner_radius == 'rounded' %}1{% else %}0{% endif %};
+      {% endunless %}
+      --divider-flex-basis: {{ local_settings.width_percent }}%;
+    "
+  ></span>
+</div>

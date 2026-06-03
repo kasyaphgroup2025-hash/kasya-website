@@ -1,0 +1,233 @@
+{%- liquid
+  assign available_tab_ids = ''
+  assign has_first_tab = false
+-%}
+{{ 'component-tabs.css' | asset_url | stylesheet_tag }}
+<custom-tabs class="db tabs tabs--use-offset tabs--{{ section.settings.tab_mode }}" data-mode="{{ section.settings.tab_mode }}" data-sticky="{{ section.settings.sticky_tablist }}">
+  <div class="tabs__title-list-wrapper tabs__title-list-wrapper--{{ section.settings.tab_mode }} flex{% if section.settings.sticky_tablist %} tabs__title-list-wrapper--sticky{% endif %}">
+    <div class="tabs__title-list">
+      <ul class="margin0 list-unstyled tabs__title-list__content" role="tablist" aria-label="{{ section.settings.tabs_label | escape }}">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            if block.type == 'description_icon'
+              continue
+            endif
+            assign available_tab = true
+            if block.type != 'description' and request.design_mode == false
+              case block.type
+                when 'custom_text'
+                  if block.settings.custom_text == blank
+                    assign available_tab = false
+                  endif
+                when 'page_content' 
+                  if block.settings.page == blank
+                    assign available_tab = false
+                  endif
+                when 'custom_liquid'
+                  if block.settings.custom_liquid_code == blank
+                    assign available_tab = false
+                  endif  
+                when 'specifications'
+                  if block.settings.metafields == blank
+                    assign available_tab = false
+                  endif
+                when 'ask_question'
+                  if block.settings.title == blank
+                    assign available_tab = false
+                  endif  
+                else
+                  if block.settings.namespace_key == blank
+                    assign available_tab = false
+                  else
+                    assign metafield_parts = block.settings.namespace_key | split: '.'
+                    if product.metafields[metafield_parts[0]][metafield_parts[1]] == blank
+                      assign available_tab = false
+                    endif
+                  endif  
+              endcase
+            endif
+          -%}
+          {%- if available_tab -%}
+            {%- assign suffix = section.id | append: '-' | append: block.id -%}
+            {%- assign available_tab_ids = available_tab_ids | append: block.id | append: ',' -%}
+            <li>
+              <button type="button" role="tab" id="tab-{{ suffix }}" aria-controls="panel-{{ suffix }}" class="tabs__item-label font-heading-bold light por db h4 tab-item-label tab-item-label--has-line unstyled-button" aria-selected="{% unless has_first_tab %}true{% else %}false{% endunless %}"{% if has_first_tab %} tabindex="-1"{% endif %} {{ block.shopify_attributes }}>{{ block.settings.title }}</button>
+            </li>
+            {%- assign has_first_tab = true -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+  {%- assign available_tab_ids = available_tab_ids | split: ',' | compact -%}
+  <div class="tabs__content-list element-small-margin-top{% if section.settings.tab_mode == 'scroll' %} flex flex-column tabs__content-list--scroll{% endif %}">
+    {%- assign has_first_tab = false -%}
+    {%- for block in section.blocks -%}
+      {%- if available_tab_ids contains block.id -%}
+        {%- assign suffix = section.id | append: '-' | append: block.id -%}
+        <div id="panel-{{ suffix }}" role="tabpanel" aria-labelledby="tab-{{ suffix }}" class="tabs__tab-content tabs__tab-content--{{ section.settings.tab_mode }} w100{% unless has_first_tab %} active{% endunless %}">
+          {%- case block.type -%}
+            {%- when 'description' -%}
+              {%- if product.description != blank -%}
+                {%-liquid
+                  render 'main-product-description', product: product, section: section, block: block, no_shopify_attributes: true
+                  assign icons = section.blocks | where: "type", "description_icon"
+                -%}
+                {%- if icons.size > 0 -%}
+                  <div class="element-small-margin-top">
+                    <div class="grid grid--2-col">
+                      {%- for icon in icons -%}
+                        <div
+                          class="grid__item{% unless icon.settings.link != blank %} flex align-center product__description-icon-{{ section.id }}{% endunless %}"
+                          {{ icon.shopify_attributes }}
+                        >
+                          {%- capture icon_content -%}
+                            {%- render 'icon-picker', icon: icon.settings.icon -%}
+                            {%- if icon.settings.title != blank -%}
+                              <span>{{ icon.settings.title }}</span>
+                            {%- endif -%}  
+                          {%- endcapture -%}
+                          {%- if icon.settings.link != blank -%}
+                            <a
+                              href="{{ icon.settings.link }}"
+                              class="link link--text flex align-center product__description-icon-{{ section.id }}"
+                            >
+                              {{- icon_content -}}
+                            </a>
+                          {%- else -%}
+                            {{ icon_content }}
+                          {%- endif -%}
+                        </div>
+                      {%- endfor -%}  
+                    </div>
+                  </div>
+                {%- endif -%}  
+              {%- endif -%}
+            {%- when 'custom_text' -%}
+              {%- if block.settings.custom_text != blank -%}  
+                <div class="rich-text__text rte">
+                  {{ block.settings.custom_text }}
+                </div>
+              {%- endif -%}
+            {%- when 'custom_liquid' -%}
+              {%-liquid
+                if block.settings.custom_liquid_code != blank
+                  echo block.settings.custom_liquid_code
+                endif
+              -%}
+            {%- when 'page_content' -%}
+              {%- if block.settings.page != blank -%}
+                <div class="rte">
+                  {{ block.settings.page.content }}
+                </div>  
+              {%- endif -%}
+            {%- when 'ask_question' -%}
+              {%- if block.settings.title != blank -%}
+                {% assign form_question_id = section.id | append: '-' | append: block.id %}
+                {% render 'main-product-tabs-question', form_question_id: form_question_id, block: block %}
+              {%- endif -%}  
+            {%- when 'metafields' -%}
+              {%- if block.settings.namespace_key != blank -%}
+                {%- assign metafield_parts = block.settings.namespace_key | split: '.' -%}
+                {%- if product.metafields[metafield_parts[0]][metafield_parts[1]] != blank -%}
+                  <div class="rte">
+                    {{ product.metafields[metafield_parts[0]][metafield_parts[1]] | metafield_tag }}
+                  </div>
+                {%- endif -%}  
+              {%- endif -%}  
+            {%- when 'specifications' -%}
+              {%- if block.settings.metafields != blank -%}
+                {%- assign metafields_array = block.settings.metafields
+                  | newline_to_br
+                  | replace: '<br />', ','
+                  | strip_newlines
+                  | split: ','
+                -%}
+                {%- if metafields_array.size > 0 -%}
+                  <div class="rte tabs__tab-content__specifications break">
+                    <table>
+                      <tbody>
+                        {%- for field in metafields_array -%}
+                          {%- liquid
+                            assign splits = field | split: ':'
+                            if splits.size == 1
+                              assign pair = field | replace: ' ', '' | split: '.'
+                            else
+                              assign pair = splits[1] | replace: ' ', '' | split: '.'
+                            endif
+                          -%}
+                          {%- if pair.size >= 2 -%}
+                            {%- liquid
+                              assign namespace = pair[0] | strip
+                              assign key = pair[1] | strip
+                              if splits.size == 1
+                                assign item_label = key | replace: '_', ' ' | capitalize
+                              else
+                                assign item_label = splits[0] | strip
+                              endif
+                            -%}
+                          {%- endif -%}
+                          {%- if product.metafields[namespace][key] -%}
+                            <tr>
+                              <th class="tabs__tab-content__specification-item-heading-{{ section.id }} left">{{ item_label | replace: '_', ' ' }}</th>
+                              <td>
+                                {%- unless product.metafields[namespace][key].type == 'boolean' -%}
+                                  {%- unless product.metafields[namespace][key].type contains 'list.'
+                                    and product.metafields[namespace][key].type != 'list.single_line_text_field'
+                                  -%}
+                                    {% unless product.metafields[namespace][key].type contains 'metaobject_reference' %}
+                                      {{ product.metafields[namespace][key] | metafield_tag }}
+                                    {% else %}
+                                      {{ product.metafields[namespace][key].value[pair[2]] }}
+                                    {% endunless %}
+                                  {%- else -%}
+                                    <ul>
+                                      {%- for field in product.metafields[namespace][key].value -%}
+                                        <li>
+                                          {%- if product.metafields[namespace][key].type contains 'product_reference'
+                                            or product.metafields[namespace][key].type contains 'variant_reference'
+                                          -%}
+                                            <a href="{{ field.url }}">{{ field.title }}</a>
+                                          {%- elsif product.metafields[namespace][key].type
+                                              contains 'metaobject_reference'
+                                          -%}
+                                            {{ field[pair[2]] }}
+                                          {%- else -%}
+                                            {{ field }}
+                                          {%- endif -%}
+                                        </li>
+                                      {%- endfor -%}
+                                    </ul>
+                                  {%- endunless -%}
+                                {%- else -%}
+                                  {%- if product.metafields[namespace][key].value == true -%}
+                                    {{ 'general.boolean.true' | t }}
+                                  {%- else -%}
+                                    {{ 'general.boolean.false' | t }}
+                                  {%- endif -%}
+                                {%- endunless -%}
+                              </td>
+                            </tr>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </tbody>
+                    </table>
+                  </div>
+                {%- endif -%}
+              {%- endif -%}  
+          {%- endcase -%}  
+        </div>
+        {%- assign has_first_tab = true -%}
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</custom-tabs>
+<style>
+  {%- if has_first_tab -%}
+    {%- if icons -%}
+      .product__description-icon-{{ section.id }} {
+        gap: 1.5rem;
+      }
+    {%- endif -%}
+  {%- endif -%}
+</style>

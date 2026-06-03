@@ -1,0 +1,27 @@
+<div class="inventory-{{ section_id }}">
+  {%- liquid
+    if product.selected_or_first_available_variant.inventory_management == 'shopify'
+      if product.selected_or_first_available_variant.inventory_quantity >= product.selected_or_first_available_variant.quantity_rule.min
+        if product.selected_or_first_available_variant.inventory_quantity <= settings.inventory_threshold_product_compare
+          if settings.show_inventory_quantity_product_compare
+            echo 'products.product.inventory_low_stock_show_count' | t: quantity: product.selected_or_first_available_variant.inventory_quantity
+          else
+            echo 'products.product.inventory_low_stock' | t
+          endif
+        else
+          if settings.show_inventory_quantity_product_compare
+            echo 'products.product.inventory_in_stock_show_count' | t: quantity: product.selected_or_first_available_variant.inventory_quantity
+          else
+            echo 'products.product.inventory_in_stock' | t
+          endif
+        endif
+      else
+        if product.selected_or_first_available_variant.inventory_policy == 'continue'
+          echo 'products.product.inventory_out_of_stock_continue_selling' | t
+        else
+          echo 'products.product.inventory_out_of_stock' | t
+        endif
+      endif
+    endif
+  -%}
+</div>

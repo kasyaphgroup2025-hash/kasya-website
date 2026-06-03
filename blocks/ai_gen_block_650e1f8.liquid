@@ -1,0 +1,774 @@
+{% doc %}
+  @prompt
+    Can you make me a customer review but in halloween style 4 customer review , can you make a black background must be black and orange blue just make it halloween style and carousel stype also in mobile view , can you make black background like halloween style or violet something, can you make black and orange blue also the title 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-halloween-reviews-{{ ai_gen_id }} {
+    padding: 60px 20px;
+    background: #000000;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-halloween-reviews-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(255, 140, 0, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(0, 123, 255, 0.15) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .ai-halloween-reviews-container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .ai-halloween-reviews-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .ai-halloween-reviews-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 15px;
+    font-weight: 700;
+    text-shadow: 0 0 20px rgba(255, 140, 0, 0.8), 0 0 40px rgba(0, 123, 255, 0.5);
+  }
+
+  .ai-halloween-reviews-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.subtitle_color }};
+    margin: 0;
+    text-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
+  }
+
+  .ai-halloween-carousel-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    padding: 0 60px;
+  }
+
+  .ai-halloween-reviews-carousel-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    transition: transform 0.5s ease;
+  }
+
+  .ai-halloween-review-card-{{ ai_gen_id }} {
+    background: {{ block.settings.card_background }};
+    border: 2px solid {{ block.settings.card_border_color }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    padding: 30px;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    box-shadow: 0 4px 20px rgba(255, 140, 0, 0.3), 0 0 30px rgba(0, 123, 255, 0.2);
+    min-height: 300px;
+  }
+
+  .ai-halloween-review-card-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    background: linear-gradient(135deg, rgba(255, 140, 0, 0.05) 0%, rgba(0, 123, 255, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .ai-halloween-review-card-{{ ai_gen_id }}:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 40px rgba(255, 140, 0, 0.6), 0 0 50px rgba(0, 123, 255, 0.4);
+    border-color: {{ block.settings.card_hover_border }};
+  }
+
+  .ai-halloween-review-card-{{ ai_gen_id }}:hover::before {
+    opacity: 1;
+  }
+
+  .ai-halloween-review-header-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .ai-halloween-review-avatar-{{ ai_gen_id }} {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: {{ block.settings.avatar_background }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    border: 2px solid {{ block.settings.card_border_color }};
+    flex-shrink: 0;
+    box-shadow: 0 0 15px rgba(255, 140, 0, 0.5);
+  }
+
+  .ai-halloween-review-info-{{ ai_gen_id }} {
+    flex-grow: 1;
+  }
+
+  .ai-halloween-review-name-{{ ai_gen_id }} {
+    font-size: 18px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 5px;
+    text-shadow: 0 0 8px rgba(255, 140, 0, 0.3);
+  }
+
+  .ai-halloween-review-stars-{{ ai_gen_id }} {
+    display: flex;
+    gap: 3px;
+    color: {{ block.settings.star_color }};
+    font-size: 16px;
+    filter: drop-shadow(0 0 5px rgba(255, 140, 0, 0.8));
+  }
+
+  .ai-halloween-review-text-{{ ai_gen_id }} {
+    font-size: 15px;
+    line-height: 1.6;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 15px;
+  }
+
+  .ai-halloween-review-date-{{ ai_gen_id }} {
+    font-size: 13px;
+    color: {{ block.settings.date_color }};
+    font-style: italic;
+  }
+
+  .ai-halloween-review-decoration-{{ ai_gen_id }} {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    opacity: 0.4;
+    filter: drop-shadow(0 0 8px rgba(255, 140, 0, 0.6));
+  }
+
+  .ai-halloween-carousel-nav-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: {{ block.settings.button_background }};
+    border: 2px solid {{ block.settings.card_border_color }};
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
+    box-shadow: 0 0 20px rgba(255, 140, 0, 0.5);
+  }
+
+  .ai-halloween-carousel-nav-{{ ai_gen_id }}:hover {
+    background: {{ block.settings.button_hover_background }};
+    border-color: {{ block.settings.card_hover_border }};
+    box-shadow: 0 0 30px rgba(255, 140, 0, 0.8), 0 0 40px rgba(0, 123, 255, 0.5);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .ai-halloween-carousel-nav-{{ ai_gen_id }}:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .ai-halloween-carousel-prev-{{ ai_gen_id }} {
+    left: 0;
+  }
+
+  .ai-halloween-carousel-next-{{ ai_gen_id }} {
+    right: 0;
+  }
+
+  .ai-halloween-carousel-dots-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+  }
+
+  .ai-halloween-carousel-dot-{{ ai_gen_id }} {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 140, 0, 0.2);
+    border: 2px solid {{ block.settings.card_border_color }};
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ai-halloween-carousel-dot-{{ ai_gen_id }}.active {
+    background: {{ block.settings.card_border_color }};
+    box-shadow: 0 0 15px {{ block.settings.card_border_color }}, 0 0 25px rgba(0, 123, 255, 0.4);
+    transform: scale(1.2);
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-halloween-reviews-carousel-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .ai-halloween-carousel-wrapper-{{ ai_gen_id }} {
+      padding: 0 50px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-halloween-reviews-{{ ai_gen_id }} {
+      padding: 40px 15px;
+    }
+
+    .ai-halloween-reviews-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.7 }}px;
+    }
+
+    .ai-halloween-reviews-carousel-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .ai-halloween-carousel-wrapper-{{ ai_gen_id }} {
+      padding: 0 40px;
+    }
+
+    .ai-halloween-review-card-{{ ai_gen_id }} {
+      padding: 25px;
+      min-height: auto;
+    }
+
+    .ai-halloween-carousel-nav-{{ ai_gen_id }} {
+      width: 35px;
+      height: 35px;
+      font-size: 16px;
+    }
+  }
+{% endstyle %}
+
+<halloween-reviews-carousel-{{ ai_gen_id }} class="ai-halloween-reviews-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-halloween-reviews-container-{{ ai_gen_id }}">
+    {% if block.settings.title != blank %}
+      <div class="ai-halloween-reviews-header-{{ ai_gen_id }}">
+        <h2 class="ai-halloween-reviews-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+        {% if block.settings.subtitle != blank %}
+          <p class="ai-halloween-reviews-subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="ai-halloween-carousel-wrapper-{{ ai_gen_id }}">
+      <button class="ai-halloween-carousel-nav-{{ ai_gen_id }} ai-halloween-carousel-prev-{{ ai_gen_id }}" aria-label="Previous reviews">
+        ‹
+      </button>
+
+      <div class="ai-halloween-reviews-carousel-{{ ai_gen_id }}">
+        {% if block.settings.review_1_name != blank %}
+          <div class="ai-halloween-review-card-{{ ai_gen_id }}">
+            <span class="ai-halloween-review-decoration-{{ ai_gen_id }}">{{ block.settings.review_1_icon }}</span>
+            <div class="ai-halloween-review-header-{{ ai_gen_id }}">
+              <div class="ai-halloween-review-avatar-{{ ai_gen_id }}">
+                {{ block.settings.review_1_avatar }}
+              </div>
+              <div class="ai-halloween-review-info-{{ ai_gen_id }}">
+                <h3 class="ai-halloween-review-name-{{ ai_gen_id }}">{{ block.settings.review_1_name }}</h3>
+                <div class="ai-halloween-review-stars-{{ ai_gen_id }}">
+                  {% for i in (1..5) %}
+                    ★
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            <p class="ai-halloween-review-text-{{ ai_gen_id }}">{{ block.settings.review_1_text }}</p>
+            <div class="ai-halloween-review-date-{{ ai_gen_id }}">{{ block.settings.review_1_date }}</div>
+          </div>
+        {% endif %}
+
+        {% if block.settings.review_2_name != blank %}
+          <div class="ai-halloween-review-card-{{ ai_gen_id }}">
+            <span class="ai-halloween-review-decoration-{{ ai_gen_id }}">{{ block.settings.review_2_icon }}</span>
+            <div class="ai-halloween-review-header-{{ ai_gen_id }}">
+              <div class="ai-halloween-review-avatar-{{ ai_gen_id }}">
+                {{ block.settings.review_2_avatar }}
+              </div>
+              <div class="ai-halloween-review-info-{{ ai_gen_id }}">
+                <h3 class="ai-halloween-review-name-{{ ai_gen_id }}">{{ block.settings.review_2_name }}</h3>
+                <div class="ai-halloween-review-stars-{{ ai_gen_id }}">
+                  {% for i in (1..5) %}
+                    ★
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            <p class="ai-halloween-review-text-{{ ai_gen_id }}">{{ block.settings.review_2_text }}</p>
+            <div class="ai-halloween-review-date-{{ ai_gen_id }}">{{ block.settings.review_2_date }}</div>
+          </div>
+        {% endif %}
+
+        {% if block.settings.review_3_name != blank %}
+          <div class="ai-halloween-review-card-{{ ai_gen_id }}">
+            <span class="ai-halloween-review-decoration-{{ ai_gen_id }}">{{ block.settings.review_3_icon }}</span>
+            <div class="ai-halloween-review-header-{{ ai_gen_id }}">
+              <div class="ai-halloween-review-avatar-{{ ai_gen_id }}">
+                {{ block.settings.review_3_avatar }}
+              </div>
+              <div class="ai-halloween-review-info-{{ ai_gen_id }}">
+                <h3 class="ai-halloween-review-name-{{ ai_gen_id }}">{{ block.settings.review_3_name }}</h3>
+                <div class="ai-halloween-review-stars-{{ ai_gen_id }}">
+                  {% for i in (1..5) %}
+                    ★
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            <p class="ai-halloween-review-text-{{ ai_gen_id }}">{{ block.settings.review_3_text }}</p>
+            <div class="ai-halloween-review-date-{{ ai_gen_id }}">{{ block.settings.review_3_date }}</div>
+          </div>
+        {% endif %}
+
+        {% if block.settings.review_4_name != blank %}
+          <div class="ai-halloween-review-card-{{ ai_gen_id }}">
+            <span class="ai-halloween-review-decoration-{{ ai_gen_id }}">{{ block.settings.review_4_icon }}</span>
+            <div class="ai-halloween-review-header-{{ ai_gen_id }}">
+              <div class="ai-halloween-review-avatar-{{ ai_gen_id }}">
+                {{ block.settings.review_4_avatar }}
+              </div>
+              <div class="ai-halloween-review-info-{{ ai_gen_id }}">
+                <h3 class="ai-halloween-review-name-{{ ai_gen_id }}">{{ block.settings.review_4_name }}</h3>
+                <div class="ai-halloween-review-stars-{{ ai_gen_id }}">
+                  {% for i in (1..5) %}
+                    ★
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            <p class="ai-halloween-review-text-{{ ai_gen_id }}">{{ block.settings.review_4_text }}</p>
+            <div class="ai-halloween-review-date-{{ ai_gen_id }}">{{ block.settings.review_4_date }}</div>
+          </div>
+        {% endif %}
+      </div>
+
+      <button class="ai-halloween-carousel-nav-{{ ai_gen_id }} ai-halloween-carousel-next-{{ ai_gen_id }}" aria-label="Next reviews">
+        ›
+      </button>
+    </div>
+
+    <div class="ai-halloween-carousel-dots-{{ ai_gen_id }}"></div>
+  </div>
+</halloween-reviews-carousel-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class HalloweenReviewsCarousel{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentIndex = 0;
+        this.cards = [];
+        this.itemsPerPage = 4;
+      }
+
+      connectedCallback() {
+        this.carousel = this.querySelector('.ai-halloween-reviews-carousel-{{ ai_gen_id }}');
+        this.prevBtn = this.querySelector('.ai-halloween-carousel-prev-{{ ai_gen_id }}');
+        this.nextBtn = this.querySelector('.ai-halloween-carousel-next-{{ ai_gen_id }}');
+        this.dotsContainer = this.querySelector('.ai-halloween-carousel-dots-{{ ai_gen_id }}');
+        this.cards = Array.from(this.querySelectorAll('.ai-halloween-review-card-{{ ai_gen_id }}'));
+        
+        this.updateItemsPerPage();
+        this.createDots();
+        this.setupEventListeners();
+        this.updateCarousel();
+
+        window.addEventListener('resize', () => {
+          this.updateItemsPerPage();
+          this.createDots();
+          this.currentIndex = 0;
+          this.updateCarousel();
+        });
+      }
+
+      updateItemsPerPage() {
+        const width = window.innerWidth;
+        if (width <= 749) {
+          this.itemsPerPage = 1;
+        } else if (width <= 989) {
+          this.itemsPerPage = 2;
+        } else {
+          this.itemsPerPage = 4;
+        }
+      }
+
+      createDots() {
+        this.dotsContainer.innerHTML = '';
+        const totalPages = Math.ceil(this.cards.length / this.itemsPerPage);
+        
+        for (let i = 0; i < totalPages; i++) {
+          const dot = document.createElement('button');
+          dot.classList.add('ai-halloween-carousel-dot-{{ ai_gen_id }}');
+          dot.setAttribute('aria-label', `Go to page ${i + 1}`);
+          if (i === 0) dot.classList.add('active');
+          dot.addEventListener('click', () => {
+            this.currentIndex = i;
+            this.updateCarousel();
+          });
+          this.dotsContainer.appendChild(dot);
+        }
+      }
+
+      setupEventListeners() {
+        this.prevBtn.addEventListener('click', () => this.prev());
+        this.nextBtn.addEventListener('click', () => this.next());
+
+        let startX = 0;
+        let endX = 0;
+
+        this.carousel.addEventListener('touchstart', (e) => {
+          startX = e.touches[0].clientX;
+        });
+
+        this.carousel.addEventListener('touchend', (e) => {
+          endX = e.changedTouches[0].clientX;
+          if (startX - endX > 50) {
+            this.next();
+          } else if (endX - startX > 50) {
+            this.prev();
+          }
+        });
+      }
+
+      prev() {
+        if (this.currentIndex > 0) {
+          this.currentIndex--;
+          this.updateCarousel();
+        }
+      }
+
+      next() {
+        const totalPages = Math.ceil(this.cards.length / this.itemsPerPage);
+        if (this.currentIndex < totalPages - 1) {
+          this.currentIndex++;
+          this.updateCarousel();
+        }
+      }
+
+      updateCarousel() {
+        const totalPages = Math.ceil(this.cards.length / this.itemsPerPage);
+        
+        this.cards.forEach((card, index) => {
+          const pageIndex = Math.floor(index / this.itemsPerPage);
+          if (pageIndex === this.currentIndex) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        this.prevBtn.disabled = this.currentIndex === 0;
+        this.nextBtn.disabled = this.currentIndex === totalPages - 1;
+
+        const dots = this.dotsContainer.querySelectorAll('.ai-halloween-carousel-dot-{{ ai_gen_id }}');
+        dots.forEach((dot, index) => {
+          if (index === this.currentIndex) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+    }
+
+    customElements.define('halloween-reviews-carousel-{{ ai_gen_id }}', HalloweenReviewsCarousel{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Halloween reviews",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section heading"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "🎃 Spooky Customer Reviews 👻"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "See what our frightfully satisfied customers say"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Review 1"
+    },
+    {
+      "type": "text",
+      "id": "review_1_name",
+      "label": "Name",
+      "default": "Morticia A."
+    },
+    {
+      "type": "text",
+      "id": "review_1_avatar",
+      "label": "Avatar emoji",
+      "default": "🧛‍♀️"
+    },
+    {
+      "type": "textarea",
+      "id": "review_1_text",
+      "label": "Review text",
+      "default": "Absolutely spooktacular! The quality is to die for. Perfect for my Halloween party and the shipping was faster than a ghost!"
+    },
+    {
+      "type": "text",
+      "id": "review_1_date",
+      "label": "Date",
+      "default": "October 15, 2025"
+    },
+    {
+      "type": "text",
+      "id": "review_1_icon",
+      "label": "Decoration icon",
+      "default": "🎃"
+    },
+    {
+      "type": "header",
+      "content": "Review 2"
+    },
+    {
+      "type": "text",
+      "id": "review_2_name",
+      "label": "Name",
+      "default": "Count D."
+    },
+    {
+      "type": "text",
+      "id": "review_2_avatar",
+      "label": "Avatar emoji",
+      "default": "🧟"
+    },
+    {
+      "type": "textarea",
+      "id": "review_2_text",
+      "label": "Review text",
+      "default": "Wickedly wonderful! I've been haunting this store for years. The products are frighteningly good and customer service is hauntingly helpful."
+    },
+    {
+      "type": "text",
+      "id": "review_2_date",
+      "label": "Date",
+      "default": "October 18, 2025"
+    },
+    {
+      "type": "text",
+      "id": "review_2_icon",
+      "label": "Decoration icon",
+      "default": "👻"
+    },
+    {
+      "type": "header",
+      "content": "Review 3"
+    },
+    {
+      "type": "text",
+      "id": "review_3_name",
+      "label": "Name",
+      "default": "Elvira M."
+    },
+    {
+      "type": "text",
+      "id": "review_3_avatar",
+      "label": "Avatar emoji",
+      "default": "🧙‍♀️"
+    },
+    {
+      "type": "textarea",
+      "id": "review_3_text",
+      "label": "Review text",
+      "default": "Bewitchingly beautiful! My coven and I are obsessed. The attention to detail is magical and the prices won't drain your cauldron."
+    },
+    {
+      "type": "text",
+      "id": "review_3_date",
+      "label": "Date",
+      "default": "October 20, 2025"
+    },
+    {
+      "type": "text",
+      "id": "review_3_icon",
+      "label": "Decoration icon",
+      "default": "🕷️"
+    },
+    {
+      "type": "header",
+      "content": "Review 4"
+    },
+    {
+      "type": "text",
+      "id": "review_4_name",
+      "label": "Name",
+      "default": "Frank S."
+    },
+    {
+      "type": "text",
+      "id": "review_4_avatar",
+      "label": "Avatar emoji",
+      "default": "🎃"
+    },
+    {
+      "type": "textarea",
+      "id": "review_4_text",
+      "label": "Review text",
+      "default": "Monstrously amazing! Best purchase I've made this season. The quality is killer and it arrived in a coffin... I mean box, perfectly packaged!"
+    },
+    {
+      "type": "text",
+      "id": "review_4_date",
+      "label": "Date",
+      "default": "October 22, 2025"
+    },
+    {
+      "type": "text",
+      "id": "review_4_icon",
+      "label": "Decoration icon",
+      "default": "🦇"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title",
+      "default": "#ff8c00"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle",
+      "default": "#007bff"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border",
+      "default": "#ff8c00"
+    },
+    {
+      "type": "color",
+      "id": "card_hover_border",
+      "label": "Card hover border",
+      "default": "#007bff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Stars",
+      "default": "#ff8c00"
+    },
+    {
+      "type": "color",
+      "id": "date_color",
+      "label": "Date",
+      "default": "#999999"
+    },
+    {
+      "type": "color",
+      "id": "avatar_background",
+      "label": "Avatar background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#ff8c00"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Button hover background",
+      "default": "#007bff"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 12
+    }
+  ],
+  "presets": [
+    {
+      "name": "Halloween reviews"
+    }
+  ]
+}
+{% endschema %}

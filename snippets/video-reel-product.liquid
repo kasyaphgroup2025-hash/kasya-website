@@ -1,0 +1,40 @@
+<div class="shoppable-reels__item__product reel-item-product zoom">
+	<div class="reel-item-product__media">
+    {%- if  card_product.featured_image != blank -%}
+      <div class="cart-drawer__recommendation-item__media-wrapper">
+        <use-animate class="media media--square">
+          {{ card_product.featured_image | image_url: width: 150 | image_tag: width: 120, class: 'cart-drawer__recommendation-item__image motion-reduce', loading: 'lazy' }}
+        </use-animate>
+      </div>
+    {%- else -%}
+      {{ card_product.title }}  
+    {%- endif -%}
+	</div>
+	<div class="reel-item-product__info">
+		<div class="reel-item-product__info__title h6 font-heading-bold card__heading">
+			<a href="{{ card_product.url }}" class="link link--text">{{ card_product.title }}</a>
+    </div>
+		{% render 'price', product: card_product, show_in_card: true, use_variant: true, use_custom_element: true, price_class: 'reel-item-product__info__price' %}
+	</div>
+</div>
+<template class="reel-quick-add-btn-tpl">
+  <quick-add-drawer-opener>
+    <reel-quick-add>
+      <button
+        type="button"
+        name="add"
+        class="quick-add__submit button button--medium"
+        aria-haspopup="dialog"
+        aria-label="{{ "products.product.add_to_cart" | t | escape }}"
+        aria-live="polite"
+        data-sold-out-message="true"
+        data-product-url="{{ card_product.url }}"
+      >
+        {% render 'icon-cart' %}
+        <div class="loading-overlay__spinner hidden">
+          {%- render 'icon-cart-loading' -%}
+        </div>
+      </button>
+    </reel-quick-add>
+  </quick-add-drawer-opener>
+</template>

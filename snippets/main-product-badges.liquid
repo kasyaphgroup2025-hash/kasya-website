@@ -1,0 +1,41 @@
+  {%- comment -%}
+	Renders custom badges on the product page, featured product section, quick view popup
+
+	Accepts:
+	- product: {Object} Product Liquid object (optional)
+	- section_id: {String} The ID of the section that contains this card.
+	
+	Usage:
+	{% render 'main-product-badges', product: product, section: section %}
+{%- endcomment -%}
+{%- if section.settings.show_custom_badges_on != 'none' -%}
+  {%- liquid
+    assign custom_badges = ''
+    assign total = 0
+    assign index_badge_position = 1
+    for i in (1..5)
+      assign index_badge = 'custom_badge_metafield_' | append: i
+      if settings[index_badge] != blank and total < 4
+        assign metafield_parts = settings[index_badge] | split: '.'
+        if product.metafields[metafield_parts[0]][metafield_parts[1]] != blank
+          if product.metafields[metafield_parts[0]][metafield_parts[1]].type == 'single_line_text_field'
+            assign custom_badges = custom_badges | append: '<span class="badge badge--bottom-left badge--custom-' | append: i | append: ' font-body-bold">' | append: product.metafields[metafield_parts[0]][metafield_parts[1]].value | append: '</span>'
+            assign total = total | plus: 1
+            assign index_badge_position = index_badge_position | plus: 1
+          elsif product.metafields[metafield_parts[0]][metafield_parts[1]].type == 'list.single_line_text_field'
+            for value in product.metafields[metafield_parts[0]][metafield_parts[1]].value
+              assign custom_badges = custom_badges | append: '<span class="badge badge--bottom-left badge--custom-' | append: i | append: ' font-body-bold">' | append: value | append: '</span>'
+              assign total = total | plus: 1
+              assign index_badge_position = index_badge_position | plus: 1
+            endfor
+          endif	
+        endif
+      endif
+    endfor
+  -%}
+  {%- if total > 0 -%}
+    <div class="product__badges flex flex-wrap{% if section.settings.show_custom_badges_on == 'mobile' %} medium-hide large-up-hide{% endif %}{% if section.settings.show_custom_badges_on == 'desktop' %} small-hide{% endif %} product__badges--{{ section.settings.custom_badges_position }} justify-{{ section.settings.custom_badges_position }}">
+    {{ custom_badges }}
+    </div>
+  {%- endif -%}
+{%- endif -%}  

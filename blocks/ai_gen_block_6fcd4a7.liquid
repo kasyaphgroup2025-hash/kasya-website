@@ -1,0 +1,652 @@
+{% doc %}
+  @prompt
+    Create a clean, minimal showcase section for the Radiance Collection featuring 2 products.
+    
+    Design aesthetic:
+    - Soft neutral background (#F2EDE7) or pure white
+    - Calm, premium, “quiet luxury” vibe
+    - Spacing should feel airy and modern
+    - No bold graphic borders, no heavy drop shadows
+    
+    Section Layout:
+    1. Title: “The Radiance Collection”
+    2. Subtitle: “Soft linens, timeless silhouettes — made to move with you.”
+    
+    3. Two product blocks side-by-side (mobile: stacked):
+       - Large product image
+       - Product name
+       - Short 1-2 sentence description about comfort and everyday elegance
+       - Price
+       - “Shop Now” button (rounded corners, dark neutral #2E2E2E)
+    
+    4. Add a small note below both items:
+       “Available in inclusive sizing. Breathable, lightweight fabric perfect for everyday wear.”
+    
+    Ensure:
+    - Mobile layout is centered and spaced well
+    - Images remain the main focus
+    - Typography is clean and balanced, can you add some hover effects, can you make the pickture clickable also and make design or effect the product 1 and 2 , can you add eyebrow text 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-radiance-collection-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.padding_top }}px 20px {{ block.settings.padding_bottom }}px;
+  }
+
+  .ai-radiance-collection__container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-radiance-collection__header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: {{ block.settings.header_spacing }}px;
+  }
+
+  .ai-radiance-collection__eyebrow-{{ ai_gen_id }} {
+    font-size: {{ block.settings.eyebrow_size }}px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 500;
+    margin: 0 0 12px;
+  }
+
+  .ai-radiance-collection__title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    margin: 0 0 12px;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-radiance-collection__subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.8;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .ai-radiance-collection__products-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: {{ block.settings.product_gap }}px;
+    margin-bottom: {{ block.settings.note_spacing }}px;
+  }
+
+  .ai-radiance-collection__product-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ai-radiance-collection__product-{{ ai_gen_id }}--1 .ai-radiance-collection__image-wrapper-{{ ai_gen_id }}::after {
+    content: '{{ block.settings.badge_1_label }}';
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: {{ block.settings.badge_1_bg }};
+    color: {{ block.settings.badge_1_color }};
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-radiance-collection__product-{{ ai_gen_id }}--1:hover .ai-radiance-collection__image-wrapper-{{ ai_gen_id }}::after {
+    opacity: 1;
+  }
+
+  .ai-radiance-collection__product-{{ ai_gen_id }}--2 .ai-radiance-collection__image-wrapper-{{ ai_gen_id }}::after {
+    content: '{{ block.settings.badge_2_label }}';
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: {{ block.settings.badge_2_bg }};
+    color: {{ block.settings.badge_2_color }};
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-radiance-collection__product-{{ ai_gen_id }}--2:hover .ai-radiance-collection__image-wrapper-{{ ai_gen_id }}::after {
+    opacity: 1;
+  }
+
+  .ai-radiance-collection__image-link-{{ ai_gen_id }} {
+    display: block;
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+    overflow: hidden;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    text-decoration: none;
+  }
+
+  .ai-radiance-collection__image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+  }
+
+  .ai-radiance-collection__image-wrapper-{{ ai_gen_id }} img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .ai-radiance-collection__product-{{ ai_gen_id }}:hover .ai-radiance-collection__image-wrapper-{{ ai_gen_id }} img {
+    transform: scale(1.05);
+  }
+
+  .ai-radiance-collection__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-radiance-collection__image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-radiance-collection__product-info-{{ ai_gen_id }} {
+    text-align: center;
+  }
+
+  .ai-radiance-collection__product-name-{{ ai_gen_id }} {
+    font-size: {{ block.settings.product_name_size }}px;
+    font-weight: 500;
+    margin: 0 0 8px;
+    color: {{ block.settings.text_color }};
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-radiance-collection__product-{{ ai_gen_id }}:hover .ai-radiance-collection__product-name-{{ ai_gen_id }} {
+    opacity: 0.7;
+  }
+
+  .ai-radiance-collection__product-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.product_description_size }}px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.75;
+    margin: 0 0 12px;
+    line-height: 1.5;
+  }
+
+  .ai-radiance-collection__product-price-{{ ai_gen_id }} {
+    font-size: {{ block.settings.product_price_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 16px;
+    font-weight: 500;
+  }
+
+  .ai-radiance-collection__button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 12px 32px;
+    background-color: {{ block.settings.button_color }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_text_size }}px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .ai-radiance-collection__button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_color }};
+    transform: translateY(-2px);
+  }
+
+  .ai-radiance-collection__note-{{ ai_gen_id }} {
+    text-align: center;
+    font-size: {{ block.settings.note_size }}px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.7;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-radiance-collection__products-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .ai-radiance-collection__title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_size }}px * 0.8);
+    }
+
+    .ai-radiance-collection__subtitle-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.subtitle_size }}px * 0.9);
+    }
+
+    .ai-radiance-collection__eyebrow-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.eyebrow_size }}px * 0.9);
+    }
+  }
+{% endstyle %}
+
+<div class="ai-radiance-collection-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-radiance-collection__container-{{ ai_gen_id }}">
+    <div class="ai-radiance-collection__header-{{ ai_gen_id }}">
+      {% if block.settings.eyebrow != blank %}
+        <p class="ai-radiance-collection__eyebrow-{{ ai_gen_id }}">{{ block.settings.eyebrow }}</p>
+      {% endif %}
+      {% if block.settings.title != blank %}
+        <h2 class="ai-radiance-collection__title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+      {% endif %}
+      {% if block.settings.subtitle != blank %}
+        <p class="ai-radiance-collection__subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</p>
+      {% endif %}
+    </div>
+
+    <div class="ai-radiance-collection__products-{{ ai_gen_id }}">
+      {% for i in (1..2) %}
+        {% liquid
+          assign product_key = 'product_' | append: i
+          assign product = block.settings[product_key]
+          assign description_key = 'product_' | append: i | append: '_description'
+          assign description = block.settings[description_key]
+        %}
+
+        <div class="ai-radiance-collection__product-{{ ai_gen_id }} ai-radiance-collection__product-{{ ai_gen_id }}--{{ i }}">
+          {% if product != blank %}
+            <a href="{{ product.url }}" class="ai-radiance-collection__image-link-{{ ai_gen_id }}">
+              <div class="ai-radiance-collection__image-wrapper-{{ ai_gen_id }}">
+                {% if product.featured_image %}
+                  <img
+                    src="{{ product.featured_image | image_url: width: 800 }}"
+                    alt="{{ product.featured_image.alt | escape }}"
+                    loading="lazy"
+                    width="{{ product.featured_image.width }}"
+                    height="{{ product.featured_image.height }}"
+                  >
+                {% else %}
+                  <div class="ai-radiance-collection__image-placeholder-{{ ai_gen_id }}">
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+              </div>
+            </a>
+          {% else %}
+            <div class="ai-radiance-collection__image-link-{{ ai_gen_id }}">
+              <div class="ai-radiance-collection__image-wrapper-{{ ai_gen_id }}">
+                <div class="ai-radiance-collection__image-placeholder-{{ ai_gen_id }}">
+                  {{ 'product-1' | placeholder_svg_tag }}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          <div class="ai-radiance-collection__product-info-{{ ai_gen_id }}">
+            {% if product != blank %}
+              <h3 class="ai-radiance-collection__product-name-{{ ai_gen_id }}">{{ product.title }}</h3>
+            {% else %}
+              <h3 class="ai-radiance-collection__product-name-{{ ai_gen_id }}">Product name</h3>
+            {% endif %}
+
+            {% if description != blank %}
+              <p class="ai-radiance-collection__product-description-{{ ai_gen_id }}">{{ description }}</p>
+            {% endif %}
+
+            {% if product != blank %}
+              <div class="ai-radiance-collection__product-price-{{ ai_gen_id }}">
+                {{ product.price | money }}
+              </div>
+              <a href="{{ product.url }}" class="ai-radiance-collection__button-{{ ai_gen_id }}">
+                {{ block.settings.button_text }}
+              </a>
+            {% else %}
+              <div class="ai-radiance-collection__product-price-{{ ai_gen_id }}">₱0.00</div>
+              <a href="#" class="ai-radiance-collection__button-{{ ai_gen_id }}">
+                {{ block.settings.button_text }}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if block.settings.note != blank %}
+      <div class="ai-radiance-collection__note-{{ ai_gen_id }}">
+        {{ block.settings.note }}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Radiance collection",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "New Collection"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "The Radiance Collection"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Soft linens, timeless silhouettes — made to move with you."
+    },
+    {
+      "type": "header",
+      "content": "Product 1"
+    },
+    {
+      "type": "product",
+      "id": "product_1",
+      "label": "Product"
+    },
+    {
+      "type": "textarea",
+      "id": "product_1_description",
+      "label": "Description",
+      "default": "Effortless comfort meets everyday elegance in this breathable linen piece."
+    },
+    {
+      "type": "text",
+      "id": "badge_1_label",
+      "label": "Hover badge text",
+      "default": "New Arrival"
+    },
+    {
+      "type": "color",
+      "id": "badge_1_bg",
+      "label": "Badge background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "badge_1_color",
+      "label": "Badge text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Product 2"
+    },
+    {
+      "type": "product",
+      "id": "product_2",
+      "label": "Product"
+    },
+    {
+      "type": "textarea",
+      "id": "product_2_description",
+      "label": "Description",
+      "default": "Designed for movement and style, crafted from premium lightweight fabric."
+    },
+    {
+      "type": "text",
+      "id": "badge_2_label",
+      "label": "Hover badge text",
+      "default": "Bestseller"
+    },
+    {
+      "type": "color",
+      "id": "badge_2_bg",
+      "label": "Badge background",
+      "default": "#2E2E2E"
+    },
+    {
+      "type": "color",
+      "id": "badge_2_color",
+      "label": "Badge text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Background color",
+      "default": "#2E2E2E"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Hover background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Note"
+    },
+    {
+      "type": "textarea",
+      "id": "note",
+      "label": "Note text",
+      "default": "Available in inclusive sizing. Breathable, lightweight fabric perfect for everyday wear."
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#F2EDE7"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#2E2E2E"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 800,
+      "max": 1400,
+      "step": 100,
+      "unit": "px",
+      "label": "Container width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 10,
+      "unit": "px",
+      "label": "Header spacing",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "product_gap",
+      "min": 20,
+      "max": 80,
+      "step": 10,
+      "unit": "px",
+      "label": "Product gap",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "note_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 10,
+      "unit": "px",
+      "label": "Note spacing",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Eyebrow size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "product_name_size",
+      "min": 16,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "label": "Product name size",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "product_description_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Product description size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "product_price_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Product price size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "note_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Note size",
+      "default": 13
+    }
+  ],
+  "presets": [
+    {
+      "name": "Radiance collection"
+    }
+  ],
+  "tag": null
+}
+{% endschema %}

@@ -1,0 +1,53 @@
+{%- render 'scrolling-text-block', block: block, item_type: 'thumbnail', hide_when_empty_content: true, thumbnail_ratio: block.settings.thumbnail_ratio -%}
+{% schema %}
+{
+  "name": "t:sections.scrolling-text.blocks.thumbnail.name",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.scrolling-text.blocks.thumbnail.settings.image.label"
+    },
+    {
+      "type": "select",
+      "id": "thumbnail_ratio",
+      "label": "t:sections.scrolling-text.settings.thumbnail_ratio.label",
+      "info": "t:sections.scrolling-text.settings.thumbnail_ratio.info",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.all.image_ratio.option_1.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.all.image_ratio.option_2.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.all.image_ratio.option_3.label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.all.image_ratio.option_4.label"
+        },
+        {
+          "value": "circle",
+          "label": "t:sections.all.image_ratio.option_5.label"
+        }
+      ],
+      "default": "circle"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:sections.scrolling-text.blocks.all.settings.link.label"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.scrolling-text.blocks.thumbnail.name"
+    }
+  ]
+}
+{% endschema %}

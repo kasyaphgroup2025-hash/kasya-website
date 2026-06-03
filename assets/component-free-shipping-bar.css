@@ -1,0 +1,36 @@
+.free-shipping-bar {
+  box-shadow: inset 1px 1px 1px rgb(var(--color-highlight), 0.1);
+  border-radius: 0.6rem;
+}
+
+.free-shipping-bar__progress-wrapper {
+  gap: 1.4rem;
+}
+
+.free-shipping-bar__progress-bar {
+  height: 0.6rem;
+  background: rgb(var(--color-foreground), 0.1);
+  border-radius: 0.4rem;
+  transition: width 1s cubic-bezier(.19,1,.22,1);
+}
+
+.free-shipping-bar__progress-bar__passed {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--percent, 0);
+  background: var(--free-shipping-tracking-background);
+  border-radius: 0.4rem;
+  transition: width 1s cubic-bezier(.19,1,.22,1);
+}
+
+.free-shipping-bar__progress-number {
+  min-width: 3rem;
+  font-size: 1.2rem;
+}
+
+.free-shipping-bar__exclude-message.alert {
+  padding-block: 0.5rem;
+  font-weight: var(--font-body-weight);
+}

@@ -1,0 +1,70 @@
+<style>
+	#shopify-section-{{ section.id }} {
+    height: {% if section.settings.auto_height %}{{ section.settings.height | times: 0.75 | round: 0 }}{% else %}{{ section.settings.height_mobile }}{% endif %}px;
+  }
+  @media screen and (min-width: 750px) {
+		#shopify-section-{{ section.id }} {
+			height: {% if section.settings.auto_height %}{{ section.settings.height }}{% else %}{{ section.settings.height_tablet }}{% endif %}px;
+		}
+	}
+  {%- unless section.settings.auto_height -%}
+    @media screen and (min-width: 990px) {
+      #shopify-section-{{ section.id }} {
+        height: {{ section.settings.height }}px;
+      }
+    } 
+  {%- endunless -%}
+</style>
+{% schema %}
+{
+  "name": "t:sections.spacer.name",
+  "tag": "section",
+  "class": "spacer",
+  "settings": [
+    {
+      "type": "range",
+      "id": "height",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.spacer.settings.height.label",
+      "default": 36
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_height",
+      "label": "Automatically calculate height on mobile and tablet",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Height on mobile",
+      "default": 36,
+      "visible_if": "{{ section.settings.auto_height == false }}"
+    },
+    {
+      "type": "range",
+      "id": "height_tablet",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Height on tablet",
+      "default": 36,
+      "visible_if": "{{ section.settings.auto_height == false }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.spacer.presets.name",
+      "category": "t:categories.layout"
+    }
+  ]
+}
+{% endschema %}

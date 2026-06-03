@@ -1,0 +1,53 @@
+.accordion {
+  --accordion-distance: var(--accordion-distance-setting, 1.5rem);
+  --accordion-block-distance: var(--accordion-distance);
+  margin: 0;
+}
+
+.accordion-wrapper:not(.accordion-wrapper--dividers) .accordion {
+  --accordion-block-distance: calc(var(--accordion-distance) / 2);
+}
+
+.accordion-wrapper--dividers .accordion + .accordion {
+  position: relative;
+}
+
+.accordion-wrapper--dividers .accordion + .accordion:before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  border-top: 1px solid rgb(var(--color-foreground), 0.1);
+}
+
+.accordion-wrapper:not(.border-style) .accordion:first-child {
+  margin-top: calc(-1 * var(--accordion-block-distance));
+}
+
+.accordion .icon-accordion {
+  align-self: center;
+  margin-inline-end: calc(var(--font-heading-scale) * 1rem);
+}
+
+.accordion summary {
+  padding: var(--accordion-block-distance) 0;
+}
+
+.accordion__content {
+  word-break: break-word;
+  overflow-x: auto;
+  padding-block: 0 var(--accordion-block-distance);
+  padding-inline: calc((var(--font-heading-scale) * 1rem) + 2rem) 0;
+}
+
+.accordion:last-child .accordion__content {
+  padding-bottom: 0;
+}
+
+.accordion__content--no-icon {
+  padding-inline-start: 0;
+}
+
+.accordion__content img {
+  max-width: 100%;
+}

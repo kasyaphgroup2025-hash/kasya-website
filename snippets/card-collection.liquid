@@ -1,0 +1,88 @@
+{% comment %}
+    Renders a collection card
+
+    Accepts:
+    - card_collection: {Object} Collection Liquid object
+    - media_aspect_ratio: {String} Size of the product image card. Values are "square" and "portrait". Default is "square" (optional)
+    - columns_desktop: {Number} 
+    - columns_tablet: {Number} 
+    - columns_mobile: {Number} 1|2
+    - custom_image: {Object} Image Liquid object. Used to replace collection featured image.
+    - custom_title: {String} Used to replace collection title.
+    - show_products_count: {Boolean} Show the number of products in a collection.
+    - placeholder_image: {String} Placeholder image when collection is empty. Default: 'collection-apparel-1' (optional).
+    
+    Usage:
+    {% render 'card-collection' %}
+{% endcomment %}
+
+{%- liquid
+  assign featured_image = custom_image | default: card_collection.featured_image
+  assign ratio = 1
+  if media_aspect_ratio == 'adapt' and featured_image
+    assign ratio = featured_image.aspect_ratio
+  endif
+  assign collection_title = custom_title | default: card_collection.title
+-%}
+{%- capture sizes -%}(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: columns_desktop }}px,(min-width: 750px) {% if columns_tablet > 1 %}calc((100vw - 10rem) / {{ columns_tablet }}){% else %}calc(100vw - 10rem){% endif %},calc((100vw - 5rem) / {{ columns_mobile | default: 2 }}){%- endcapture -%}
+
+<div class="card-wrapper por overflow-hidden{% unless featured_image != blank %} h100{% endunless %}">
+  <div class="card {% if featured_image %} card--media{% else %} card--text{% endif %} card--collection"
+  >
+    <div class="card__inner w100">
+      <div class="card__media">
+        {%- unless show_title or show_products_count or card_collection == blank -%}
+          <a class="full-unstyled-link" href="{{ card_collection.url }}" aria-label="{{ card_collection.title | escape }}">
+        {%- endunless -%}
+        {%- if featured_image -%}
+          <use-animate class="media media--hover-effect{% if media_aspect_ratio != 'circle' %} card-radius-collection{% endif %} w100 media--hover-effect media--{{ media_aspect_ratio }}{% if media_aspect_ratio == 'adapt' %} ratio{% endif %}"{% if media_aspect_ratio == 'adapt' %} style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"{% endif %}>
+            {%- unless preload -%}
+              {{ featured_image | image_url: width: featured_image.width | 
+                image_tag: sizes: sizes, width: featured_image.width, height: featured_image.height, widths: '165,330,535,750,1000,1500,3000', class: 'motion-reduce', loading: 'lazy' }}
+            {%- else -%}
+              {{ featured_image | image_url: width: featured_image.width | 
+                image_tag: sizes: sizes, width: featured_image.width, height: featured_image.height, widths: '165,330,535,750,1000,1500,3000', class: 'motion-reduce', preload: true, fetchpriority: 'high' }}    
+            {%- endunless -%}    
+          </use-animate>
+        {%- elsif card_collection == blank -%}
+          <div class="media w100 media--{{ media_aspect_ratio | replace: 'adapt', 'square' }}{% if media_aspect_ratio != 'circle' %} card-radius-collection{% endif %}">
+            {{ placeholder_image | default: 'collection-apparel-1' | placeholder_svg_tag: 'placeholder-svg w100 h100' }}
+          </div>
+        {%- else -%}
+          <div class="media w100 media--{{ media_aspect_ratio | replace: 'adapt', 'square' }}{% if media_aspect_ratio != 'circle' %} card-radius-collection{% endif %}">&nbsp;</div>  
+        {%- endif -%}
+        {%- unless show_title or show_products_count or card_collection == blank -%}
+          </a>
+        {%- endunless -%}
+      </div>
+    </div>
+    {%- if show_title or show_products_count -%}
+      <{{ heading_tag | default: 'h3' }} class="card__heading card__heading--collection lh1 {% unless settings.collection_show_text_below %}card__heading--collection-background h3 color-{{ settings.collection_card_color_scheme }}{% else %}h4{% endunless %}{% if small_title_mobile %} card__heading--collection--small-on-mobile{% endif %}{% if small_title_tablet %} card__heading--collection--small-on-tablet{% endif %}{% if small_title_desktop %} card__heading--collection--small-on-desktop{% endif %}">
+        <a{% if card_collection == blank %} role="link" aria-disabled="true"{% else %} href="{{ card_collection.url }}"{% endif %} class="full-unstyled-link">
+          <span class="card__heading__collection-title flex justify-{% unless media_aspect_ratio == 'circle' and settings.collection_show_text_below == false %}{{ settings.collection_card_text_alignment }}{% else %}center{% endunless %}{% unless settings.collection_show_text_below %} card__heading__collection-title-inside{% endunless %}">
+            <span class="color-foreground {% unless media_aspect_ratio == 'circle' and settings.collection_show_text_below == false %}{{ settings.collection_card_text_alignment }}{% else %}center{% endunless %}{% unless settings.collection_show_text_below %} card__heading__collection-title-box{% endunless %}">
+              {%- if show_title -%}
+                <span class="font-heading-bold break">
+                  {%- if collection_title != blank -%}
+                    {{- collection_title | escape | truncatewords: 5 -}}
+                  {%- else -%}
+                    {{ 'onboarding.collection_title' | t | truncatewords: 5 }}
+                  {%- endif -%}
+                </span>
+              {%- endif -%}
+              {%- if show_products_count -%}
+                <span class="caption db text-body text-small light{% unless settings.collection_show_text_below %} font-body-semi-bold{% endunless %} margin-top-1rem">
+                  {%- if card_collection != blank -%}
+                    {{ 'products.facets.product_count_simple' | t: count: card_collection.all_products_count }}
+                  {%- else -%}
+                    {{ 'products.facets.product_count_simple' | t: count: 0 }}  
+                  {%- endif -%}  
+                </span>
+              {%- endif -%}  
+            </span>
+          </span>
+        </a>
+      </{{ heading_tag | default: 'h3' }}>
+    {%- endif -%}
+  </div>
+</div>

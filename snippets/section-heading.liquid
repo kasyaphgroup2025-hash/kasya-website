@@ -1,0 +1,45 @@
+{% comment %}
+    Renders title, subtitle, slider arrows for a section.
+
+    Accepts:
+		- show_desktop_slider: {Boolean} show slider arrows on desktop.
+    - show_tablet_slider: {Boolean} show slider arrows on tablet.
+		- show_mobile_slider: {Boolean} show slider arrows on mobile.
+		- include_page_width: {Boolean} allow to add "page-width--full" CSS class. Helpful for sections showing a full-width slider.
+
+    Usage:
+    {% render 'section-heading', show_desktop_slider: show_desktop_slider, show_tablet_slider: show_tablet_slider, show_mobile_slider: show_mobile_slider, include_page_width: include_page_width %}
+{% endcomment %}
+{%- if section.settings.title != blank -%}
+	<div class="title{% if section.settings.full_width and include_page_width %} page-width--full{% endif %}{% if custom_classes %} {{ custom_classes }}{% endif %}">
+		<div class="flex justify-space-between w100 align-center title__gap por{% if section_additional_buttons %} flex-wrap{% if full_on_mobile or show_mobile_slider %} title__gap--full-buttons-mobile{% endif %}{% if show_tablet_slider %} title__gap--full-buttons-tablet{% endif %}{% endif %}">
+			{%- unless section.settings.subtitle != blank -%}
+				<h2 class="title__heading h{{ section.settings.heading_size | replace: 'h', '' | plus: 1 }} font-heading-extra-bold margin0 lh1 title__heading--before-line">{{ section.settings.title | escape }}</h2>	
+				{%- render 'section-heading-line' -%}
+			{%- else -%}
+				<div class="flex flex-column justify-right align-start">
+					<h2 class="title__heading title__back title__back--{{ section.settings.heading_size }} font-heading-bold margin0 lh1">{{ section.settings.title | escape }}</h2>
+					<h3 class="title__subtitle margin0 title__front {% if section.settings.heading_size != 'h2' %}h{{ section.settings.heading_size | replace: 'h', '' | plus: 1 }}{% else %}title__front--small{% endif %} lh1">{{ section.settings.subtitle }}</h3>
+				</div>
+			{%- endunless -%}	
+			{%- unless section_additional_buttons -%}
+				{%- if show_desktop_slider or show_tablet_slider or show_mobile_slider -%}
+					<div class="slider-buttons slider-buttons--box flex{% unless show_mobile_slider %} small-hide{% endunless %}{% unless show_tablet_slider %} medium-hide{% endunless %}{% unless show_desktop_slider %} large-up-hide{% endunless %}">
+						<button type="button" id="Slider-{{ section.id }}-prev-button" class="slider-button flex flex-column justify-center align-center slider-button--prev no-js-hidden por tap-area-icon" name="previous" aria-label="{{ 'general.slider.previous_slide' | t }}" aria-controls="Slider-{{ section.id }}" disabled="disabled">{% render 'icon-caret-slider-prev' %}</button>
+						<button type="button" id="Slider-{{ section.id }}-next-button" class="slider-button flex flex-column justify-center align-center slider-button--next no-js-hidden por tap-area-icon" name="next" aria-label="{{ 'general.slider.next_slide' | t }}" aria-controls="Slider-{{ section.id }}">{% render 'icon-caret-slider-next' %}</button>
+					</div>
+				{%- endif -%} 
+      {%- else -%}
+        <div class="title__buttons{% if show_desktop_slider or show_tablet_slider or show_mobile_slider %} flex title__gap{% endif %}{% if full_on_mobile or show_mobile_slider or show_tablet_slider %} justify-space-between{% endif %}{% if section_additional_buttons and show_mobile_slider %} title__buttons--full{% endif %}">
+          {{ section_additional_buttons }}
+          {%- if show_desktop_slider or show_tablet_slider or show_mobile_slider -%}
+            <div class="slider-buttons slider-buttons--box flex{% unless show_mobile_slider %} small-hide{% endunless %}{% unless show_tablet_slider %} medium-hide{% endunless %}{% unless show_desktop_slider %} large-up-hide{% endunless %}">
+              <button type="button" id="Slider-{{ section.id }}-prev-button" class="slider-button flex flex-column justify-center align-center slider-button--prev no-js-hidden por tap-area-icon" name="previous" aria-label="{{ 'general.slider.previous_slide' | t }}" aria-controls="Slider-{{ section.id }}" disabled="disabled">{% render 'icon-caret-slider-prev' %}</button>
+              <button type="button" id="Slider-{{ section.id }}-next-button" class="slider-button flex flex-column justify-center align-center slider-button--next no-js-hidden por tap-area-icon" name="next" aria-label="{{ 'general.slider.next_slide' | t }}" aria-controls="Slider-{{ section.id }}">{% render 'icon-caret-slider-next' %}</button>
+            </div>
+          {%- endif -%} 
+        </div>  
+			{%- endunless -%}
+		</div>
+	</div>
+{%- endif -%}

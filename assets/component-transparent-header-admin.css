@@ -1,0 +1,17 @@
+.section-header.focus-by-admin:not(.shopify-section-header-sticky) .header .header__inner:before {
+  opacity: 1;
+}
+
+.section-header.focus-by-admin:not(.shopify-section-header-sticky) .header .header__inline-menu, .section-header.focus-by-admin:not(.shopify-section-header-sticky) .header .header__icon, .section-header.focus-by-admin:not(.shopify-section-header-sticky) .header .header__heading {
+  --color-foreground: inherit;
+  --color-price-foreground: inherit;
+  z-index: 3;
+}
+
+.section-header.focus-by-admin:not(.shopify-section-header-sticky) .header .hide-in-transparent {
+  display: block;
+}
+
+.section-header.focus-by-admin:not(.shopify-section-header-sticky) .header .show-in-transparent {
+  display: none;
+}

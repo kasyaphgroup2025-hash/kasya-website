@@ -1,0 +1,100 @@
+{%- if block.settings.metafield_namespace_key != blank or request.design_mode -%}
+  {% assign has_content = false %}
+  {%- capture content -%}
+    {%- assign pair = block.settings.metafield_namespace_key | replace: ' ', '' | split: '.' -%}
+    {%- if pair.size >= 2 -%}
+      {%-liquid
+        assign namespace = pair[0]
+        assign key = pair[1]
+        if block.settings.metafield_owner_type == 'product'
+          assign object = closest.product
+        else
+          assign object = closest.product.selected_or_first_available_variant
+        endif
+        if object.metafields[namespace][key] != nil
+          assign has_content = true
+        endif
+      -%}
+      <div class="rte{% if object.metafields[namespace][key].type != 'file_reference' %} product-attributes__tablet-item-light{% endif %}">
+        {%- unless object.metafields[namespace][key].type == 'boolean' -%}
+          {%- unless object.metafields[namespace][key].type contains 'list.' and object.metafields[namespace][key].type != 'list.single_line_text_field' -%}
+            {% unless object.metafields[namespace][key].type contains 'metaobject_reference' %}
+              {{ object.metafields[namespace][key] | metafield_tag }}
+            {% else %}
+              {{ object.metafields[namespace][key].value[pair[2]] }}
+            {% endunless %}  
+          {%- else -%}  
+            <ul>
+              {%- for field in object.metafields[namespace][key].value -%}
+                <li>
+                  {%- if object.metafields[namespace][key].type contains 'product_reference' or object.metafields[namespace][key].type contains 'variant_reference' -%}
+                    <a href="{{ field.url }}">{{ field.title }}</a>
+                  {%- elsif object.metafields[namespace][key].type contains 'metaobject_reference' -%}  
+                    {{ field[pair[2]] }}  
+                  {%- else -%}
+                    {{ field }}
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}  
+            </ul>
+          {%- endunless -%}  
+        {%- else -%}
+          {%- if object.metafields[namespace][key].value == true -%}
+            {{ 'general.boolean.true' | t }}
+          {%- else -%}
+            {{ 'general.boolean.false' | t }}
+          {%- endif -%}    
+        {%- endunless -%}   
+      </div>
+    {%- endif -%}
+  {%- endcapture -%}
+  <tr class="product-attributes__value{% unless has_content or request.design_mode %} hidden{% endunless %}{% if block.settings.metafield_owner_type == 'variant' %} require-variant-update{% endif %}" {{ block.shopify_attributes }}>
+    <th class="tabs__tab-content__specification left">
+      {{ block.settings.title }}
+    </th>
+    <td>
+      {{ content }}
+    </td>
+  </tr>
+{%- endif -%}
+{% schema %}
+{
+  "name": "t:names.specification",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:settings.label",
+      "default": "t:text_defaults.your_label"
+    },
+    {
+      "type": "select",
+      "id": "metafield_owner_type",
+      "label": "t:settings.metafield_owner_type",
+      "options": [
+        {
+          "value": "product",
+          "label": "t:options.product"
+        },
+        {
+          "value": "variant",
+          "label": "t:options.variant"
+        }
+      ],
+      "default": "product"
+    },
+    {
+      "type": "text",
+      "id": "metafield_namespace_key",
+      "label": "t:settings.metafield_namespace_key",
+      "info": "t:info.metafield_namespace_key"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.specification"
+    }
+  ]
+}
+{% endschema %}

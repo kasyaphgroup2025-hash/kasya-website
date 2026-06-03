@@ -1,0 +1,116 @@
+{%- doc -%}
+  Renders a cart discount form.
+
+  @param {string} section_id - The section ID
+  @param {string} [add_classes] - Custom HTML classes
+{%- enddoc -%}
+
+{% liquid
+  assign discount_codes = cart.cart_level_discount_applications | where: 'type', 'discount_code' | map: 'title'
+  for item in cart.items
+    for allocation in item.line_level_discount_allocations
+      if allocation.discount_application.type == 'discount_code'
+        assign discount_codes = item.line_level_discount_allocations | slice: forloop.index0 | map: 'discount_application' | map: 'title' | concat: discount_codes
+      endif
+    endfor
+  endfor
+
+  assign discount_codes = discount_codes | uniq
+%}
+
+<cart-discount-component
+  data-section-id="{{ section_id }}"
+  class="db cart-discount-wrapper{% if add_classes %} {{ add_classes }}{% endif %}"
+>
+  <details-accordion class="accordion db cart-discount">
+    <details
+      id="Details-cart-discount-{{ section_id }}"
+    >
+      <summary class="summary-accordion summary-accordion--has-hover flex justify-space-between align-center por" id="Summary-cart-discount-{{ section_id }}">
+        <div class="summary__title flex align-center flex-grow-1">
+          {% render 'icon-accordion', icon: 'sale' %}
+          <h2 class="h6 accordion__title font-heading-bold margin0">
+            {{ 'general.discount.label' | t }}
+          </h2>
+        </div>
+        {%- render 'accoridon-plus' -%}
+      </summary>
+
+      <div class="accordion__content">
+        <div class="cart-discount__content">
+          <form
+            class="cart-discount__form flex margin-top-1rem"
+          >
+            <div class="field flex-grow-1">
+              <label
+                for="cart-discount"
+                class="visually-hidden"
+              >
+                {{- 'general.discount.accessibility' | t -}}
+              </label>
+              <input
+                id="cart-discount"
+                class="cart-discount__input field__input"
+                name="discount"
+                placeholder="{{ 'general.discount.code' | t }}"
+              >
+            </div>
+            <button
+              type="submit"
+              class="button button--primary cart-discount__button button--small nowrap"
+            >
+              <span>{{ 'general.discount.apply' | t }}</span>
+              <div class="loading-overlay__spinner hidden">
+                {%- render 'icon-cart-loading' -%}
+              </div>
+            </button>
+          </form>
+        </div>
+        <div
+          class="cart-discount__error form__message alert alert--error alert--small hidden"
+          role="alert"
+          id="cartDiscountError"
+        >
+          {%- render 'icon-error' -%}
+          <small
+            class="cart-discount__error-text cart-primary-typography hidden"
+            id="cartDiscountErrorDiscountCode"
+          >
+            {{ 'general.discount.code_error' | t: code: 'test' }}
+          </small>
+          <small
+            class="cart-discount__error-text cart-primary-typography hidden"
+            id="cartDiscountErrorShipping"
+          >
+            {{ 'general.discount.shipping_error' | t }}
+          </small>
+        </div>
+        <ul class="cart-discount__codes list-unstyled flex flex-wrap margin-top-1rem">
+          {% for discount_code in discount_codes %}
+            <li
+              class="cart-discount__pill flex align-center por"
+              data-discount-code="{{ discount_code }}"
+              aria-label="{{ 'general.discount.accessibility_applied' | t: code: discount_code }}"
+            >
+              <p class="cart-discount__pill-code overflow-hidden caption-large margin0 lh1">
+                {{ discount_code }}
+              </p>
+              <cart-discount-remove>
+                <button
+                  type="button"
+                  class="cart-discount__pill-remove unstyled-button flex align-center full-link"
+                  aria-label="{{ 'general.discount.remove_code' | t: code: discount_code }}"
+                >
+                  {%- render 'icon-close', icon_width: 16 -%}
+                  <div class="cart-discount__pill-remove__loading loading-overlay__spinner hidden">
+                    {%- render 'icon-cart-loading' -%}
+                  </div>
+                </button>
+              </cart-discount-remove>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </details>
+  </details-accordion>
+</cart-discount-component>

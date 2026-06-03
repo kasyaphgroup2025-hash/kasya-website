@@ -1,0 +1,732 @@
+{% doc %}
+  @prompt
+    A magazine-style editorial layout, Can you design like halloween design , can you add button each item, Can you remove the author and date then add the button Please make the mobile view more visually appealing.
+    On mobile, display the products in 2 items per row instead of one.
+    Keep the same fashion magazine layout and Halloween aesthetic, with balanced spacing, elegant typography, and soft orange glow accents.
+    Ensure the design still looks premium and cohesive — like a mini magazine spread even on mobile., Add a blurred background gradient blending deep orange and violet tones, soft and atmospheric, like warm candlelight mixing with twilight.
+    
+    When hovering over a product (or tapping on mobile), make it fade in with a smooth orange shadow or glow behind the product card, giving a subtle 3-D feel.
+    The effect should look elegant and soft, not harsh — think fashion-magazine elegance with a Halloween aura.
+    
+    Keep everything responsive, premium, and cohesive with the overall Halloween theme: warm orange light, violet depth, and minimalist editorial layout.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-halloween-editorial-{{ ai_gen_id }} {
+    background: linear-gradient(135deg, 
+      {{ block.settings.gradient_color_1 }} 0%, 
+      {{ block.settings.gradient_color_2 }} 50%, 
+      {{ block.settings.gradient_color_3 }} 100%);
+    padding: {{ block.settings.section_padding }}px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-halloween-editorial-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(ellipse at 15% 25%, {{ block.settings.glow_color }}{{ block.settings.glow_opacity }} 0%, transparent 45%),
+      radial-gradient(ellipse at 85% 75%, {{ block.settings.violet_color }}{{ block.settings.violet_opacity }} 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, {{ block.settings.glow_color }}08 0%, transparent 60%);
+    filter: blur({{ block.settings.blur_intensity }}px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .ai-halloween-editorial-{{ ai_gen_id }}::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 30% 60%, {{ block.settings.violet_color }}15 0%, transparent 40%),
+      radial-gradient(circle at 70% 30%, {{ block.settings.glow_color }}12 0%, transparent 45%);
+    filter: blur({{ block.settings.blur_intensity | times: 1.5 }}px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  .ai-halloween-editorial__container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .ai-halloween-editorial__header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .ai-halloween-editorial__title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 4px 20px {{ block.settings.glow_color }}40;
+  }
+
+  .ai-halloween-editorial__subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.subtitle_color }};
+    font-style: italic;
+    margin: 0;
+  }
+
+  .ai-halloween-editorial__grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .ai-halloween-editorial__item-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    background: {{ block.settings.card_background }};
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(10px);
+  }
+
+  .ai-halloween-editorial__item-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, {{ block.settings.glow_color }}00 0%, {{ block.settings.glow_color }}00 100%);
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .ai-halloween-editorial__item-{{ ai_gen_id }}:hover::before,
+  .ai-halloween-editorial__item-{{ ai_gen_id }}:active::before {
+    opacity: 1;
+    background: radial-gradient(circle, {{ block.settings.glow_color }}25 0%, {{ block.settings.glow_color }}00 70%);
+  }
+
+  .ai-halloween-editorial__item-{{ ai_gen_id }}:hover,
+  .ai-halloween-editorial__item-{{ ai_gen_id }}:active {
+    transform: translateY(-12px) scale(1.01);
+    box-shadow: 
+      0 25px 50px {{ block.settings.glow_color }}35,
+      0 15px 35px {{ block.settings.violet_color }}20,
+      0 5px 15px {{ block.settings.glow_color }}40,
+      inset 0 1px 0 {{ block.settings.glow_color }}15;
+  }
+
+  .ai-halloween-editorial__item-{{ ai_gen_id }}:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .ai-halloween-editorial__item-{{ ai_gen_id }}:first-child .ai-halloween-editorial__image-wrapper-{{ ai_gen_id }} {
+    height: 500px;
+  }
+
+  .ai-halloween-editorial__image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+  }
+
+  .ai-halloween-editorial__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ai-halloween-editorial__item-{{ ai_gen_id }}:hover .ai-halloween-editorial__image-{{ ai_gen_id }},
+  .ai-halloween-editorial__item-{{ ai_gen_id }}:active .ai-halloween-editorial__image-{{ ai_gen_id }} {
+    transform: scale(1.08);
+  }
+
+  .ai-halloween-editorial__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-halloween-editorial__image-placeholder-{{ ai_gen_id }} svg {
+    width: 80px;
+    height: 80px;
+    opacity: 0.3;
+  }
+
+  .ai-halloween-editorial__overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, 
+      {{ block.settings.overlay_color }}95 0%, 
+      {{ block.settings.overlay_color }}40 40%,
+      transparent 70%);
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+
+  .ai-halloween-editorial__item-{{ ai_gen_id }}:hover .ai-halloween-editorial__overlay-{{ ai_gen_id }},
+  .ai-halloween-editorial__item-{{ ai_gen_id }}:active .ai-halloween-editorial__overlay-{{ ai_gen_id }} {
+    opacity: 0.7;
+  }
+
+  .ai-halloween-editorial__content-{{ ai_gen_id }} {
+    padding: 28px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ai-halloween-editorial__item-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-size: 24px;
+    color: {{ block.settings.card_title_color }};
+    margin: 0 0 12px;
+    line-height: 1.3;
+    transition: color 0.3s ease;
+  }
+
+  .ai-halloween-editorial__item-{{ ai_gen_id }}:hover .ai-halloween-editorial__item-title-{{ ai_gen_id }},
+  .ai-halloween-editorial__item-{{ ai_gen_id }}:active .ai-halloween-editorial__item-title-{{ ai_gen_id }} {
+    color: {{ block.settings.glow_color }};
+  }
+
+  .ai-halloween-editorial__item-{{ ai_gen_id }}:first-child .ai-halloween-editorial__item-title-{{ ai_gen_id }} {
+    font-size: 32px;
+  }
+
+  .ai-halloween-editorial__description-{{ ai_gen_id }} {
+    font-size: 15px;
+    color: {{ block.settings.card_text_color }};
+    line-height: 1.6;
+    margin: 0 0 20px;
+    flex-grow: 1;
+  }
+
+  .ai-halloween-editorial__button-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 32px;
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid {{ block.settings.button_background }};
+    align-self: flex-start;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-halloween-editorial__button-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: {{ block.settings.button_hover_background }};
+    transform: translate(-50%, -50%);
+    transition: width 0.5s ease, height 0.5s ease;
+    z-index: -1;
+  }
+
+  .ai-halloween-editorial__button-{{ ai_gen_id }}:hover::before,
+  .ai-halloween-editorial__button-{{ ai_gen_id }}:active::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  .ai-halloween-editorial__button-{{ ai_gen_id }}:hover,
+  .ai-halloween-editorial__button-{{ ai_gen_id }}:active {
+    color: {{ block.settings.button_hover_text_color }};
+    border-color: {{ block.settings.button_hover_background }};
+    box-shadow: 
+      0 10px 30px {{ block.settings.glow_color }}50,
+      0 5px 15px {{ block.settings.glow_color }}30;
+    transform: translateY(-2px);
+  }
+
+  .ai-halloween-editorial__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 13px;
+    color: {{ block.settings.glow_color }};
+    text-align: center;
+    pointer-events: none;
+    font-style: italic;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-halloween-editorial__grid-{{ ai_gen_id }} {
+      gap: 20px;
+    }
+
+    .ai-halloween-editorial__item-{{ ai_gen_id }}:first-child .ai-halloween-editorial__image-wrapper-{{ ai_gen_id }} {
+      height: 400px;
+    }
+
+    .ai-halloween-editorial__image-wrapper-{{ ai_gen_id }} {
+      height: 280px;
+    }
+
+    .ai-halloween-editorial__item-title-{{ ai_gen_id }} {
+      font-size: 20px;
+    }
+
+    .ai-halloween-editorial__item-{{ ai_gen_id }}:first-child .ai-halloween-editorial__item-title-{{ ai_gen_id }} {
+      font-size: 26px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-halloween-editorial-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding | times: 0.7 }}px 16px;
+    }
+
+    .ai-halloween-editorial__header-{{ ai_gen_id }} {
+      margin-bottom: 40px;
+    }
+
+    .ai-halloween-editorial__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.7 }}px;
+    }
+
+    .ai-halloween-editorial__subtitle-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subtitle_size | times: 0.85 }}px;
+    }
+
+    .ai-halloween-editorial__grid-{{ ai_gen_id }} {
+      gap: 16px;
+    }
+
+    .ai-halloween-editorial__item-{{ ai_gen_id }}:first-child .ai-halloween-editorial__image-wrapper-{{ ai_gen_id }} {
+      height: 300px;
+    }
+
+    .ai-halloween-editorial__image-wrapper-{{ ai_gen_id }} {
+      height: 220px;
+    }
+
+    .ai-halloween-editorial__content-{{ ai_gen_id }} {
+      padding: 20px;
+    }
+
+    .ai-halloween-editorial__item-title-{{ ai_gen_id }} {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .ai-halloween-editorial__item-{{ ai_gen_id }}:first-child .ai-halloween-editorial__item-title-{{ ai_gen_id }} {
+      font-size: 22px;
+    }
+
+    .ai-halloween-editorial__description-{{ ai_gen_id }} {
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .ai-halloween-editorial__button-{{ ai_gen_id }} {
+      padding: 12px 24px;
+      font-size: 13px;
+      width: 100%;
+    }
+
+    .ai-halloween-editorial__item-{{ ai_gen_id }}:active {
+      transform: translateY(-8px) scale(1.01);
+    }
+  }
+{% endstyle %}
+
+<div class="ai-halloween-editorial-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-halloween-editorial__container-{{ ai_gen_id }}">
+    {% if block.settings.section_title != blank or block.settings.section_subtitle != blank %}
+      <div class="ai-halloween-editorial__header-{{ ai_gen_id }}">
+        {% if block.settings.section_title != blank %}
+          <h2 class="ai-halloween-editorial__title-{{ ai_gen_id }}">{{ block.settings.section_title }}</h2>
+        {% endif %}
+        {% if block.settings.section_subtitle != blank %}
+          <p class="ai-halloween-editorial__subtitle-{{ ai_gen_id }}">{{ block.settings.section_subtitle }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="ai-halloween-editorial__grid-{{ ai_gen_id }}">
+      {% for i in (1..5) %}
+        {% liquid
+          assign product_key = 'product_' | append: i
+          assign product = block.settings[product_key]
+          assign button_text_key = 'button_text_' | append: i
+          assign button_text = block.settings[button_text_key]
+        %}
+
+        <div class="ai-halloween-editorial__item-{{ ai_gen_id }}">
+          <div class="ai-halloween-editorial__image-wrapper-{{ ai_gen_id }}">
+            {% if product != blank and product.featured_image %}
+              <img
+                src="{{ product.featured_image | image_url: width: 1200 }}"
+                alt="{{ product.featured_image.alt | escape }}"
+                loading="lazy"
+                width="{{ product.featured_image.width }}"
+                height="{{ product.featured_image.height }}"
+                class="ai-halloween-editorial__image-{{ ai_gen_id }}"
+              >
+            {% else %}
+              <div class="ai-halloween-editorial__image-placeholder-{{ ai_gen_id }}">
+                {{ 'product-1' | placeholder_svg_tag }}
+                {% if product == blank %}
+                  <div class="ai-halloween-editorial__empty-state-{{ ai_gen_id }}">
+                    Add a product for item {{ i }}
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+            <div class="ai-halloween-editorial__overlay-{{ ai_gen_id }}"></div>
+          </div>
+
+          <div class="ai-halloween-editorial__content-{{ ai_gen_id }}">
+            {% if product != blank %}
+              <h3 class="ai-halloween-editorial__item-title-{{ ai_gen_id }}">{{ product.title }}</h3>
+              {% if product.description != blank %}
+                <div class="ai-halloween-editorial__description-{{ ai_gen_id }}">
+                  {{ product.description | strip_html | truncate: 120 }}
+                </div>
+              {% endif %}
+              <a href="{{ product.url }}" class="ai-halloween-editorial__button-{{ ai_gen_id }}">
+                {% if button_text != blank %}
+                  {{ button_text }}
+                {% else %}
+                  {{ block.settings.default_button_text }}
+                {% endif %}
+              </a>
+            {% else %}
+              <h3 class="ai-halloween-editorial__item-title-{{ ai_gen_id }}">Product Title</h3>
+              <div class="ai-halloween-editorial__description-{{ ai_gen_id }}">
+                Add a product to display its description and details here.
+              </div>
+              <a href="#" class="ai-halloween-editorial__button-{{ ai_gen_id }}">
+                {{ block.settings.default_button_text }}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Halloween editorial",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Title",
+      "default": "Spooky Season Collection"
+    },
+    {
+      "type": "text",
+      "id": "section_subtitle",
+      "label": "Subtitle",
+      "default": "Curated picks for a hauntingly stylish Halloween"
+    },
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "product",
+      "id": "product_1",
+      "label": "Featured product"
+    },
+    {
+      "type": "text",
+      "id": "button_text_1",
+      "label": "Featured product button"
+    },
+    {
+      "type": "product",
+      "id": "product_2",
+      "label": "Product 2"
+    },
+    {
+      "type": "text",
+      "id": "button_text_2",
+      "label": "Product 2 button"
+    },
+    {
+      "type": "product",
+      "id": "product_3",
+      "label": "Product 3"
+    },
+    {
+      "type": "text",
+      "id": "button_text_3",
+      "label": "Product 3 button"
+    },
+    {
+      "type": "product",
+      "id": "product_4",
+      "label": "Product 4"
+    },
+    {
+      "type": "text",
+      "id": "button_text_4",
+      "label": "Product 4 button"
+    },
+    {
+      "type": "product",
+      "id": "product_5",
+      "label": "Product 5"
+    },
+    {
+      "type": "text",
+      "id": "button_text_5",
+      "label": "Product 5 button"
+    },
+    {
+      "type": "header",
+      "content": "Button settings"
+    },
+    {
+      "type": "text",
+      "id": "default_button_text",
+      "label": "Default button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#ff6b35"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Hover background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text",
+      "default": "#ff6b35"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "playfair_display_n7"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Section heading size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Background gradient"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_1",
+      "label": "Gradient start",
+      "default": "#1a0a2e"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_2",
+      "label": "Gradient middle",
+      "default": "#2d1b3d"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_3",
+      "label": "Gradient end",
+      "default": "#1f0f1a"
+    },
+    {
+      "type": "range",
+      "id": "blur_intensity",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Blur intensity",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Glow effects"
+    },
+    {
+      "type": "color",
+      "id": "glow_color",
+      "label": "Orange glow",
+      "default": "#ff6b35"
+    },
+    {
+      "type": "text",
+      "id": "glow_opacity",
+      "label": "Orange glow opacity",
+      "default": "25"
+    },
+    {
+      "type": "color",
+      "id": "violet_color",
+      "label": "Violet glow",
+      "default": "#8b5cf6"
+    },
+    {
+      "type": "text",
+      "id": "violet_opacity",
+      "label": "Violet glow opacity",
+      "default": "20"
+    },
+    {
+      "type": "header",
+      "content": "Card colors"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Section heading",
+      "default": "#ff6b35"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle",
+      "default": "#cccccc"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Card title",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card text",
+      "default": "#cccccc"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Image overlay",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 12
+    }
+  ],
+  "presets": [
+    {
+      "name": "Halloween editorial"
+    }
+  ]
+}
+{% endschema %}

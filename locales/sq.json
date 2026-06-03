@@ -1,0 +1,658 @@
+{
+  "general": {
+    "search": {
+      "search": "Kërko",
+      "type": {
+        "products": "Produktet",
+        "collections": "Koleksionet",
+        "articles": "Artikuj",
+        "pages": "Faqet",
+        "suggestions": "Sugjerime"
+      },
+      "clear": "E qartë",
+      "view_all_results": "Shikoni të gjitha rezultatet"
+    },
+    "floating_bar": {
+      "recently_viewed": "Shikuar së fundmi",
+      "recently_viewed_empty": "Nuk ka produkte të shikuara së fundmi.",
+      "recently_viewed_open": "Hap kutinë e parë së fundmi",
+      "back_to_top": "Kthehu në krye"
+    },
+    "password_page": {
+      "login_form_heading": "Hyni në dyqan duke përdorur fjalëkalimin:",
+      "login_password_button": "Futni duke përdorur fjalëkalimin",
+      "login_form_password_label": "Fjalëkalimi",
+      "login_form_password_placeholder": "Fjalëkalimi juaj",
+      "login_form_error": "Fjalëkalim i gabuar!",
+      "login_form_submit": "Hyni",
+      "admin_link_html": "Jeni pronari i dyqanit? <a href=\"/admin\" class=\"link underlined-link\">Identifikohu këtu</a>",
+      "powered_by_shopify_html": "Ky dyqan do të mundësohet nga {{ shopify }}"
+    },
+    "social": {
+      "alt_text": {
+        "share_on_facebook": "Shpërndaje në Facebook",
+        "share_on_twitter": "Tweet në Twitter",
+        "share_on_pinterest": "Pin në Pinterest",
+        "share_by_email": "Ndani me email"
+      },
+      "links": {
+        "twitter": "Twitter",
+        "facebook": "Facebook",
+        "pinterest": "Pinterest",
+        "instagram": "Instagram",
+        "tumblr": "Tumblr",
+        "snapchat": "Snapchat",
+        "youtube": "YouTube",
+        "vimeo": "Vimeo",
+        "tiktok": "TikTok",
+        "linkedin": "Linkedin"
+      }
+    },
+    "continue_shopping": "Vazhdoni blerjet",
+    "pagination": {
+      "label": "Faqezim",
+      "page": "Faqja {{ number }}",
+      "next": "Faqja tjetër",
+      "previous": "Faqja e mëparshme",
+      "load_more": "Ngarko më shumë",
+      "load_previous_items": "Ngarko artikujt e mëparshëm"
+    },
+    "cart": {
+      "view": "Shiko karrocën time ( {{ count }} )",
+      "item_added": "Artikulli u shtua në shportën tuaj"
+    },
+    "discount": {
+      "label": "Zbritje",
+      "accessibility": "Apliko një kod zbritjeje",
+      "code": "Kodi i zbritjes",
+      "apply": "Apliko",
+      "code_error": "Kodi i zbritjes nuk mund të aplikohet në shportën tuaj",
+      "shipping_error": "Zbritjet e transportit shfaqen në arkë pasi të shtoni një adresë",
+      "accessibility_applied": "Kodi i zbritjes i aplikuar: {{ code }}",
+      "remove_code": "Hiq zbritjen {{ code }}",
+      "total_discount": "Zbritje totale"
+    },
+    "share": {
+      "close": "Mbyll ndarjen",
+      "copy_to_clipboard": "Kopjo lidhjen",
+      "share_url": "Lidhje",
+      "success_message": "Lidhja u kopjua në kujtesën e fragmenteve"
+    },
+    "slider": {
+      "of": "e",
+      "next_slide": "Rrëshqitni djathtas",
+      "previous_slide": "Rrëshqitni majtas",
+      "name": "Rrëshqitës"
+    },
+    "shipping_calculator": {
+      "heading": "Llogaritësi i transportit",
+      "errors_heading": "Gabimet",
+      "carriers": "Transportuesit e disponueshëm të transportit",
+      "button": "Llogaritni",
+      "do_not_ship": "Ne nuk dërgojmë në këtë destinacion.",
+      "delivery_date_one": "{{ count }} ditë pune",
+      "delivery_date_many": "{{ count }} ditë pune",
+      "delivery_date_range": "{{ minimum }} deri në {{ maximum }} ditë pune"
+    },
+    "countdown": {
+      "days": "Ditët",
+      "hours": "orët",
+      "minutes": "Minutat",
+      "seconds": "Sekonda",
+      "error_msg": "Sintaksë e gabuar. Ju lutemi shkruani datën me sintaksën: yyyy-mm-dd ose yyyy-mm-dd hh:ii. Shembull: 2023-01-15 ose 2023-01-15 23:00.",
+      "expired_msg": "Kohëmatësi i numërimit mbrapsht ka skaduar."
+    },
+    "boolean": {
+      "true": "po",
+      "false": "Nr"
+    },
+    "gift_wrapping": {
+      "button_label": "Mbështjellje dhurate",
+      "checkbox_label_html": "Dua që këto produkte të mbështillen si dhuratë - {{ price }}",
+      "note_placeholder": "Shtoni një mesazh të personalizuar dhurate në porosinë tuaj:",
+      "variant_picker_button": "Zgjidh letër mbështjellëse"
+    }
+  },
+  "accessibility": {
+    "complementary_products": "Produkte plotësuese",
+    "skip_to_text": "Kalo te përmbajtja",
+    "skip_to_product_info": "Kalo te informacioni i produktit",
+    "skip_to_product_grid": "Kalo te rrjeti i produkteve",
+    "close": "Mbylle",
+    "unit_price_separator": "per",
+    "vendor": "Shitësi:",
+    "error": "Gabim",
+    "refresh_page": "Zgjedhja e një përzgjedhjeje rezulton në një rifreskim të plotë të faqes.",
+    "link_messages": {
+      "new_window": "Hapet në një dritare të re.",
+      "external": "Hap faqen e jashtme."
+    },
+    "loading": "Po ngarkohet...",
+    "total_reviews": "komente totale",
+    "star_reviews_info": "{{ rating_value }} nga {{ rating_max }} yje",
+    "collapsible_content_title": "Përmbajtje e palosshme",
+    "navigation_toggle": "Ndërrimi i navigimit në kokën ngjitëse",
+    "next_video": "Videoja tjetër",
+    "previous_video": "Videoja e mëparshme",
+    "swipe": "Rrëshqit",
+    "toggle_sound": "Ndërro tingullin"
+  },
+  "blogs": {
+    "article": {
+      "blog": "Blogu",
+      "name": "Emri",
+      "read_more_title": "Lexo më shumë: {{ title }}",
+      "comments": {
+        "one": "{{ count }} koment",
+        "other": "{{ count }} komente"
+      },
+      "author_html": "Postuar nga <strong>{{ author }}</strong>",
+      "moderated": "Ju lutemi vini re, komentet duhet të miratohen përpara se të publikohen.",
+      "comment_form_title": "Lini një koment",
+      "email": "Email",
+      "message": "Komentoni",
+      "post": "Posto koment",
+      "back_to_blog": "Kthehu në blog",
+      "share": "Ndani këtë artikull",
+      "success": "Komenti juaj u postua me sukses! faleminderit!",
+      "success_moderated": "Komenti juaj u postua me sukses. Do ta publikojmë pas pak, pasi blogu ynë është i moderuar.",
+      "previous": "E mëparshme",
+      "next": "Tjetra",
+      "tags_all": "Të gjitha",
+      "continue": "Vazhdoni"
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Shto në shportë",
+      "description": "Përshkrimi",
+      "volume_pricing": {
+        "price_at_each": "{{ price }} /ea",
+        "each": "{{ money }} /ea",
+        "title": "Çmimi i vëllimit",
+        "note": "Vëllimi i çmimeve në dispozicion",
+        "minimum": "{{ quantity }} +",
+        "price_range": "{{ minimum }} - {{ maximum }}"
+      },
+      "pickup_availability": {
+        "view_store_info": "Shikoni informacionin e dyqanit",
+        "check_other_stores": "Kontrolloni disponueshmërinë në dyqane të tjera",
+        "pick_up_available": "Ofrohet marrje",
+        "pick_up_available_at_html": "Ofrohet marrja në <span class=\"color-foreground\">{{ location_name }}</span>",
+        "pick_up_unavailable_at_html": "Marrja aktualisht nuk ofrohet në <span class=\"color-foreground\">{{ location_name }}</span>",
+        "unavailable": "Disponueshmëria e marrjes nuk mund të ngarkohej",
+        "refresh": "Rifresko"
+      },
+      "price": {
+        "from_price_html": "Nga {{ price }}",
+        "regular_price": "Çmimi i rregullt",
+        "sale_price": "Çmimi i shitjes",
+        "unit_price": "Çmimi për njësi",
+        "varies_html": "{{ price_from }} - {{ price_to }}",
+        "discount_html": "Shpëto {{ amount }}"
+      },
+      "share": "Ndani këtë produkt",
+      "sold_out": "I shitur",
+      "unavailable": "E padisponueshme",
+      "vendor": "Shitësi",
+      "video_exit_message": "{{ title }} hap videon me ekran të plotë në të njëjtën dritare.",
+      "view_full_details": "Shikoni detajet e plota",
+      "xr_button": "Shikoni në hapësirën tuaj",
+      "xr_button_label": "Shikoni në hapësirën tuaj, ngarkon artikullin në dritaren e realitetit të shtuar",
+      "include_taxes": "Taksa e përfshirë.",
+      "shipping_policy_html": "<a href=\"&lt;span%20class='notranslate'&gt;{{%20link%20}}&lt;/span&gt;\">Transporti</a> i llogaritur në arkë.",
+      "value_unavailable": "{{ option_value }} - E padisponueshme",
+      "variant_sold_out_or_unavailable": "Varianti i shitur ose i padisponueshëm",
+      "inventory_in_stock": "Në magazinë",
+      "inventory_in_stock_show_count": "{{ quantity }} në magazinë",
+      "inventory_low_stock": "Stoku i ulët",
+      "inventory_low_stock_show_count": "Stoku i ulët: {{ quantity }} ka mbetur",
+      "inventory_out_of_stock": "Jashtë stok",
+      "inventory_out_of_stock_continue_selling": "Në magazinë",
+      "quick_view": "Shikimi i shpejtë i një produkti",
+      "quick_view_button": "Pamje e shpejtë",
+      "view_product": "Shiko produktin",
+      "number_of_reviews": {
+        "one": "{{ count }} koment",
+        "other": "{{ count }} komente"
+      },
+      "by_vendor_html": "<span>Nga</span> {{ vendor }}",
+      "choose_options": "Zgjidhni opsionet",
+      "choose_product_options": "Zgjidh opsionet për {{ product_name }}",
+      "pre_order": "Porosit paraprakisht",
+      "on_sale": "Shitje",
+      "product_variants": "Variantet e produktit",
+      "media": {
+        "gallery_viewer": "Shikuesi i Galerisë",
+        "load_image": "Ngarko imazhin {{ index }} në pamjen e galerisë",
+        "load_model": "Ngarko modelin 3D {{ index }} në pamjen e galerisë",
+        "load_video": "Luaj videon {{ index }} në pamjen e galerisë",
+        "image_available": "Imazhi {{ index }} është tani i disponueshëm në pamjen e galerisë",
+        "open_media": "Hap median {{ index }} në modalitet",
+        "play_model": "Luaj Viewer 3D",
+        "play_video": "Luaj video"
+      },
+      "quantity": {
+        "label": "Sasia",
+        "input_label": "Sasia për {{ product }}",
+        "increase": "Rrit sasinë për {{ product }}",
+        "decrease": "Zvogëlo sasinë për {{ product }}",
+        "minimum_of": "Minimumi prej {{ quantity }}",
+        "maximum_of": "Maksimumi prej {{ quantity }}",
+        "multiples_of": "Rritje prej {{ quantity }}",
+        "min_of": "Minimumi {{ quantity }}",
+        "max_of": "Maksimumi {{ quantity }}",
+        "in_cart_html": "<strong class=\"quantity-cart\">{{ quantity }}</strong> në karrocë",
+        "note": "Shikoni rregullat e sasisë"
+      }
+    },
+    "modal": {
+      "label": "Galeria e mediave"
+    },
+    "facets": {
+      "apply": "Aplikoni",
+      "clear": "E qartë",
+      "clear_all": "Hiq të gjitha",
+      "from": "Nga",
+      "filter_and_sort": "Filtro dhe rendit",
+      "filter_by_label": "Filtri:",
+      "filter_button": "Filtro",
+      "filters_selected": {
+        "one": "{{ count }} e zgjedhur",
+        "other": "{{ count }} e zgjedhur"
+      },
+      "filter_selected_accessibility": "{{ type }} ( {{ count }} filtra të zgjedhur)",
+      "show_more": "Trego më shumë",
+      "show_less": "Trego më pak",
+      "max_price": "Çmimi më i lartë është {{ price }}",
+      "price_from_to_html": "{{ price_label }} {{ price_from }} - {{ price_to }}",
+      "product_count": {
+        "one": "{{ product_count }} nga {{ count }} produkti",
+        "other": "{{ product_count }} nga {{ count }} produkteve"
+      },
+      "product_count_simple": {
+        "one": "{{ count }} produkt",
+        "other": "{{ count }} produkte"
+      },
+      "reset": "Rivendos",
+      "sort_button": "Rendit",
+      "sort_by_label": "Rendit sipas:",
+      "to": "për të",
+      "clear_filter": "Hiq filtrin",
+      "show_filter": "Shfaq filtrin",
+      "hide_filter": "Fshih filtrin",
+      "categories_block_label": "Kategoritë"
+    }
+  },
+  "templates": {
+    "404": {
+      "title": "Faqja nuk u gjet",
+      "subtext": "404"
+    },
+    "search": {
+      "products": "Produktet",
+      "no_results": "Nuk u gjetën rezultate për \" {{ terms }} \". Kontrolloni drejtshkrimin ose përdorni një fjalë ose frazë tjetër.",
+      "no_products": "Nuk u gjet asnjë produkt për “ {{ terms }} ”. Kontrolloni drejtshkrimin ose përdorni një fjalë ose frazë tjetër.",
+      "no_articles": "Nuk u gjetën artikuj për \" {{ terms }} \". Kontrolloni drejtshkrimin ose përdorni një fjalë ose frazë tjetër.",
+      "no_pages": "Nuk u gjetën faqe për \" {{ terms }} \". Kontrolloni drejtshkrimin ose përdorni një fjalë ose frazë tjetër.",
+      "no_collections": "Nuk u gjetën koleksione për \" {{ terms }} \". Kontrolloni drejtshkrimin ose përdorni një fjalë ose frazë tjetër.",
+      "page": "Faqe",
+      "article": "Artikuj",
+      "results_with_count": {
+        "one": "{{ count }} rezultat",
+        "other": "{{ count }} rezultate"
+      },
+      "results_with_count_and_term": {
+        "one": "{{ count }} u gjet rezultat për \" {{ terms }} \"",
+        "other": "{{ count }} u gjetën rezultate për \" {{ terms }} \""
+      },
+      "title": "Rezultatet e kërkimit",
+      "search_for": "Kërko për \" {{ terms }} \"",
+      "suggestions": "Sugjerime"
+    },
+    "contact": {
+      "form": {
+        "name": "Emri",
+        "email": "Email",
+        "title": "Formulari i kontaktit",
+        "phone": "Numri i telefonit",
+        "comment": "Komentoni",
+        "send": "Dërgo",
+        "post_success": "Faleminderit që na kontaktuat. Ne do të kthehemi tek ju sa më shpejt të jetë e mundur.",
+        "error_heading": "Ju lutemi rregulloni sa vijon:"
+      },
+      "address": {
+        "heading": "Adresa jonë"
+      },
+      "opening_hour": {
+        "heading": "Ora e hapjes"
+      }
+    },
+    "cart": {
+      "cart": "Karrocë"
+    },
+    "compare": {
+      "header_icon": "Krahasoni produktin",
+      "add_button": "Shto {{ product_title }} në listën e krahasimit",
+      "add_to_compare": "Shto për të krahasuar",
+      "popup": "Krahasimi i produktit popup",
+      "empty": "Nuk ka produkte në listën e krahasimit.",
+      "warning": "Ju lutemi zgjidhni të paktën 2 produkte për të krahasuar.",
+      "success": "Shtuar në listën e krahasimit.",
+      "remove": "Hiq"
+    }
+  },
+  "sections": {
+    "cart": {
+      "headings": {
+        "price": "Çmimi",
+        "product": "Produkti",
+        "total": "Gjithsej",
+        "quantity": "Sasia",
+        "image": "Imazhi i produktit"
+      },
+      "title": "Karroca juaj",
+      "caption": "Artikujt e karrocave",
+      "remove_title": "Hiq {{ title }}",
+      "subtotal": "Nëntotali",
+      "new_subtotal": "Nëntotal i ri",
+      "note": "Porosit udhëzime speciale",
+      "note_drawer": "Shënim",
+      "note_label": "Add order note",
+      "apply": "Aplikoni",
+      "shipping": "Transporti",
+      "checkout": "Shikoni",
+      "view_cart": "Shiko karrocën",
+      "empty": "Karroca juaj është bosh",
+      "cart_error": "Pati një gabim gjatë përditësimit të karrocës. Ju lutemi provoni përsëri.",
+      "cart_quantity_error_html": "Ju mund të shtoni vetëm {{ quantity }} të këtij artikulli në shportën tuaj.",
+      "cart_success": "Produkti është shtuar në shportë.",
+      "taxes_and_shipping_policy_at_checkout_html": "Taksat dhe <a href=\"&lt;span%20class='notranslate'&gt;{{%20link%20}}&lt;/span&gt;\">transporti</a> llogariten në arkë",
+      "taxes_included_but_shipping_at_checkout": "Taksa e përfshirë dhe transporti i llogaritur në arkë",
+      "taxes_included_and_shipping_policy_html": "Taksa e përfshirë. <a href=\"&lt;span%20class='notranslate'&gt;{{%20link%20}}&lt;/span&gt;\">Transporti</a> i llogaritur në arkë.",
+      "taxes_and_shipping_at_checkout": "Taksat dhe transporti llogariten në arkë",
+      "update": "Përditëso",
+      "login": {
+        "title": "Keni një llogari?",
+        "paragraph_html": "<a href=\"&lt;span%20class='notranslate'&gt;{{%20link%20}}&lt;/span&gt;\" class=\"link underlined-link\">Identifikohu</a> për të kontrolluar më shpejt."
+      },
+      "cart_totals": "Totali i karrocave"
+    },
+    "header": {
+      "announcement": "Njoftim",
+      "menu": "Menyja",
+      "cart_count": {
+        "one": "{{ count }} artikull",
+        "other": "{{ count }} artikuj"
+      },
+      "breadcrumbs": {
+        "home": "Shtëpi"
+      },
+      "go_to_link": "Shko te {{ title }}"
+    },
+    "footer": {
+      "payment": "Mënyrat e pagesës"
+    },
+    "featured_blog": {
+      "view_all": "Shiko të gjitha",
+      "onboarding_title": "Postimi në blog",
+      "onboarding_content": "Jepni klientëve tuaj një përmbledhje të postimit tuaj në blog"
+    },
+    "featured_collection": {
+      "view_all": "Shiko të gjitha",
+      "view_all_label": "Shikoni të gjitha produktet në koleksionin {{ collection_name }}",
+      "slider": "Rrëshqitës"
+    },
+    "gallery": {
+      "list": "Artikujt e galerisë",
+      "item_id_label": "Artikulli i galerisë # {{ item_number }}"
+    },
+    "collection_list": {
+      "view_all": "Shiko të gjitha"
+    },
+    "collection_banner": {
+      "load_collection_icon": "Koleksion me ikonë",
+      "slider": "Rrëshqitës"
+    },
+    "collection_template": {
+      "empty": "Nuk u gjet asnjë produkt",
+      "title": "Mbledhja",
+      "use_fewer_filters_html": "Përdorni më pak filtra ose <a class=\"&lt;span class='notranslate'&gt;{{ class }}&lt;/span&gt;\" href=\"&lt;span%20class='notranslate'&gt;{{%20link%20}}&lt;/span&gt;\">hiqni të gjithë</a>"
+    },
+    "video": {
+      "load_video": "Ngarko videon: {{ description }}"
+    },
+    "slideshow": {
+      "load_slide": "Ngarko rrëshqitjen",
+      "previous_slideshow": "Sllajdi i mëparshëm",
+      "next_slideshow": "Rrëshqitja tjetër",
+      "pause_slideshow": "Ndalo shfaqjen e rrëshqitjes",
+      "play_slideshow": "Luaj Slideshow",
+      "carousel": "Karuseli",
+      "slide": "Rrëshqitje"
+    },
+    "page": {
+      "title": "Titulli i faqes"
+    },
+    "background-color-swatches": {
+      "preview_title": "Shiko paraprakisht mostrat me ngjyra",
+      "preview_description": "Kjo pamje paraprake është e dukshme vetëm në faqen e Redaktuesit të Temave për t'ju ndihmuar të shtoni/redaktoni/fshini lehtësisht kodet e ngjyrave. Në vitrinën e dyqanit, kjo pamje paraprake nuk do të shfaqet, do të ekzekutohen vetëm kodet e ngjyrave.",
+      "group_item": "Grupi # {{ index }}"
+    },
+    "cookies_banner": {
+      "accept": "Pranoje",
+      "decline": "Rënia"
+    },
+    "google_maps": {
+      "coordinate_empty_error_html": "Ju lutemi shkruani koordinatat tuaja. <a href=\"&lt;span%20class='notranslate'&gt;{{%20link%20}}&lt;/span&gt;\">Mësoni si të merrni koordinatat e adresës suaj</a> .",
+      "api_key_empty_error_html": "Ju lutemi shkruani çelësin tuaj API. Sigurohuni që çelësi të jetë përfshirë Maps Embed API. <a href=\"&lt;span%20class='notranslate'&gt;{{%20link%20}}&lt;/span&gt;\">Mësoni se si të merrni çelësin API</a> ."
+    }
+  },
+  "customer": {
+    "addresses": {
+      "phone": "Telefoni",
+      "title": "Adresat",
+      "default": "E paracaktuar",
+      "add_new": "Shto një adresë të re",
+      "edit_address": "Redakto adresën",
+      "first_name": "Emri i parë",
+      "last_name": "Mbiemri",
+      "company": "Kompania",
+      "address1": "Adresa 1",
+      "address2": "Adresa 2",
+      "city": "Qyteti",
+      "country": "Vendi/rajon",
+      "province": "Provinca",
+      "zip": "Kodi postar/ZIP",
+      "set_default": "Cakto si adresë të paracaktuar",
+      "add": "Shto adresën",
+      "update": "Përditëso adresën",
+      "cancel": "Anulo",
+      "edit": "Redakto",
+      "delete": "Fshije",
+      "delete_confirm": "Jeni i sigurt që dëshironi ta fshini këtë adresë?"
+    },
+    "order": {
+      "price": "Çmimi",
+      "title": "Porosit {{ name }}",
+      "date_html": "Vendosur në {{ date }}",
+      "cancelled_html": "Porosia u anulua më {{ date }}",
+      "cancelled_reason": "Arsyeja: {{ reason }}",
+      "billing_address": "Adresa e faturimit",
+      "payment_status": "Statusi i pagesës",
+      "shipping_address": "Adresa e Transportit",
+      "fulfillment_status": "Statusi i përmbushjes",
+      "discount": "Zbritje",
+      "shipping": "Transporti",
+      "tax": "Taksa",
+      "product": "Produkti",
+      "sku": "SKU",
+      "quantity": "Sasia",
+      "total": "Gjithsej",
+      "fulfilled_at_html": "E plotësuar {{ date }}",
+      "track_shipment": "Ndiqni dërgesën",
+      "tracking_url": "Lidhja e ndjekjes",
+      "tracking_company": "Transportuesi",
+      "tracking_number": "Numri i përcjelljes",
+      "subtotal": "Nëntotali",
+      "total_duties": "Detyrat"
+    },
+    "account": {
+      "title": "Llogaria",
+      "details": "Detajet e llogarisë",
+      "profile": "Profili",
+      "orders": "Porositë",
+      "view_addresses": "Shiko adresat",
+      "return": "Kthehu te detajet e llogarisë",
+      "welcome_html": "Mirë se erdhe, <strong>{{ first_name }}</strong> !"
+    },
+    "account_fallback": "Llogaria",
+    "activate_account": {
+      "title": "Aktivizo llogarinë",
+      "subtext": "Krijoni fjalëkalimin tuaj për të aktivizuar llogarinë tuaj.",
+      "password": "Fjalëkalimi",
+      "password_confirm": "Konfirmo fjalëkalimin",
+      "submit": "Aktivizo llogarinë",
+      "cancel": "Refuzo ftesën"
+    },
+    "log_in": "Identifikohu",
+    "back_to_login": "Kthehu në faqen e hyrjes",
+    "log_out": "Dilni",
+    "login_page": {
+      "cancel": "Anulo",
+      "create_account": "Krijo llogari",
+      "email": "Email",
+      "forgot_password": "Keni harruar fjalëkalimin tuaj?",
+      "guest_continue": "Vazhdoni",
+      "guest_title": "Vazhdoni si mysafir",
+      "password": "Fjalëkalimi",
+      "title": "Identifikohu",
+      "sign_in": "Identifikohu",
+      "submit": "Paraqisni"
+    },
+    "orders": {
+      "title": "Historia e porosive",
+      "order_number": "Rendit",
+      "order_number_link": "Numri i porosisë {{ number }}",
+      "date": "Data",
+      "payment_status": "Statusi i pagesës",
+      "fulfillment_status": "Statusi i përmbushjes",
+      "total": "Gjithsej",
+      "none": "Nuk keni bërë ende asnjë porosi."
+    },
+    "recover_password": {
+      "title": "Rivendosni fjalëkalimin tuaj",
+      "subtext": "Ne do t'ju dërgojmë një email për të rivendosur fjalëkalimin tuaj",
+      "success": "Ne ju kemi dërguar një email me një lidhje për të përditësuar fjalëkalimin tuaj."
+    },
+    "register": {
+      "title": "Krijo llogari",
+      "first_name": "Emri i parë",
+      "last_name": "Mbiemri",
+      "email": "Email",
+      "password": "Fjalëkalimi",
+      "submit": "Krijo"
+    },
+    "reset_password": {
+      "title": "Rivendos fjalëkalimin e llogarisë",
+      "subtext": "Futni një fjalëkalim të ri",
+      "password": "Fjalëkalimi",
+      "password_confirm": "Konfirmo fjalëkalimin",
+      "submit": "Rivendos fjalëkalimin"
+    },
+    "password_visibility": {
+      "show": "Shfaq fjalëkalimin",
+      "hide": "Fshih fjalëkalimin"
+    }
+  },
+  "recipient": {
+    "form": {
+      "name": "Emri",
+      "checkbox": "Dua ta dërgoj këtë si dhuratë",
+      "email_label": "Email i marrësit",
+      "email_label_optional_for_no_js_behavior": "Email i marrësit (opsionale)",
+      "email": "Email",
+      "name_label": "Emri i marrësit (opsionale)",
+      "message_label": "Mesazh (opsionale)",
+      "message": "Mesazh",
+      "max_characters": "{{ max_chars }} karaktere maksimumi",
+      "send_on": "VVVV-MM-DD",
+      "send_on_label": "Dërgo në (opsionale)"
+    }
+  },
+  "localization": {
+    "country_label": "Vendi/rajon",
+    "language_label": "Gjuha",
+    "update_language": "Përditëso gjuhën",
+    "update_country": "Përditëso shtetin/rajonin"
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "Këtu është karta juaj dhuratë {{ value }} për {{ shop }} !",
+      "subtext": "Karta juaj e dhuratës",
+      "gift_card_code": "Kodi i kartës së dhuratës",
+      "shop_link": "Vazhdoni blerjet",
+      "remaining_html": "Mbetet {{ balance }}",
+      "add_to_apple_wallet": "Shtoni në portofolin Apple",
+      "qr_image_alt": "Kodi QR - skanoni për të shlyer kartën e dhuratës",
+      "copy_code": "Kopjo kodin",
+      "expired": "I skaduar",
+      "copy_code_success": "Kodi u kopjua me sukses",
+      "print_gift_card": "Printo"
+    }
+  },
+  "newsletter": {
+    "label": "Email",
+    "success": "Faleminderit për abonimin",
+    "button_label": "Abonohu"
+  },
+  "onboarding": {
+    "product_title": "Shembull i titullit të produktit",
+    "collection_title": "Emri i koleksionit tuaj"
+  },
+  "pagefly": {
+    "products": {
+      "product": {
+        "regular_price": "Regular price",
+        "sold_out": "Sold out",
+        "unavailable": "Unavailable",
+        "on_sale": "Sale",
+        "quantity": "Quantity",
+        "add_to_cart": "Add to cart",
+        "back_to_collection": "Back to {{ title }}",
+        "view_details": "View details"
+      }
+    },
+    "article": {
+      "tags": "Tags:",
+      "all_topics": "All topics",
+      "by_author": "by {{ author }}",
+      "posted_in": "Posted in",
+      "read_more": "Read more",
+      "back_to_blog": "Back to {{ title }}"
+    },
+    "comments": {
+      "title": "Leave a comment",
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "post": "Post comment",
+      "moderated": "Please note, comments must be approved before they are published",
+      "success_moderated": "Your comment was posted successfully. We will publish it in a little while, as our blog is moderated.",
+      "success": "Your comment was posted successfully! Thank you!",
+      "comments_with_count": {
+        "one": "{{ count }} comment",
+        "other": "{{ count }} comments"
+      }
+    },
+    "password_page": {
+      "login_form_message": "Enter store using password:",
+      "login_form_password_label": "Password",
+      "login_form_password_placeholder": "Your password",
+      "login_form_submit": "Enter",
+      "signup_form_email_label": "Email",
+      "signup_form_success": "We will send you an email right before we open!",
+      "password_link": "Enter using password"
+    }
+  }
+}

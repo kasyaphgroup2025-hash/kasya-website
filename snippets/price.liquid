@@ -1,0 +1,128 @@
+{% comment %}
+    Renders a list of product's price (regular, sale)
+
+    Accepts:
+    - product: {Object} Product Liquid object (optional)
+    - use_variant: {Boolean} Renders selected or first variant price instead of overall product pricing (optional)
+    - show_badges: {Boolean} Renders 'Sale' and 'Sold Out' tags if the product matches the condition (optional)
+    - show_in_card: {Boolean} Detect the price is shown in a product card or details page
+    - price_class: {String} Adds a price class to the price element (optional)
+
+    Usage:
+    {% render 'price', product: product %}
+{% endcomment %}
+{%- liquid
+  if use_variant
+    assign target = product.selected_or_first_available_variant
+  else
+    assign target = product
+  endif
+
+  assign compare_at_price = target.compare_at_price
+  assign price = target.price | default: 1999
+  assign available = target.available | default: false
+  assign money_price = price | money
+  if settings.currency_code_enabled
+    assign money_price = price | money_with_currency
+  endif
+
+  if target == product and product.price_varies
+    assign money_price = 'products.product.price.from_price_html' | t: price: money_price
+  endif
+  unless use_custom_element
+    assign price_tag = 'div'
+  else
+    assign price_tag = 'product-price'  
+  endunless
+-%}
+
+<{{ price_tag }} class="price
+  {%- if price_class %} {{ price_class }}{% endif -%}
+  {%- if available == false %} price--sold-out {% endif -%}
+  {%- if compare_at_price > price %} price--on-sale {% endif -%}
+  {%- if product.price_varies == false and product.compare_at_price_varies %} price--no-compare{% endif %}
+  {%- if show_in_card %} price--in-card{% endif %}
+  {%- if show_badges and settings.sale_badge_label != 'none' %} price--show-badge{% endif %}{% unless show_in_card %} price--out-card{% endunless %}">
+  <div class="price__container{% if compare_at_price > price and show_in_card %} break{% endif %}">
+    {%- comment -%}
+      Explanation of description list:
+        - div.price__regular: Displayed when there are no variants on sale
+        - div.price__sale: Displayed when a variant is a sale
+    {%- endcomment -%}
+    <div class="price__regular">
+      <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.regular_price' | t }}</span>
+      <span class="price-item price-item--regular">
+        {{ money_price }}
+      </span>
+    </div>
+    <div class="price__sale{% if show_in_card %} flex-column{% endif %}">
+      <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.regular_price' | t }}</span>
+      <span class="flex align-center">
+        <s class="price-item price-item--regular">
+          {% if settings.currency_code_enabled %}
+            {{ compare_at_price | money_with_currency }}
+          {% else %}
+            {{ compare_at_price | money }}
+          {% endif %}
+        </s>
+        
+        {%- if show_badges and show_in_card and target.price < target.compare_at_price and settings.sale_badge_label != 'none' -%}
+          <span class="price__badge price__badge--in-card lh1 color-foreground">
+            {%- if settings.sale_badge_label == 'text' -%}
+              {{ 'products.product.on_sale' | t }}
+            {%- elsif settings.sale_badge_label == 'percent' -%}
+              {{ target.price | minus: target.compare_at_price | times: 100.00 | divided_by: target.compare_at_price | round }}%
+            {%- else -%}
+              {%- if settings.currency_code_enabled -%}
+                -{{ target.compare_at_price | minus: target.price | money_with_currency }}	
+              {%- else -%}
+                -{{ target.compare_at_price | minus: target.price | money }}	
+              {%- endif -%}	
+            {%- endif -%}	
+          </span>
+        {%- endif -%}
+      </span>
+      <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.sale_price' | t }}</span>
+      <span class="price-item price-item--sale price-item--last{% if show_in_card %} price-item--sale-in-card{% endif %}">
+        {{ money_price }}
+      </span>
+    </div>
+    {%- unless show_in_card and product.selected_or_first_available_variant.unit_price_measurement == nil -%}
+    <small class="unit-price caption{% if product.selected_or_first_available_variant.unit_price_measurement == nil %} hidden{% endif %}">
+      <span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span>
+      <span class="price-item price-item--last">
+        <span>{{- product.selected_or_first_available_variant.unit_price | money -}}</span>
+        <span aria-hidden="true">/</span>
+        <span class="visually-hidden">&nbsp;{{ 'accessibility.unit_price_separator' | t }}&nbsp;</span>
+        <span>
+          {%- if product.selected_or_first_available_variant.unit_price_measurement.reference_value != 1 -%}
+            {{- product.selected_or_first_available_variant.unit_price_measurement.reference_value -}}
+          {%- endif -%}
+          {{ product.selected_or_first_available_variant.unit_price_measurement.reference_unit }}
+        </span>
+      </span>
+    </small>
+    {%- endunless -%}
+  </div>
+  {%- if show_badges and show_in_card == false and target.price < target.compare_at_price and settings.sale_badge_label != 'none' -%}
+    <span class="price__badge lh1 color-foreground">
+      {%- if settings.sale_badge_label == 'text' -%}
+        {{ 'products.product.on_sale' | t }}
+      {%- elsif settings.sale_badge_label == 'percent' -%}
+        {%- capture discount_amount -%}
+          {{ target.compare_at_price | minus: target.price | times: 100.00 | divided_by: target.compare_at_price | round }}%
+        {%- endcapture -%}
+        {{ 'products.product.price.discount_html' | t: amount: discount_amount }}
+      {%- else -%}
+        {%- capture discount_amount -%}
+          {%- if settings.currency_code_enabled -%}
+            {{ target.compare_at_price | minus: target.price | money_with_currency }}	
+          {%- else -%}
+            {{ target.compare_at_price | minus: target.price | money }}	
+          {%- endif -%}
+        {%- endcapture -%}
+        {{ 'products.product.price.discount_html' | t: amount: discount_amount }}	
+      {%- endif -%}	
+    </span>
+  {%- endif -%}
+</{{ price_tag }}>

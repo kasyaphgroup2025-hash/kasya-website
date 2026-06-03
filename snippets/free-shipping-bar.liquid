@@ -1,0 +1,38 @@
+{%-liquid
+  assign cart_total_price = cart.total_price
+  assign count_exclude_products = 0
+  if cart.items.size > 0 and settings.free_shipping_exclude_products != blank and settings.free_shipping_exclude_products.count > 0
+    assign exclude_product_ids = settings.free_shipping_exclude_products | map: 'id'
+    for item in cart.items
+      if exclude_product_ids contains item.product_id
+        assign cart_total_price = cart_total_price | minus: item.final_line_price
+        assign count_exclude_products = count_exclude_products | plus: 1
+      endif
+    endfor
+  endif
+-%}
+<free-shipping-bar
+  class="free-shipping-bar db{% unless no_background %} background-input{% endunless %} no-js-hidden{% if wrapper_classes %} {{ wrapper_classes }}{% endif %}"
+  data-threshold="{{ settings.free_shipping_threshold | times: 100 }}"
+  data-total="{{ cart_total_price }}"
+  {% if show_exclude_message %}
+    data-show-exclude-message="true"
+    data-count-exclude-products="{{ count_exclude_products }}"
+  {% endif %}
+>
+  <div class="free-shipping-bar__unreached-message text-small hidden rte">{{ settings.free_shipping_unreached_message }}</div>
+  <div class="free-shipping-bar__reached-message text-small hidden rte">{{ settings.free_shipping_reached_message }}</div>
+  <div class="free-shipping-bar__progress-wrapper flex align-center{% unless no_progress_margin %} margin-top-1rem{% endunless %}">
+    <div class="free-shipping-bar__progress-bar por flex-grow-1">
+      <span class="free-shipping-bar__progress-bar__passed"></span>
+    </div>
+    <span class="free-shipping-bar__progress-number font-body-bold"></span>
+  </div>
+  {%- if show_exclude_message -%}
+    <div class="free-shipping-bar__exclude-message text-small{% unless count_exclude_products > 0 %} hidden{% endunless %} rte alert alert--small alert--warning caption margin-top-1rem">
+      {{ settings.free_shipping_exclude_message }}
+    </div>
+  {%- endif -%}
+</free-shipping-bar>
+<script src="{{ 'free-shipping-bar.js' | asset_url }}" defer="defer"></script>
+<link rel="stylesheet" href="{{ 'component-free-shipping-bar.css' | asset_url }}" media="print" onload="this.media='all'">

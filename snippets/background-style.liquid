@@ -1,0 +1,13 @@
+{%- comment -%}
+  Intended for blocks and sections that provide values for background settings.
+  Accepts:
+    local_settings: {local_settings || section.settings}
+{%- endcomment -%}
+{%- if local_settings.background -%}
+  --color-background: {{ local_settings.background_color.rgb | replace: ' ', ',' }};
+  {%- if local_settings.gradient_background != blank -%}
+    --gradient-background: {{ local_settings.gradient_background }};
+  {%- else -%}
+    --gradient-background: {{ local_settings.background_color }};
+  {%- endif -%}
+{%- endif -%}

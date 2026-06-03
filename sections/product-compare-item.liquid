@@ -1,0 +1,65 @@
+{%-liquid
+  assign section_id = 'product-compare-' | append: product.id
+  assign product_form_id = 'product-form-' | append: section_id
+  assign product_url = product.url | split: '?' | first
+-%}
+<product-info id="ProductInfo-{{ section_id }}" data-section="{{ section_id }}" data-original-section="product-compare-item" data-url="{{ product.url | split: '?' | first }}" data-option-size="{{ product.options.size }}">
+  <div id="Featured-Media-{{ section_id }}">
+    {%- capture sizes -%}
+      (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 130 | divided_by: 4 }}px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)
+    {%- endcapture -%}
+    {%- liquid
+      assign srcset = ''
+      assign featured_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media
+      if featured_media.width >= 165
+        assign product_image_url = featured_media | image_url: width: 165
+        assign srcset = srcset | append: product_image_url | append: ' 165w,'
+      endif
+      if featured_media.width >= 360
+        assign product_image_url = featured_media | image_url: width: 360
+        assign srcset = srcset | append: product_image_url | append: ' 360w,'
+      endif
+      if featured_media.width >= 430
+        assign product_image_url = featured_media | image_url: width: 450
+        assign srcset = srcset | append: product_image_url | append: ' 450w,'
+      endif
+      if featured_media.width >= 533
+        assign product_image_url = featured_media | image_url: width: 533
+        assign srcset = srcset | append: product_image_url | append: ' 533w,'
+      endif
+      if featured_media.width >= 720
+        assign product_image_url = featured_media | image_url: width: 720
+        assign srcset = srcset | append: product_image_url | append: ' 720w,'
+      endif
+      if featured_media.width >= 940
+        assign product_image_url = featured_media | image_url: width: 940
+        assign srcset = srcset | append: product_image_url | append: ' 940w,'
+      endif
+      if featured_media.width >= 1066
+        assign product_image_url = featured_media | image_url: width: 1066
+        assign srcset = srcset | append: product_image_url | append: ' 1066w,'
+      endif
+      assign product_image_url = featured_media | image_url
+      assign srcset = srcset | append: product_image_url | append: ' ' | append: featured_media.width | append: 'w'
+    -%}
+    {{ featured_media | image_url: width: 300 | image_tag: sizes: sizes, srcset: srcset, width: featured_media.width, height: featured_media.height, class: 'motion-reduce', loading: 'lazy' }}
+  </div>
+  <div class="no-js-hidden" id="price-{{ section_id }}" role="status">
+    {%-liquid
+      unless product.quantity_price_breaks_configured?
+        render 'price', product: product, use_variant: true, show_badges: false, price_class: 'price--large flex align-center', show_in_card: false
+      else
+        render 'main-product-price-per-item', product: product, section_id: section_id, price_classes: 'price price--large flex align-center'  
+      endunless
+    -%}
+  </div>
+  <div id="product-compare-inventory">
+    {%- render 'product-compare-item-inventory', section_id: section_id, product: product -%}
+  </div>
+  <div id="product-compare-form">
+    {%- render 'product-compare-item-form', section_id: section_id, product: product, show_quantity_selector: true, product_form_id: product_form_id -%}
+  </div>
+  <div id="compare-variants-{{ section_id }}">
+    {%- render 'main-product-variant-picker', product: product, product_form_id: product_form_id, product_url: product_url, section_id: section_id, picker_type: settings.picker_type_compare, enable_color_swatches: settings.enable_color_swatches_compare, color_swatches_style: settings.color_swatches_style_compare -%}
+  </div>
+</product-info>

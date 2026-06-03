@@ -1,0 +1,104 @@
+.shoppable-reels__item__text {
+  position: absolute;
+  inset-inline: 15px;
+  bottom: 10px;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.reel-video {
+  border-radius: 6px;
+  aspect-ratio: var(--aspect-ratio);
+}
+
+.reel-video .icon-pause {
+  display: none;
+}
+
+.reel-video[loaded]:not(.in-popup) > .deferred-media__poster.reuse img {
+  opacity: 0;
+}
+
+.reel-video>.deferred-media__poster.reuse {
+  position: absolute;
+}
+
+.reel-video > .deferred-media__poster.reuse img {
+  transition: opacity 500ms ease;
+}
+
+.reel-video > .deferred-media__poster.reuse {
+  transition: opacity 300ms ease;
+  z-index: 1;
+}
+
+.reel-video.playing > .deferred-media__poster.reuse {
+  opacity: 0;
+}
+
+.reel-video.playing.allow-pause > .deferred-media__poster.reuse .icon-play {
+  display: none;
+}
+
+.reel-video.playing.allow-pause > .deferred-media__poster.reuse .icon-pause {
+  display: block;
+}
+
+.reel-item-product {
+  --product-position: 5px;
+  --product-padding-radius: 6px;
+  position: absolute;
+  bottom: var(--product-position);
+  inset-inline: var(--product-position);
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  padding: var(--product-padding-radius);
+  border-radius: var(--product-padding-radius);
+  background: rgb(var(--color-background));
+  align-items: center;
+  column-gap: 10px;
+  transition: all 500ms ease;
+  border: 1px solid rgba(var(--color-foreground), 0.10);
+  box-shadow: 0 1px 2px 0 rgba(var(--color-foreground), 0.05);
+}
+
+.reels-thumbnails--product-cards-below .reel-item-product {
+  position: relative;
+  margin-top: 10px;
+  inset-inline: 0;
+}
+
+.reels-thumbnails--product-cards-none .reel-item-product,
+.reels-thumbnails .icon-cart,
+.reels-thumbnails .quick-add__submit:before {
+  display: none;
+}
+
+.reel-item-product__info__title.card__heading {
+  margin: 0;
+}
+
+.reels-thumbnails .reel-item-product__info__title,
+.reels-thumbnails .reel-item-product__info__price {
+  font-size: 1.4rem;
+}
+
+.reel-item-product__info__price.price--on-sale .price__sale {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+video-reel[data-ignore-hover] deferred-media {
+  cursor: pointer;
+}
+
+.reel-video.playing.allow-pause > .deferred-media__poster.reuse:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .reel-video.playing.allow-pause:hover > .deferred-media__poster.reuse {
+    opacity: 1;
+  }
+}

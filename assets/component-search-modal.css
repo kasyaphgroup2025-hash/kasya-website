@@ -1,0 +1,48 @@
+.search-modal {
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  padding: 1.5rem 0;
+}
+
+details[open] > .search-modal {
+  opacity: 1;
+  animation: animateMenuOpen 300ms ease;
+  z-index: 5;
+}
+
+.search-modal__inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 1.5rem;
+}
+
+.search-modal__close-button {
+  align-self: center;
+}
+
+.header__search .search-modal-overlay {
+  display: block;
+}
+
+.search-modal-overlay {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 300ms ease, visibility 300ms ease;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  inset-inline: 0;
+  z-index: 1;
+  transition: opacity .3s ease, visibility .3s ease;
+  background: rgb(var(--color-foreground),.1);
+  pointer-events: none;
+}
+
+.header__search:not(.header__search--has-predictive) details[open] + .search-modal-overlay, .no-js .header__search details[open] + .search-modal-overlay {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1;
+  cursor: pointer;
+  pointer-events: auto;
+}

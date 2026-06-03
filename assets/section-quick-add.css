@@ -1,0 +1,60 @@
+.quick-add__main-info {
+  display: grid;
+	grid-template-columns: 30% 1fr;
+	gap: 1.5rem;
+}
+
+.quick-add-main-product .product-form__input__radio-label--color.color-swatches-variant {
+	width: 4rem;
+	height: 4rem;
+}
+
+.quick-add__information > * + * {
+	margin-top: 0.5rem;
+}
+
+.quick-add__information > .product__tax {
+	margin-top: 0;
+}
+
+.quick-add-drawer .product__slider-button {
+	position: static;
+	transform: none;
+}
+
+.quick-add-drawer .slider-buttons {
+	column-gap: 1.5rem;
+}
+
+.quick-add-drawer .drawer__inner {
+	background: rgb(var(--color-background-input));
+}
+
+.quick-add__actions {
+	padding: 1.5rem;
+}
+
+.quick-add__product-form-buttons {
+	gap: 1rem 0.6rem;
+}
+
+.quick-add__product-form-buttons .product-form__submit + .shopify-payment-button {
+	width: 100%;
+}
+
+.product__sale-box__actions--quick-add {
+	padding-top: 1rem;
+	margin-top: -1rem;
+}
+
+@media (min-width: 550px) {
+	.quick-add__actions .product-form__buttons--input {
+    --column-quantity-label: span 2;
+  }
+  .quick-add__actions .product-form__buttons--input:not(.product-form__buttons--no-quantity) {
+    grid-template-columns: auto 1fr;
+  }
+  .quick-add__actions .product-form__buttons--input:not(.product-form__buttons--no-quantity) .shopify-payment-button {
+    grid-column: span 2;
+  }
+}

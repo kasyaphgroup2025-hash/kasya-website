@@ -1,0 +1,659 @@
+{% doc %}
+  @prompt
+    Create a bold and elegant heading block for KasyaPH’s 11.11 Mega Sale featuring the Radiance Collection.
+    Theme: Black and White minimalist, fashion editorial style with a premium, modern vibe.
+    Headline should highlight both the 11.11 Mega Sale and the Radiance Collection launch — something that feels exclusive and sophisticated.
+    Example tone: “The Radiance Collection Shines This 11.11” or “Step Into the Spotlight — 11.11 Radiance Arrives.”
+    Include a short subheading that hints at limited-time offers or new arrivals.
+    Design direction:
+    
+    Big bold serif font for the main headline
+    
+    Soft sans serif subtext below
+    
+    Clean layout with subtle motion (fade-in or slide)
+    
+    Background in white or black with soft glow accents to suggest “radiance”, can you make the shop now button make scroll section in radiance collection , Can you make the button scroll to radiance collection no need to input section ID 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-radiance-heading-{{ ai_gen_id }} {
+    position: relative;
+    padding: {{ block.settings.padding_top }}px {{ block.settings.padding_horizontal }}px {{ block.settings.padding_bottom }}px;
+    background-color: {{ block.settings.background_color }};
+    overflow: hidden;
+    min-height: {{ block.settings.min_height }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-radiance-heading-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: {{ block.settings.glow_size }}px;
+    height: {{ block.settings.glow_size }}px;
+    background: radial-gradient(circle, {{ block.settings.glow_color }} 0%, transparent 70%);
+    opacity: {{ block.settings.glow_opacity | divided_by: 100.0 }};
+    pointer-events: none;
+  }
+
+  .ai-radiance-heading__container-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 1;
+    text-align: {{ block.settings.text_alignment }};
+    max-width: {{ block.settings.content_width }}px;
+    width: 100%;
+  }
+
+  .ai-radiance-heading__eyebrow-{{ ai_gen_id }} {
+    font-family: {{ block.settings.subtext_font.family }}, {{ block.settings.subtext_font.fallback_families }};
+    font-weight: {{ block.settings.subtext_font.weight }};
+    font-size: {{ block.settings.eyebrow_size }}px;
+    color: {{ block.settings.eyebrow_color }};
+    letter-spacing: {{ block.settings.eyebrow_spacing }}px;
+    text-transform: uppercase;
+    margin-bottom: {{ block.settings.eyebrow_margin }}px;
+    opacity: 0;
+  }
+
+  .ai-radiance-heading__title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-size: {{ block.settings.heading_size }}px;
+    line-height: {{ block.settings.heading_line_height }};
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 {{ block.settings.heading_margin }}px;
+    opacity: 0;
+  }
+
+  .ai-radiance-heading__subtext-{{ ai_gen_id }} {
+    font-family: {{ block.settings.subtext_font.family }}, {{ block.settings.subtext_font.fallback_families }};
+    font-weight: {{ block.settings.subtext_font.weight }};
+    font-size: {{ block.settings.subtext_size }}px;
+    line-height: 1.6;
+    color: {{ block.settings.subtext_color }};
+    margin: 0;
+    opacity: 0;
+  }
+
+  .ai-radiance-heading__cta-{{ ai_gen_id }} {
+    margin-top: {{ block.settings.button_margin }}px;
+    opacity: 0;
+  }
+
+  .ai-radiance-heading__button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    font-family: {{ block.settings.subtext_font.family }}, {{ block.settings.subtext_font.fallback_families }};
+    font-weight: {{ block.settings.subtext_font.weight }};
+    font-size: {{ block.settings.button_font_size }}px;
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    border: {{ block.settings.button_border_width }}px solid {{ block.settings.button_border_color }};
+    cursor: pointer;
+  }
+
+  .ai-radiance-heading__button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_background }};
+    color: {{ block.settings.button_hover_text_color }};
+    border-color: {{ block.settings.button_hover_border_color }};
+    transform: translateY(-2px);
+  }
+
+  .ai-radiance-heading--loaded-{{ ai_gen_id }} .ai-radiance-heading__eyebrow-{{ ai_gen_id }} {
+    animation: ai-radiance-fade-in-{{ ai_gen_id }} 0.8s ease-out 0.2s forwards;
+  }
+
+  .ai-radiance-heading--loaded-{{ ai_gen_id }} .ai-radiance-heading__title-{{ ai_gen_id }} {
+    animation: ai-radiance-slide-up-{{ ai_gen_id }} 1s ease-out 0.4s forwards;
+  }
+
+  .ai-radiance-heading--loaded-{{ ai_gen_id }} .ai-radiance-heading__subtext-{{ ai_gen_id }} {
+    animation: ai-radiance-fade-in-{{ ai_gen_id }} 0.8s ease-out 0.8s forwards;
+  }
+
+  .ai-radiance-heading--loaded-{{ ai_gen_id }} .ai-radiance-heading__cta-{{ ai_gen_id }} {
+    animation: ai-radiance-fade-in-{{ ai_gen_id }} 0.8s ease-out 1.2s forwards;
+  }
+
+  @keyframes ai-radiance-fade-in-{{ ai_gen_id }} {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes ai-radiance-slide-up-{{ ai_gen_id }} {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-radiance-heading-{{ ai_gen_id }} {
+      padding: {{ block.settings.padding_top | times: 0.6 }}px {{ block.settings.padding_horizontal | times: 0.5 }}px {{ block.settings.padding_bottom | times: 0.6 }}px;
+      min-height: {{ block.settings.min_height | times: 0.7 }}px;
+    }
+
+    .ai-radiance-heading__eyebrow-{{ ai_gen_id }} {
+      font-size: {{ block.settings.eyebrow_size | times: 0.8 }}px;
+    }
+
+    .ai-radiance-heading__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.5 }}px;
+    }
+
+    .ai-radiance-heading__subtext-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subtext_size | times: 0.9 }}px;
+    }
+
+    .ai-radiance-heading__button-{{ ai_gen_id }} {
+      font-size: {{ block.settings.button_font_size | times: 0.9 }}px;
+      padding: {{ block.settings.button_padding_vertical | times: 0.8 }}px {{ block.settings.button_padding_horizontal | times: 0.8 }}px;
+    }
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 989px) {
+    .ai-radiance-heading__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.7 }}px;
+    }
+  }
+{% endstyle %}
+
+<radiance-heading-{{ ai_gen_id }}
+  class="ai-radiance-heading-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-radiance-heading__container-{{ ai_gen_id }}">
+    {% if block.settings.eyebrow_text != blank %}
+      <div class="ai-radiance-heading__eyebrow-{{ ai_gen_id }}">
+        {{ block.settings.eyebrow_text }}
+      </div>
+    {% endif %}
+
+    {% if block.settings.heading_text != blank %}
+      <h1 class="ai-radiance-heading__title-{{ ai_gen_id }}">
+        {{ block.settings.heading_text }}
+      </h1>
+    {% endif %}
+
+    {% if block.settings.subtext != blank %}
+      <div class="ai-radiance-heading__subtext-{{ ai_gen_id }}">
+        {{ block.settings.subtext }}
+      </div>
+    {% endif %}
+
+    {% if block.settings.show_button and block.settings.button_text != blank %}
+      <div class="ai-radiance-heading__cta-{{ ai_gen_id }}">
+        <button
+          class="ai-radiance-heading__button-{{ ai_gen_id }}"
+        >
+          {{ block.settings.button_text }}
+        </button>
+      </div>
+    {% endif %}
+  </div>
+</radiance-heading-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class RadianceHeading{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        setTimeout(() => {
+          this.classList.add('ai-radiance-heading--loaded-{{ ai_gen_id }}');
+        }, 100);
+
+        this.setupScrollButton();
+      }
+
+      setupScrollButton() {
+        const button = this.querySelector('.ai-radiance-heading__button-{{ ai_gen_id }}');
+        if (!button) return;
+
+        button.addEventListener('click', (e) => {
+          e.preventDefault();
+          
+          const targetElement = this.findRadianceSection();
+          
+          if (targetElement) {
+            const headerOffset = 80;
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+          }
+        });
+      }
+
+      findRadianceSection() {
+        const searchTerms = ['radiance', 'collection', 'radiance-collection'];
+        
+        for (const term of searchTerms) {
+          const elementById = document.getElementById(term);
+          if (elementById) {
+            return elementById;
+          }
+          
+          const elementByClass = document.querySelector('.' + term);
+          if (elementByClass) {
+            return elementByClass;
+          }
+          
+          const elementByPartialId = document.querySelector('[id*="' + term + '"]');
+          if (elementByPartialId && elementByPartialId !== this) {
+            return elementByPartialId;
+          }
+          
+          const elementByPartialClass = document.querySelector('[class*="' + term + '"]');
+          if (elementByPartialClass && elementByPartialClass !== this) {
+            return elementByPartialClass;
+          }
+        }
+        
+        const allSections = document.querySelectorAll('section, [class*="section"], .shopify-section');
+        const currentIndex = Array.from(allSections).indexOf(this.closest('section, .shopify-section'));
+        
+        if (currentIndex !== -1 && currentIndex + 1 < allSections.length) {
+          return allSections[currentIndex + 1];
+        }
+        
+        return null;
+      }
+    }
+
+    customElements.define('radiance-heading-{{ ai_gen_id }}', RadianceHeading{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Radiance heading",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Eyebrow text",
+      "default": "11.11 Mega Sale"
+    },
+    {
+      "type": "textarea",
+      "id": "heading_text",
+      "label": "Heading",
+      "default": "The Radiance Collection Shines This 11.11"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Limited-time exclusive launch. Step into the spotlight with new arrivals."
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "paragraph",
+      "content": "Button will automatically scroll to the Radiance Collection section below"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "playfair_display_n7"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 30,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "heading_line_height",
+      "min": 0.8,
+      "max": 1.5,
+      "step": 0.1,
+      "label": "Heading line height",
+      "default": 1.1
+    },
+    {
+      "type": "font_picker",
+      "id": "subtext_font",
+      "label": "Subtext font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Eyebrow size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_spacing",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Eyebrow letter spacing",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "subtext_size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtext size",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow",
+      "default": "#cccccc"
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Subtext",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "color",
+      "id": "glow_color",
+      "label": "Glow accent",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "glow_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Glow opacity",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "glow_size",
+      "min": 200,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "label": "Glow size",
+      "default": 500
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Border",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Hover background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_border_color",
+      "label": "Hover border",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "min": 20,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 400,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "label": "Content width",
+      "default": 900
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "min": 300,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "label": "Minimum height",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 20,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 20,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "min": 20,
+      "max": 80,
+      "step": 10,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_margin",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Eyebrow bottom margin",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "heading_margin",
+      "min": 12,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading bottom margin",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "button_margin",
+      "min": 20,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Button top margin",
+      "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "Radiance heading"
+    }
+  ]
+}
+{% endschema %}

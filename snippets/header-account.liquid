@@ -1,0 +1,73 @@
+{%- if shop.customer_accounts_enabled -%}
+  {% if customer %}
+    <details-disclosure class="por{% if class %} {{ class }}{% endif %}" data-ignore-hover="true">
+      <details class="disclosure">
+        <summary class="header__icon header__button-icon flex justify-center align-center header__account">
+          <div class="por flex justify-center align-center">
+            {% render 'icon-account' %}
+            <div class="flex justify-center align-center header__count-bubble font-body-semi-bold">
+              <span aria-hidden="true" class="flex justify-center align-center">
+                {%- liquid
+                  assign initial = customer.email | first
+            
+                  if customer.first_name != blank
+                    assign initial = customer.first_name | first
+                  endif
+                -%}
+                {{ initial }}
+              </span>
+            </div>
+          </div>
+        </summary>
+        <div class="disclosure__list-wrapper disclosure__list-wrapper--bottom flex flex-column header__account__popover header__account__popover--{{ position }} overflow-hidden">
+          <span class="h5">
+            {% if customer.first_name != blank %}
+              {{ 'customer.account.welcome_html' | t: first_name: customer.first_name }}
+            {% else %}
+              {{ 'customer.account.title' | t }}
+            {% endif %}
+          </span>
+          <span class="caption-large header__account__caption light">
+            {% if customer.email %}
+              {{ customer.email }}
+            {% elsif customer.phone %}
+              {{ customer.phone }}
+            {% endif %}
+          </span>
+          <div class="flex header__account__actions small-margin-top">
+            <a
+              href="{{ routes.account_addresses_url }}"
+              class="button"
+            >
+              {% render 'icon-account', icon_width: 16 %}
+              <span>{{ 'customer.account.profile' | t }}</span>
+            </a>
+            <a
+              href="{{ routes.account_url }}"
+              class="button button--secondary"
+              {% if customer %}
+                autofocus
+              {% endif %}
+            >
+              {% render 'icon-orders', icon_width: 16 %}
+              <span>{{ 'customer.account.orders' | t }}</span>
+            </a>
+          </div>
+        </div>
+      </details>
+    </details-disclosure>
+  {% else %}
+    <a href="{{ routes.account_login_url }}" class="header__icon header__icon--account link header__button-icon flex justify-center align-center{% if class %} {{ class }}{% endif %}">
+      {% render 'icon-account' %}
+      <span class="visually-hidden">
+        {%- liquid
+          if customer
+            echo 'customer.account_fallback' | t
+          else
+            echo 'customer.log_in' | t
+          endif
+        -%}
+      </span>
+    </a>
+  {% endif %}
+{%- endif -%}

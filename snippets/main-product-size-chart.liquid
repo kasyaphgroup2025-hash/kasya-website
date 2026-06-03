@@ -1,0 +1,20 @@
+{%- liquid 
+  assign variant_picker_block = section.blocks | where: "type", "sale_box" | first 
+-%}
+{%- if variant_picker_block and variant_picker_block.settings.size_chart_enable and variant_picker_block.settings.size_chart_link_label != blank -%}
+  {%- assign size_name = variant_picker_block.settings.size_chart_option -%}
+  {%- if product.options_by_name[size_name] -%}
+    <modal-dialog id="PopupModal-{{ variant_picker_block.id }}" class="popup-modal">
+      <div role="dialog" aria-label="{{ variant_picker_block.settings.size_chart_link_label | default: variant_picker_block.settings.size_chart_page.title }}" aria-modal="true" class="popup-modal__content" tabindex="-1">
+        <button id="ModalClose-{{ variant_picker_block.id }}" type="button" class="popup-modal__toggle" aria-label="{{ 'accessibility.close' | t }}">{% render 'icon-close' %}</button>
+        <div class="popup-modal__content-info">
+          <h1 class="h2">{{ variant_picker_block.settings.size_chart_page.title }}</h1>
+          <div class="rte element-small-margin-top">
+            {{ variant_picker_block.settings.size_chart_text }}
+            {{ variant_picker_block.settings.size_chart_page.content }}
+          </div>  
+        </div>
+      </div>
+    </modal-dialog>
+  {%- endif -%}  
+{%- endif -%}

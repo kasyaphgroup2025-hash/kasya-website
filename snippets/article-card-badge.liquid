@@ -1,0 +1,4 @@
+{%- if show_image and article_image and show_badge and article.tags.size > 0 -%}
+  {%- assign badge = article.tags | first -%}
+  <a href="{{ blog.url }}/tagged/{{ badge | handleize }}" class="link badge article-card__badge article-card__badge--{{ layout }} lh1 font-body-semi-bold">{{ badge }}</a>
+{%- endif -%}  

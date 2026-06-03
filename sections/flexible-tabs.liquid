@@ -1,0 +1,290 @@
+<style>
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+</style>
+{%-liquid
+  assign tab_list_title = ''
+  assign tab_list_content = ''
+  assign has_first_tab = false
+-%}
+{{ 'component-tabs.css' | asset_url | stylesheet_tag }}
+<div class="color-{{ section.settings.color_scheme }} gradient isolate section-{{ section.id }}-padding">
+  <custom-tabs class="db page-width{% if section.settings.grid_layout == 'stretched_grid' %}--full{% endif %} tabs tabs--use-offset tabs--{{ section.settings.tab_mode }}" data-mode="{{ section.settings.tab_mode }}" data-sticky="{{ section.settings.sticky_tablist }}">
+    {%- capture tabs_content -%}
+      {% content_for 'blocks' %}
+    {%- endcapture -%}
+    {%- if tabs_content != blank and tabs_content != '' -%}
+      {%- assign tab_list = tabs_content | strip | split: '<!--FLEXIBLE_TAB_ITEM-->' -%}
+      {%- if tab_list.size > 0 -%}
+        {%-liquid
+          for tab in tab_list
+            assign tab_info = tab | split: '<!--FLEXIBLE_TAB_SPLIT-->'
+            if has_first_tab
+              assign tab_title = tab_info[0] | replace: 'RICH_SELECTED_TAB_HOLDER', 'false' | replace: 'RICH_TAB_INDEX_HOLDER', ' tabindex="-1"'
+              assign tab_content = tab_info[1] | replace: 'RICH_ACTIVE_CONTENT_HOLDER', ''
+            else
+              assign tab_title = tab_info[0] | replace: 'RICH_SELECTED_TAB_HOLDER', 'true' | replace: 'RICH_TAB_INDEX_HOLDER', ''
+              assign tab_content = tab_info[1] | replace: 'RICH_ACTIVE_CONTENT_HOLDER', ' active'
+              assign has_first_tab = true
+            endif
+            assign tab_list_title = tab_list_title | append: tab_title
+            assign tab_list_content = tab_list_content | append: tab_content
+          endfor
+        -%}
+        <div class="tabs__title-list-wrapper tabs__title-list-wrapper--{{ section.settings.tab_mode }} flex{% if section.settings.sticky_tablist %} tabs__title-list-wrapper--sticky{% endif %}">
+          <div class="tabs__title-list">
+            <ul class="margin0 list-unstyled tabs__title-list__content" role="tablist" aria-label="{{ section.settings.tabs_label | escape }}">
+              {{ tab_list_title }}
+            </ul>
+          </div>
+        </div>
+        <div class="tabs__content-list element-small-margin-top{% if section.settings.tab_mode == 'scroll' %} flex flex-column tabs__content-list--scroll{% endif %}">
+          {{- tab_list_content -}}
+        </div>
+      {%- endif -%}
+    {%- endif -%}  
+  </custom-tabs>
+</div>
+{%- unless tab_list_content != blank and tab_list_content != '' -%}
+  {%- if request.design_mode == false -%}
+    <style>.section-{{ section.id }}-padding {display:none;}</style>
+  {%- endif -%}
+{%- endunless -%}
+{% schema %}
+{
+  "name": "t:names.flexible_tabs",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "grid_layout",
+      "options": [
+        {
+          "value": "stretched_grid",
+          "label": "t:sections.all.grid_layout.options_2.label"
+        },
+        {
+          "value": "grid",
+          "label": "t:sections.all.grid_layout.options_3.label"
+        }
+      ],
+      "default": "grid",
+      "label": "t:sections.all.grid_layout.label"
+    },
+    {
+      "type": "select",
+      "id": "tab_mode",
+      "label": "t:settings.tab_mode",
+      "options": [
+        {
+          "value": "tabbed",
+          "label": "t:options.tabbed"
+        },
+        {
+          "value": "scroll",
+          "label": "t:options.scroll"
+        }
+      ],
+      "default": "tabbed"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_tablist",
+      "label": "t:settings.tabs_sticky",
+      "info": "t:info.tabs_sticky",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "tabs_label",
+      "label": "t:settings.tabs_label",
+      "info": "t:info.tabs_label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_flexible-tab"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.flexible_tabs",
+      "category": "t:categories.layout",
+      "blocks": {
+        "tab_1": {
+          "type": "_flexible-tab",
+          "settings": {
+            "heading": "Storytelling"
+          },
+          "blocks": {
+            "group": {
+              "type": "group",
+              "blocks": {
+                "media_with_text": {
+                  "type": "media-with-text",
+                  "blocks": {
+                    "media-block": {
+                      "type": "_media",
+                      "static": true,
+                      "settings": {
+                        "media_type": "image",
+                        "source": "uploaded",
+                        "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+                      }
+                    },
+                    "content-box": {
+                      "type": "_content-box-with-text",
+                      "static": true,
+                      "blocks": {
+                        "group-content-banner": {
+                          "type": "_basic-group",
+                          "blocks": {
+                            "text": {
+                              "type": "text",
+                              "settings": {
+                                "text": "Heading",
+                                "html_tag": "h1"
+                              }
+                            },
+                            "rich_text": {
+                              "type": "rich-text"
+                            },
+                            "button": {
+                              "type": "button"
+                            }
+                          },
+                          "block_order": ["text", "rich_text", "button"]
+                        }
+                      },
+                      "block_order": ["group-content-banner"]
+                    }
+                  }
+                }
+              },
+              "block_order": ["media_with_text"]
+            }
+          },
+          "block_order": ["group"]
+        },
+        "tab_2": {
+          "type": "_flexible-tab",
+          "settings": {
+            "heading": "Banner"
+          },
+          "blocks": {
+            "group": {
+              "type": "group",
+              "blocks": {
+                "media-banner": {
+                  "type": "media-banner",
+                  "blocks": {
+                    "group-content-banner": {
+                      "type": "_content-box",
+                      "static": true,
+                      "blocks": {
+                        "basic_group": {
+                          "type": "_basic-group",
+                          "blocks": {
+                            "text": {
+                              "type": "text",
+                              "settings": {
+                                "text": "Heading",
+                                "html_tag": "h1"
+                              }
+                            },
+                            "rich_text": {
+                              "type": "rich-text"
+                            },
+                            "button": {
+                              "type": "button"
+                            }
+                          },
+                          "block_order": ["text", "rich_text", "button"]
+                        }
+                      },
+                      "block_order": ["basic_group"]
+                    }
+                  }
+                }
+              },
+              "block_order": ["media-banner"]
+            }
+          },
+          "block_order": ["group"]
+        },
+        "tab_3": {
+          "type": "_flexible-tab",
+          "settings": {
+            "heading": "Video"
+          },
+          "blocks": {
+            "group": {
+              "type": "group",
+              "blocks": {
+                "video": {
+                  "type": "video",
+                  "name": "t:names.video",
+                  "settings": {
+                    "source": "uploaded",
+                    "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+                  }
+                }
+              },
+              "block_order": [
+                "video"
+              ]
+            }
+          },
+          "block_order": [
+            "group"
+          ]
+        }
+      },
+      "block_order": ["tab_1","tab_2","tab_3"]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header"]
+  }
+}
+{% endschema %}

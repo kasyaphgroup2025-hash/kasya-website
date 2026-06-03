@@ -1,0 +1,74 @@
+{% comment %}
+    Renders share buttons.
+
+    Accepts:
+    - share_url: {String} the absolute URL you want to share.
+    - title: {String} product title or article title.
+    - obj: {Object} Section or block object.
+    - featured_media: {Object} the featured media of the article.
+    - enable_floating_layout: Display the sharing button in floating layout.
+
+    Usage:
+    {% render 'main-blog-share', share_url: share_url, title: title, section: section, featured_media: article.image %}
+{% endcomment %}
+{%- liquid
+	if enable_floating_layout
+		assign tooltip_pos = 'left'
+	else
+		assign tooltip_pos = 'top'	
+	endif	
+-%}
+<share-button id="Share-{{ section.id }}" class="share-button flex{% if enable_floating_layout %} por{% endif %}">
+	<input type="hidden"
+		id="url"
+		value="{{ share_url }}"
+		>
+	<button class="share-button__button flex align-center large-up-hide button button--medium{% if enable_floating_layout %} share-button__button--article share-button__button--floating{% endif %}">
+		{% render 'icon-share' %}
+		<span{% if hidden_text_mobile %} class="small-hide"{% endif %}>{{ 'blogs.article.share' | t }}</span>	
+	</button>
+	<div class="share-button__network{% if enable_floating_layout %} share-button__network--floating{% endif %} w100 flex small-hide medium-hide">
+    <ul role="list" class="share-button__network__list{% if enable_floating_layout %} share-button__network__list--floating justify-center{% endif %} list-unstyled flex flex-wrap align-center">
+			{%- if obj.settings.share_on_facebook -%}
+				<li>
+					<a target="_blank" href="//www.facebook.com/sharer.php?u={{ share_url | url_encode }}" rel="nofollow" class="bt-tooltip share-button__network__link tap-area-icon flex align-center justify-center" aria-label="{{ 'general.social.alt_text.share_on_facebook' | t | escape }}" data-no-instant>
+						{%- render 'icon-facebook', icon_width: 20 -%}
+						<span class="bt-tooltip__inner bt-tooltip__inner--{{ tooltip_pos }}">{{ 'general.social.alt_text.share_on_facebook' | t | escape }}</span>
+					</a>
+				</li>
+			{%- endif -%}
+			{%- if obj.settings.share_on_twitter -%}
+				<li>
+					<a target="_blank" href="//twitter.com/intent/tweet?text={{ title | url_param_escape }}&amp;url={{ share_url | url_encode }}" rel="nofollow" class="bt-tooltip share-button__network__link tap-area-icon flex align-center justify-center" aria-label="{{ 'general.social.alt_text.share_on_twitter' | t | escape }}" data-no-instant>
+						{%- render 'icon-twitter', icon_width: 20 -%}
+						<span class="bt-tooltip__inner bt-tooltip__inner--{{ tooltip_pos }}">{{ 'general.social.alt_text.share_on_twitter' | t | escape }}</span>
+					</a>
+				</li>
+			{%- endif -%}
+			{%- if obj.settings.share_on_pinterest -%}
+				<li>
+					<a target="_blank" href="//pinterest.com/pin/create/button/?{% if featured_media %}media={{ featured_media | image_url: width: 1024, height: 1024 | url_encode }}&amp;{% endif %}description={{ title | url_param_escape }}&amp;url={{ share_url | url_encode }}" rel="nofollow" class="bt-tooltip share-button__network__link tap-area-icon flex align-center justify-center" aria-label="{{ 'general.social.alt_text.share_on_pinterest' | t | escape }}" data-no-instant>
+						{%- render 'icon-pinterest', icon_width: 20 -%}
+						<span class="bt-tooltip__inner bt-tooltip__inner--{{ tooltip_pos }}">{{ 'general.social.alt_text.share_on_pinterest' | t | escape }}</span>
+					</a>
+				</li>
+			{%- endif -%}
+			{%- if obj.settings.share_on_email -%}
+				<li>
+					<a target="_blank" href="mailto:?subject={{ title }}&amp;body={{ share_url | url_encode }}" rel="nofollow" class="bt-tooltip share-button__network__link tap-area-icon flex align-center justify-center" aria-label="{{ 'general.social.alt_text.share_by_email' | t | escape }}" data-no-instant>
+						{%- render 'icon-email', icon_width: 20 -%}
+						<span class="bt-tooltip__inner bt-tooltip__inner--{{ tooltip_pos }}">{{ 'general.social.alt_text.share_by_email' | t | escape }}</span>
+					</a>
+				</li>
+			{%- endif -%}
+			{%- if obj.settings.share_link -%}
+				<li>
+					<button type="button" class="bt-tooltip share-button__network__link tap-area-icon share-button__network__link--copy flex align-center justify-center" aria-label="{{ 'general.share.copy_to_clipboard' | t | escape }}" data-no-instant>
+						{%- render 'icon-link', icon_width: 20 -%}
+						<span class="bt-tooltip__inner bt-tooltip__inner--{{ tooltip_pos }}">{{ 'general.share.copy_to_clipboard' | t | escape }}</span>
+					</button>
+				</li>
+			{%- endif -%}
+		</ul>
+	</div>
+</share-button>

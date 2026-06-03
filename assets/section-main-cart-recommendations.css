@@ -1,0 +1,7 @@
+.main-cart-recommendations__loading, .main-cart-recommendations.loading .main-cart-recommendations__list {
+  display: none;
+}
+
+.main-cart-recommendations.loading .main-cart-recommendations__loading {
+	display: block;
+}

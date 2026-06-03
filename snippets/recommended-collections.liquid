@@ -1,0 +1,47 @@
+{%- doc -%}
+  Display recommended collections when the cart is empty. Used in the cart drawer and cart page.
+
+  @param {object} section_object - The section object
+  @param {string} collections_layout - The layout name. Accepted values: "grid" or "list".
+{%- enddoc -%}
+
+<ul class="recommended-collections recommended-collections--{{ collections_layout }}
+  collection-list
+  contains-card
+  contains-card--collection
+  {% if collections_layout == 'list' %}flex flex-column list-unstyled{% else %}grid grid--2-col{% endif %}
+  collection-list--{{ section_object.settings.recommended_collection_list.count }}-items"
+  role="list"
+>
+  {%- if collections_layout == 'list' -%}
+    {%- for rc in section_object.settings.recommended_collection_list -%}
+      <li class="recommended-collections__item{% if rc.featured_image == nil %} recommended-collections__item--no-media{% endif %}">
+        {%- assign featured_image = rc.featured_image -%}
+        <div class="recommended-collections__list-item custom-gap align-center w100 por background-input">
+          {%- if featured_image != blank -%}
+            <div class="media">
+              {{ featured_image | image_url: width: 100, height: 100, crop: 'center' | image_tag: loading: 'lazy', class: 'aspect-ratio' }}  
+            </div>
+          {%- else -%}
+            <div class="flex justify-center align-center">
+              {%- render 'icon-picker', icon: 'collection', icon_width: 34 -%}
+            </div>
+          {%- endif -%}
+          <a class="full-link full-unstyled-link flex-grow-1 heading-font font-heading-extra-bold text-small left" href="{{ rc.url }}">{{ rc.title }}</a>
+          {%- render 'icon-picker', icon: 'chevron_right', icon_width: 16 -%}
+        </div>
+      </li>
+    {%- endfor -%}
+  {%- else -%}  
+    {%- for rc in section_object.settings.recommended_collection_list -%}
+      {%- assign placeholder_image_index = forloop.index0 | modulo: 4 | plus: 1 -%}
+      {%- assign placeholder_image = 'collection-apparel-' | append: placeholder_image_index -%}
+      <li class="recommended-collections__item grid__item{% if rc.featured_image == nil %} recommended-collections__item--no-media{% endif %}">
+        {% render 'card-collection', card_collection: rc , media_aspect_ratio: 'adapt', columns_desktop: 2, columns_tablet: 2, columns_mobile: 2, placeholder_image: placeholder_image, show_title: section_object.settings.collection_card_show_title, small_title_mobile: true %}
+      </li>
+    {%- endfor -%}
+  {%- endif -%}
+</ul>
+<a href="{{ settings.continue_button_link }}" class="button element-small-margin-top w100">
+  <span>{{ 'general.continue_shopping' | t }}</span>
+</a>    

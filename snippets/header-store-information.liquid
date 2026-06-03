@@ -1,0 +1,19 @@
+{%- if store_information_blocks.size > 0 -%}
+	<ul class="header__store-information__list list-unstyled flex{% if add_classes %} {{ add_classes }}{% endif %}">
+		{%- for store_info in store_information_blocks -%}
+			<li>
+				{%- if store_info.settings.link -%}
+					<a href="{{ store_info.settings.link }}" role="link" aria-label="{{ store_info.settings.title | escape }}" class="header__store-information__item header__store-information__item--link flex align-center link-effect-no-underline color-foreground header__icon__text">
+						{%- render 'icon-picker', icon: store_info.settings.icon, icon_width: 16 -%}
+						<span>{{ store_info.settings.title }}</span>
+					</a>
+				{%- else -%}
+				<div class="header__store-information__item flex align-center header__icon__text">
+					{%- render 'icon-picker', icon: store_info.settings.icon, icon_width: 16 -%}
+					<span>{{ store_info.settings.title }}</span>
+				</div>
+				{%- endif -%}  
+			</li>
+		{%- endfor -%}  
+	</ul>
+{%- endif -%}  

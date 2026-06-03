@@ -1,0 +1,515 @@
+{%- if request.design_mode and section.blocks.size > 0 -%}
+	{{ 'section-background-color-swatches-admin.css' | asset_url | stylesheet_tag }}
+  <link rel="stylesheet" href="{{ 'component-tooltip.css' | asset_url }}" media="print" onload="this.media='all'">
+  <noscript>{{ 'component-tooltip.css' | asset_url | stylesheet_tag }}</noscript>
+	<div class="background-color-swatches__inner color-background-1">
+    <div class="page-width element-marign-top">
+      <h2 class="title center">{{ 'sections.background-color-swatches.preview_title' | t }}</h2>
+      <h3 class="caption caption-large">{{ 'sections.background-color-swatches.preview_description' | t }}</h3>
+      <div class="preview-colors">
+        {%- assign color_items = section.blocks | where: 'type', 'color_item' -%}
+        {%- assign group_items = section.blocks | where: 'type', 'group_item' -%}
+        {%- if color_items.size > 0 -%}
+          <div class="grid grid--2-col grid--4-col-tablet grid--6-col-desktop">
+            {%- for block in color_items -%}
+              <div class="grid__item flex align-center" {{ block.shopify_attributes }}>
+                <span class="flex justify-center align-center color-item-background{% unless block.settings.gradient_background != blank %} color-item-background--border{% endunless %}" data-color="{{ block.settings.title | handleize }}">
+                  {%- render 'icon-checkmark', add_classes: 'color-item-background__icon' -%}
+                </span>
+                <label>{{ block.settings.title | default: 'Color name' }}</label>
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+        {%- if group_items.size > 0 -%}
+          {%- for block in group_items -%}
+            <div class="background-color-swatches__group-item" {{ block.shopify_attributes }}>
+              <h4 class="background-color-swatches__group-item__heading center">{{ 'sections.background-color-swatches.group_item' | t: index: forloop.index }}</h4>
+              <div class="grid grid--2-col grid--4-col-tablet grid--6-col-desktop">
+                {%- for i in (1..12) -%}
+                  {%-liquid
+                    assign title_index = 'title_' | append: i
+                    assign gradient_background_index = 'gradient_background_' | append: i
+                  -%}
+                  {%- if block.settings[title_index] != blank -%}
+                    <div class="grid__item flex align-center">
+                      <span class="flex justify-center align-center color-item-background{% unless block.settings[gradient_background_index] != blank %} color-item-background--border{% endunless %}" data-color="{{ block.settings[title_index] | handleize }}">
+                        {%- render 'icon-checkmark', add_classes: 'color-item-background__icon' -%}
+                      </span>
+                      <label>{{ block.settings[title_index] | default: 'Color name' }}</label>
+                    </div>
+                  {%- endif -%}  
+                {%- endfor -%}  
+              </div>
+            </div>  
+          {%- endfor -%}  
+        {%- endif -%}  
+      </div>
+    </div>
+	</div>
+  <button type="button" onclick="this.closest('.background-color-swatches').querySelector('.background-color-swatches__inner').classList.remove('open')" class="color-inverse background-color-swatches__button background-color-swatches__button--close flex align-center justify-center tap-area-icon bt-tooltip">
+    {% render 'icon-close' %}
+    <span class="bt-tooltip__inner bt-tooltip__inner--right color-background-1">{{ 'accessibility.close' | t }}</span>
+  </button>
+  <button type="button" onclick="this.closest('.background-color-swatches').querySelector('.background-color-swatches__inner').classList.add('open')" class="color-background-1 background-color-swatches__button background-color-swatches__button--open align-center justify-center bt-tooltip">
+    <svg viewBox="0 0 20 20" class="" focusable="false" aria-hidden="true">
+      <path fill-rule="evenodd" d="M18.868 12.48a4.529 4.529 0 0 0 1.132-3.176v-.19a9.998 9.998 0 0 0-1.916-5.041 10.03 10.03 0 0 0-14.53-1.7 10.005 10.005 0 0 0-3.303 9.848 10.001 10.001 0 0 0 2.566 4.744 10.02 10.02 0 0 0 4.66 2.725 19.9 19.9 0 0 0 4.007.31h1.153c.375 0 .734-.195.985-.474a1.47 1.47 0 0 0 .378-1.019 1.5 1.5 0 0 0-1.5-1.5c-.398 0-.795-.167-1.076-.448a1.5 1.5 0 0 1 1.062-2.562h3.366a4.54 4.54 0 0 0 3.016-1.517zm-6.868-8.98a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-6.5 3.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-1 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm10-4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" fill="currentColor"></path>
+    </svg>
+    <span class="bt-tooltip__inner bt-tooltip__inner--right">{{ 'sections.background-color-swatches.preview_title' | t }}</span>
+  </button>
+{%- endif -%}
+<style>
+	{%- for block in section.blocks -%}
+    {%- if block.type == 'color_item' -%}
+			{%- if block.settings.title != blank -%}
+				[data-color="{{ block.settings.title | handleize }}"]{
+          --color-swatch-background: {{ block.settings.colors_background.red }}, {{ block.settings.colors_background.green }}, {{ block.settings.colors_background.blue }};
+          {%- if block.settings.background_image != blank -%}
+            --background-position: {{ block.settings.background_image.presentation.focal_point }};
+						--background-image: url({{ block.settings.background_image | image_url: width: 100 }});
+            --color-check: {%- if block.settings.color_checkmark_icon != blank -%}{{ block.settings.color_checkmark_icon.red }}, {{ block.settings.color_checkmark_icon.green }}, {{ block.settings.color_checkmark_icon.blue }}{%- else -%}255, 255, 255{%- endif -%};
+					{%- else -%}
+            {%- if block.settings.color_checkmark_icon != blank -%}--color-check: {{ block.settings.color_checkmark_icon.red }}, {{ block.settings.color_checkmark_icon.green }}, {{ block.settings.color_checkmark_icon.blue }};{%- endif -%}
+					{%- endif -%}
+          {% if block.settings.gradient_background != blank %}--background-gradient: {{ block.settings.gradient_background }}{% endif %};
+				}
+			{%- endif -%}
+    {%- else -%}
+      {%- for i in (1..12) -%}
+        {%-liquid
+          assign title_index = 'title_' | append: i
+          assign colors_background_index = 'colors_background_' | append: i
+          assign gradient_background_index = 'gradient_background_' | append: i
+          assign background_image_index = 'background_image_' | append: i
+          assign color_checkmark_icon_index = 'color_checkmark_icon_' | append: i
+        -%}
+        {%- if block.settings[title_index] != blank -%}
+          [data-color="{{ block.settings[title_index] | handleize }}"]{
+            --color-swatch-background: {{ block.settings[colors_background_index].red }}, {{ block.settings[colors_background_index].green }}, {{ block.settings[colors_background_index].blue }};
+            {%- if block.settings[background_image_index] != blank -%}
+              --background-position: {{ block.settings[background_image_index].presentation.focal_point }};
+              --background-image: url({{ block.settings[background_image_index] | image_url: width: 100 }});
+              --color-check: {%- if block.settings[color_checkmark_icon_index] != blank -%}{{ block.settings[color_checkmark_icon_index].red }}, {{ block.settings[color_checkmark_icon_index].green }}, {{ block.settings[color_checkmark_icon_index].blue }}{%- else -%}255, 255, 255{%- endif -%};
+            {%- else -%}
+              {%- if block.settings[color_checkmark_icon_index] != blank -%}--color-check: {{ block.settings[color_checkmark_icon_index].red }}, {{ block.settings[color_checkmark_icon_index].green }}, {{ block.settings[color_checkmark_icon_index].blue }};{%- endif -%}
+            {%- endif -%}
+            {% if block.settings[gradient_background_index] != blank %}--background-gradient: {{ block.settings[gradient_background_index] }}{% endif %};
+          }
+        {%- endif -%}  
+      {%- endfor -%}    
+    {%- endif -%}  
+	{%- endfor -%}
+  .color-swatches-variant {
+    background-image: var(--background-image);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-origin: content-box;
+  }
+  {%- if request.design_mode -%}
+  .color-item-background {
+    --hover-offset: -.4rem;
+    --default-check-color: var(--color-foreground);
+    --color-check-icon: var(--color-check, var(--default-check-color));
+    box-shadow: inset 1px 3px 0 rgb(var(--color-foreground),.1);
+    border-radius: var(--variants-pills-color-radius);
+    width: 3rem;
+    height: 3rem;
+    color: rgb(var(--color-check-icon));
+  }
+  {%- endif -%}
+</style>
+{% schema %}
+{
+  "name": "t:sections.background-color-swatches.name",
+  "class": "section background-color-swatches",
+  "max_blocks": 50,
+  "blocks": [
+    {
+      "type": "color_item",
+      "name": "t:sections.background-color-swatches.blocks.color_item.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.title.label"
+        },
+        {
+          "type": "color",
+          "id": "colors_background",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.colors_background.label"
+        },
+        {
+          "type": "color_background",
+          "id": "gradient_background",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.gradient_background.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.background_image.label"
+        },
+        {
+          "type": "color",
+          "id": "color_checkmark_icon",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.color_checkmark_icon.label"
+        }
+      ]
+    },
+    {
+      "type": "group_item",
+      "name": "t:sections.background-color-swatches.blocks.group_item.name",
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:sections.background-color-swatches.blocks.group_item.settings.color_1_header.content"
+        },
+        {
+          "type": "text",
+          "id": "title_1",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.title.label"
+        },
+        {
+          "type": "color",
+          "id": "colors_background_1",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.colors_background.label"
+        },
+        {
+          "type": "color_background",
+          "id": "gradient_background_1",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.gradient_background.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image_1",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.background_image.label"
+        },
+        {
+          "type": "color",
+          "id": "color_checkmark_icon_1",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.color_checkmark_icon.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.background-color-swatches.blocks.group_item.settings.color_2_header.content"
+        },
+        {
+          "type": "text",
+          "id": "title_2",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.title.label"
+        },
+        {
+          "type": "color",
+          "id": "colors_background_2",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.colors_background.label"
+        },
+        {
+          "type": "color_background",
+          "id": "gradient_background_2",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.gradient_background.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image_2",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.background_image.label"
+        },
+        {
+          "type": "color",
+          "id": "color_checkmark_icon_2",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.color_checkmark_icon.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.background-color-swatches.blocks.group_item.settings.color_3_header.content"
+        },
+        {
+          "type": "text",
+          "id": "title_3",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.title.label"
+        },
+        {
+          "type": "color",
+          "id": "colors_background_3",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.colors_background.label"
+        },
+        {
+          "type": "color_background",
+          "id": "gradient_background_3",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.gradient_background.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image_3",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.background_image.label"
+        },
+        {
+          "type": "color",
+          "id": "color_checkmark_icon_3",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.color_checkmark_icon.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.background-color-swatches.blocks.group_item.settings.color_4_header.content"
+        },
+        {
+          "type": "text",
+          "id": "title_4",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.title.label"
+        },
+        {
+          "type": "color",
+          "id": "colors_background_4",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.colors_background.label"
+        },
+        {
+          "type": "color_background",
+          "id": "gradient_background_4",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.gradient_background.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image_4",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.background_image.label"
+        },
+        {
+          "type": "color",
+          "id": "color_checkmark_icon_4",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.color_checkmark_icon.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.background-color-swatches.blocks.group_item.settings.color_5_header.content"
+        },
+        {
+          "type": "text",
+          "id": "title_5",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.title.label"
+        },
+        {
+          "type": "color",
+          "id": "colors_background_5",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.colors_background.label"
+        },
+        {
+          "type": "color_background",
+          "id": "gradient_background_5",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.gradient_background.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image_5",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.background_image.label"
+        },
+        {
+          "type": "color",
+          "id": "color_checkmark_icon_5",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.color_checkmark_icon.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.background-color-swatches.blocks.group_item.settings.color_6_header.content"
+        },
+        {
+          "type": "text",
+          "id": "title_6",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.title.label"
+        },
+        {
+          "type": "color",
+          "id": "colors_background_6",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.colors_background.label"
+        },
+        {
+          "type": "color_background",
+          "id": "gradient_background_6",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.gradient_background.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image_6",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.background_image.label"
+        },
+        {
+          "type": "color",
+          "id": "color_checkmark_icon_6",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.color_checkmark_icon.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.background-color-swatches.blocks.group_item.settings.color_7_header.content"
+        },
+        {
+          "type": "text",
+          "id": "title_7",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.title.label"
+        },
+        {
+          "type": "color",
+          "id": "colors_background_7",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.colors_background.label"
+        },
+        {
+          "type": "color_background",
+          "id": "gradient_background_7",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.gradient_background.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image_7",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.background_image.label"
+        },
+        {
+          "type": "color",
+          "id": "color_checkmark_icon_7",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.color_checkmark_icon.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.background-color-swatches.blocks.group_item.settings.color_8_header.content"
+        },
+        {
+          "type": "text",
+          "id": "title_8",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.title.label"
+        },
+        {
+          "type": "color",
+          "id": "colors_background_8",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.colors_background.label"
+        },
+        {
+          "type": "color_background",
+          "id": "gradient_background_8",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.gradient_background.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image_8",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.background_image.label"
+        },
+        {
+          "type": "color",
+          "id": "color_checkmark_icon_8",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.color_checkmark_icon.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.background-color-swatches.blocks.group_item.settings.color_9_header.content"
+        },
+        {
+          "type": "text",
+          "id": "title_9",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.title.label"
+        },
+        {
+          "type": "color",
+          "id": "colors_background_9",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.colors_background.label"
+        },
+        {
+          "type": "color_background",
+          "id": "gradient_background_9",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.gradient_background.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image_9",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.background_image.label"
+        },
+        {
+          "type": "color",
+          "id": "color_checkmark_icon_9",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.color_checkmark_icon.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.background-color-swatches.blocks.group_item.settings.color_10_header.content"
+        },
+        {
+          "type": "text",
+          "id": "title_10",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.title.label"
+        },
+        {
+          "type": "color",
+          "id": "colors_background_10",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.colors_background.label"
+        },
+        {
+          "type": "color_background",
+          "id": "gradient_background_10",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.gradient_background.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image_10",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.background_image.label"
+        },
+        {
+          "type": "color",
+          "id": "color_checkmark_icon_10",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.color_checkmark_icon.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.background-color-swatches.blocks.group_item.settings.color_11_header.content"
+        },
+        {
+          "type": "text",
+          "id": "title_11",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.title.label"
+        },
+        {
+          "type": "color",
+          "id": "colors_background_11",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.colors_background.label"
+        },
+        {
+          "type": "color_background",
+          "id": "gradient_background_11",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.gradient_background.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image_11",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.background_image.label"
+        },
+        {
+          "type": "color",
+          "id": "color_checkmark_icon_11",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.color_checkmark_icon.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.background-color-swatches.blocks.group_item.settings.color_12_header.content"
+        },
+        {
+          "type": "text",
+          "id": "title_12",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.title.label"
+        },
+        {
+          "type": "color",
+          "id": "colors_background_12",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.colors_background.label"
+        },
+        {
+          "type": "color_background",
+          "id": "gradient_background_12",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.gradient_background.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image_12",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.background_image.label"
+        },
+        {
+          "type": "color",
+          "id": "color_checkmark_icon_12",
+          "label": "t:sections.background-color-swatches.blocks.all.settings.color_checkmark_icon.label"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}	

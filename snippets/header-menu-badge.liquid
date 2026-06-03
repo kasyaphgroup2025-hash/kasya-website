@@ -1,0 +1,30 @@
+{%- liquid
+  assign blocks = blocks_index | split: ','
+-%}
+{%- for block_index in blocks -%}
+  {% liquid
+    assign block_index_number = block_index | plus: 0
+    assign block = section.blocks[block_index_number]
+    assign show_badge = true
+    if block.settings.trigger_parent != blank
+      assign show_badge = false
+      assign parent_compare = block.settings.trigger_parent | downcase | handle
+      if parent_item
+        assign parent_handle = parent_item.title | downcase | handle
+        if parent_handle == parent_compare
+          assign show_badge = true
+        endif
+      endif
+    endif
+  %}
+
+  {%- if block.settings.text != blank and show_badge -%}
+    <span
+      class="header__menu-badge heading-font font-heading-bold{% if is_in_drawer %} header__menu-badge--in-drawer{% endif %}{% if custom_classes %} {{ custom_classes }}{% endif %}"
+      style="color:{{ block.settings.text_color }};background:{{ block.settings.background_color }};border-color:{{ block.settings.background_color }};"
+      {{ block.shopify_attributes }}
+    >
+      {{ block.settings.text }}
+    </span>
+  {%- endif -%}
+{%- endfor -%}

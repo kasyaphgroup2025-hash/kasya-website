@@ -1,0 +1,222 @@
+<product-recommendations class="complementary-products no-js-hidden db{% if block.settings.make_collapsible_row %} is-accordion accordion{% endif %}" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ block.settings.product_list_limit }}&intent=complementary">
+  {%- if recommendations.performed and recommendations.products_count > 0 -%}
+    {%-liquid
+      assign section_id = section.id | append: '-' | append: block.id
+      assign has_footer = false
+    -%}
+    <aside aria-label="{{ 'accessibility.complementary_products' | t }}" {{ block.shopify_attributes }}>
+      <div class="complementary-products__container">
+        {%- if block.settings.make_collapsible_row -%}
+          <details-accordion class="product__accordion db">
+            <details id="Details-{{ block.id }}-{{ section.id }}" open>
+              <summary class="summary-accordion summary-accordion--has-hover flex justify-space-between align-center por">
+        {%- endif %}
+        <div class="summary__title flex align-center flex-grow-1">
+          {%- if block.settings.make_collapsible_row -%}
+            {%- render 'icon-picker', icon: block.settings.icon, add_classes: 'icon-accordion' -%}
+          {%- endif -%}
+          <h2 class="h4 accordion__title margin0 font-heading-bold complementary-products__title">
+            {{ block.settings.block_heading }}
+          </h2>
+        </div>
+        {%- if block.settings.make_collapsible_row -%}
+            <div class="summary-accordion__plus-minus-wrapper flex justify-center align-center">
+              <span class="summary-accordion__plus-minus por flex justify-center align-center">
+                <span class="summary-accordion__icon-line"></span>
+                <span class="summary-accordion__icon-line"></span>
+              </span>
+            </div>
+          </summary>
+        {%- endif -%}
+        <complementary-products id="complementary-products-{{ section.id }}" class="complementary complementary--standard db product__info-box{% if block.settings.make_collapsible_row %} complementary--accordion{% endif %}" tabindex="-1" role="group">
+          <form method="POST" accept-charset="UTF-8" enctype="multipart/form-data" class="product__sale-box product__info-box flex flex-column">
+            <div class="complementary__items product__sale-box__actions">
+              <ul class="list-unstyled recommendation-list complementary__product-list" role="list">
+                {%- for r_product in recommendations.products -%}
+                  {%- capture srcset -%}
+                    {%- if r_product.featured_image.width >= 275 -%}{{ r_product.featured_image | image_url: width: 275 }} 275w,{%- endif -%}
+                    {%- if r_product.featured_image.width >= 550 -%}{{ r_product.featured_image | image_url: width: 550 }} 550w,{%- endif -%}
+                    {%- if r_product.featured_image.width >= 710 -%}{{ r_product.featured_image | image_url: width: 710 }} 710w,{%- endif -%}
+                    {%- if r_product.featured_image.width >= 1420 -%}{{ r_product.featured_image | image_url: width: 1420 }} 1420w,{%- endif -%}
+                    {{ r_product.featured_image | image_url }} {{ r_product.featured_image.width }}w
+                  {%- endcapture -%}
+                  {%-liquid
+                    unless customer.b2b? or r_product.variants.size > 99
+                      assign has_footer = true
+                    endunless
+                  -%}
+                  <li class="complementary__item"{% if r_product.variants.size > 1 and r_product.featured_image != blank %} data-featured-image="{{ srcset }}"{% endif %}>
+                    <div class="complementary__item__info complementary__item__info--media{% unless r_product.has_only_default_variant %} complementary__item__info--has-variants{% endunless %}">
+                      {%- if  r_product.featured_image != blank -%}
+                        <a class="complementary__item__media-wrapper" href="{{ r_product.url }}" aria-label="{{ r_product.featured_image.alt | default: r_product.title | escape }}">
+                          <use-animate class="media media--{{ block.settings.image_ratio }}">
+                            <img
+                              class="complementary__item__image"
+                              srcset="{{ srcset }}"
+                              src="{{ r_product.featured_image | image_url: width: 150 }}"
+                              sizes="30rem"
+                              alt="{{ r_product.featured_image.alt }}"
+                              height="{{ r_product.featured_image.height }}"
+                              width="{{ r_product.featured_image.width }}"
+                              loading="lazy"
+                            >
+                          </use-animate>
+                        </a>
+                      {%- else -%}
+                        {{ r_product.title }}  
+                      {%- endif -%}
+                    </div>
+                    <div class="complementary__item__info complementary__item__name flex flex-column justify-center">
+                      <h3 class="h4 complementary__item__title margin0" id="rel-title-{{ section_id }}-{{ r_product.id }}">
+                        <a href="{{ r_product.url }}" class="link link-effect-no-underline">{{ r_product.title }}</a>
+                      </h3>
+                      {% render 'price', product: r_product, show_in_card: true, use_variant: true, use_custom_element: true %}
+                    </div>
+                    <div class="complementary__item__info complementary__item__info--variant flex align-center">
+                      {%- unless customer.b2b? or r_product.variants.size > 99 -%}
+                        {%- unless r_product.has_only_default_variant -%}
+                          <label class="form__label visually-hidden" for="Complementary-Option-{{ section_id }}-{{ forloop.index0 }}">
+                            {{ 'products.product.product_variants' | t }}
+                          </label>
+                          <div class="select">
+                            <select
+                              class="select__select complementary__item__select complementary-variant-id"
+                              name="items[][id]"
+                              id="Complementary-Option-{{ section_id }}-{{ forloop.index0 }}"
+                            >
+                              {%- for r_variant in r_product.variants -%}
+                                <option value="{{ r_variant.id | escape }}"
+                                  {% if r_variant.id == r_product.first_available_variant.id %} selected="selected"{% endif %}
+                                  data-price="{{ r_variant.price }}"
+                                  data-compare-at-price="{{ r_variant.compare_at_price }}"
+                                  data-available="{{ r_variant.available }}"
+                                  {% unless r_variant.available %}disabled{% endunless %}
+                                  {% if r_variant.featured_image != blank %} data-featured-image="{{ r_variant.featured_image.src | image_url }}" data-featured-image-width="{{ r_variant.featured_image.width }}"{% endif %}
+                                >
+                                  {{ r_variant.title }}
+                                </option>
+                              {%- endfor -%}
+                            </select>
+                            {% render 'icon-caret' %}
+                          </div>
+                        {%- else -%}
+                          <input type="hidden" name="items[][id]" value="{{ r_product.selected_or_first_available_variant.id }}" data-price="{{ r_product.selected_or_first_available_variant.price }}" data-compare-at-price="{{ r_product.selected_or_first_available_variant.compare_at_price }}" data-available="{{ r_product.selected_or_first_available_variant.available }}" class="complementary-variant-id">  
+                        {%- endunless -%}  
+                        {%- if r_product.available -%}
+                          <label class="form__label visually-hidden" for="Complementary-Quantity-{{ section_id }}-{{ r_product.id }}">
+                            {{ 'products.product.quantity.label' | t }}
+                          </label>
+                          <quantity-input class="quantity flex align-center color-foreground por complementary__item__quantity">
+                            <input class="quantity__input flex-grow-1 center background-input"
+                                type="number"
+                                name="quantity"
+                                id="Complementary-Quantity-{{ section_id }}-{{ r_product.id }}"
+                                min="0"
+                                value="0"
+                              >
+                            <div class="quantity__buttons flex flex-column flex-grow-1">    
+                              <button class="quantity__button flex justify-center align-center no-js-hidden w100 color-foreground" name="plus" type="button">
+                                <span class="visually-hidden">{{ 'products.product.quantity.increase' | t: product: r_product.title | escape }}</span>
+                                <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M10.6666 5.33331L5.99992 0.666646L1.33325 5.33331" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                              </button>
+                              <button class="quantity__button flex justify-center align-center no-js-hidden w100 color-foreground" name="minus" type="button">
+                                <span class="visually-hidden">{{ 'products.product.quantity.decrease' | t: product: r_product.title | escape }}</span>
+                                <svg width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M10.6666 1.16663L5.99992 5.83329L1.33325 1.16663" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                              </button>
+                            </div>
+                          </quantity-input>
+                        {%- endif -%}
+                      {%- else -%}
+                        <quick-view-modal-opener data-modal="#QuickView-Modal">
+                          <button
+                            type="button"
+                            class="button button--small"
+                            aria-haspopup="dialog"
+                            data-product-url="{{ r_product.url }}"
+                            tabindex="-1"
+                          >
+                            <span>{{ 'products.product.quick_view_button' | t }}</span>
+                            <div class="loading-overlay__spinner hidden">
+                              {%- render 'icon-cart-loading' -%}
+                            </div>
+                          </button>
+                        </quick-view-modal-opener>  
+                      {%- endunless -%}  
+                    </div>
+                  </li>
+                  {%- unless forloop.last -%}
+                    <li><hr class="complementary__separated-line"></li>
+                  {%- endunless -%}  
+                {%- endfor -%}
+              </ul>
+            </div>  
+            {%- if has_footer -%}
+              {%- if block.settings.total_enable or block.settings.button_enable -%}
+                <div class="complementary__actions w100 flex align-center product__sale-box__footer por flex justify-space-between">
+                  {%- if block.settings.total_enable -%}
+                    {%- liquid
+                      assign money_price = 0 | money
+                      if settings.currency_code_enabled
+                        assign money_price = 0 | money_with_currency
+                      endif
+                    -%}
+                    <div class="complementary__total flex flex-column">
+                      <span class="complementary__total__label text-small lh1">{{ block.settings.total_label }}</span>
+                      <product-price class="price complementary__total__price font-body-semi-bold">
+                        <div class="price__container">
+                          <div class="price__regular">
+                            <span class="price-item price-item--regular">
+                              {{ money_price }}
+                            </span>
+                          </div>
+                          <div class="price__sale">
+                            <span>
+                              <s class="price-item price-item--regular light">
+                                {{ money_price }}
+                              </s>
+                            </span>
+                            <span class="price-item price-item--sale price-item--last">
+                              {{ money_price }}
+                            </span>
+                          </div>
+                        </div>
+                      </product-price>
+                    </div>
+                  {%- endif -%}
+                  {%- if block.settings.button_enable -%}
+                    <button type="submit" class="button button--secondary button--medium" disabled>
+                      <span>
+                        {{ block.settings.button_label }}
+                      </span>
+                      <div class="loading-overlay__spinner hidden">
+                        {%- render 'icon-cart-loading' -%}
+                      </div>
+                    </button>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            {%- endif -%}
+          </form>
+        </complementary-products>
+        {%- if block.settings.make_collapsible_row -%}
+          </details>
+        </details-accordion>
+        {%- endif -%}  
+      </div>
+    </aside>
+  {%- endif -%}
+  {{ 'component-complementary-products.css' | asset_url | stylesheet_tag }}
+  {%- unless request.design_mode -%}
+    <script src="{{ 'product-price.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'complementary-products.js' | asset_url }}" defer="defer"></script>
+  {%- endunless -%}
+  <link rel="stylesheet" href="{{ 'quick-view.css' | asset_url }}" media="print" onload="this.media='all'">
+  {%- if block.settings.make_collapsible_row -%}
+    <script src="{{ 'details-accordion.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}  
+</product-recommendations>
+<script src="{{ 'product-recommendation.js' | asset_url }}" defer="defer"></script>

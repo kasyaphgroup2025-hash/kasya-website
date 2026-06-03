@@ -1,0 +1,564 @@
+{% comment %}
+  KasyaPH Product Landing Fit Confidence
+  Standalone section for model views and fit notes.
+{% endcomment %}
+
+<section class="kasya-fit-confidence" data-kasya-fit-confidence data-section-id="{{ section.id }}">
+  <div class="kasya-fit-confidence__inner">
+    <div class="kasya-fit-confidence__header">
+      {% if section.settings.heading != blank %}
+        <h2 class="kasya-fit-confidence__heading">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.subheading != blank %}
+        <p class="kasya-fit-confidence__subheading">
+          {{ section.settings.subheading }}
+        </p>
+      {% endif %}
+
+      <p class="kasya-fit-confidence__color" data-fit-color-shown hidden>
+        Color shown: <span data-fit-color-name></span>
+      </p>
+    </div>
+
+    <div class="kasya-fit-confidence__cards">
+      <article class="kasya-fit-confidence__card">
+        <div class="kasya-fit-confidence__media">
+          {% if section.settings.front_image != blank %}
+            <img
+              src="{{ section.settings.front_image | image_url: width: 900 }}"
+              data-fit-image="front"
+              data-default-src="{{ section.settings.front_image | image_url: width: 900 }}"
+              alt="{{ section.settings.front_label | escape }}"
+              width="900"
+              height="1200"
+              loading="lazy"
+            >
+            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="front" hidden>
+              {{ section.settings.front_label }}
+            </div>
+          {% else %}
+            <img
+              data-fit-image="front"
+              data-default-src=""
+              alt="{{ section.settings.front_label | escape }}"
+              width="900"
+              height="1200"
+              loading="lazy"
+              hidden
+            >
+            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="front">
+              {{ section.settings.front_label }}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="kasya-fit-confidence__card-copy">
+          <h3 class="kasya-fit-confidence__card-label">
+            {{ section.settings.front_label }}
+          </h3>
+          <p class="kasya-fit-confidence__card-description">
+            {{ section.settings.front_description }}
+          </p>
+        </div>
+      </article>
+
+      <article class="kasya-fit-confidence__card">
+        <div class="kasya-fit-confidence__media">
+          {% if section.settings.side_image != blank %}
+            <img
+              src="{{ section.settings.side_image | image_url: width: 900 }}"
+              data-fit-image="side"
+              data-default-src="{{ section.settings.side_image | image_url: width: 900 }}"
+              alt="{{ section.settings.side_label | escape }}"
+              width="900"
+              height="1200"
+              loading="lazy"
+            >
+            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="side" hidden>
+              {{ section.settings.side_label }}
+            </div>
+          {% else %}
+            <img
+              data-fit-image="side"
+              data-default-src=""
+              alt="{{ section.settings.side_label | escape }}"
+              width="900"
+              height="1200"
+              loading="lazy"
+              hidden
+            >
+            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="side">
+              {{ section.settings.side_label }}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="kasya-fit-confidence__card-copy">
+          <h3 class="kasya-fit-confidence__card-label">
+            {{ section.settings.side_label }}
+          </h3>
+          <p class="kasya-fit-confidence__card-description">
+            {{ section.settings.side_description }}
+          </p>
+        </div>
+      </article>
+
+      <article class="kasya-fit-confidence__card">
+        <div class="kasya-fit-confidence__media">
+          {% if section.settings.back_image != blank %}
+            <img
+              src="{{ section.settings.back_image | image_url: width: 900 }}"
+              data-fit-image="back"
+              data-default-src="{{ section.settings.back_image | image_url: width: 900 }}"
+              alt="{{ section.settings.back_label | escape }}"
+              width="900"
+              height="1200"
+              loading="lazy"
+            >
+            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="back" hidden>
+              {{ section.settings.back_label }}
+            </div>
+          {% else %}
+            <img
+              data-fit-image="back"
+              data-default-src=""
+              alt="{{ section.settings.back_label | escape }}"
+              width="900"
+              height="1200"
+              loading="lazy"
+              hidden
+            >
+            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="back">
+              {{ section.settings.back_label }}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="kasya-fit-confidence__card-copy">
+          <h3 class="kasya-fit-confidence__card-label">
+            {{ section.settings.back_label }}
+          </h3>
+          <p class="kasya-fit-confidence__card-description">
+            {{ section.settings.back_description }}
+          </p>
+        </div>
+      </article>
+    </div>
+
+    {% if section.settings.model_info != blank %}
+      <p class="kasya-fit-confidence__model">
+        {{ section.settings.model_info }}
+      </p>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="kasya-fit-confidence__notes-wrap">
+        <h3 class="kasya-fit-confidence__notes-heading">FIT NOTES</h3>
+
+        <ul class="kasya-fit-confidence__notes">
+          {% for block in section.blocks %}
+            {% if block.settings.note != blank %}
+              <li class="kasya-fit-confidence__note" {{ block.shopify_attributes }}>
+                {{ block.settings.note }}
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .kasya-fit-confidence {
+    --kasya-fit-text: #111111;
+    --kasya-fit-muted: #5d5d5d;
+    --kasya-fit-line: #e9e4dd;
+    --kasya-fit-soft: #f7f4ef;
+
+    background: #ffffff;
+    color: var(--kasya-fit-text);
+    font-family: inherit;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .kasya-fit-confidence * {
+    box-sizing: border-box;
+  }
+
+  .kasya-fit-confidence__inner {
+    padding: 30px 18px 34px;
+  }
+
+  .kasya-fit-confidence__header {
+    max-width: 520px;
+  }
+
+  .kasya-fit-confidence__heading {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+
+  .kasya-fit-confidence__subheading {
+    margin: 10px 0 0;
+    color: var(--kasya-fit-muted);
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .kasya-fit-confidence__color {
+    margin: 10px 0 0;
+    color: #303030;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 1.3;
+    text-transform: uppercase;
+  }
+
+  .kasya-fit-confidence__color span {
+    font-weight: 500;
+  }
+
+  .kasya-fit-confidence__cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 22px;
+  }
+
+  .kasya-fit-confidence__card {
+    display: grid;
+    grid-template-columns: 42% minmax(0, 1fr);
+    gap: 14px;
+    align-items: center;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--kasya-fit-line);
+  }
+
+  .kasya-fit-confidence__card:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .kasya-fit-confidence__media {
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--kasya-fit-soft);
+    aspect-ratio: 3 / 4;
+  }
+
+  .kasya-fit-confidence__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .kasya-fit-confidence__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    color: #7a746b;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .kasya-fit-confidence__card-copy {
+    min-width: 0;
+  }
+
+  .kasya-fit-confidence__card-label {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 850;
+    letter-spacing: 0.1em;
+    line-height: 1.15;
+    text-transform: uppercase;
+  }
+
+  .kasya-fit-confidence__card-description {
+    margin: 8px 0 0;
+    color: var(--kasya-fit-muted);
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .kasya-fit-confidence__model {
+    margin: 22px 0 0;
+    padding: 12px 14px;
+    border: 1px solid var(--kasya-fit-line);
+    border-radius: 6px;
+    color: #292929;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .kasya-fit-confidence__notes-wrap {
+    margin-top: 14px;
+  }
+
+  .kasya-fit-confidence__notes-heading {
+    margin: 0 0 10px;
+    color: #111111;
+    font-size: 12px;
+    font-weight: 850;
+    letter-spacing: 0.12em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .kasya-fit-confidence__notes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+
+  .kasya-fit-confidence__note {
+    position: relative;
+    padding-left: 18px;
+    color: var(--kasya-fit-muted);
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .kasya-fit-confidence__note::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: #111111;
+  }
+
+  @media screen and (min-width: 680px) {
+    .kasya-fit-confidence__inner {
+      padding: 42px 26px 46px;
+    }
+
+    .kasya-fit-confidence__heading {
+      font-size: 34px;
+    }
+
+    .kasya-fit-confidence__cards {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .kasya-fit-confidence__card {
+      display: block;
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .kasya-fit-confidence__card-copy {
+      margin-top: 12px;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const section = document.querySelector('[data-kasya-fit-confidence][data-section-id="{{ section.id }}"]');
+    if (!section) return;
+
+    const colorLabel = section.querySelector('[data-fit-color-shown]');
+    const colorName = section.querySelector('[data-fit-color-name]');
+    const shots = ['front', 'side', 'back'];
+
+    function updateShot(shot, src, displayColor) {
+      const image = section.querySelector(`[data-fit-image="${shot}"]`);
+      const placeholder = section.querySelector(`[data-fit-placeholder="${shot}"]`);
+      if (!image) return;
+
+      const nextSrc = src || image.dataset.defaultSrc || '';
+
+      if (nextSrc) {
+        if (image.getAttribute('src') !== nextSrc) {
+          image.setAttribute('src', nextSrc);
+        }
+
+        image.alt = `${displayColor} ${shot} view`.trim();
+        image.hidden = false;
+
+        if (placeholder) {
+          placeholder.hidden = true;
+        }
+
+        return;
+      }
+
+      image.removeAttribute('src');
+      image.hidden = true;
+
+      if (placeholder) {
+        placeholder.hidden = false;
+      }
+    }
+
+    function updateFitImages(state) {
+      if (!state || !state.color) return;
+
+      const displayColor = String(state.displayColor || state.color || '').trim();
+      const images = state.images || {};
+
+      if (colorLabel && colorName && displayColor) {
+        colorName.textContent = displayColor.toUpperCase();
+        colorLabel.hidden = false;
+      }
+
+      shots.forEach(shot => {
+        updateShot(shot, images[shot], displayColor);
+      });
+    }
+
+    document.addEventListener('kasya:hero-color-change', event => {
+      updateFitImages(event.detail);
+    });
+
+    if (window.KasyaLPSelectedColor) {
+      updateFitImages(window.KasyaLPSelectedColor);
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Kasya LP Fit Confidence",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "HOW IT FITS"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "See how the garment falls from every angle before choosing your size."
+    },
+    {
+      "type": "image_picker",
+      "id": "front_image",
+      "label": "Front image"
+    },
+    {
+      "type": "text",
+      "id": "front_label",
+      "label": "Front label",
+      "default": "FRONT VIEW"
+    },
+    {
+      "type": "textarea",
+      "id": "front_description",
+      "label": "Front description",
+      "default": "Shows the full silhouette and length."
+    },
+    {
+      "type": "image_picker",
+      "id": "side_image",
+      "label": "Side image"
+    },
+    {
+      "type": "text",
+      "id": "side_label",
+      "label": "Side label",
+      "default": "SIDE VIEW"
+    },
+    {
+      "type": "textarea",
+      "id": "side_description",
+      "label": "Side description",
+      "default": "Shows the drape around the waist, hips, and tummy."
+    },
+    {
+      "type": "image_picker",
+      "id": "back_image",
+      "label": "Back image"
+    },
+    {
+      "type": "text",
+      "id": "back_label",
+      "label": "Back label",
+      "default": "BACK VIEW"
+    },
+    {
+      "type": "textarea",
+      "id": "back_description",
+      "label": "Back description",
+      "default": "Shows how it falls from behind."
+    },
+    {
+      "type": "textarea",
+      "id": "model_info",
+      "label": "Model info",
+      "default": "Model is 5'2 and wears size L."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "fit_note",
+      "name": "Fit note",
+      "settings": [
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Note",
+          "default": "Relaxed through the waist and hips"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Kasya LP Fit Confidence",
+      "blocks": [
+        {
+          "type": "fit_note",
+          "settings": {
+            "note": "Relaxed through the waist and hips"
+          }
+        },
+        {
+          "type": "fit_note",
+          "settings": {
+            "note": "Soft drape, not clingy"
+          }
+        },
+        {
+          "type": "fit_note",
+          "settings": {
+            "note": "True to size for a relaxed fit"
+          }
+        },
+        {
+          "type": "fit_note",
+          "settings": {
+            "note": "Size up if you prefer extra room"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

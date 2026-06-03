@@ -1,0 +1,82 @@
+{%- assign color_name = settings.color_name | downcase | split: ',' | first -%}
+{%- unless card_product.has_only_default_variant
+  or color_name == blank
+  or card_product.options_by_name[color_name] == blank
+-%}
+  {%- assign attribute = 'option' | append: card_product.options_by_name[color_name].position -%}
+  <card-product-colors>
+    <ul class="card__product-color-list list-unstyled flex flex-wrap align-center">
+      {%- assign color_size = card_product.options_by_name[color_name].values.size -%}
+      {%- for color in card_product.options_by_name[color_name].values limit: 5 -%}
+        {%- liquid
+          assign variant_color = color.variant
+          assign swatch_image = variant_color.featured_image | default: color.swatch.image
+          unless variant_color and swatch_image
+            assign variants = card_product.variants | where: attribute, color
+            assign variant_color = variants | where: 'featured_image' | first
+            unless variant_color
+              assign variant_color = variants | first
+            endunless
+          endunless
+
+          assign srcset = ''
+          assign visual_color = ''
+          if swatch_image != blank
+            if swatch_image.width >= 165
+              assign product_image_url = swatch_image | image_url: width: 165
+              assign srcset = srcset | append: product_image_url | append: ' 165w,'
+            endif
+            if swatch_image.width >= 360
+              assign product_image_url = swatch_image | image_url: width: 360
+              assign srcset = srcset | append: product_image_url | append: ' 360w,'
+            endif
+            if swatch_image.width >= 430
+              assign product_image_url = swatch_image | image_url: width: 450
+              assign srcset = srcset | append: product_image_url | append: ' 450w,'
+            endif
+            assign product_image_url = swatch_image | image_url
+            assign srcset = srcset | append: product_image_url | append: ' ' | append: variant_color.featured_image.width | append: 'w'
+          endif
+          if color.swatch.color
+            assign visual_color = '--color-swatch-background:' | append: color.swatch.color.red | append: ',' | append: color.swatch.color.green | append: ',' | append: color.swatch.color.blue
+          endif
+        -%}
+        <li>
+          <a
+            href="{{ variant_color.url }}"
+            class="card__product-color-list__button bt-tooltip por db{% if color_swatches_style == 'variant' %} card__product-color-list__button--variant{% if swatch_image != blank %} color-swatch-own-image{% endif %}{% endif %}"
+            {% if srcset != '' %}
+              data-srcset="{{ srcset | escape }}"
+            {% endif %}
+            data-color="{{ color | handleize }}"
+            {%- if visual_color != '' %}
+              style="{{ visual_color }}"
+            {%- endif -%}
+          >
+            {%- if color_swatches_style == 'variant' and swatch_image != blank -%}
+              <img
+                src="{{ swatch_image | image_url: width: 100, height: 100, crop: 'center' }}"
+                width="100"
+                height="100"
+                loading="lazy"
+                class="w100 h100"
+                alt="{{ card_product.title | escape }} - {{ color | escape }}"
+              >
+            {%- endif -%}
+            <span class="bt-tooltip__inner bt-tooltip__inner--top">{{ color }}</span>
+          </a>
+        </li>
+      {%- endfor -%}
+      {%- if color_size > 5 -%}
+        <li>
+          <a
+            href="{{ card_product.url }}"
+            class="card__product-color-list__more lh1 font-body-bold{% if color_swatches_style == 'variant' %} card__product-color-list__more--variant flex justify-center align-center{% endif %}"
+          >
+            +{{ color_size | minus: 5 }}
+          </a>
+        </li>
+      {%- endif -%}
+    </ul>
+  </card-product-colors>
+{%- endunless -%}

@@ -1,0 +1,147 @@
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    function isIE() {
+      const ua = window.navigator.userAgent;
+      const msie = ua.indexOf('MSIE ');
+      const trident = ua.indexOf('Trident/');
+
+      return (msie > 0 || trident > 0);
+    }
+
+    if (!isIE()) return;
+    const hiddenInput = document.querySelector('#{{ product_form_id }} input[name="id"]');
+    const noScriptInputWrapper = document.createElement('div');
+    const variantSwitcher = document.querySelector('variant-radios[data-section="{{ section.id }}"]') || document.querySelector('variant-selects[data-section="{{ section.id }}"]');
+    noScriptInputWrapper.innerHTML = document.querySelector('.product-form__noscript-wrapper-{{ section.id }}').textContent;
+    variantSwitcher.outerHTML = noScriptInputWrapper.outerHTML;
+
+    document.querySelector('#Variants-{{ section.id }}').addEventListener('change', function(event) {
+      hiddenInput.value = event.currentTarget.value;
+    });
+  });
+</script>
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  if product.selected_or_first_available_variant.featured_media
+    assign seo_media = current_variant.featured_media
+  else
+    assign seo_media = product.featured_media
+  endif
+  assign price_valid_until = 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d'
+  assign variant_count = product.variants | size
+-%}
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org/",
+    "@type": "Product",
+    "name": {{ product.title | json }},
+    "url": {{ request.origin | append: product.url | json }},
+    "productID": "{{ product.id }}",
+    {% if seo_media -%}
+      "image": [
+        {{ seo_media | image_url: width: seo_media.preview_image.width | prepend: "https:" | json }}
+      ],
+    {%- endif %}
+    "description": {{ product.description | strip_html | json }},
+    {% if current_variant.sku != blank -%}
+      "sku": {{ current_variant.sku | json }},
+    {%- endif %}
+    {%- if current_variant.barcode != blank -%}
+      {%- if current_variant.barcode.size == 12 -%}
+        "gtin12": {{ current_variant.barcode }},
+      {%- elsif current_variant.barcode.size == 13 -%}  
+        "gtin13": {{ current_variant.barcode }},
+      {%- elsif current_variant.barcode.size == 14 -%}  
+        "gtin14": {{ current_variant.barcode }}, 
+      {%- else -%}
+        "mpn": {{ current_variant.barcode | json }},
+      {%- endif -%}
+    {%- endif -%}
+    "brand": {
+      "@type": "Brand",
+      "name": {{ product.vendor | json }}
+    },
+    "offers": [
+      {%- for variant in product.variants -%}
+        {
+          "@type" : "Offer",
+          {%- if variant.sku != blank -%}
+            "sku": {{ variant.sku | json }},
+          {%- endif -%}  
+          {%- if variant.barcode != blank -%}
+            {%- if variant.barcode.size == 12 -%}
+              "gtin12": {{ variant.barcode }},
+            {%- elsif variant.barcode.size == 13 -%}  
+              "gtin13": {{ variant.barcode }},
+            {%- elsif variant.barcode.size == 14 -%}  
+              "gtin14": {{ variant.barcode }}, 
+            {%- else -%}
+              "mpn": {{ variant.barcode | json }},
+            {%- endif -%}
+          {%- endif -%}
+          "availability" : "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+          "price" : {{ variant.price | divided_by: 100.00 | json }},
+          "priceCurrency" : {{ cart.currency.iso_code | json }},
+          "priceValidUntil": "{{ price_valid_until }}",
+          "url" : {{ request.origin | append: variant.url | json }}
+          {%- if variant_count > 1 -%}
+            {%- for option in product.options -%}
+            ,{{ option | json }}: {{ variant.options[forloop.index0] | json }}
+            {%- endfor -%}
+          {%- endif -%}      
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+    {%- unless settings.read_rating_data_from_app == 'none' -%}
+      {%-liquid
+        assign has_rating_data = false
+        case settings.read_rating_data_from_app
+        when 'standard'
+          assign rating_value = product.metafields.reviews.rating.value.rating | default: 0
+          assign rating_max = product.metafields.reviews.rating.value.scale_max | default: 5
+          assign rating_min = product.metafields.reviews.rating.value.scale_min | default: 5
+          assign rating_count = product.metafields.reviews.rating_count | default: 0 | plus: 0
+          if product.metafields.reviews.rating.value != blank
+            assign has_rating_data = true
+          endif
+        when 'loox'
+          assign rating_value = product.metafields.loox.avg_rating.value | default: 0
+          assign rating_max = 5.0
+          assign rating_min = 1.0
+          assign rating_count = product.metafields.loox.num_reviews | default: 0 | plus: 0
+          if product.metafields.loox.avg_rating.value != blank
+            assign has_rating_data = true
+          endif  
+        when 'okendo'
+          assign rating_summary_data = product.metafields.okendo.summaryData
+          assign rating_value = rating_summary_data.reviewAverageValue | default: 0 | plus: 0.0
+          assign rating_count = rating_summary_data.reviewCount | default: 0 | plus: 0
+          assign rating_max = 5.0
+          assign rating_min = 1.0
+          if rating_summary_data != blank
+            assign has_rating_data = true
+          endif 
+        when 'stamped'
+          assign rating_value = product.metafields.stamped.reviews_average | default: 0 | plus: 0.0
+          assign rating_count = product.metafields.stamped.reviews_count | default: 0 | plus: 0
+          assign rating_max = 5.0
+          assign rating_min = 1.0
+          if product.metafields.stamped.reviews_average != blank
+            assign has_rating_data = true
+          endif  
+        endcase
+      -%}
+      {%- if has_rating_data -%}
+        ,"aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "{{ rating_value }}",
+          "reviewCount": "{{ rating_count }}",
+          "worstRating": "{{ rating_min }}",
+          "bestRating": "{{ rating_max }}"
+        }
+      {%- endif -%}
+    {%- endunless -%}  
+  }
+</script>

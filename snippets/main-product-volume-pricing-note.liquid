@@ -1,0 +1,5 @@
+{%- if product.quantity_price_breaks_configured? -%}
+  <div class="volume-pricing-note volume-pricing-note--large{% unless no_shadow %} volume-pricing-note--shadow{% endunless %} align-center caption margin-top-1rem{% unless on_background_input %} background-input{% endunless %}" id="Volume-Note-{{ section_id }}">
+    <span>{{ 'products.product.volume_pricing.note' | t }}</span>
+  </div>
+{%- endif -%}

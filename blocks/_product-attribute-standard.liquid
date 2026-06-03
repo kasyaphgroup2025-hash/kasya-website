@@ -1,0 +1,106 @@
+{%- assign is_display = request.design_mode -%}
+{%- capture content -%}
+  {%-liquid
+    assign current_variant = product.selected_or_first_available_variant
+    case block.settings.attribute
+      when 'product_brand'
+      if product.vendor != blank
+        assign vendor_url = product.vendor | url_for_vendor
+        echo '<a class="link link-effect-no-underline" href="' | append: vendor_url | append: '">'
+        echo product.vendor | capitalize
+        echo '</a>'
+        assign is_display = true
+      elsif request.design_mode
+        echo 'products.product.vendor' | t | capitalize
+      endif
+    when 'product_type'
+      if product.type != blank
+        assign type_url = product.type | url_for_type
+        echo '<a class="link link-effect-no-underline" href="' | append: type_url | append: '">'
+        echo product.type | capitalize
+        echo '</a>'
+        assign is_display = true
+      endif
+    when 'sku'
+      if current_variant.sku != blank
+        echo current_variant.sku
+      endif
+      assign is_display = true
+    when 'weight'
+      if current_variant.weight != blank
+        echo current_variant.weight | weight_with_unit
+      endif
+      assign is_display = true	
+    when 'custom'
+      if block.settings.custom_text != blank
+        echo '<div class="rte">'
+        echo block.settings.custom_text
+        echo '</div>'
+        assign is_display = true
+      endif	
+    endcase
+  -%}
+{%- endcapture -%}
+{%- if is_display -%}
+  <div class="grid__item{% unless content or request.design_mode %} hidden{% endunless %}{% if block.settings.attribute == 'sku' or block.settings.attribute == 'product_weight' or block.settings.attribute == 'product_text' %} require-variant-update{% endif %}" {{ block.shopify_attributes }}>
+    <div class="product-attributes__table-item flex flex-column">
+      <h3 class="product-attributes__table-item__title margin0 font-heading-bold h5">{{ block.settings.title }}</h3>
+      <div class="product-attributes__table-item__content text-medium margin-top-1rem product-attributes__tablet-item-light product-attributes__value">
+        {{ content }}
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+{% schema %}
+{
+  "name": "t:names.standard_attribute",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:settings.label",
+      "default": "t:text_defaults.your_label"
+    },
+    {
+      "type": "select",
+      "id": "attribute",
+      "label": "t:settings.attribute",
+      "options": [
+        {
+          "value": "sku",
+          "label": "t:options.sku"
+        },
+        {
+          "value": "product_brand",
+          "label": "t:options.brand"
+        },
+        {
+          "value": "product_type",
+          "label": "t:options.product_type"
+        },
+        {
+          "value": "weight",
+          "label": "t:options.weight"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.custom"
+        }
+      ],
+      "default": "sku"
+    },
+    {
+      "type": "richtext",
+      "id": "custom_text",
+      "label": "t:settings.text",
+      "visible_if": "{{ block.settings.attribute == 'custom' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.standard_attribute"
+    }
+  ]
+}
+{% endschema %}

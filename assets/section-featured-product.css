@@ -1,0 +1,24 @@
+
+.share-button + .product__view-details {
+  display: inline-flex;
+  float: inline-end;
+  align-items: center;
+}
+
+.share-button + .product__view-details::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.product__view-details-button {
+  --color-button-text: var(--color-foreground);
+}
+
+.product__view-details-button--page-background {
+  --color-button: var(--color-background);
+}
+
+.product__view-details-button--input-background {
+  --color-button: var(--color-background-input);
+}

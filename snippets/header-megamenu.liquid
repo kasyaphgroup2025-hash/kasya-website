@@ -1,0 +1,313 @@
+{%- liquid
+  assign first_column = ''
+  assign last_column = ''
+  assign first_column_size = 0
+  assign last_column_size = 0
+  assign available_for_first_column = 0
+  assign total_available_columns = 4
+  assign available_columns = total_available_columns
+  assign last_level_group_size = 0
+  assign use_mega_linklist = false
+  assign need_splitting_columns = false
+  assign max_rows_splitting = 20
+  if link.links != blank
+    assign available_columns = available_columns | minus: 1
+    for childlink in link.links
+      if childlink.links != blank
+        assign last_level_group_size = last_level_group_size | plus: 1
+        if childlink.links.size >= 20 and need_splitting_columns == false
+          assign need_splitting_columns = true
+        endif
+      endif
+    endfor
+  endif
+  if blocks_str contains compare_index
+    assign blocks_index = blocks_str | split: compare_index | last | split: ';' | first
+    assign blocks = blocks_index | split: ','
+    for block_index in blocks
+      assign block_index_number = block_index | plus: 0
+      assign block = section.blocks[block_index_number]
+      capture block_html
+        if block.type == 'mega_menu_promotion'
+          render 'header-megamenu-promotion-block', block: block
+        elsif block.type == 'mega_menu_product_brand'
+          render 'header-megamenu-product-brand-block', block: block
+        elsif block.type == 'mega_menu_product_type'
+          render 'header-megamenu-product-type-block', block: block
+        endif
+      endcapture
+      case block.settings.position
+        when 'first'
+          assign first_column = first_column | append: block_html
+          assign first_column_size = first_column_size | plus: 1
+        when 'last'
+          assign last_column = last_column | append: block_html
+          assign last_column_size = last_column_size | plus: 1
+      endcase
+    endfor
+  endif
+  unless section.settings.always_use_standard_menu
+    if need_splitting_columns
+      assign use_mega_linklist = true
+    elsif last_level_group_size >= 4 and last_level_group_size <= 12
+      assign use_mega_linklist = true
+    endif
+  endunless
+  if last_level_group_size >= 2
+    assign available_columns = total_available_columns | minus: last_level_group_size
+  endif
+  if first_column != ''
+    assign last_column_size_demand = last_column_size | at_most: 2
+    assign available_for_first_column = available_columns | minus: last_column_size_demand | at_least: 1
+    if available_for_first_column > first_column_size
+      if first_column_size == 1
+        assign available_for_first_column = 2
+      else
+        assign available_for_first_column = first_column_size
+      endif
+    endif
+  endif
+  if last_column != ''
+    assign available_for_last_column = available_columns | minus: available_for_first_column | at_least: 1
+  endif
+  assign need_more_columns = 0
+  assign available_columns_for_more = 2
+  assign total_columns_list_blocks = 0
+-%}
+{%- if first_column != '' or last_column != '' or use_mega_linklist -%}
+  {%- capture mega_menu_list -%}
+    {%- if link.links != blank -%}
+      {%-liquid
+        assign available_for_list_columns = 4 | minus: available_for_first_column | minus: available_for_last_column | at_least: 1
+        assign used_columns = 0
+      -%}
+      <ul class="mega-menu__list{% if link.levels == 1 %} mega-menu__list--condensed{% endif %} mega-menu__list--center {% unless first_column == '' and last_column == '' and last_level_group_size > 8 %}mega-menu__column--span_column_holder_{% else %}{% if last_level_group_size <= 10 %}mega-menu__column--span5{% else %}mega-menu__column--span6{% endif %}{% endunless %}" role="list">
+        {%- for childlink in link.links -%}
+          {%-liquid
+            assign should_splitting = false
+            if childlink.links != blank and childlink.links.size >= 10
+              assign should_splitting = true
+              assign total_rows = childlink.links.size | divided_by: 2.0 | ceil | at_most: max_rows_splitting | times: 1.0
+              assign total_columns = childlink.links.size | divided_by: total_rows | ceil
+             assign total_columns_list_blocks = total_columns_list_blocks | plus: total_columns
+              assign used_columns = used_columns | plus: total_columns
+              if used_columns > available_for_list_columns and available_columns_for_more > 0
+                assign ask_for_more_columns = used_columns | minus: available_for_list_columns
+                if ask_for_more_columns <= available_columns_for_more
+                  assign need_more_columns = need_more_columns | plus: ask_for_more_columns
+                  assign available_columns_for_more = available_columns_for_more | minus: ask_for_more_columns
+                endif  
+              endif
+            elsif used_columns < available_for_list_columns
+              assign used_columns = used_columns | plus: 1
+             assign total_columns_list_blocks = total_columns_list_blocks | plus: 1
+             else
+             assign total_columns_list_blocks = total_columns_list_blocks | plus: 1
+            endif
+            assign compare_index = ':' | append: childlink.title | append: '=' | downcase
+          -%}
+          <li{% if should_splitting %} class="mega-menu__splitting-span" style="--total-rows: {{ total_rows | ceil }};--total-columns: {{ total_columns }};"{% endif %}>
+            <a href="{{ childlink.url }}" class="link {% if childlink.links != blank %}mega-menu__link font-heading-bold mega-menu__link--title h4{% else %}h5{% endif %}{% if badges_str contains compare_index %} por{% endif %}"{% if childlink.current %} aria-current="page"{% endif %}>
+              <span class="{% if childlink.current %}underlined-link{% else %}link-effect-no-underline{% endif %}">{{ childlink.title }}</span>
+              {%-liquid
+                if badges_str contains compare_index
+                  assign blocks_index = badges_str | split: compare_index | last | split: ';' | first
+                  render 'header-menu-badge', blocks_index: blocks_index, is_in_drawer: false, custom_classes: 'header__menu-badge--in-megamenu-level2', parent_item: link
+                endif
+              -%}
+            </a>
+            {%- if childlink.links != blank -%}
+              <ul class="list-unstyled{% if should_splitting %} mega-menu__list mega-menu__list--splitting{% endif %}" role="list">
+                {%- for grandchildlink in childlink.links -%}
+                  {%- assign compare_index = ':' | append: grandchildlink.title | append: '=' | downcase -%}
+                  <li>
+                    <a href="{{ grandchildlink.url }}" class="mega-menu__link link header-menu__link-sub font-body-semi-bold text-small{% if badges_str contains compare_index %} por{% endif %}"{% if grandchildlink.current %} aria-current="page"{% endif %}>
+                      <span class="{% if grandchildlink.current %}underlined-link{% else %}link-effect-no-underline{% endif %}">{{ grandchildlink.title }}</span>
+                      {%-liquid
+                        if badges_str contains compare_index
+                          assign blocks_index = badges_str | split: compare_index | last | split: ';' | first
+                          render 'header-menu-badge', blocks_index: blocks_index, is_in_drawer: false, custom_classes: 'header__menu-badge--in-megamenu-level3', parent_item: childlink
+                        endif
+                      -%}
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  {%- endcapture -%}
+  <div
+    id="MegaMenu-Content-{{ index }}"
+    class="mega-menu__content gradient motion-reduce global-settings-popup{% if section.settings.show_go_to_link and link.url != blank %} mega-menu__content--has-go-to-link{% endif %}"
+    tabindex="-1"
+  >
+    <div class="page-width flex mega-menu__content__inner flex-wrap">
+      {%- if first_column != '' -%}
+        <div class="mega-menu__column mega-menu__column--first mega-menu__column--span{{ available_for_first_column }}{% if available_for_first_column <= 2 and first_column_size == 1 %} mega-menu__column--allow-full{% endif %}">
+          {{ first_column }}
+        </div>
+      {%- endif -%}
+      {%- if available_for_list_columns >= 3 -%}
+        {%- liquid
+          assign column_for_list = available_for_list_columns | plus: need_more_columns
+          assign column_for_list_float = available_for_list_columns | times: 1.0 | plus: need_more_columns
+          assign total_show_rows = total_columns_list_blocks | divided_by: column_for_list_float | ceil
+        -%}
+        {% if total_show_rows < 3 or column_for_list == 6 %}
+          {{ mega_menu_list | replace: '_column_holder_', column_for_list }}
+        {% else %}
+          {%- liquid
+            assign new_column_for_list = total_columns_list_blocks | divided_by: 2.0 | ceil | at_most: 6
+          -%}
+          {{ mega_menu_list | replace: '_column_holder_', new_column_for_list }}
+        {% endif %}
+      {%- else -%}
+        {{ mega_menu_list | replace: '_column_holder_', available_for_list_columns }}
+      {%- endif -%}
+      {%- if last_column != '' -%}
+        <div class="mega-menu__column mega-menu__column--last mega-menu__column--span{{ available_for_last_column }}{% if available_for_last_column <= 2 and last_column_size == 1 %} mega-menu__column--allow-full{% endif %}">
+          {{ last_column }}
+        </div>
+      {%- endif -%}
+    </div>
+    {%- if section.settings.show_go_to_link and link.url != blank -%}
+      <div class="header__goto-link center margin-top-1rem">
+        <a
+          href="{{ link.url }}"
+          class="link link-effect-no-underline align-center justify-center font-body-semi-bold"
+          {% if highlight_block and highlight_block.settings.new_tab %}
+            target="_blank"
+          {% endif %}
+        >
+          {{ 'sections.header.go_to_link' | t: title: link.title }}
+          {%- render 'icon-picker', icon: 'external_link', icon_width: 16 -%}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+{%- elsif link.links != blank -%}
+  {%- liquid
+    assign columns = 1
+    if link.links.size > 10
+      assign columns = link.links.size | divided_by: 10.0 | ceil | at_most: 6
+    endif
+  -%}
+  {%- if columns > 2 -%}
+    <div
+      id="MegaMenu-Content-{{ index }}"
+      class="mega-menu__content gradient motion-reduce global-settings-popup{% if section.settings.show_go_to_link and link.url != blank %} mega-menu__content--has-go-to-link{% endif %}"
+      tabindex="-1"
+    >
+      <div class="page-width flex mega-menu__content__inner flex-wrap">
+  {%- endif -%}
+  <ul
+    id="HeaderMenu-MenuList-{{ index }}"
+    class="{% if columns > 1 %}mega-menu__list mega-menu__column--span{{ columns }}{% endif %}{% if columns <= 2 %} header__submenu list-menu list-menu--disclosure global-settings-popup{% endif %} gradient caption-large motion-reduce{% if section.settings.show_go_to_link and link.url != blank %} header__submenu--has-go-to-link{% endif %}"
+    role="list"
+    tabindex="-1"
+  >
+    {%- for childlink in link.links -%}
+      {%- assign compare_index = ':' | append: childlink.title | append: '=' | downcase -%}
+      <li>
+        {%- if childlink.links == blank -%}
+          <a
+            href="{{ childlink.url }}"
+            class="header__menu-item list-menu__item link focus-inset caption-large w100 font-body-semi-bold list-menu__item--level2{% if badges_str contains compare_index %} por{% endif %}"
+            {% if childlink.current %}
+              aria-current="page"
+            {% endif %}
+          >
+            <span class="{% if childlink.active %}underlined-link{% else %}link-effect-no-underline{% endif %}">
+              {{- childlink.title -}}
+            </span>
+            {%- liquid
+              if badges_str contains compare_index
+                assign blocks_index = badges_str | split: compare_index | last | split: ';' | first
+                render 'header-menu-badge', blocks_index: blocks_index, is_in_drawer: false, custom_classes: 'header__menu-badge--in-standard-dropdown', parent_item: link
+              endif
+            -%}
+          </a>
+        {%- else -%}
+          <header-menu>
+            <details id="Details-HeaderSubMenu-{{ index }}-{{ forloop.index }}" class="header__submenu__last">
+              <summary
+                class="header__menu-item header__menu-item--has-last-sub flex justify-space-between align-center w100 link list-menu__item list-menu__item--level2 focus-inset caption-large w100 font-body-semi-bold{% if childlink.url != blank and childlink.url != '#' and childlink.url != '' and childlink.current == false %} header__menu-item--link{% endif %}{% if badges_str contains compare_index %} por{% endif %}"
+                data-href="{{ childlink.url }}"
+              >
+                <span class="{% if childlink.child_active or childlink.active %}underlined-link{% else %}link-effect-no-underline{% endif %}">
+                  {{- childlink.title -}}
+                </span>
+                {% render 'icon-caret' %}
+                {%- liquid
+                  if badges_str contains compare_index
+                    assign blocks_index = badges_str | split: compare_index | last | split: ';' | first
+                    render 'header-menu-badge', blocks_index: blocks_index, is_in_drawer: false, custom_classes: 'header__menu-badge--in-standard-dropdown', parent_item: link
+                  endif
+                -%}
+              </summary>
+              <ul
+                id="HeaderMenu-SubMenuList-{{ index }}-{{ forloop.index }}"
+                class="header__submenu list-menu motion-reduce header__submenu--last-level global-settings-popup{% if section.settings.show_go_to_link and childlink.url != blank %} header__submenu--has-go-to-link{% endif %}"
+              >
+                {%- for grandchildlink in childlink.links -%}
+                  {%- assign compare_index = ':' | append: grandchildlink.title | append: '=' | downcase -%}
+                  <li>
+                    <a
+                      href="{{ grandchildlink.url }}"
+                      class="header__menu-item list-menu__item link focus-inset caption-large w100 font-body-semi-bold{% if badges_str contains compare_index %} por{% endif %}"
+                      {% if grandchildlink.current %}
+                        aria-current="page"
+                      {% endif %}
+                    >
+                      <span class="{% if grandchildlink.active %}underlined-link{% else %}link-effect-no-underline{% endif %}">
+                        {{- grandchildlink.title -}}
+                      </span>
+                      {%- liquid
+                        if badges_str contains compare_index
+                          assign blocks_index = badges_str | split: compare_index | last | split: ';' | first
+                          render 'header-menu-badge', blocks_index: blocks_index, is_in_drawer: false, custom_classes: 'header__menu-badge--in-standard-dropdown', parent_item: childlink
+                        endif
+                      -%}
+                    </a>
+                  </li>
+                {%- endfor -%}
+                {%- if section.settings.show_go_to_link and childlink.url != blank -%}
+                  <li class="header__goto-link center margin-top-1rem">
+                    <a
+                      href="{{ childlink.url }}"
+                      class="link link-effect-no-underline align-center justify-center font-body-semi-bold"
+                    >
+                      {{ 'sections.header.go_to_link' | t: title: childlink.title }}
+                      {%- render 'icon-picker', icon: 'external_link', icon_width: 16 -%}
+                    </a>
+                  </li>
+                {%- endif -%}
+              </ul>
+            </details>
+          </header-menu>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+    {%- if section.settings.show_go_to_link and link.url != blank -%}
+      <li class="header__goto-link center margin-top-1rem">
+        <a
+          href="{{ link.url }}"
+          class="link link-effect-no-underline align-center justify-center font-body-semi-bold"
+          {% if highlight_block and highlight_block.settings.new_tab %}
+            target="_blank"
+          {% endif %}
+        >
+          {{ 'sections.header.go_to_link' | t: title: link.title }}
+          {%- render 'icon-picker', icon: 'external_link', icon_width: 16 -%}
+        </a>
+      </li>
+    {%- endif -%}
+  </ul>
+  {%- if columns > 2 -%}
+    </div>
+    </div>
+  {%- endif -%}
+{%- endif -%}

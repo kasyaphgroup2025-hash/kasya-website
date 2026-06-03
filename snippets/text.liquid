@@ -1,0 +1,81 @@
+{%- doc -%}
+  Intended for use in a block similar to the text block.
+
+  @param {string} text - the text to display
+  @param {string} [fallback_text] - fallback text if the text does not exist
+  @param {object} local_settings - the settings of the text block.
+  @param {object} [block] - the block
+  @param {string} [class] - custom class to define in addition to text-block classes
+{%- enddoc -%}
+
+{% liquid
+  assign plain_text = text | strip_newlines | strip_html | strip
+  assign disable_scaling = true
+  if local_settings.background
+    assign disable_scaling = false
+  endif
+  assign block_content = ''
+  if fallback_text != blank and plain_text == blank
+    assign block_content = fallback_text
+  elsif plain_text != blank
+    assign block_content = text
+  endif
+  if local_settings.html_tag
+    if local_settings.html_tag == 'p' or local_settings.use_html_heading_tag
+      assign html_tag = local_settings.html_tag
+      if html_tag == 'p' and block.settings.enable_truncated_text
+        assign html_tag = 'div'
+      endif
+    else
+      assign html_tag = 'div'
+    endif
+  else
+    assign html_tag = 'div'
+  endif
+  assign has_border = false
+  if local_settings.border != 'none' and local_settings.border_width > 0 and local_settings.border_opacity > 0
+    assign has_border = true
+  endif
+%}
+
+{%- if block_content != '' -%}
+{% capture attributes %}
+  class="spacing-style size-style text-block text-block--{{ block.id }} rte color-foreground rewrite-color-link
+  {{ local_settings.alignment_mobile }}
+  {% if local_settings.alignment_desktop != local_settings.alignment_mobile %}text-block--desktop-alignment{% endif %}
+  {% if local_settings.background %}gradient{% unless has_border %} custom-radius{% endunless %}{% endif %}
+  {% if local_settings.case == 'uppercase' %}uppercase{% endif %}
+  {% unless local_settings.html_tag %}text-scale heading-scale{% else %}{% if html_tag == 'p' %}text{% else %}heading{% endif %}-scale{% endunless %}
+  {% if local_settings.heading_line_height and local_settings.heading_line_height != 'auto' %}custom-heading-line-height{% endif %}
+  {% if local_settings.paragraph_line_height and local_settings.paragraph_line_height != 'auto' %}custom-paragraph-line-height{% endif %}
+  {% if local_settings.html_tag and local_settings.html_tag != 'p' and local_settings.use_html_heading_tag == false %}{{ local_settings.html_tag }}{% endif %}
+  {% if local_settings.html_tag and local_settings.custom_line_height and local_settings.custom_line_height != 'auto' %}{% if html_tag == 'p' %}custom-paragraph-line-height{% else %}custom-heading-line-height-self{% endif %}{% endif %}
+  {% if has_border %}border-style{% endif %}
+  {{ class }}
+  "
+  style="
+  {% if local_settings.alignment_desktop != local_settings.alignment_mobile %}--text-alignment-desktop: {{ local_settings.alignment_desktop | replace: 'left', 'start' | replace: 'right', 'end' }};{% endif %}
+  {% if local_settings.color != 'color-foreground' %}--color-foreground:{% if local_settings.color != 'custom' %}var(--color-button){% else %}{{ local_settings.custom_color.rgb | replace: ' ', ',' }}{% endif %};{% endif %}
+  {% if local_settings.background or has_border %}
+    --border-radius: {{ local_settings.corner_radius }}px;
+  {% endif %}
+  {% render 'typo-style', local_settings: local_settings %}
+  {% render 'spacing-style', local_settings: local_settings, disable_scaling: disable_scaling, scale_min: 5 %}
+  {% render 'size-style', local_settings: local_settings %}
+  {%- render 'background-style', local_settings: local_settings -%}
+  {% if has_border %}
+    --border-width: {{ local_settings.border_width }}px; --border-style: {{ local_settings.border }}; --border-color: rgb(var(--color-foreground),{{ local_settings.border_opacity | divided_by: 100.0 }});
+  {% endif %}
+  "
+  {{ block.shopify_attributes }}
+{% endcapture %}
+<{{ html_tag }} {{ attributes }}>
+  {%-liquid
+    unless block.settings.enable_truncated_text
+      echo block_content
+    else
+      render 'truncate-text', text: block_content, length: block.settings.visible_height, button_text: block.settings.read_more_button
+    endunless
+  -%}
+</{{ html_tag }}>
+{%- endif -%}

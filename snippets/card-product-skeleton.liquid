@@ -1,0 +1,30 @@
+<div class="card-wrapper card-wrapper--product por h100">
+	<div class="card card--product"
+	>
+		<div class="card__inner w100">
+			<div class="media{% if media_aspect_ratio == 'adapt' %} media--square{% else %} media--{{ media_aspect_ratio | default: 'square' }}{% endif %} skeleton-box">
+				<span></span>
+			</div>
+		</div>
+		<div class="card__content card__content--product">
+			<div class="card__information">
+				{%- if show_vendor -%}
+					<span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
+					<div class="skeleton-box small-margin-bottom">
+						<span class="w100 db margin-top-1rem"></span>
+					</div>
+				{%- endif -%}
+				<h3 class="card__heading card__heading--product font-heading-bold h4">
+					<div class="skeleton-box small-margin-bottom">
+						<span class="w100 db margin-top-1rem"></span>
+					</div>
+				</h3>
+				<div class="card-information w100">
+					<div class="skeleton-box small-margin-bottom">
+						<span class="w100 db margin-top-1rem"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

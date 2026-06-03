@@ -1,0 +1,518 @@
+{% doc %}
+  @prompt
+     Create a Black Friday themed landing page background for Shopify. The design should look premium, modern, and clean. Use a dark, luxurious color palette (black, deep charcoal, metallic gold accents). Add soft glowing highlights and subtle shadows to create depth.
+    
+    Include elegant Black Friday elements such as:
+    • minimal gold geometric lines
+    • soft sparkles or bokeh lights
+    • very subtle shopping-themed icons (tag, cart, percent symbol) but kept minimal
+    
+    This landing page will showcase multiple product collections, so the layout should leave clean space for product blocks. Avoid clutter.
+    
+    Make it look high-end and visually strong but not too busy. Style: premium, bold, elegant, modern luxury.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-bf-background-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    min-height: {{ block.settings.min_height }}vh;
+    background: {{ block.settings.base_color }};
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-bf-background-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+      circle at 20% 30%, 
+      {{ block.settings.glow_color_1 }} 0%, 
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 70%, 
+      {{ block.settings.glow_color_2 }} 0%, 
+      transparent 50%
+    );
+    opacity: {{ block.settings.glow_opacity }};
+    pointer-events: none;
+  }
+
+  .ai-bf-geometric-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .ai-bf-line-{{ ai_gen_id }} {
+    position: absolute;
+    background: {{ block.settings.accent_color }};
+    opacity: {{ block.settings.line_opacity }};
+  }
+
+  .ai-bf-line-{{ ai_gen_id }}.horizontal {
+    height: 1px;
+    width: 100%;
+  }
+
+  .ai-bf-line-{{ ai_gen_id }}.vertical {
+    width: 1px;
+    height: 100%;
+  }
+
+  .ai-bf-line-{{ ai_gen_id }}.diagonal-1 {
+    width: 1px;
+    height: 140%;
+    top: -20%;
+    left: 25%;
+    transform: rotate(45deg);
+  }
+
+  .ai-bf-line-{{ ai_gen_id }}.diagonal-2 {
+    width: 1px;
+    height: 140%;
+    top: -20%;
+    right: 25%;
+    transform: rotate(-45deg);
+  }
+
+  .ai-bf-sparkles-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .ai-bf-sparkle-{{ ai_gen_id }} {
+    position: absolute;
+    width: {{ block.settings.sparkle_size }}px;
+    height: {{ block.settings.sparkle_size }}px;
+    background: {{ block.settings.accent_color }};
+    border-radius: 50%;
+    opacity: 0;
+    animation: ai-bf-sparkle-{{ ai_gen_id }} 3s infinite ease-in-out;
+  }
+
+  @keyframes ai-bf-sparkle-{{ ai_gen_id }} {
+    0%, 100% {
+      opacity: 0;
+      transform: scale(0);
+    }
+    50% {
+      opacity: {{ block.settings.sparkle_opacity }};
+      transform: scale(1);
+    }
+  }
+
+  .ai-bf-icons-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .ai-bf-icon-{{ ai_gen_id }} {
+    position: absolute;
+    opacity: {{ block.settings.icon_opacity }};
+    color: {{ block.settings.accent_color }};
+  }
+
+  .ai-bf-icon-{{ ai_gen_id }} svg {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.5;
+  }
+
+  .ai-bf-content-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: {{ block.settings.content_width }}px;
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .ai-bf-heading-{{ ai_gen_id }} {
+    color: {{ block.settings.heading_color }};
+    font-size: {{ block.settings.heading_size }}px;
+    margin: 0 0 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .ai-bf-subheading-{{ ai_gen_id }} {
+    color: {{ block.settings.subheading_color }};
+    font-size: {{ block.settings.subheading_size }}px;
+    margin: 0;
+    font-weight: 300;
+    letter-spacing: 1px;
+  }
+
+  .ai-bf-shadow-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      {{ block.settings.shadow_color }} 100%
+    );
+    opacity: {{ block.settings.shadow_opacity }};
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-bf-background-{{ ai_gen_id }} {
+      min-height: {{ block.settings.min_height_mobile }}vh;
+    }
+
+    .ai-bf-heading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.6);
+    }
+
+    .ai-bf-subheading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.subheading_size }}px * 0.7);
+    }
+
+    .ai-bf-icon-{{ ai_gen_id }} svg {
+      width: calc({{ block.settings.icon_size }}px * 0.7);
+      height: calc({{ block.settings.icon_size }}px * 0.7);
+    }
+  }
+{% endstyle %}
+
+<div class="ai-bf-background-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.show_geometric_lines %}
+    <div class="ai-bf-geometric-{{ ai_gen_id }}">
+      <div class="ai-bf-line-{{ ai_gen_id }} horizontal" style="top: 20%;"></div>
+      <div class="ai-bf-line-{{ ai_gen_id }} horizontal" style="top: 80%;"></div>
+      <div class="ai-bf-line-{{ ai_gen_id }} vertical" style="left: 15%;"></div>
+      <div class="ai-bf-line-{{ ai_gen_id }} vertical" style="right: 15%;"></div>
+      <div class="ai-bf-line-{{ ai_gen_id }} diagonal-1"></div>
+      <div class="ai-bf-line-{{ ai_gen_id }} diagonal-2"></div>
+    </div>
+  {% endif %}
+
+  {% if block.settings.show_sparkles %}
+    <div class="ai-bf-sparkles-{{ ai_gen_id }}">
+      {% for i in (1..12) %}
+        {% assign top = i | times: 8 | plus: 5 %}
+        {% assign left = i | times: 7 | modulo: 90 | plus: 5 %}
+        {% assign delay = i | times: 0.25 %}
+        <div 
+          class="ai-bf-sparkle-{{ ai_gen_id }}" 
+          style="top: {{ top }}%; left: {{ left }}%; animation-delay: {{ delay }}s;"
+        ></div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if block.settings.show_icons %}
+    <div class="ai-bf-icons-{{ ai_gen_id }}">
+      <div class="ai-bf-icon-{{ ai_gen_id }}" style="top: 15%; left: 10%;">
+        <svg viewBox="0 0 24 24">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+          <line x1="7" y1="7" x2="7.01" y2="7"></line>
+        </svg>
+      </div>
+      
+      <div class="ai-bf-icon-{{ ai_gen_id }}" style="top: 70%; right: 12%;">
+        <svg viewBox="0 0 24 24">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+      </div>
+      
+      <div class="ai-bf-icon-{{ ai_gen_id }}" style="bottom: 20%; left: 15%;">
+        <svg viewBox="0 0 24 24">
+          <line x1="19" y1="5" x2="5" y2="19"></line>
+          <circle cx="6.5" cy="6.5" r="2.5"></circle>
+          <circle cx="17.5" cy="17.5" r="2.5"></circle>
+        </svg>
+      </div>
+
+      <div class="ai-bf-icon-{{ ai_gen_id }}" style="top: 25%; right: 20%;">
+        <svg viewBox="0 0 24 24">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="ai-bf-content-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank %}
+      <h1 class="ai-bf-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h1>
+    {% endif %}
+    {% if block.settings.subheading != blank %}
+      <p class="ai-bf-subheading-{{ ai_gen_id }}">{{ block.settings.subheading }}</p>
+    {% endif %}
+  </div>
+
+  {% if block.settings.show_shadow %}
+    <div class="ai-bf-shadow-overlay-{{ ai_gen_id }}"></div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Black Friday background",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Black Friday"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Exclusive Luxury Deals"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 400,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "label": "Content width",
+      "default": 800
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Minimum height",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Minimum height (mobile)",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "base_color",
+      "label": "Background",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent (gold)",
+      "default": "#d4af37"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading",
+      "default": "#d4af37"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 14,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Glow effects"
+    },
+    {
+      "type": "color",
+      "id": "glow_color_1",
+      "label": "Glow color 1",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "glow_color_2",
+      "label": "Glow color 2",
+      "default": "#2a2520"
+    },
+    {
+      "type": "range",
+      "id": "glow_opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "label": "Glow opacity",
+      "default": 0.5
+    },
+    {
+      "type": "header",
+      "content": "Geometric lines"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_geometric_lines",
+      "label": "Show geometric lines",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "line_opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "label": "Line opacity",
+      "default": 0.2
+    },
+    {
+      "type": "header",
+      "content": "Sparkles"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sparkles",
+      "label": "Show sparkles",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "sparkle_size",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "label": "Sparkle size",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "sparkle_opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "label": "Sparkle opacity",
+      "default": 0.5
+    },
+    {
+      "type": "header",
+      "content": "Shopping icons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_icons",
+      "label": "Show icons",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "icon_opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "label": "Icon opacity",
+      "default": 0.1
+    },
+    {
+      "type": "header",
+      "content": "Shadow overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shadow",
+      "label": "Show shadow overlay",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "shadow_color",
+      "label": "Shadow color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "shadow_opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "label": "Shadow opacity",
+      "default": 0.3
+    }
+  ],
+  "presets": [
+    {
+      "name": "Black Friday background"
+    }
+  ]
+}
+{% endschema %}

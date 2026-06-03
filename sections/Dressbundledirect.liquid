@@ -1,0 +1,172 @@
+<!-- FLICKITY CDN -->
+<link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+<script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+
+<style>
+  .bundle-carousel {
+    max-width: 1500px;
+    margin: auto;
+    padding: 40px 20px;
+  }
+  .carousel {
+    background: #fff;
+  }
+  .carousel-cell {
+    width: 70%;
+    max-width: 450px;
+    margin: 0 15px;
+    background: #fafafa;
+    border-radius: 16px;
+    padding: 30px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    opacity: 0.3;
+    transform: scale(0.92);
+    transition: all 0.4s ease-in-out;
+    filter: blur(1px);
+    pointer-events: none;
+  }
+  .carousel-cell.is-selected {
+    opacity: 1;
+    transform: scale(1);
+    filter: none;
+    pointer-events: all;
+  }
+  .carousel-cell img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 12px;
+  }
+  .carousel-cell h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+  .carousel-cell p {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  .carousel-cell select,
+  .carousel-cell button {
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .carousel-cell button {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .carousel-cell.is-selected button {
+    opacity: 1;
+    pointer-events: all;
+  }
+  @media (max-width: 768px) {
+    .carousel-cell {
+      width: 85%;
+      margin: 0 10px;
+    }
+  }
+  .benefits-section {
+    text-align: center;
+    margin-top: 60px;
+    margin-bottom: 40px;
+  }
+  .benefits-section h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+  .benefits-section img {
+    max-width: 100%;
+    height: auto;
+  }
+</style>
+
+<div class="bundle-carousel">
+  <div class="carousel" data-flickity='{ 
+    "wrapAround": true,
+    "pageDots": false,
+    "cellAlign": "center",
+    "contain": true,
+    "selectedAttraction": 0.1,
+    "friction": 0.8
+  }'>
+
+    <!-- SKIRT BUNDLE -->
+    <div class="carousel-cell">
+      <h3> Skirt Bundle – 5 pcs </h3>
+      <p>Get our most-loved colors in one curated set:<br>
+      Red, Emerald Green, Black, Choco Brown, and Navy Blue – all in the same size!</p>
+      <img src="https://i.postimg.cc/FRDLgpCp/1.png" alt="Skirt Bundle">
+      <form method="post" action="/cart/add">
+        <select name="id">
+          <option value="49375383748898">Small - ₱1,381.05</option>
+          <option value="49375383781666">Medium - ₱1,431.05</option>
+          <option value="49375383814434">Large - ₱1,481.05</option>
+          <option value="49375383847202">XL - ₱1,531.05</option>
+          <option value="49375383879970">2XL - ₱1,579.05</option>
+          <option value="49375383912738">3XL - ₱1,599.05</option>
+        </select>
+        <button type="submit">Add to Cart </button>
+      </form>
+    </div>
+
+    <!-- DRESS BUNDLE -->
+    <div class="carousel-cell">
+      <h3>Dress Bundle – 3 pcs </h3>
+      <p>Your fave easy-to-wear dress, now in a best-selling trio:<br>
+      Includes Black, Choco Brown, and Navy Blue – all in one size! <strong>₱2,199</strong></p>
+      <img src="https://i.postimg.cc/q7SJC3B5/Dress.png" alt="Dress Bundle">
+      <form method="post" action="/cart/add">
+        <select name="id">
+          <option value="50074727711010">Small - ₱2,199</option>
+          <option value="50075760361762">Small to Medium - ₱2,199</option>
+          <option value="50074727743778">Large - ₱2,199</option>
+          <option value="50074727776546">XL - ₱2,199</option>
+          <option value="50074727809314">2XL - ₱2,199</option>
+          <option value="50074727842082">3XL - ₱2,199</option>
+        </select>
+        <button type="submit">Add to Cart </button>
+      </form>
+    </div>
+
+    <!-- WIDELEG BUNDLE -->
+    <div class="carousel-cell">
+      <h3>Wideleg Pants Bundle – 5 pcs</h3>
+      <p>Snag our most in-demand colors in one comfy-chic bundle:<br>
+      Red, Emerald Green, Black, Choco Brown, and Navy Blue – same size for all!</p>
+      <img src="https://i.postimg.cc/CMjhz53c/Wideleg.png" alt="Wideleg Pants Bundle">
+      <form method="post" action="/cart/add">
+        <select name="id">
+          <option value="49599964807458">Medium - ₱2,120.75</option>
+          <option value="49599964840226">XL - ₱2,120.75</option>
+          <option value="49599964872994">2XL - ₱2,120.75</option>
+        </select>
+        <button type="submit">Add to Cart </button>
+      </form>
+    </div>
+    
+<!-- BUILD YOUR OWN BUNDLE SLIDE (Add to your Flickity carousel) -->
+<div class="carousel-cell">
+  <h3>Build Your Own Bundle</h3>
+  <p>Pick 1 Skirt + 1 Claire Dress + 1 Wideleg Pants<br><strong> 10% off</strong></p>
+
+  <!-- Image for the bundle -->
+  <img src="https://i.postimg.cc/8cHgwJDD/bundle.png" alt="Build Your Bundle Image" style="max-width:100%; border-radius:12px; margin-bottom:20px;">
+
+  <!-- Open link in new tab instead of popup -->
+  <a href="https://www.kasyaph.com/pages/claire-trio-bundle" target="_blank">
+    <button>Start Building</button>
+  </a>
+</div>
+
+</div>
+    
+<!-- BENEFITS SECTION -->
+<div class="benefits-section">
+  <h2>Why Shop With Us</h2>
+  <img src="https://i.imgur.com/MrJACYN.png" alt="KasyaPH Benefits">
+</div>
+
+
+

@@ -1,0 +1,71 @@
+{%- if section.settings.title != blank -%}
+  #shopify-section-{{ section.id }} {
+    {%- case section.settings.heading_size -%}
+    {%- when 'h0' -%}
+      --title-gap: -2.2rem;
+      --title-indent: 1rem;
+      --title-back-size: 4.8rem;
+      --title-back-letter-spacing: -2.4px;
+    {%- when 'h1' -%}
+      --title-gap: -1.8rem;
+      --title-indent: 0.8rem;
+      --title-back-size: 4rem;
+      --title-back-letter-spacing: -1.6px;  
+    {%- when 'h2' -%}
+      --title-gap: -1.2rem;
+      --title-indent: 0.6rem;
+      --title-back-size: 3rem;
+      --title-back-letter-spacing: -1.2px;    
+      --title-small-size: 2.4rem;
+      --title-small-letter-spacing: -0.48px;
+    {%- endcase -%}  
+  }
+
+  @media screen and (min-width: 990px) {
+    #shopify-section-{{ section.id }} {
+      {%- case section.settings.heading_size -%}
+      {%- when 'h0' -%}
+        --title-gap: -2.6rem;
+        --title-indent: 1.2rem;
+        --title-back-size: 5.4rem;
+        --title-back-letter-spacing: -2.7px;
+      {%- when 'h1' -%}
+        --title-gap: -2.2rem;
+        --title-indent: 1rem;
+        --title-back-size: 4.8rem;
+        --title-back-letter-spacing: -2.4px;  
+      {%- when 'h2' -%}
+        --title-gap: -1.8rem;
+        --title-indent: 0.8rem;
+        --title-back-size: 4rem;
+        --title-back-letter-spacing: -1.6px;    
+        --title-small-size: 3rem;
+        --title-small-letter-spacing: -0.9px;
+      {%- endcase -%}  
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    #shopify-section-{{ section.id }} {
+      {%- case section.settings.heading_size -%}
+      {%- when 'h0' -%}
+        --title-gap: -3rem;
+        --title-indent: 1.6rem;
+        --title-back-size: 6.4rem;
+        --title-back-letter-spacing: -3.2px;
+      {%- when 'h1' -%}
+        --title-gap: -2.6rem;
+        --title-indent: 1.2rem;
+        --title-back-size: 5.4rem;
+        --title-back-letter-spacing: -2.7px;  
+      {%- when 'h2' -%}
+        --title-gap: -2.2rem;
+        --title-indent: 1rem;
+        --title-back-size: 4.8rem;
+        --title-back-letter-spacing: -1.92px;    
+        --title-small-size: 3.4rem;
+        --title-small-letter-spacing: -1.02px;
+      {%- endcase -%}  
+    }
+  }
+{%- endif -%}

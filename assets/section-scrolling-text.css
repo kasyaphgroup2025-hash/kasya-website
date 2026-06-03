@@ -1,0 +1,49 @@
+.scrolling-text__content {
+  gap: var(--gap);
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc((100% + var(--gap)) * var(--transform-direction)));
+  }
+}
+
+.scrolling-text__item--outline {
+  color: rgb(var(--color-background));
+  -webkit-text-stroke: var(--text-stroke) rgb(var(--color-foreground));
+}
+
+.scrolling-text__item--gradient {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-stroke-color: transparent;
+}
+
+.scrolling-text__item--gradient:not(.scrolling-text__item--outline) {
+  -webkit-text-fill-color: transparent;
+}
+
+.scrolling-text__item {
+  padding: 5px;
+}
+
+/* Pause animation when reduced-motion is set */
+
+@media (prefers-reduced-motion: reduce) {
+  .scrolling-text__list {
+    animation-play-state: paused !important;
+  }
+}
+
+/* Enable animation */
+
+.enable-animation .scrolling-text__list {
+  animation: scroll var(--scroll-speed) linear infinite var(--animation-direction);
+}
+
+.scrolling-text__content--pause-on-hover:hover .scrolling-text__list {
+  animation-play-state: paused;
+}

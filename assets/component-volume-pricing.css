@@ -1,0 +1,84 @@
+.quantity__rules__divider + .quantity__rules__divider:before {
+  content: "-";
+  display: inline-block;
+  margin: 0 .5rem;
+}
+
+.product-volume-pricing--block {
+  --item-padding: 1.4rem 1.8rem;
+  padding: 1.5rem 2.4rem 2rem;
+}
+
+.product-volume-pricing--popup {
+  --item-padding: 1rem 1.4rem;
+  border: 1px solid rgb(var(--color-foreground), 0.05);
+}
+
+.product-volume-pricing {
+  border-radius: .6rem;
+  box-shadow: 1px 1px 1px 0px rgb(var(--color-foreground), 0.05) inset;
+}
+
+.product-volume-pricing:empty {
+  display: none;
+}
+
+.product-volume-pricing__list {
+  margin-top: 1.6rem;
+}
+
+.product-volume-pricing__list__item {
+  padding: var(--item-padding);
+  gap: 1rem 0.5rem;
+}
+
+.product-volume-pricing__list__item.odd {
+  border-radius: 4px;
+  background: rgb(var(--color-background));
+  box-shadow: 0px 1px 2px 0px rgb(var(--color-foreground), 0.05);
+}
+
+.volume-pricing-note--with-icon {
+  gap: 0.6rem;
+  font-size: calc(1rem * var(--font-body-scale));
+}
+
+.volume-pricing-note--with-icon span {
+  color: rgb(var(--color-foreground), 0.6);
+}
+
+.disclosure--volume-pricing {
+  --disclosure-direction: 0.5rem;
+}
+
+.product-volume-pricing__popup-heading {
+  padding: 0.8rem 1.6rem;
+}
+
+.disclosure__volume-pricing-list {
+  padding: 1rem;
+}
+
+.product-volume-pricing__close-button {
+  cursor: pointer;
+  transition: background 300ms ease;
+  padding: 0.3rem;
+  border-radius: 50%;
+  margin-inline-end: -5px;
+}
+
+.product-volume-pricing__close-button:hover {
+  background: rgb(var(--color-foreground), 0.05);
+}
+
+@media (min-width: 425px) {
+  .product-volume-pricing__list__item {
+    gap: 1rem 3rem;
+  }
+}
+
+@media (max-width: 749px) {
+  .product-volume-pricing--drawer {
+    inset-inline-end: 0;
+  }
+}

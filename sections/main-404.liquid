@@ -1,0 +1,32 @@
+<style type="text/css">
+  .template-404 .title + * {
+    margin-top: 1rem;
+  }
+
+  .template-404__subtext {
+    text-shadow: 3px 3px 0px rgb(var(--color-background), 0.6), 8px 8px 0px rgba(var(--color-foreground), 0.15);
+    font-size: 10rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .template-404 .title + * {
+      margin-top: 2rem;
+    }
+
+    .template-404__subtext {
+      font-size: 20rem;
+    }
+  }
+</style>
+
+<div class="template-404 page-width page-margin center">
+  <p class="font-body-bold template-404__subtext margin0">
+    {{ 'templates.404.subtext' | t }}
+  </p>
+  <h1 class="title h2 font-heading-bold">
+    {{ 'templates.404.title' | t }}
+  </h1>
+  <a href="{{ routes.all_products_collection_url }}" class="button">
+    <span>{{ 'general.continue_shopping' | t }}</span>
+  </a>
+</div>

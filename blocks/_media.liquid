@@ -1,0 +1,266 @@
+{%- doc -%}
+  Intended for use in a block similar to the media with text block.
+
+  @param {string} [block_class] - the HTML class.
+{%- enddoc -%}
+{%-liquid
+  assign should_display = true
+  assign has_content = false
+  if block.settings.media_type == 'image'
+    if block.settings.image != blank
+      assign has_content = true
+    endif
+  else
+    if block.settings.source == 'uploaded' and block.settings.video != nil
+      assign has_content = true
+    endif
+    if block.settings.source == 'url' and block.settings.video_url != nil
+      assign has_content = true
+    endif
+  endif
+  if has_content == false and request.design_mode == false
+    if request.page_type == 'product' or request.page_type == 'collection' or request.page_type == 'page' or request.page_type == 'blog' or request.page_type == 'article'
+      assign should_display = false
+    endif
+  endif
+-%}
+{%- if should_display -%}
+  {% capture block_style %}
+    --size-style-width-desktop: {{ block.settings.width_desktop }}%;
+    --size-style-width-tablet: {{ block.settings.width_tablet }}%;
+    --size-style-width-mobile: 100%;
+    --border-radius: {{ block.settings.border_radius }}px;
+    {%- if block.settings.media_type == 'video' -%}
+      {%-liquid
+        assign video_ratio = '16 / 9'
+        if block.settings.aspect_ratio == 'portrait'
+          assign video_ratio = '4 / 5'
+        elsif block.settings.aspect_ratio == 'square'
+          assign video_ratio = '1 / 1'  
+        elsif block.settings.aspect_ratio == 'adapt'
+          if block.settings.video != nil
+            assign video_ratio = block.settings.video.aspect_ratio
+          endif  
+        endif
+      %}
+      --aspect-ratio: {{ video_ratio }};
+    {%- endif -%}
+  {% endcapture %}
+  <div class="por size-style size-style--tablet{% if block_class %} {{ block_class }}{% endif %}" style="{{ block_style }}" {{ block.shopify_attributes }}>
+    {%- if block.settings.media_type == 'image' -%}
+      {%- render 'image', block: block, wrapper_class: 'custom-radius' -%}
+    {%- else -%}
+      {% if block.settings.source == 'uploaded' %}
+        {% render 'video',
+          video_from_url: false,
+          video: block.settings.video,
+          video_autoplay: block.settings.video_autoplay,
+          enable_sound: block.settings.enable_sound,
+          video_loop: block.settings.video_loop,
+          enable_controls: block.settings.enable_controls,
+          preview_image: block.settings.cover_image,
+          additional_attributes: block.shopify_attributes,
+          video_class: 'custom-radius overflow-hidden'
+        %}
+      {% else %}
+        {% render 'video',
+          video_from_url: true,
+          video: block.settings.video_url.id,
+          video_type: block.settings.video_url.type,
+          video_autoplay: block.settings.video_autoplay,
+          enable_sound: block.settings.enable_sound,
+          video_loop: block.settings.video_loop,
+          enable_controls: block.settings.enable_controls,
+          video_alt: block.settings.alt,
+          preview_image: block.settings.cover_image,
+          additional_attributes: block.shopify_attributes,
+          video_class: 'custom-radius overflow-hidden'
+        %}
+      {% endif %}
+      {{ 'video-section.css' | asset_url | stylesheet_tag }}
+      {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+    
+    {%- if block.settings.media_type == 'image' and block.settings.link != blank -%}
+      <a
+        href="{{ block.settings.link }}"
+        class="banner__full-link w100 h100"
+      ></a>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:names.media",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "media_type",
+      "label": "t:settings.media_type",
+      "options": [
+        {
+          "value": "image",
+          "label": "t:options.image"
+        },
+        {
+          "value": "video",
+          "label": "t:options.video"
+        }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:settings.image",
+      "visible_if": "{{ block.settings.media_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "t:settings.mobile_image",
+      "visible_if": "{{ block.settings.media_type == 'image' }}"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:settings.link",
+      "visible_if": "{{ block.settings.media_type == 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "source",
+      "label": "t:settings.source",
+      "options": [
+        {
+          "value": "uploaded",
+          "label": "t:options.video_uploaded"
+        },
+        {
+          "value": "url",
+          "label": "t:options.video_external_url"
+        }
+      ],
+      "default": "uploaded",
+      "visible_if": "{{ block.settings.media_type == 'video' }}"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "t:sections.video.settings.video_hosted.label",
+      "visible_if": "{{ block.settings.media_type == 'video' and block.settings.source == 'uploaded' }}"
+    },
+    {
+      "type": "video_url",
+      "id": "video_url",
+      "label": "t:sections.video.settings.video_url.label",
+      "info": "t:sections.video.settings.video_url.info",
+      "accept": ["youtube", "vimeo"],
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+      "visible_if": "{{ block.settings.media_type == 'video' and block.settings.source == 'url' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_autoplay",
+      "label": "t:sections.video.settings.autoplay.label",
+      "info": "t:info.video_autoplay",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sound",
+      "label": "t:settings.enable_sound",
+      "info": "t:info.sound_not_work_on_vimeo",
+      "default": false,
+      "visible_if": "{{ block.settings.media_type == 'video' and block.settings.video_autoplay == false }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_loop",
+      "label": "t:sections.video.settings.enable_video_looping.label",
+      "default": true,
+      "visible_if": "{{ block.settings.media_type == 'video' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_controls",
+      "label": "t:sections.video.settings.enable_controls.label",
+      "default": false,
+      "visible_if": "{{ block.settings.media_type == 'video' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "cover_image",
+      "label": "t:sections.video.settings.cover_image.label",
+      "visible_if": "{{ block.settings.media_type == 'video' and block.settings.video_autoplay == false }}"
+    },
+    {
+      "type": "text",
+      "id": "alt",
+      "label": "t:settings.video_alt_text",
+      "info": "t:info.video_alt_text",
+      "visible_if": "{{ block.settings.media_type == 'video' and block.settings.source == 'url' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.size"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "t:settings.aspect_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:options.auto"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.all.image_ratio.option_2.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.all.image_ratio.option_3.label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.all.image_ratio.option_4.label"
+        }
+      ],
+      "default": "adapt"
+    },
+    {
+      "type": "range",
+      "id": "width_desktop",
+      "label": "t:settings.width_desktop",
+      "min": 10,
+      "max": 70,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "width_tablet",
+      "label": "t:settings.width_tablet",
+      "min": 10,
+      "max": 70,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    }
+  ]
+}
+{% endschema %}

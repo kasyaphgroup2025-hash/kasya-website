@@ -1,0 +1,85 @@
+.countdown__timer {
+  gap: 1.2rem;
+}
+
+.countdown__part__value--in-banner {
+  min-width: 7rem;
+  height: 5rem;
+  padding: 1rem;
+  background: rgb(var(--color-background));
+  border-radius: 1rem;
+  margin-bottom: .5rem;
+  box-shadow: 0px 10px 10px -5px rgba(43, 43, 43, 0.04), 0px 20px 25px -5px rgba(43, 43, 43, 0.10);
+  letter-spacing: -0.96px;
+}
+
+.countdown__text--in-banner {
+  color: rgb(var(--color-background));
+  font-size: calc(1rem * var(--font-body-scale));
+  letter-spacing: 1px;
+}
+
+@media screen and (min-width: 750px) {
+  .countdown__timer {
+    gap: 1.6rem;
+  }
+
+  .countdown__text--in-banner {
+    font-size: calc(1.2rem * var(--font-body-scale));
+    letter-spacing: 1.2px;
+  }
+}
+
+/* Simple style with one color for product page and Image with text section */
+
+.product__countdown {
+  padding: 1.6rem 2.4rem;
+}
+
+.countdown-simple__inner {
+  gap: 1rem 2.4rem;
+}
+
+.countdown__timer-simple {
+  gap: 0.5rem;
+}
+
+.countdown__part--simple {
+  border-radius: 0.6rem;
+  border: 0.1rem solid rgb(var(--color-foreground), 0.05);
+  background: var(--color-background);
+  box-shadow: 0px 1px 2px 0px rgba(var(--color-foreground), 0.07);
+  min-width: 4.5rem;
+  height: 5rem;
+  padding: 0.8rem;
+}
+
+.countdown__part__value--simple {
+  font-size: calc(2rem * var(--font-heading-scale));
+  letter-spacing: -0.6px;
+}
+
+.countdown__text--simple {
+  color: rgb(var(--color-foreground));
+  font-size: calc(0.8rem * var(--font-body-scale));
+  letter-spacing: 0.5px;
+}
+
+.countdown__sep {
+  gap: 0.5rem;
+}
+
+.countdown__part--simple.hidden + .countdown__sep {
+  display: none;
+}
+
+@media (min-width: 425px) {
+  .countdown__timer-simple {
+    gap: 0.8rem;
+  }
+  
+  .countdown__part--simple {
+    min-width: 6rem;
+    padding: 0.8rem 1.2rem;
+  }
+}

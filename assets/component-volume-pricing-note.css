@@ -1,0 +1,21 @@
+.volume-pricing-note--small {
+  --volume-pricing-note-padding: 0.4rem 0.8rem;
+}
+
+.volume-pricing-note--large {
+  --volume-pricing-note-padding: 0.6rem 1.2rem;
+}
+
+.volume-pricing-note--shadow {
+  box-shadow: 0px 1px 2px 0px rgb(var(--color-foreground), 0.05);
+}
+
+.volume-pricing-note {
+  display: inline-flex;
+  padding: var(--volume-pricing-note-padding);
+  border-radius: 10rem;
+}
+
+.volume-pricing-note:not(.background-input) {
+  background: rgb(var(--color-background));
+}

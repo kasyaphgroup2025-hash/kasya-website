@@ -1,0 +1,78 @@
+@media screen and (min-width: 990px) {
+  .facets-vertical {
+    --filter-width: calc(25% + 1rem);
+    column-gap: var(--grid-desktop-horizontal-spacing);
+  }
+
+  .facets-vertical--hide-filter .facets-wrapper--vertical {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .facets-vertical--hide-filter .product-grid-container {
+    margin-inline-start: calc(-1 * var(--filter-width) - var(--grid-desktop-horizontal-spacing));
+  }
+
+  .facets-wrapper--vertical {
+    min-width: var(--filter-width);
+    width: var(--filter-width);
+    position: sticky;
+    top: 1rem;
+    max-height: calc(100vh - 1rem);
+    overflow-y: auto;
+    padding-inline-end: 1.5rem;
+    padding-inline-start: 0.5rem;
+    margin-inline-start: -0.5rem;
+    margin-inline-end: -0.5rem;
+    transition: top 500ms ease, max-height 500ms ease, opacity 500ms ease, visibility 500ms ease;
+  }
+
+  .facets-wrapper--vertical .facets-wrap {
+    overflow-y: visible;
+    margin: 0;
+    padding: 0;
+    max-height: none;
+  }
+
+  .shopify-section-header-sticky.animate:not(.shopify-section-header-hidden) ~ .content-for-layout .facets-wrapper--vertical {
+    top: calc(var(--header-height) - var(--nav-height, 0rem) + 1rem);
+    max-height: calc(100vh - var(--header-height) + var(--nav-height, 0rem) - 1rem);
+  }
+
+  .shopify-section-header-sticky.animate:not(.shopify-section-header-hidden).toggle-nav.open-nav ~ .content-for-layout .facets-wrapper--vertical {
+    top: calc(var(--header-height) + 1rem);
+    max-height: calc(100vh - var(--header-height) - 1rem);
+  }
+
+  .product-grid-container {
+    transition: margin-left 500ms ease;
+  }
+
+  .show-filter-text {
+    display: none;
+  }
+
+  .facets-vertical--hide-filter .show-filter-text {
+    display: block;
+  }
+
+  .facets-vertical--hide-filter .hide-filter-text {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 990px) and (hover: hover) {
+  .facets-wrapper--vertical::-webkit-scrollbar {
+    width: 0.7rem;
+  }
+
+  .facets-wrapper--vertical::-webkit-scrollbar-thumb {
+    background: rgb(var(--color-foreground), 0.3);
+    border-radius: 0.5rem;
+    visibility: hidden;
+  }
+
+  .facets-wrapper--vertical:hover::-webkit-scrollbar-thumb, .facets-wrapper--vertical:focus::-webkit-scrollbar-thumb {
+    visibility: visible;
+  }
+}

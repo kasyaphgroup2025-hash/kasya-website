@@ -1,0 +1,795 @@
+{% doc %}
+  @prompt
+    Build a live selling product grid.
+    Show many products per collection (target 8+ per collection, up to 25 items total).
+    Desktop: 5 per row. Tablet: 3 per row. Mobile: 2 per row.
+    
+    Each product card must have:
+    
+    Image (auto from variant)
+    
+    Title
+    
+    Price (show compare-at if any)
+    
+    Color swatches (switch image + variant)
+    
+    Size selector (disable OOS)
+    
+    Add to Cart button (AJAX to mini cart)
+    
+    NO quantity field
+    
+    Style: hype ribbons (e.g., “LIVE DEAL”, “-15%”), bold price, orange glow on hover.
+    Fast, responsive, clean. Use my collection order.”
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-live-grid-{{ ai_gen_id }} {
+    padding: 40px 20px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-live-grid-container-{{ ai_gen_id }} {
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .ai-live-grid-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .ai-live-grid-title-{{ ai_gen_id }} {
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0 0 12px;
+    color: {{ block.settings.heading_color }};
+  }
+
+  .ai-live-grid-subtitle-{{ ai_gen_id }} {
+    font-size: 16px;
+    color: {{ block.settings.text_color }};
+    margin: 0;
+  }
+
+  .ai-live-grid-products-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+  }
+
+  .ai-live-product-card-{{ ai_gen_id }} {
+    position: relative;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .ai-live-product-card-{{ ai_gen_id }}:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px {{ block.settings.hover_glow_color }}40;
+  }
+
+  .ai-live-product-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    overflow: hidden;
+    background: #f5f5f5;
+  }
+
+  .ai-live-product-image-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-live-badge-{{ ai_gen_id }} {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 4px;
+    z-index: 2;
+    letter-spacing: 0.5px;
+  }
+
+  .ai-live-badge-live-{{ ai_gen_id }} {
+    background: linear-gradient(135deg, #ff0000, #ff4444);
+    color: #fff;
+    animation: ai-live-pulse-{{ ai_gen_id }} 2s infinite;
+  }
+
+  .ai-live-badge-sale-{{ ai_gen_id }} {
+    background: {{ block.settings.sale_badge_color }};
+    color: #fff;
+  }
+
+  @keyframes ai-live-pulse-{{ ai_gen_id }} {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+  }
+
+  .ai-live-product-info-{{ ai_gen_id }} {
+    padding: 16px;
+  }
+
+  .ai-live-product-title-{{ ai_gen_id }} {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: {{ block.settings.text_color }};
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 40px;
+  }
+
+  .ai-live-product-price-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .ai-live-price-current-{{ ai_gen_id }} {
+    font-size: 20px;
+    font-weight: 700;
+    color: {{ block.settings.price_color }};
+  }
+
+  .ai-live-price-compare-{{ ai_gen_id }} {
+    font-size: 14px;
+    color: #94a3b8;
+    text-decoration: line-through;
+  }
+
+  .ai-live-color-swatches-{{ ai_gen_id }} {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .ai-live-color-swatch-{{ ai_gen_id }} {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid #e5e7eb;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .ai-live-color-swatch-{{ ai_gen_id }}:hover {
+    border-color: {{ block.settings.hover_glow_color }};
+    transform: scale(1.1);
+  }
+
+  .ai-live-color-swatch-{{ ai_gen_id }}.active {
+    border-color: {{ block.settings.hover_glow_color }};
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px {{ block.settings.hover_glow_color }};
+  }
+
+  .ai-live-size-selector-{{ ai_gen_id }} {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .ai-live-size-option-{{ ai_gen_id }} {
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #fff;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-live-size-option-{{ ai_gen_id }}:hover:not(.disabled) {
+    border-color: {{ block.settings.hover_glow_color }};
+    background: {{ block.settings.hover_glow_color }}10;
+  }
+
+  .ai-live-size-option-{{ ai_gen_id }}.active {
+    border-color: {{ block.settings.hover_glow_color }};
+    background: {{ block.settings.hover_glow_color }};
+    color: #fff;
+  }
+
+  .ai-live-size-option-{{ ai_gen_id }}.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+
+  .ai-live-add-to-cart-{{ ai_gen_id }} {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: {{ block.settings.button_color }};
+    color: {{ block.settings.button_text_color }};
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+  }
+
+  .ai-live-add-to-cart-{{ ai_gen_id }}:hover:not(:disabled) {
+    background: {{ block.settings.button_hover_color }};
+    box-shadow: 0 4px 12px {{ block.settings.hover_glow_color }}60;
+    transform: translateY(-2px);
+  }
+
+  .ai-live-add-to-cart-{{ ai_gen_id }}:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .ai-live-add-to-cart-{{ ai_gen_id }}.loading {
+    position: relative;
+    color: transparent;
+  }
+
+  .ai-live-add-to-cart-{{ ai_gen_id }}.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid {{ block.settings.button_text_color }};
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: ai-live-spin-{{ ai_gen_id }} 0.6s linear infinite;
+  }
+
+  @keyframes ai-live-spin-{{ ai_gen_id }} {
+    to { transform: rotate(360deg); }
+  }
+
+  .ai-live-empty-state-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 60px 20px;
+    color: #94a3b8;
+  }
+
+  @media screen and (max-width: 1200px) {
+    .ai-live-grid-products-{{ ai_gen_id }} {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-live-grid-products-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .ai-live-grid-title-{{ ai_gen_id }} {
+      font-size: 28px;
+    }
+
+    .ai-live-product-info-{{ ai_gen_id }} {
+      padding: 12px;
+    }
+
+    .ai-live-product-title-{{ ai_gen_id }} {
+      font-size: 13px;
+    }
+
+    .ai-live-price-current-{{ ai_gen_id }} {
+      font-size: 18px;
+    }
+
+    .ai-live-color-swatch-{{ ai_gen_id }} {
+      width: 24px;
+      height: 24px;
+    }
+
+    .ai-live-size-option-{{ ai_gen_id }} {
+      padding: 5px 10px;
+      font-size: 11px;
+    }
+
+    .ai-live-add-to-cart-{{ ai_gen_id }} {
+      padding: 10px;
+      font-size: 12px;
+    }
+  }
+{% endstyle %}
+
+<live-selling-grid-{{ ai_gen_id }} class="ai-live-grid-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-live-grid-container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank or block.settings.subtitle != blank %}
+      <div class="ai-live-grid-header-{{ ai_gen_id }}">
+        {% if block.settings.heading != blank %}
+          <h2 class="ai-live-grid-title-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+        {% endif %}
+        {% if block.settings.subtitle != blank %}
+          <p class="ai-live-grid-subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if block.settings.collection != blank %}
+      {% assign collection = block.settings.collection %}
+      {% assign products_to_show = block.settings.products_limit | at_most: collection.products.size %}
+      
+      {% if products_to_show > 0 %}
+        <div class="ai-live-grid-products-{{ ai_gen_id }}">
+          {% for product in collection.products limit: products_to_show %}
+            <div class="ai-live-product-card-{{ ai_gen_id }}" data-product-id="{{ product.id }}">
+              <div class="ai-live-product-image-wrapper-{{ ai_gen_id }}">
+                {% if product.featured_image %}
+                  <img
+                    src="{{ product.featured_image | image_url: width: 600 }}"
+                    alt="{{ product.featured_image.alt | escape }}"
+                    class="ai-live-product-image-{{ ai_gen_id }}"
+                    loading="lazy"
+                    width="600"
+                    height="600"
+                    data-main-image
+                  >
+                {% else %}
+                  <div class="ai-live-product-image-placeholder-{{ ai_gen_id }}">
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+
+                {% if block.settings.show_live_badge %}
+                  <div class="ai-live-badge-{{ ai_gen_id }} ai-live-badge-live-{{ ai_gen_id }}">
+                    {{ block.settings.live_badge_text }}
+                  </div>
+                {% elsif product.compare_at_price > product.price %}
+                  {% assign discount = product.compare_at_price | minus: product.price %}
+                  {% assign discount_percent = discount | times: 100.0 | divided_by: product.compare_at_price | round %}
+                  <div class="ai-live-badge-{{ ai_gen_id }} ai-live-badge-sale-{{ ai_gen_id }}">
+                    -{{ discount_percent }}%
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="ai-live-product-info-{{ ai_gen_id }}">
+                <h3 class="ai-live-product-title-{{ ai_gen_id }}">
+                  {{ product.title }}
+                </h3>
+
+                <div class="ai-live-product-price-{{ ai_gen_id }}">
+                  <span class="ai-live-price-current-{{ ai_gen_id }}">
+                    {{ product.price | money }}
+                  </span>
+                  {% if product.compare_at_price > product.price %}
+                    <span class="ai-live-price-compare-{{ ai_gen_id }}">
+                      {{ product.compare_at_price | money }}
+                    </span>
+                  {% endif %}
+                </div>
+
+                {% assign color_option = null %}
+                {% assign size_option = null %}
+                {% for option in product.options_with_values %}
+                  {% assign option_name_downcase = option.name | downcase %}
+                  {% if option_name_downcase == 'color' or option_name_downcase == 'colour' %}
+                    {% assign color_option = option %}
+                  {% elsif option_name_downcase == 'size' %}
+                    {% assign size_option = option %}
+                  {% endif %}
+                {% endfor %}
+
+                {% if color_option %}
+                  <div class="ai-live-color-swatches-{{ ai_gen_id }}" data-color-swatches>
+                    {% for value in color_option.values %}
+                      {% assign color_value_handle = value | handle %}
+                      {% assign swatch_image = null %}
+                      
+                      {% for variant in product.variants %}
+                        {% assign variant_color = variant.option1 %}
+                        {% if color_option.position == 2 %}
+                          {% assign variant_color = variant.option2 %}
+                        {% elsif color_option.position == 3 %}
+                          {% assign variant_color = variant.option3 %}
+                        {% endif %}
+                        
+                        {% if variant_color == value and variant.featured_image %}
+                          {% assign swatch_image = variant.featured_image %}
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+
+                      <button
+                        type="button"
+                        class="ai-live-color-swatch-{{ ai_gen_id }} {% if forloop.first %}active{% endif %}"
+                        style="background-color: {{ value | handle }}; background-image: url('{{ swatch_image | image_url: width: 100 }}');"
+                        data-color="{{ value }}"
+                        data-image-url="{% if swatch_image %}{{ swatch_image | image_url: width: 600 }}{% endif %}"
+                        aria-label="{{ value }}"
+                        title="{{ value }}"
+                      ></button>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+
+                {% if size_option %}
+                  <div class="ai-live-size-selector-{{ ai_gen_id }}" data-size-selector>
+                    {% for value in size_option.values %}
+                      {% assign size_available = false %}
+                      {% for variant in product.variants %}
+                        {% assign variant_size = variant.option1 %}
+                        {% if size_option.position == 2 %}
+                          {% assign variant_size = variant.option2 %}
+                        {% elsif size_option.position == 3 %}
+                          {% assign variant_size = variant.option3 %}
+                        {% endif %}
+                        
+                        {% if variant_size == value and variant.available %}
+                          {% assign size_available = true %}
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+
+                      <button
+                        type="button"
+                        class="ai-live-size-option-{{ ai_gen_id }} {% if forloop.first %}active{% endif %} {% unless size_available %}disabled{% endunless %}"
+                        data-size="{{ value }}"
+                        {% unless size_available %}disabled{% endunless %}
+                      >
+                        {{ value }}
+                      </button>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+
+                <button
+                  type="button"
+                  class="ai-live-add-to-cart-{{ ai_gen_id }}"
+                  data-add-to-cart
+                  data-product-id="{{ product.id }}"
+                >
+                  {{ block.settings.button_text }}
+                </button>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="ai-live-empty-state-{{ ai_gen_id }}">
+          <p>No products available in this collection.</p>
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="ai-live-empty-state-{{ ai_gen_id }}">
+        <p>Please select a collection to display products.</p>
+      </div>
+    {% endif %}
+  </div>
+</live-selling-grid-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class LiveSellingGrid{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.productCards = this.querySelectorAll('.ai-live-product-card-{{ ai_gen_id }}');
+      }
+
+      connectedCallback() {
+        this.setupProductCards();
+      }
+
+      setupProductCards() {
+        this.productCards.forEach(card => {
+          const productId = card.dataset.productId;
+          const colorSwatches = card.querySelectorAll('[data-color-swatches] button');
+          const sizeOptions = card.querySelectorAll('[data-size-selector] button');
+          const addToCartBtn = card.querySelector('[data-add-to-cart]');
+          const mainImage = card.querySelector('[data-main-image]');
+
+          let selectedColor = null;
+          let selectedSize = null;
+
+          colorSwatches.forEach(swatch => {
+            if (swatch.classList.contains('active')) {
+              selectedColor = swatch.dataset.color;
+            }
+
+            swatch.addEventListener('click', () => {
+              colorSwatches.forEach(s => s.classList.remove('active'));
+              swatch.classList.add('active');
+              selectedColor = swatch.dataset.color;
+
+              if (swatch.dataset.imageUrl && mainImage) {
+                mainImage.src = swatch.dataset.imageUrl;
+              }
+
+              this.updateAvailability(card, productId, selectedColor, selectedSize);
+            });
+          });
+
+          sizeOptions.forEach(option => {
+            if (option.classList.contains('active') && !option.disabled) {
+              selectedSize = option.dataset.size;
+            }
+
+            option.addEventListener('click', () => {
+              if (option.disabled) return;
+              
+              sizeOptions.forEach(o => o.classList.remove('active'));
+              option.classList.add('active');
+              selectedSize = option.dataset.size;
+
+              this.updateAvailability(card, productId, selectedColor, selectedSize);
+            });
+          });
+
+          addToCartBtn.addEventListener('click', () => {
+            this.addToCart(card, productId, selectedColor, selectedSize, addToCartBtn);
+          });
+        });
+      }
+
+      async updateAvailability(card, productId, color, size) {
+        try {
+          const response = await fetch(`/products/${productId}.js`);
+          const product = await response.json();
+          
+          const sizeOptions = card.querySelectorAll('[data-size-selector] button');
+          
+          sizeOptions.forEach(option => {
+            const optionSize = option.dataset.size;
+            let isAvailable = false;
+
+            product.variants.forEach(variant => {
+              const variantOptions = [variant.option1, variant.option2, variant.option3].filter(Boolean);
+              
+              if (color && size) {
+                if (variantOptions.includes(color) && variantOptions.includes(optionSize) && variant.available) {
+                  isAvailable = true;
+                }
+              } else if (color) {
+                if (variantOptions.includes(color) && variantOptions.includes(optionSize) && variant.available) {
+                  isAvailable = true;
+                }
+              } else if (variantOptions.includes(optionSize) && variant.available) {
+                isAvailable = true;
+              }
+            });
+
+            if (isAvailable) {
+              option.classList.remove('disabled');
+              option.disabled = false;
+            } else {
+              option.classList.add('disabled');
+              option.disabled = true;
+              if (option.classList.contains('active')) {
+                option.classList.remove('active');
+              }
+            }
+          });
+        } catch (error) {
+          console.error('Error updating availability:', error);
+        }
+      }
+
+      async addToCart(card, productId, color, size, button) {
+        try {
+          button.classList.add('loading');
+          button.disabled = true;
+
+          const response = await fetch(`/products/${productId}.js`);
+          const product = await response.json();
+
+          let variantId = null;
+
+          if (color || size) {
+            for (const variant of product.variants) {
+              const variantOptions = [variant.option1, variant.option2, variant.option3].filter(Boolean);
+              
+              if (color && size) {
+                if (variantOptions.includes(color) && variantOptions.includes(size)) {
+                  variantId = variant.id;
+                  break;
+                }
+              } else if (color && variantOptions.includes(color)) {
+                variantId = variant.id;
+                break;
+              } else if (size && variantOptions.includes(size)) {
+                variantId = variant.id;
+                break;
+              }
+            }
+          } else {
+            variantId = product.variants[0].id;
+          }
+
+          if (!variantId) {
+            throw new Error('Please select all options');
+          }
+
+          const formData = {
+            items: [{
+              id: variantId,
+              quantity: 1
+            }]
+          };
+
+          const cartResponse = await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+          });
+
+          if (!cartResponse.ok) {
+            throw new Error('Failed to add to cart');
+          }
+
+          document.dispatchEvent(new CustomEvent('cart:refresh'));
+          
+          const cartDrawer = document.querySelector('cart-drawer');
+          if (cartDrawer) {
+            cartDrawer.open();
+          }
+
+        } catch (error) {
+          console.error('Error adding to cart:', error);
+          alert(error.message || 'Failed to add to cart. Please try again.');
+        } finally {
+          button.classList.remove('loading');
+          button.disabled = false;
+        }
+      }
+    }
+
+    customElements.define('live-selling-grid-{{ ai_gen_id }}', LiveSellingGrid{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Live selling grid",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Live Selling Now"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Grab these deals before they're gone!"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "min": 4,
+      "max": 25,
+      "step": 1,
+      "label": "Maximum products",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Live badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_live_badge",
+      "label": "Show live badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "live_badge_text",
+      "label": "Live badge text",
+      "default": "LIVE DEAL"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Add to Cart"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#fafafa"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Price",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "sale_badge_color",
+      "label": "Sale badge",
+      "default": "#ef4444"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Button hover background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "hover_glow_color",
+      "label": "Hover glow",
+      "default": "#ff6b35"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Live selling grid"
+    }
+  ]
+}
+{% endschema %}

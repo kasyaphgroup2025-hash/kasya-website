@@ -1,0 +1,15 @@
+{%- comment -%}
+  Intended for blocks and sections that provide values for all the custom typography settings.
+  Accepts:
+     local_settings: {block.settings || section.settings}
+{%- endcomment -%}
+--custom-font-scale: {{ local_settings.font_size_scale | divided_by: 100.0 }};
+{% if local_settings.heading_line_height and local_settings.heading_line_height != 'auto' %}
+  --custom-heading-line-height: {{ local_settings.heading_line_height }};
+{% endif %}  
+{% if local_settings.paragraph_line_height and local_settings.paragraph_line_height != 'auto' %}
+  --custom-paragraph-line-height: {{ local_settings.paragraph_line_height }};
+{% endif %}
+{% if local_settings.custom_line_height and local_settings.custom_line_height != 'auto' %}
+  --custom-{% if local_settings.html_tag == 'p' %}paragraph{% else %}heading{% endif %}-line-height: {{ local_settings.custom_line_height }};
+{% endif %}  

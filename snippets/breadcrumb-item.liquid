@@ -1,0 +1,28 @@
+{% comment %}
+	Renders an item in breadcrumb
+
+	Accepts:
+	- url: {String} URL of the item (optional)
+	- label: {String} Label of the item
+	- index: {Number} The position of the item
+
+	Usage:
+	{% render 'breadcrumb-item' %}
+{% endcomment %}
+<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="flex">
+	{%- if url -%}
+	<a itemprop="item" href="{{ url }}" class="light full-unstyled-link">
+	{%- endif -%}	
+		<span itemprop="name"{% unless url %} class="break"{% endunless %}>{{ label }}</span>
+	{%- if url -%}
+		</a>
+	{%- endif -%}
+	<meta itemprop="position" content="{{ index }}" />
+</li>
+{%- if url -%}
+<li class="flex">
+	<svg class="icon breadcrumb__slash light icon-revert-in-rtl" aria-hidden="true" focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+		<path d="M6 3.33329L10.6667 7.99996L6 12.6666" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+	</svg>
+</li>
+{%- endif -%}

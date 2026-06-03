@@ -1,0 +1,6 @@
+{%- assign rtl_codes = "ae,ar,arc,bcc,bqi,ckb,dv,fa,glk,ha,he,kwh,ks,ku,mzn,nqo,pnb,ps,sd,ug,ur,yi" | split: "," -%}
+{%- unless rtl_codes contains request.locale.iso_code -%}
+  ltr
+{%- else -%}
+  rtl  
+{%- endunless -%}  

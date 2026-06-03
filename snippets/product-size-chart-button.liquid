@@ -1,0 +1,10 @@
+<modal-opener class="popup-modal__opener popup-modal__button-size-chart no-js-hidden quick-add-hidden" data-modal="#PopupModal-{{ block.id }}">
+  <button id="ProductPopup-{{ block.id }}" class="product__sale-box__footer-button font-body-semi-bold flex align-center unstyled-button text-body por" type="button" aria-haspopup="dialog">
+    {%- render 'icon-ruler' -%}
+    <span class="caption-large">{{- block.settings.size_chart_link_label | default: block.settings.size_chart_page.title -}}</span>
+  </button>
+</modal-opener>
+<a href="{{ block.settings.size_chart_page.url }}" class="popup-modal__button popup-modal__button-size-chart product__sale-box__footer-button font-body-semi-bold flex align-center unstyled-button text-body link no-js">
+  {%- render 'icon-ruler' -%}
+  <span class="caption-large">{{ block.settings.size_chart_link_label | default: block.settings.size_chart_page.title }}</span>
+</a> 

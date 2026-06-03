@@ -1,0 +1,123 @@
+{%-liquid
+  case request.page_type
+    when 'collection'
+    unless section.settings.page_heading_collection_image_height == '0'
+    assign image_height = section.settings.page_heading_collection_image_height
+  else
+    assign image_height = settings.page_heading_collection_image_height
+  endunless
+    when 'blog' or 'article'
+      assign banner_image = section.settings.title_background_image | default: settings.page_heading_blog_banner_image
+      assign image_height = settings.page_heading_blog_image_height
+    else
+      assign banner_image = settings.page_heading_other_banner_image
+      assign image_height = settings.page_heading_other_image_height
+  endcase
+  if banner_image != blank
+    assign wrapper_tag = 'parallax-element'
+  else
+    assign wrapper_tag = 'div'  
+  endif
+-%}
+<{{ wrapper_tag }} class="db page-title por{% unless banner_image != blank %} background-input{% endunless %} color-{{ settings.page_heading_color_scheme }} isolate{% if banner_image != blank %} page-title--with-image{% if settings.page_heading_overlay_color != blank and settings.page_heading_overlay_color.alpha > 0 %} background-overlay{% endif %}{% endif %} overflow-hidden{% if settings.enable_appear_effect and banner_image != blank %} {% endif %}" data-speed="0.5" style="--speed: 0.5;"{% unless enable_parallax_scrolling_effect %} data-turn-off="true"{% endunless %}>
+  {%- if banner_image != blank -%}
+    <appear-animate-single class="parallax-inner w100 h100 db media media--background media--transparent" data-immediate="true" data-force="true">
+      {%- capture sizes -%}
+        (min-width: {{ settings.page_width }}px) {{ settings.page_width | plus: 100 }}px, calc(100vw - 30px)
+      {%- endcapture -%}
+      {%- liquid
+        assign widths = ''
+        if banner_image.width >= 375
+          assign widths = widths | append: '375,'
+        endif
+        if banner_image.width >= 550
+          assign widths = widths | append: '550,'
+        endif
+        if banner_image.width >= 750
+          assign widths = widths | append: '750,'
+        endif
+        if banner_image.width >= 1100
+          assign widths = widths | append: '1100,'
+        endif
+        if banner_image.width >= 1500
+          assign widths = widths | append: '1500,'
+        endif  
+        if banner_image.width >= 1780
+          assign widths = widths | append: '1780,'
+        endif  
+        if banner_image.width >= 2000
+          assign widths = widths | append: '2000,'
+        endif  
+        if banner_image.width >= 3000
+          assign widths = widths | append: '3000,'
+        endif  
+        if banner_image.width >= 3840
+          assign widths = widths | append: '3840,'
+        endif
+        assign widths = widths | append: banner_image.width
+      -%}
+      {%- if preload_background_image -%}
+        {{ banner_image | image_url: width: banner_image.width | image_tag: sizes: sizes, widths: widths, width: banner_image.width, height: banner_image.height, preload: true, fetchpriority: 'high' }}
+      {%- else -%}
+        {{ banner_image | image_url: width: banner_image.width | image_tag: sizes: sizes, widths: widths, width: banner_image.width, height: banner_image.height, preload: false }}  
+      {%- endif -%}
+    </appear-animate-single>
+  {%- endif -%}
+
+  <div class="page-title__text-wrapper">
+    <div class="page-width">
+      {%- liquid
+        if settings.enable_breadcrumns
+          assign breadcrumb_align_class = 'justify-' | append: settings.page_heading_alignment
+          render 'breadcrumbs', no_page_width: true, align_classes: breadcrumb_align_class, add_classes: 'margin-bottom-1rem'
+        endif  
+      -%}
+
+      <h1 class="page-title__title {{ settings.page_heading_size }} {{ settings.page_heading_alignment }} margin0 font-heading-extra-bold">
+        {{- heading_title | escape -}}
+      </h1>
+      {%- if extra_html != blank -%}{{ extra_html }}{%- endif -%}
+    </div>
+  </div>
+</{{ wrapper_tag }}>
+<style>
+.page-title {
+  --page-title-height: 5rem;
+  padding: {% unless has_transparent %}var(--page-title-height){% else %}calc(var(--page-title-height) + max(8rem, var(--header-height, 0px))){% endunless %} 0 calc(var(--page-title-height) + var(--extra-height, 0rem));
+}
+.page-title__title {
+  font-weight: var(--font-heading-weight-bold);
+}
+{%- if banner_image != blank -%}
+  .page-title .page-title__text-wrapper {
+    position: relative;
+    z-index: 2;
+  }
+  .page-title--with-image {
+    --color-foreground: var(--color-page-heading-text);
+    --page-title-height: {{ image_height | divided_by: 3 }}rem;
+    --focal-point:{{ banner_image.presentation.focal_point }};
+    {%- if settings.page_heading_overlay_color != blank and settings.page_heading_overlay_color.alpha > 0 -%}
+      --color-overlay: {{ settings.page_heading_overlay_color.red }}, {{ settings.page_heading_overlay_color.green }}, {{ settings.page_heading_overlay_color.blue }};
+      --overlay-opacity: 0.3;
+    {%- endif -%}  
+  }
+  {%- if settings.page_heading_overlay_color != blank and settings.page_heading_overlay_color.alpha > 0 -%}
+    .page-title--with-image:before {
+      z-index: 1;
+    }
+  {%- endif -%}
+  @media(min-width: 750px) {
+    .page-title--with-image {
+      --page-title-height: {{ image_height | divided_by: 2 }}rem;
+    }
+  }
+  {%- if has_transparent -%}
+    @media(min-width: 990px) {
+      .page-title--with-image {
+        padding-top: calc(var(--page-title-height) + max(23rem, var(--header-height, 0px)))
+      }
+    }
+  {%- endif -%}
+{%- endif -%}
+</style>

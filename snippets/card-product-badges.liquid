@@ -1,0 +1,78 @@
+{%- comment -%}
+	Renders badges in a card product
+
+	Accepts:
+	- card_product: {Object} Product Liquid object (optional)
+	- section_id: {String} The ID of the section that contains this card.
+	- prefix_id: {String} The prefix that used to print in the HTML ID. Not apply the prefix ID for custom badges.
+	
+	Usage:
+	{% render 'card-product-badges', card_product: product %}
+{%- endcomment -%}
+{%- liquid
+	assign custom_badges = ''
+	assign total = 0
+	assign index_badge_position = 1
+  assign sale_badge_position = 0
+	if card_product.compare_at_price > card_product.price and card_product.available and settings.sale_badge_label != 'none'
+		assign total = total | plus: 1
+    assign sale_badge_position = settings.sale_badge_position | plus: 0
+    if index_badge_position == sale_badge_position
+      assign index_badge_position = index_badge_position | plus: 1
+    endif
+	endif	
+	for i in (1..5)
+		assign index_badge = 'custom_badge_metafield_' | append: i
+		if settings[index_badge] != blank and total < 4
+			assign metafield_parts = settings[index_badge] | split: '.'
+			if card_product.metafields[metafield_parts[0]][metafield_parts[1]] != blank
+				if card_product.metafields[metafield_parts[0]][metafield_parts[1]].type == 'single_line_text_field'
+					assign custom_badges = custom_badges | append: '<span class="badge badge--bottom-left badge--custom-' | append: i | append: ' badge--position-' | append: index_badge_position | append: ' font-body-bold">' | append: card_product.metafields[metafield_parts[0]][metafield_parts[1]].value | append: '</span>'
+					assign total = total | plus: 1
+					assign index_badge_position = index_badge_position | plus: 1
+          if index_badge_position == sale_badge_position
+            assign index_badge_position = index_badge_position | plus: 1
+          endif
+				elsif card_product.metafields[metafield_parts[0]][metafield_parts[1]].type == 'list.single_line_text_field'
+					for value in card_product.metafields[metafield_parts[0]][metafield_parts[1]].value
+						assign custom_badges = custom_badges | append: '<span class="badge badge--bottom-left badge--custom-' | append: i | append: ' badge--position-' | append: index_badge_position | append: ' font-body-bold">' | append: value | append: '</span>'
+						assign total = total | plus: 1
+						assign index_badge_position = index_badge_position | plus: 1
+            if index_badge_position == sale_badge_position
+              assign index_badge_position = index_badge_position | plus: 1
+            endif
+					endfor
+				endif	
+			endif
+		endif
+	endfor
+-%}
+{%- if total > 0 or card_product.available == false -%}
+	{%- if card_product.compare_at_price > card_product.price and card_product.available and settings.sale_badge_label != 'none' -%}
+		<span id="{{ prefix_id }}-{{ section_id }}-{{ card_product.id }}" class="badge badge--bottom-left badge--sale badge--position-{{ sale_badge_position }} font-body-bold">
+			{%- if settings.sale_badge_label == 'text' -%}
+				{{ 'products.product.on_sale' | t }}
+			{%- elsif settings.sale_badge_label == 'percent' -%}
+				{%- capture discount_amount -%}
+          {{ card_product.compare_at_price | minus: card_product.price | times: 100.00 | divided_by: card_product.compare_at_price | round }}%
+        {%- endcapture -%}
+        {{ 'products.product.price.discount_html' | t: amount: discount_amount }}
+			{%- else -%}
+				{%- capture discount_amount -%}
+          {%- if settings.currency_code_enabled -%}
+						{{ card_product.compare_at_price | minus: card_product.price | money_with_currency }}	
+					{%- else -%}
+						{{ card_product.compare_at_price | minus: card_product.price | money }}	
+					{%- endif -%}	
+        {%- endcapture -%}
+        {{ 'products.product.price.discount_html' | t: amount: discount_amount }}	
+			{%- endif -%}	
+		</span>
+	{%- endif -%}
+	{%- if card_product.available == false -%}
+		<span id="{{ prefix_id }}-{{ section_id }}-{{ card_product.id }}" class="badge badge--bottom-left badge--sold-out uppercase {% if card_product.compare_at_price > card_product.price and card_product.available %}badge--position-2{% else %}badge--position-1{% endif %} font-body-bold">{{ 'products.product.sold_out' | t }}</span>
+	{%- endif -%}	
+	{{ custom_badges }}
+{%- endif -%} {% if card_product.tags contains 'New Arrival' %}
+  <span class="product-card__badge">NEW ARRIVAL</span>
+{% endif %}

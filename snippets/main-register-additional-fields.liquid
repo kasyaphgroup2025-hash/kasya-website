@@ -1,0 +1,143 @@
+{%- if section.blocks.size > 0 -%}
+  {%- for field in section.blocks -%}
+    {% if field.settings.position == position %}
+      {%- assign information_id = field.settings.information_id | default: field.settings.title -%}
+      {%- if information_id != blank -%}
+        <div class="field{% if field.settings.type == 'textarea' %} field--full{% endif %}">
+          {%- if field.settings.title != blank -%}
+            {%- if field.settings.type != 'checkboxes'
+              or field.settings.type == 'checkboxes'
+              and field.settings.options != blank
+            -%}
+              <label
+                class="field__label text-small font-body-semi-bold uppercase"
+                for="RegisterForm-field-{{ field.id }}"
+              >
+                {{- field.settings.title -}}
+                {%- if field.settings.required %}
+                  <span aria-hidden="true">*</span>
+                {%- endif -%}
+              </label>
+            {%- endif -%}
+          {%- endif -%}
+          {%- case field.settings.type -%}
+            {%- when 'text' -%}
+              <input
+                type="text"
+                id="RegisterForm-field-{{ field.id }}"
+                name="customer[note][{{ information_id | escape }}]"
+                class="field__input"
+                {% if field.settings.required %}
+                  aria-required="true" required="required"
+                {% endif %}
+              >
+            {%- when 'textarea' -%}
+              <textarea
+                id="RegisterForm-field-{{ field.id }}"
+                name="customer[note][{{ information_id | escape }}]"
+                class="text-area field__input"
+                rows="10"
+                {% if field.settings.required %}
+                  aria-required="true" required="required"
+                {% endif -%}
+              ></textarea>
+            {%- when 'checkboxes' -%}
+              {%- if field.settings.options != blank -%}
+                {%- assign options = field.settings.options | split: ';' -%}
+                <ul class="list-unstyled contact__list-option field__list-option flex flex-wrap">
+                  {%- for option in options -%}
+                    <li>
+                      <div class="por flex virtual-checkbox">
+                        <input
+                          type="checkbox"
+                          name="customer[note][{{ information_id | escape }}{% if options.size > 1 %}_{{ forloop.index }}{% endif %}]"
+                          id="contact-field-{{ field.id }}-option-{{ forloop.index }}"
+                          value="{{ option | strip | escape }}"
+                          {% if field.settings.required and options.size == 1 %}
+                            aria-required="true" required="required"
+                          {% endif %}
+                          class="virtual-checkbox__checkbox margin0"
+                        >
+                        <label
+                          for="contact-field-{{ field.id }}-option-{{ forloop.index }}"
+                          class="virtual-checkbox__label db {% unless field.settings.title != blank %}contact__checkbox-large-label{% else %}text-small{% endunless %}"
+                        >
+                          <svg
+                            class="virtual-checkbox__icon-checkmark icon icon-checkmark"
+                            width="10"
+                            height="8"
+                            viewBox="0 0 10 8"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path d="M1.5 4.00002L3.83333 6.33335L8.5 1.66669" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                          <span class="first-letter-uppercase db">
+                            {{- option -}}
+                            {%- if field.settings.title == blank and field.settings.required and options.size == 1 %}
+                              <span aria-hidden="true">*</span>
+                            {%- endif -%}
+                          </span>
+                        </label>
+                      </div>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- else -%}
+                <div class="por flex virtual-checkbox">
+                  <input
+                    type="checkbox"
+                    name="customer[note][{{ information_id | escape }}]"
+                    id="contact-field-{{ field.id }}-option-{{ forloop.index }}"
+                    value="Yes"
+                    {% if field.settings.required %}
+                      aria-required="true" required="required"
+                    {% endif %}
+                    class="virtual-checkbox__checkbox margin0"
+                  >
+                  <label
+                    for="contact-field-{{ field.id }}-option-{{ forloop.index }}"
+                    class="virtual-checkbox__label db contact__checkbox-large-label"
+                  >
+                    <svg
+                      class="virtual-checkbox__icon-checkmark icon icon-checkmark"
+                      width="10"
+                      height="8"
+                      viewBox="0 0 10 8"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M1.5 4.00002L3.83333 6.33335L8.5 1.66669" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="first-letter-uppercase db">
+                      {{- field.settings.title | default: field.settings.information_id -}}
+                      {%- if field.settings.required %}
+                        <span aria-hidden="true">*</span>
+                      {%- endif -%}
+                    </span>
+                  </label>
+                </div>
+              {%- endif -%}
+            {%- else -%}
+              {%- assign options = field.settings.options | split: ';' -%}
+              <div class="select">
+                <select
+                  id="RegisterForm-field-{{ field.id }}"
+                  name="customer[note][{{ information_id | escape }}]"
+                  class="select__select"
+                  {% if field.settings.required %}
+                    aria-required="true" required="required"
+                  {% endif %}
+                >
+                  {%- for option in options -%}
+                    <option value="{{ option | strip | escape }}">{{ option }}</option>
+                  {%- endfor -%}
+                </select>
+                {%- render 'icon-caret' -%}
+              </div>
+          {%- endcase -%}
+        </div>
+      {%- endif -%}
+    {% endif %}
+  {%- endfor -%}
+{%- endif -%}

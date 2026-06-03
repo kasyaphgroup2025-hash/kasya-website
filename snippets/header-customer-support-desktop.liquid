@@ -1,0 +1,49 @@
+{%- if supported_region_blocks.size > 0 -%}
+  <details-disclosure class="header__customer-support-region small-hide medium-hide por" data-ignore-hover="true" id="header-region-desktop">
+    <details class="disclosure">
+      <summary class="disclosure__button header__customer-support-region__button header__customer-support-region__button--desktop flex align-center">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" class="icon icon-support-region light">
+          <path d="M2 10L5 10C5.55228 10 6 10.4477 6 11V16C6 16.5523 5.55228 17 5 17H3C2.44772 17 2 16.5523 2 16V10Z" stroke="currentColor" stroke-width="2"/>
+          <path d="M22 10L19 10C18.4477 10 18 10.4477 18 11V16C18 16.5523 18.4477 17 19 17H21C21.5523 17 22 16.5523 22 16V10Z" stroke="currentColor" stroke-width="2"/>
+          <path d="M21 8C21 4.5 17.5228 1 12 1C6.47715 1 3 4.5 3 8" stroke="currentColor" stroke-width="2"/>
+          <path d="M21 20V21V21C21 22.1046 20.1046 23 19 23H11.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="header__customer-support-region__global-info">
+          {%- if section.settings.customer_support_region_caption != blank -%}
+            <span class="light db w100 caption lh1">{{ section.settings.customer_support_region_caption }}</span>
+          {%- endif -%}
+          <span class="link link--text font-body-bold">{{ section.settings.customer_support_region_global_hotline }}</span>
+        </span>
+        {%- render 'icon-caret-18', add_classes: 'light' -%}
+      </summary>
+      <div class="disclosure__list-wrapper disclosure__list-wrapper--bottom header__customer-support-region__list header__customer-support-region__list--in-dropdown flex flex-column">
+        {%- for region in supported_region_blocks -%}
+            {%- unless forloop.first -%}
+              <hr class="margin0">
+            {%- endunless -%}  
+            <div class="header__customer-support-region__region flex flex-column" {{ region.shopify_attributes }}>
+              <span class="header__customer-support-region__name">{{ region.settings.title }}</span>
+              <a href="tel:{{ region.settings.hotline }}" class="header__customer-support-region__hotline font-body-bold link link--text" data-no-instant>{{ region.settings.hotline }}</a>
+              <span class="header__customer-support-region__address light">{{ region.settings.address }}</span>
+              <a href="mailto:{{ region.settings.email }}" class="header__customer-support-region__email link link--text" data-no-instant>{{ region.settings.email }}</a>
+            </div>
+        {%- endfor -%}  
+      </div>
+    </details>
+  </details-disclosure>
+{%- else -%}
+<a href="tel:{{ section.settings.customer_support_region_global_hotline | escape }}" class="header__customer-support-region__button header__customer-support-region flex link link--text align-center small-hide medium-hide por" data-no-instant>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" class="icon icon-support-region light">
+    <path d="M2 10L5 10C5.55228 10 6 10.4477 6 11V16C6 16.5523 5.55228 17 5 17H3C2.44772 17 2 16.5523 2 16V10Z" stroke="currentColor" stroke-width="2"/>
+    <path d="M22 10L19 10C18.4477 10 18 10.4477 18 11V16C18 16.5523 18.4477 17 19 17H21C21.5523 17 22 16.5523 22 16V10Z" stroke="currentColor" stroke-width="2"/>
+    <path d="M21 8C21 4.5 17.5228 1 12 1C6.47715 1 3 4.5 3 8" stroke="currentColor" stroke-width="2"/>
+    <path d="M21 20V21V21C21 22.1046 20.1046 23 19 23H11.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </svg>
+  <span class="header__customer-support-region__global-info">
+    {%- if section.settings.customer_support_region_caption != blank -%}
+      <span class="light db w100 caption lh1">{{ section.settings.customer_support_region_caption }}</span>
+    {%- endif -%}
+    <span class="font-body-bold">{{ section.settings.customer_support_region_global_hotline }}</span>
+  </span>
+</a>   
+{%- endif -%}

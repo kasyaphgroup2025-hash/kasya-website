@@ -1,0 +1,96 @@
+{%- if collection and section.settings.show_next_prev_products -%}
+  <link rel="stylesheet" href="{{ 'component-next-prev-products.css' | asset_url }}" media="print" onload="this.media='all'">
+  <noscript>{{ 'component-next-prev-products.css' | asset_url | stylesheet_tag }}</noscript>
+	<div class="product-nav small-hide medium-hide">
+		{%- if collection.previous_product -%}
+			{%- assign prev_product = collection.previous_product -%}
+			<div class="product-nav__item product-nav__item--previous product-nav__item--transform-left">
+				<div class="product-nav__content flex align-center por">
+					<div class="product-nav__info text-right">
+						{%- if prev_product.vendor != blank -%}
+							<span class="product-nav__vendor w100 db">{{ prev_product.vendor }}</span>
+						{%- endif -%}
+						<a href="{{ prev_product.url | within: nav_collection }}" title="{{ prev_product.title | escape }}" class="product-nav__title full-link link h4">{{ prev_product.title }}</a>
+					</div>
+					<div class="product-nav__image">
+						<div class="media media--hover-effect media--square w100">
+              {%- if prev_product.featured_image != blank -%}
+                {{ prev_product.featured_image | image_url: width: 1420 | image_tag:
+                  loading: 'lazy',
+                  width: 300
+                }}
+              {%- endif -%}
+            </div>
+					</div>
+					<div class="product-nav__direction product-nav__direction--previous text-uppercase">
+						<div class="product-nav__text product-nav__text--previous">
+							<svg class="icon" aria-hidden="true" focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M15 19L8 12L15 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>  
+						</div>
+					</div>
+				</div>
+			</div>
+		{%- endif -%}
+		{%- if collection.next_product -%}
+			{%- assign next_product = collection.next_product -%}
+			<div class="product-nav__item product-nav__item--next product-nav__item--transform-right">
+				<div class="product-nav__content flex align-center por">
+					<div class="product-nav__direction product-nav__direction--next text-uppercase">
+						<div class="product-nav__text product-nav__text--next">
+							<svg class="icon" aria-hidden="true" focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>  
+						</div>
+					</div>
+					<div class="product-nav__image">
+            <div class="media media--hover-effect media--square w100">
+              {%- if next_product.featured_image != blank -%}
+                {{ next_product.featured_image | image_url: width: 1420 | image_tag:
+                  loading: 'lazy',
+                  width: 300
+                }}
+              {%- endif -%}
+            </div>  
+					</div>
+					<div class="product-nav__info text-left">
+						{%- if next_product.vendor != blank -%}
+							<span class="product-nav__vendor w100 db">{{ next_product.vendor }}</span>
+						{%- endif -%}
+						<a href="{{ next_product.url | within: nav_collection }}" title="{{ next_product.title | escape }}" class="product-nav__title full-link link h4">{{ next_product.title }}</a>
+					</div>
+				</div>
+			</div>
+		{%- endif -%}
+	</div>
+{%- endif -%}
+<style>
+.product-nav__item {
+  position: fixed;
+  top: 50%;
+  z-index: 2;
+  padding: 1.5rem;
+}
+.product-nav__content {
+	width: 32rem;
+}
+.product-nav__item--previous {
+  inset-inline-start: 0;
+}
+.product-nav__item--transform-left {
+  transform: translate(calc((100% - 3.5rem) * var(--transform-direction)), -50%);
+}
+.product-nav__item--next {
+  inset-inline-end: 0;
+}
+.product-nav__item--transform-right {
+  transform: translate(calc((-100% + 3.5rem) * var(--transform-direction)), -50%);
+}
+.product-nav__info {
+  padding: 0 15px;
+  width: 70%;
+}
+.product-nav__image {
+  width: 30%;
+}
+</style>

@@ -1,0 +1,15 @@
+<quick-view-modal id="QuickView-Modal" class="popup-modal quick-view-modal">
+	{{ 'section-main-product.css' | asset_url | stylesheet_tag }}
+    {{ 'component-accordion.css' | asset_url | stylesheet_tag }}
+    {{ 'component-price.css' | asset_url | stylesheet_tag }}
+    {{ 'component-rating.css' | asset_url | stylesheet_tag }}
+    {{ 'component-loading-overlay.css' | asset_url | stylesheet_tag }}
+    {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
+    {{ 'section-main-product-no-media.css' | asset_url | stylesheet_tag }}
+	<div role="dialog" aria-modal="true" aria-label="{{ 'products.product.quick_view' | t | escape }}" class="popup-modal__content quick-view-modal__content" tabindex="-1">
+        <button id="ModalClose-QuickView" type="button" class="popup-modal__toggle quick-view-modal__toggle" aria-label="{{ 'accessibility.close' | t }}">{% render 'icon-close' %}</button>
+        <div id="QuickViewInfo-QuickView" class="quick-view-modal__content-info popup-modal__content-info flex">
+        </div>
+	</div>
+    <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
+</quick-view-modal>

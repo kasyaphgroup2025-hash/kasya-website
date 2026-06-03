@@ -1,0 +1,125 @@
+{%- if settings.recently_viewed_enable -%}
+  <style>
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+
+    {%- render 'section-heading-styles' -%}
+  </style>
+
+  <recently-viewed class="db recently-viewed-products"
+    {% if request.page_type == 'product' and product %} data-product-id="{{ product.id }}" data-product-url="{{ product.url }}" data-product-image="{{ product.featured_image | image_url: width: 100 }}"{% endif %}
+    {% if section.settings.full_width %} data-full-width="true"{% endif %}
+    data-prev-button="Slider-{{ section.id }}-prev-button"
+    data-next-button="Slider-{{ section.id }}-next-button"
+    data-limit="{{ settings.recently_viewed_products_to_show }}"
+    data-color-scheme="{{ section.settings.color_scheme }}"
+    data-inherit-card-color-scheme="{{ settings.recently_viewed_inherit_card_color_scheme }}"
+    data-card-color-scheme="{{ settings.recently_viewed_card_color_scheme }}"
+  >
+    <div class="recently-viewed-products__section color-{{ section.settings.color_scheme }} gradient hidden">
+      <div class="collection section-{{ section.id }}-padding">
+        <div class="page-width{% if section.settings.full_width %}--full{% endif %}">
+          {%- render 'section-heading', show_desktop_slider: true, show_tablet_slider: true, show_mobile_slider: true -%}
+        </div>
+        <div class="recently-viewed-products__results{% if section.settings.full_width == false %} page-width{% endif %}">
+          
+        </div>  
+      </div>
+    </div>
+  </recently-viewed>
+{%- endif -%}
+{% schema %}
+{
+  "name": "t:sections.recently-viewed-products.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.recently-viewed-products.settings.instruction.content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Recently viewed",
+      "label": "t:sections.recently-viewed-products.settings.title.label"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "t:sections.recently-viewed-products.settings.subtitle.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:sections.recently-viewed-products.settings.full_width.label",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.recently-viewed-products.presets.name",
+      "category": "t:categories.products"
+    }
+  ]
+}
+{% endschema %}

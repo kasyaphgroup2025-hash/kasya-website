@@ -1,0 +1,51 @@
+{%- if product.quantity_price_breaks_configured? -%}
+  <volume-pricing class="product-form__volume-pricing product-volume-pricing product-volume-pricing--block background-input db caption-large font-body-semi-bold margin-top-1rem parent-display" id="Volume-{{ section_id | default: section.id }}">
+    {%- if product.selected_or_first_available_variant.quantity_price_breaks.size > 0 -%}
+      <span>{{ 'products.product.volume_pricing.title' | t }}</span>
+      <ul class="product-volume-pricing__list list-unstyled">
+        <li class="product-volume-pricing__list__item flex justify-space-between align-center odd">
+          <span>{{ product.selected_or_first_available_variant.quantity_rule.min }}+</span>
+          {%-liquid
+            assign money_price = product.selected_or_first_available_variant.price | money
+            if settings.currency_code_enabled
+              assign money_price = product.selected_or_first_available_variant.price | money_with_currency
+            endif
+          -%}
+          <span data-text="{{ 'products.product.volume_pricing.price_at_each' | t: price: money_price }}">
+            {{- money_price -}}
+          </span>
+        </li>
+        {%- for price_break in product.selected_or_first_available_variant.quantity_price_breaks -%}
+          {%-liquid
+            assign money_price = price_break.price | money
+            if settings.currency_code_enabled
+              assign money_price = price_break.price | money_with_currency
+            endif
+          -%}
+          <li class="product-volume-pricing__list__item flex justify-space-between align-center {% cycle "even", "odd" %}{% if forloop.index >= 3 %} show-more-item hidden{% endif %}">
+            <span>
+              {{- price_break.minimum_quantity -}}
+              <span aria-hidden="true">+</span></span
+            >
+            <span data-text="{{ 'products.product.volume_pricing.price_at_each' | t: price: money_price }}">
+              {{- money_price -}}
+            </span>
+          </li>
+        {%- endfor -%}
+      </ul>
+      {%- if product.selected_or_first_available_variant.quantity_price_breaks.size >= 3 -%}
+        <show-more-button data-onetime="true" class="db margin-top-1rem">
+          <button
+            class="button-show-more link underlined-link"
+            id="Show-More-{{ section_id | default: section.id }}"
+            type="button"
+          >
+            <span class="label-show-more label-text"
+              ><span aria-hidden="true">+ </span>{{ 'products.facets.show_more' | t }}
+            </span>
+          </button>
+        </show-more-button>
+      {%- endif -%}
+    {%- endif -%}
+  </volume-pricing>
+{%- endif -%}

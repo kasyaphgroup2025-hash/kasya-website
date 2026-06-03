@@ -1,0 +1,226 @@
+{%- if section.settings.categories_filter != blank -%}
+  {%- if filter_type == 'horizontal' -%}
+  <details id="Details-{{ suffix_id }}0-{{ section.id }}" class="facets__details {% if filter_type == 'horizontal' %}disclosure-has-popup por facets__disclosure{% else %} facets__accordion{% endif %} js-filter first" data-index="0">
+    <summary class="facets__summary facets__summary--horizontal font-body-semi-bold text-small background-input" aria-label="{{ 'products.facets.categories_block_label' | t | escape }}">
+      <div class="flex align-center justify-space-between facets__label-wrapper">
+        <span class="flex align-center facets__summary__label">{{ 'products.facets.categories_block_label' | t | escape }}</span>
+        {% render 'facets-heading-icon', filter_type: 'horizontal' %}
+      </div>
+    </summary>
+    <div id="Facet-{{ suffix_id }}0-{{ section.id }}" class="parent-display facets__display facets__display--horizontal">
+  {%- endif -%}    
+  {%-liquid
+    assign icons_str = ''
+    for block in section.blocks
+      if block.settings.trigger != blank
+        assign compare_index = ':' | append: block.settings.trigger | append: '=' | downcase
+        if icons_str contains compare_index
+          assign exist_blocks = icons_str | split: compare_index | last | split: ';' | first
+          assign new_blocks = exist_blocks | append: ',' | append: forloop.index0
+          assign find_str = compare_index | append: exist_blocks | append: ';'
+          assign replace_str = compare_index | append: new_blocks | append: ';'
+          assign icons_str = icons_str | replace: find_str, replace_str
+        else
+          assign icons_str = icons_str | append: compare_index | append: forloop.index0 | append: ';'
+        endif
+      endif
+    endfor
+    if section.settings.categories_filter_type == 'dropdown'
+      assign facet_wrapper_tag = 'details-accordion'
+      assign facet_inner_tag = 'details'
+      assign facet_label_tag = 'summary'
+    else
+      assign facet_wrapper_tag = 'div'
+      assign facet_inner_tag = 'div'
+      assign facet_label_tag = 'a'
+    endif
+  -%}
+  <div class="facets__item-filter facets__categories-filter facets__list">
+    <ul class="list-unstyled flex flex-column facets__categories-filter__list">
+      {%- for link in section.settings.categories_filter.links -%}
+        {%-liquid
+           assign compare_index = ':' | append: link.title | append: '=' | downcase
+           assign is_open = false
+           if link.active or link.child_active
+             assign is_open = true
+           endif
+        -%}
+        <li>
+          {%- if link.links != blank -%}
+            <{{ facet_wrapper_tag }} data-ignore-setup-event="true">
+              <{{ facet_inner_tag }} class="facets__accordion facets__accordion--category{% if is_open and section.settings.categories_filter_type != 'dropdown' %} open{% endif %}"{% if is_open and section.settings.categories_filter_type == 'dropdown' %} open{% endif %}>
+                <{{ facet_label_tag }} class="facets__summary--plus-minus facets__categories-filter__top-item summary-accordion--has-hover background-input focus-inset w100{% if section.settings.categories_filter_type != 'dropdown' %} full-unstyled-link{% endif %}{% if forloop.first %} first{% endif %}{% if forloop.last %} last{% endif %}{% if is_open %} font-body-bold{% endif %} caption-large" aria-label="{{ link.title | escape }}"
+                  {% if section.settings.categories_filter_type == 'dropdown' %}onclick="return this.closest('details-accordion').toggleContent();"{% else %}href="{{ link.url }}"{% endif %}{% if is_open %} aria-expanded="true"{% endif %}>
+                  <div class="flex align-center justify-space-between facets__label-wrapper">
+                    <span class="flex align-center facets__summary__label">
+                      {%- if icons_str contains compare_index -%}
+                        {%-liquid
+                          assign blocks_index = icons_str | split: compare_index | last | split: ';' | first | plus: 0
+                          assign icon_block = section.blocks[blocks_index]
+                        -%}
+                        {%- if icon_block.settings.custom_icon != blank -%}
+                          <div class="facets__category-icon">
+                            <use-animate class="media media--hover-effect w100 media--square">
+                              {{ icon_block.settings.custom_icon | image_url: width: 30, height: 30 | image_tag: width: 20, height: 20, class: 'motion-reduce', loading: 'lazy' }}
+                            </use-animate>
+                          </div>
+                        {%- else -%}
+                          {%- render 'icon-picker', icon: icon_block.settings.icon, add_classes: 'facets__category-icon' -%}  
+                        {%- endif -%}
+                      {%- endif -%}
+                      {{ link.title | escape }}
+                      {%- if link.type == 'collection_link' -%}<span class="facets__selected facet-checkbox__content__count facet-checkbox__content__count--categories flex justify-center align-center lh1 no-js-hidden">{{ link.object.all_products_count }}</span>{%- endif -%}
+                    </span>
+                    <div class="facets__summary__plus-minus-wrapper summary-accordion__plus-minus-wrapper flex justify-center align-center">
+                      <span class="facets__summary__plus-minus summary-accordion__plus-minus por flex justify-center align-center">
+                        <span class="facets__summary__icon-line facets__categories-filter__icon-line summary-accordion__icon-line"></span>
+                        <span class="facets__summary__icon-line facets__categories-filter__icon-line summary-accordion__icon-line"></span>
+                      </span>
+                    </div>
+                  </div>
+                </{{ facet_label_tag }}>
+                {%- if is_open or section.settings.categories_filter_type == 'dropdown' -%}
+                  <div class="facets__categories-filter__child-wrapper background-input">
+                    <ul class="list-unstyled flex flex-column">
+                      {%- for child_link in link.links -%}
+                        {%-liquid
+                          assign child_compare_index = ':' | append: child_link.title | append: '=' | downcase
+                          assign is_child_open = false
+                          if child_link.active or child_link.child_active
+                            assign is_child_open = true
+                          endif
+                        -%}
+                        <li>
+                          {%- if child_link.links != blank -%}
+                            <{{ facet_wrapper_tag }} data-ignore-setup-event="true">
+                              <{{ facet_inner_tag }} class="facets__accordion facets__accordion--category{% if is_child_open and section.settings.categories_filter_type != 'dropdown' %} open{% endif %}"{% if is_child_open and section.settings.categories_filter_type == 'dropdown' %} open{% endif %}>
+                                <{{ facet_label_tag }} class="facets__summary--plus-minus facets__categories-filter__child-link summary-accordion--has-hover background-input focus-inset w100{% if section.settings.categories_filter_type != 'dropdown' %} full-unstyled-link{% endif %}{% if forloop.first %} first{% endif %}{% if forloop.last %} last{% endif %}{% if child_link.active or child_link.child_active %} font-body-bold{% endif %} caption-large" aria-label="{{ child_link.title | escape }}"
+                                  {% if section.settings.categories_filter_type == 'dropdown' %}onclick="return this.closest('details-accordion').toggleContent();"{% else %}href="{{ child_link.url }}"{% endif %}{% if is_child_open %} aria-expanded="true"{% endif %}>
+                                  <div class="flex align-center justify-space-between facets__label-wrapper">
+                                    <span class="flex align-center facets__summary__label text-small">
+                                      {%- if icons_str contains child_compare_index -%}
+                                        {%-liquid
+                                          assign blocks_index = icons_str | split: child_compare_index | last | split: ';' | first | plus: 0
+                                          assign icon_block = section.blocks[blocks_index]
+                                        -%}
+                                        {%- if icon_block.settings.custom_icon != blank -%}
+                                          <div class="facets__category-icon facets__category-icon--child-link">
+                                            <use-animate class="media media--hover-effect w100 media--square">
+                                              {{ icon_block.settings.custom_icon | image_url: width: 30, height: 30 | image_tag: width: 20, height: 20, class: 'motion-reduce', loading: 'lazy' }}
+                                            </use-animate>
+                                          </div>
+                                        {%- else -%}
+                                          {%- render 'icon-picker', icon: icon_block.settings.icon, add_classes: 'facets__category-icon facets__category-icon--child-link', icon_width: 15 -%}  
+                                        {%- endif -%}
+                                      {%- endif -%}
+                                      {{ child_link.title | escape }}
+                                      {%- if child_link.type == 'collection_link' -%}<span class="facets__selected facet-checkbox__content__count facet-checkbox__content__count--categories flex justify-center align-center lh1 no-js-hidden">{{ child_link.object.all_products_count }}</span>{%- endif -%}
+                                    </span>
+                                    <div class="facets__summary__plus-minus-wrapper summary-accordion__plus-minus-wrapper facets__summary__plus-minus-wrapper--grand-child flex justify-center align-center">
+                                      <span class="facets__summary__plus-minus summary-accordion__plus-minus facets__summary__plus-minus--grand-child por flex justify-center align-center">
+                                        <span class="facets__summary__icon-line facets__categories-filter__icon-line summary-accordion__icon-line facets__summary__icon-line--grand-child"></span>
+                                        <span class="facets__summary__icon-line facets__categories-filter__icon-line summary-accordion__icon-line facets__summary__icon-line--grand-child"></span>
+                                      </span>
+                                    </div>
+                                  </div>
+                                </{{ facet_label_tag }}>
+                                {%- if is_child_open or section.settings.categories_filter_type == 'dropdown' -%}
+                                  <div class="facets__categories-filter__last-child-wrapper-content">
+                                    <div class="facets__categories-filter__last-child-wrapper background-input">
+                                      <ul class="list-unstyled flex flex-column">
+                                        {%- for grand_child_link in child_link.links -%}
+                                          {%- assign grand_child_compare_index = ':' | append: grand_child_link.title | append: '=' | downcase -%}
+                                          <li>
+                                            <a href="{{ grand_child_link.url }}" class="facets__categories-filter__child-link link flex align-center{% if grand_child_link.type == 'collection_link' %} justify-space-between{% endif %}{% if grand_child_link.active or grand_child_link.child_active %} facets__categories-filter__child-link--active{% endif %} facets__label-wrapper">
+                                              {%- if icons_str contains grand_child_compare_index -%}
+                                                {%-liquid
+                                                  assign blocks_index = icons_str | split: grand_child_compare_index | last | split: ';' | first | plus: 0
+                                                  assign icon_block = section.blocks[blocks_index]
+                                                -%}
+                                                {%- if icon_block.settings.custom_icon != blank -%}
+                                                  <div class="facets__category-icon facets__category-icon--child-link">
+                                                    <use-animate class="media media--hover-effect w100 media--square">
+                                                      {{ icon_block.settings.custom_icon | image_url: width: 30, height: 30 | image_tag: width: 20, height: 20, class: 'motion-reduce', loading: 'lazy' }}
+                                                    </use-animate>
+                                                  </div>
+                                                {%- else -%}
+                                                  {%- render 'icon-picker', icon: icon_block.settings.icon, add_classes: 'facets__category-icon facets__category-icon--child-link', icon_width: 15 -%}  
+                                                {%- endif -%}
+                                              {%- endif -%}
+                                              <div class="flex align-center facets__summary__label flex-grow-1 justify-space-between">
+                                                {{ grand_child_link.title }}
+                                                {%- if grand_child_link.type == 'collection_link' -%}
+                                                  <span class="facets__selected facet-checkbox__content__count facet-checkbox__content__count--categories flex justify-center align-center lh1 no-js-hidden">{{ grand_child_link.object.all_products_count }}</span>
+                                                {%- endif -%}  
+                                              </div>
+                                            </a>
+                                          </li>
+                                        {%- endfor -%}  
+                                      </ul>
+                                    </div>
+                                  </div>
+                                {%- endif -%}
+                              </{{ facet_inner_tag }}>
+                            </{{ facet_wrapper_tag }}>  
+                          {%- else -%}  
+                            <a href="{{ child_link.url }}" class="facets__categories-filter__child-link link flex align-center{% if child_link.active or child_link.child_active %} facets__categories-filter__child-link--active{% endif %} facets__label-wrapper">
+                              {%- if icons_str contains child_compare_index -%}
+                                {%-liquid
+                                  assign blocks_index = icons_str | split: child_compare_index | last | split: ';' | first | plus: 0
+                                  assign icon_block = section.blocks[blocks_index]
+                                -%}
+                                {%- if icon_block.settings.custom_icon != blank -%}
+                                  <div class="facets__category-icon facets__category-icon--child-link">
+                                    <use-animate class="media media--hover-effect w100 media--square">
+                                      {{ icon_block.settings.custom_icon | image_url: width: 30, height: 30 | image_tag: width: 20, height: 20, class: 'motion-reduce', loading: 'lazy' }}
+                                    </use-animate>
+                                  </div>
+                                {%- else -%}
+                                  {%- render 'icon-picker', icon: icon_block.settings.icon, add_classes: 'facets__category-icon facets__category-icon--child-link', icon_width: 15 -%}  
+                                {%- endif -%}
+                              {%- endif -%}
+                              <div class="flex align-center facets__summary__label text-small">
+                                {{ child_link.title }}
+                                {%- if child_link.type == 'collection_link' -%}
+                                  <span class="facets__selected facet-checkbox__content__count facet-checkbox__content__count--categories flex justify-center align-center lh1 no-js-hidden">{{ child_link.object.all_products_count }}</span>
+                                {%- endif -%}  
+                              </div>
+                            </a>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}  
+                    </ul>
+                  </div>
+                {%- endif -%}
+              </{{ facet_inner_tag }}>
+            </{{ facet_wrapper_tag }}>    
+          {%- else -%}
+            <a href="{{ link.url }}" class="facets__categories-filter__top-item background-input{% if forloop.first %} first{% endif %}{% if forloop.last %} last{% endif %} facets__categories-filter__link caption-large flex align-center color-foreground facets__summary__label facets__label-wrapper{% if link.active %} font-body-bold{% endif %}">
+              {%- if icons_str contains compare_index -%}
+                {%-liquid
+                  assign blocks_index = icons_str | split: compare_index | last | split: ';' | first | plus: 0
+                  assign icon_block = section.blocks[blocks_index]
+                -%}
+                {%- if icon_block.settings.custom_icon != blank -%}
+                  <div class="facets__category-icon">
+                    <use-animate class="media media--hover-effect w100 media--square">
+                      {{ icon_block.settings.custom_icon | image_url: width: 30, height: 30 | image_tag: width: 20, height: 20, class: 'motion-reduce', loading: 'lazy' }}
+                    </use-animate>
+                  </div>
+                {%- else -%}
+                  {%- render 'icon-picker', icon: icon_block.settings.icon, add_classes: 'facets__category-icon' -%}  
+                {%- endif -%}
+              {%- endif -%}
+              {{ link.title }}
+              {%- if link.type == 'collection_link' -%}<span class="facets__selected facet-checkbox__content__count facet-checkbox__content__count--categories flex justify-center align-center lh1 no-js-hidden">{{ link.object.all_products_count }}</span>{%- endif -%}
+            </a>  
+          {%- endif -%}  
+        </li>
+      {%- endfor -%}  
+    </ul>
+  </div>
+  {%- if filter_type == 'horizontal' -%}
+    </div>
+  </details>  
+  {%- endif -%}
+{%- endif -%}

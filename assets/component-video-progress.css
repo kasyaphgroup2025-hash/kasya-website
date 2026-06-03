@@ -1,0 +1,15 @@
+video-progress {
+  display: block;
+  position: absolute;
+  inset-inline: 10px;
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
+  height: 5px;
+  border-radius: 5px;;
+  background: rgba(var(--video-progress),.25);
+  pointer-events: none;
+}
+video-progress .fill {
+  width: 0%;
+  background: rgb(var(--video-progress));
+  transition: width 40ms linear;
+}

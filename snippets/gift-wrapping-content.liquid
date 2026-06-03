@@ -1,0 +1,76 @@
+{%-liquid
+  assign gift_wrapping_variant = gift_wrapping_product.first_available_variant
+  assign gift_wrapping_image = gift_wrapping_product.first_available_variant.featured_image | default: gift_wrapping_product.featured_image
+-%}
+<gift-wrapping-content class="gift-wrapping-content cart__textarea-wrap__content cart__gift-wrapping-note field flex flex-column"{% if gift_wrapping_cart_items.size > 0 %} data-line-items-key="{{ gift_wrapping_cart_items | map: 'key' | join: ',' }}"{% endif %}
+  {% if gift_wrapping_cart_items.size == cart.items.size %} data-remove-gift-wrapping="true"{% endif %}
+  data-note-key="{{ settings.gift_wrapping_note_key | escape }}"
+>
+  {{ 'component-virtual-checkbox.css' | asset_url | stylesheet_tag }}
+  {%- unless gift_wrapping_product.variants.size > 1 -%}
+    {%- capture gift_wrapping_price -%}{%- render 'price-format', price: gift_wrapping_variant.price -%}{% endcapture %}
+    <div class="por gift-wrapping-content__checkbox-inner virtual-checkbox">
+      <input type="checkbox" class="gift-wrapping-content__checkbox margin0 virtual-checkbox__checkbox" id="gift-wrapping-content-checkbox-{{ section.id }}"{% if gift_wrapping_cart_items.size > 0 %} checked="checked"{% endif %}>
+      <label for="gift-wrapping-content-checkbox-{{ section.id }}" class="gift-wrapping-content__label text-small db virtual-checkbox__label">
+        <svg class="gift-wrapping-content__icon-checkmark icon icon-checkmark virtual-checkbox__icon-checkmark" width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1.5 4.00002L3.83333 6.33335L8.5 1.66669" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="font-body-semi-bold text-small">{{ 'general.gift_wrapping.checkbox_label_html' | t: price: gift_wrapping_price }}</span>
+      </label>
+    </div>
+    <hr class="gift-wrapping-content__line margin0">
+  {%- endunless -%}
+  <div class="gift-wrapping-content__product link align-center por">
+    {%- if gift_wrapping_image != nil -%}
+      <div class="gift-wrapping-content__product__media media media--square card-radius" id="gift-wrapping-content-produc-media-{{ section.id }}">
+        {{ gift_wrapping_image | image_url: width: 100 | image_tag: loading: 'lazy' }}
+      </div>
+    {%- endif -%}
+    <div>
+      <span class="gift-wrapping-content__product__heading h6 font-heading-bold card__heading margin0">
+        <a href="{{ gift_wrapping_product.url }}" class="full-unstyled-link">
+          {{ gift_wrapping_product.title | truncatewords: 5 }}
+        </a>
+      </span>
+      {% render 'price', product: gift_wrapping_product, show_in_card: true, price_class: 'price--small', show_badges: false %}
+      {%- if gift_wrapping_product.variants.size > 1 -%}
+        <div class="gift-wrapping-content__action margin-top-1rem">
+          <quick-add-drawer-opener class="db">
+            <button
+              id="gift-wrapping-quick-add-submit"
+              type="submit"
+              name="add"
+              class="button button--medium por"
+              aria-haspopup="dialog"
+              aria-label="{{ "general.gift_wrapping.variant_picker_button" | t | escape }}"
+              data-product-url="{{ gift_wrapping_product.url }}"
+            >
+              <span>{{ "general.gift_wrapping.variant_picker_button" | t }}</span>  
+              <div class="loading-overlay__spinner hidden">
+                {%- render 'icon-cart-loading' -%}
+              </div>
+            </button>
+          </quick-add-drawer-opener>
+        </div>
+      {%- endif -%} 
+    </div> 
+  </div>
+  {%- unless gift_wrapping_product.variants.size > 1 -%}
+    <product-form>
+      {%- form 'product', gift_wrapping_product, id: 'gift-wrapping-product-form', class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+        <input type="hidden" name="id" value="{{ gift_wrapping_variant.id }}" disabled>
+        <button
+          type="submit"
+          name="add"
+          class="unstyled-button gift-wrapping-content__add-button"
+        >
+          <span class="hidden">{{ "products.product.add_to_cart" | t }}</span>  
+          <div class="loading-overlay__spinner">
+            {%- render 'icon-cart-loading' -%}
+          </div>
+        </button>
+      {%- endform -%}
+    </product-form>
+  {%- endunless -%}
+  <textarea class="text-area field__input{% unless gift_wrapping_cart_items.size > 0 %} hidden{% endunless %} card cart__input-area" name="attributes[Gift wrapping note]" form="cart" id="Gift-wrapping-note" placeholder="{{ 'general.gift_wrapping.note_placeholder' | t | escape }}">{{ cart.attributes['Gift wrapping note'] }}</textarea>
+</gift-wrapping-content>

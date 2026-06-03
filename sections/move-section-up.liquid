@@ -1,0 +1,66 @@
+<style>
+	#shopify-section-{{ section.id }} + .section {
+    --distance: -{{ section.settings.distance_mobile }}px;
+    margin-top: var(--distance);
+    position: relative;
+    z-index: 2;
+  }
+	@media screen and (min-width: 750px) {
+		#shopify-section-{{ section.id }} + .section {
+			--distance: -{{ section.settings.distance_tablet }}px;
+		}
+	}
+  @media screen and (min-width: 990px) {
+		#shopify-section-{{ section.id }} + .section {
+			--distance: -{{ section.settings.distance_desktop }}px;
+		}
+	}
+</style>
+{% schema %}
+{
+  "name": "t:sections.move-section-up.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.move-section-up.settings.instruction.content"
+    },
+    {
+      "type": "range",
+      "id": "distance_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "t:sections.move-section-up.settings.distance_mobile.label",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "distance_tablet",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "t:sections.move-section-up.settings.distance_tablet.label",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "distance_desktop",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "t:sections.move-section-up.settings.distance_desktop.label",
+      "default": 30
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.move-section-up.presets.name",
+      "category": "t:categories.layout"
+    }
+  ]
+}
+{% endschema %}

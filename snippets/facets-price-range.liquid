@@ -1,0 +1,137 @@
+{% liquid
+  assign has_price_active = false
+  if filter.min_value.value != nil or filter.max_value.value != nil
+    if filter.min_value.value > 0 or filter.max_value.value != filter.range_max
+      assign has_price_active = true
+    endif
+  endif
+  assign currencies_using_comma_decimals = 'ANG,ARS,BRL,BYN,BYR,CLF,CLP,COP,CRC,CZK,DKK,EUR,HRK,HUF,IDR,ISK,MZN,NOK,PLN,RON,RUB,SEK,TRY,UYU,VES,VND' | split: ','
+  assign uses_comma_decimals = false
+  if currencies_using_comma_decimals contains cart.currency.iso_code
+    assign uses_comma_decimals = true
+  endif
+  unless filter_type == 'horizontal'
+    assign facet_tag = 'details-accordion'
+  else
+    assign facet_tag = 'div'
+  endunless
+%}
+<{{ facet_tag }} class="db facets__item-filter" data-ignore-setup-event="true">
+  <details id="Details-{{ filter.param_name | escape | handleize }}-{{ suffix_id }}{{ section.id }}" class="facets__details facets__details--{{ filter_type }} {% if filter_type == 'horizontal' %}disclosure-has-popup por facets__disclosure{% else %} facets__accordion{% endif %} js-filter"{% if section.settings.filter_collapse == 'expand' and filter_type != 'horizontal' %} open{% endif %}>
+    <summary class="facets__summary facets__summary--{{ filter_type }}{% if filter_type == 'vertical' or filter_type == 'drawer' %} h6 font-heading-bold{% elsif filter_type == 'horizontal' %} font-body-semi-bold text-small background-input{% if has_price_active %} facets__summary--has-actives{% endif %}{% endif %}{% if summary_classes %} {{ summary_classes }}{% endif %}"
+      {% unless filter_type == 'horizontal' %} onclick="return this.closest('details-accordion').toggleContent();"{% if section.settings.filter_collapse == 'expand' %} aria-expanded="true"{% endif %}{% endunless %}>
+      <div class="flex align-center justify-space-between facets__label-wrapper">
+        <span>{{ filter.label | escape }}</span>
+        {% render 'facets-heading-icon', filter_type: filter_type %}
+      </div>
+    </summary>
+    <div id="Facet-{{ filter.param_name | escape | handleize }}-{{ suffix_id }}{{ section.id }}" class="facets__display facets__display--{{ filter_type }}">
+      <price-range class="facets__price flex flex-wrap" style="--range-used-start-width:{%- if filter.min_value.value -%}{{ filter.min_value.value | times: 100.00 | divided_by: filter.range_max }}%{%- else -%}0{%- endif -%};--range-used-end-width:{%- if filter.max_value.value -%}{{ filter.range_max | minus: filter.max_value.value | times: 100.00 | divided_by: filter.range_max }}%{%- else -%}0{%- endif -%};">
+        <div class="range-slider w100 por center no-js-hidden">
+          <input type="range" min="0" class="w100 range-slider__input range-slider__input--lower"
+            {%- if filter.min_value.value -%}
+              value="{{ filter.min_value.value }}"
+            {%- else -%}
+              value="0"  
+            {%- endif -%}
+            max="{{ filter.range_max }}"
+            data-input="Filter-{{ suffix_id }}{{ filter.label | escape }}-GTE"
+            data-range-input="Filter-{{ suffix_id }}range-{{ filter.label | escape }}-LTE"
+            data-range-value="Filter-{{ suffix_id }}Price-Range-Value-From"
+            id="Filter-{{ suffix_id }}range-{{ filter.label | escape }}-GTE"
+            aria-labelledby="lbl-Filter-{{ suffix_id }}-{{ filter.label | escape }}-GTE"
+          >
+          
+          <input type="range" class="w100 range-slider__input range-slider__input--upper"
+            min="0"
+            {%- if filter.max_value.value -%}
+              value="{{ filter.max_value.value }}"
+            {%- else -%}
+              value="{{ filter.range_max }}"
+            {%- endif -%}
+            max="{{ filter.range_max }}"
+            data-input="Filter-{{ suffix_id }}{{ filter.label | escape }}-LTE"
+            data-range-input="Filter-{{ suffix_id }}range-{{ filter.label | escape }}-GTE"
+            data-range-value="Filter-{{ suffix_id }}Price-Range-Value-To"
+            id="Filter-{{ suffix_id }}range-{{ filter.label | escape }}-LTE"
+            aria-labelledby="lbl-Filter-{{ suffix_id }}-{{ filter.label | escape }}-LTE"
+          />
+        </div>
+        <div class="facets__price__results no-js-hidden flex align-center caption-large">
+          {%- capture price_label -%}<span class="facets__price__label">{{ filter.label }}:</span>{%- endcapture -%}
+          <div class="facets__price__range flex align-center font-body-bold">
+            {%-liquid
+              capture price_from
+                assign start_tag = '<span class="facets__price__range-value facets__price__range-value--from" id="Filter-' | append: suffix_id | append: 'Price-Range-Value-From">'
+                echo start_tag
+                if filter.min_value.value
+                  render 'price-format', price: filter.min_value.value
+                else
+                  render 'price-format', price: 0
+                endif
+                echo '</span>'
+              endcapture
+              capture price_to
+                assign end_tag = '<span class="facets__price__range-value facets__price__range-value--to" id="Filter-' | append: suffix_id | append: 'Price-Range-Value-To">'
+                echo end_tag
+                if filter.max_value.value
+                  render 'price-format', price: filter.max_value.value
+                else
+                  render 'price-format', price: filter.range_max
+                endif
+                echo '</span>'
+              endcapture
+            -%}
+            {{ 'products.facets.price_from_to_html' | t: price_label: price_label, price_from: price_from, price_to: price_to }}
+          </div>
+        </div>
+        <div class="facets__price__info flex flex-grow-1 no-js">
+          <div class="field field--price align-center">
+            <label class="field__label" for="Filter-{{ suffix_id }}{{ filter.label | escape }}-GTE" id="lbl-Filter-{{ suffix_id }}-{{ filter.label | escape }}-GTE">{{ 'products.facets.from' | t }}</label>
+            <input class="field__input field__input--price field__input--price-gte"
+              name="{{ filter.min_value.param_name }}"
+              id="Filter-{{ suffix_id }}{{ filter.label | escape }}-GTE"
+              {%- if filter.min_value.value -%}
+                value="{{ filter.min_value.value | divided_by: 100.00 }}"
+              {%- else -%}
+                value="0"  
+              {%- endif -%}
+              type="number"
+              placeholder="0"
+              min="0"
+              inputmode="decimal"
+              max="{{ filter.range_max | divided_by: 100.00 }}"
+              data-range-input="Filter-{{ suffix_id }}range-{{ filter.label | escape }}-GTE"
+            >
+          </div>
+          <span class="field-currency">{{ cart.currency.symbol }}</span>
+          <div class="field field--price align-center">
+            <label class="field__label" for="Filter-{{ suffix_id }}{{ filter.label | escape }}-LTE" id="lbl-Filter-{{ suffix_id }}-{{ filter.label | escape }}-LTE">{{ 'products.facets.to' | t }}</label>
+            <input class="field__input field__input--price field__input--price-lte"
+              name="{{ filter.max_value.param_name }}"
+              id="Filter-{{ suffix_id }}{{ filter.label | escape }}-LTE"
+              {%- if filter.max_value.value -%}
+                value="{{ filter.max_value.value | divided_by: 100 }}"
+              {%- else -%}
+                value="{{ filter.range_max | divided_by: 100.00 }}"  
+              {%- endif -%}
+              type="number"
+              min="0"
+              inputmode="decimal"
+              max="{{ filter.range_max | divided_by: 100.00 }}"
+              {%- if uses_comma_decimals -%}
+                placeholder="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+              {%- else -%}
+                placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+              {% endif %}
+              data-range-input="Filter-{{ suffix_id }}range-{{ filter.label | escape }}-LTE"
+            >
+          </div>
+          {%- if filter_type != 'vertical' -%}
+            <span class="field-currency">{{ cart.currency.symbol }}</span>
+          {%- endif -%}
+        </div>
+      </price-range>
+    </div>
+  </details>
+</{{ facet_tag }}>

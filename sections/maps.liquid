@@ -1,0 +1,528 @@
+<style>
+	.section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+	.button--map-{{ section.id }} {
+		gap: 0.5rem;
+	}
+
+  .maps__block-group--{{ section.id }} {
+    gap: 1rem;
+  }
+
+  .maps__info--{{ section.id }} {
+    gap: 1.6rem;
+    padding: 3.4rem 2.3rem;
+  }
+
+  .maps__info__blocks--{{ section.id }} {
+    gap: 1rem;
+  }
+
+  .maps__heading--{{ section.id }} {
+    gap: 1.6rem;
+  }
+
+  {%- if section.settings.badge != blank -%}
+    .maps__badge--{{ section.id }} {
+      padding: 0.8rem 1.6rem;
+      border-radius: 10rem;
+      border: 0.1rem solid rgb(var(--color-foreground));
+      font-size: calc(1.2rem * var(--font-body-scale));
+    }
+  {%- endif -%}  
+
+  {%- unless section.settings.layout == 'full_bleed' -%}
+    .maps-wrapper-radius-{{ section.id }} {
+      border-radius: 1rem;
+    }
+  {%- endunless -%}
+
+  {%- unless section.settings.coordinates != blank and settings.google_maps_api_key != blank -%}
+    {%- if section.settings.image != blank -%}
+      .maps__google-maps--{{ section.id }} > .media {
+        align-self: normal;
+      }
+    {%- endif -%}  
+  {%- endunless -%}
+
+  @media screen and (max-width: 749px) {
+		.maps--{{ section.id }} {
+			flex-wrap: wrap;
+		}
+		.maps__google-maps__render-{{ section.id }} {
+      min-height: {{ section.settings.map_height | times: 0.75 | round: 0 }}px;
+    }
+
+    .maps__error-message-{{ section.id }} {
+      margin: 1.5rem;
+    }
+	}
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+    .maps--{{ section.id }} {
+      --content-info-width: 30rem;
+    }
+    .maps__info--{{ section.id }} {
+      gap: 2.4rem;
+      padding: 3.4rem;
+      min-width: var(--content-info-width);	
+    }
+		{%- unless section.settings.layout == 'full_bleed' -%}
+      .maps-wrapper-radius-{{ section.id }} {
+        border-radius: 1.2rem;
+      }
+    {%- endunless -%}
+    .maps__google-maps__render-{{ section.id }} {
+      min-height: {{ section.settings.map_height }}px;
+    }
+    .maps__error-message-{{ section.id }} {
+      margin: 3rem;
+    }
+    .maps__block-group--{{ section.id }} {
+      gap: 1.6rem;
+    }
+    {%- if section.settings.badge != blank -%}
+      .maps__badge--{{ section.id }} {
+        font-size: calc(1.4rem * var(--font-body-scale));
+      }
+    {%- endif -%}  
+    {%- if section.settings.overlapping_content_layout -%}
+      .maps--{{ section.id }} {
+        {%- if section.settings.layout == 'full_bleed' -%}     
+          --position-left: max(5rem, calc((100vw - var(--page-width) + 13rem - var(--grid-desktop-horizontal-spacing)) / 2));
+        {%- else -%}
+          --position-left: 3rem;  
+        {%- endif -%}  
+        overflow: hidden;
+      }
+      .maps__info--{{ section.id }} {
+        border-radius: 1.6rem;
+        background: rgb(var(--color-background), 0.85);
+        box-shadow: 5px 5px 34px -7px rgb(var(--color-foreground), 0.25);
+        backdrop-filter: blur(6px);
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: var(--content-info-width);
+        max-height: calc(100% - 7rem);
+        overflow-y: auto;
+        inset-inline-start: var(--position-left);
+        z-index: 1;
+      }  
+      {%- unless section.settings.coordinates != blank and settings.google_maps_api_key != blank -%}
+        {%- unless section.settings.image != blank -%}
+          .maps__google-maps--{{ section.id }} > .alert {
+            margin-inline-start: calc(var(--content-info-width) + var(--position-left) + 3rem);
+          }
+        {%- endunless -%}
+      {%- else -%}
+        .maps--{{ section.id }} > .maps__google-maps {
+          margin-inline-end: calc(((-1) * var(--content-info-width)) - var(--position-left));
+        }
+      {%- endunless -%}  
+    {%- else -%}  
+      .maps--{{ section.id }} {
+        flex-direction: row;
+      }
+    {%- endif -%}  
+  }
+
+  @media screen and (min-width: 990px) {
+    .maps--{{ section.id }} {
+      --content-info-width: 47.5rem;
+    }
+    {%- unless section.settings.layout == 'full_bleed' -%}
+      .maps-wrapper-radius-{{ section.id }} {
+        border-radius: 1.6rem;
+      }
+    {%- endunless -%}
+    .maps__info--{{ section.id }} {
+      gap: 3.4rem;
+      padding: 7rem;
+    }	
+    .maps__block-group--{{ section.id }} {
+      gap: 2rem;
+    }
+  }
+</style>
+<div class="section-{{ section.id }}-padding">
+  <div class="{% unless section.settings.layout == 'full_bleed' %}page-width{% if section.settings.layout == 'stretched_grid' %}--full{% endif %}{% endunless %}">
+    <div class="color-{{ section.settings.color_scheme }} gradient isolate{% unless section.settings.layout == 'full_bleed' %} maps-wrapper-radius-{{ section.id }} overflow-hidden{% endunless %}">
+      <div class="maps maps--{{ section.id }} maps--with-google-maps flex flex-column por">
+        <div class="maps__info maps__info--{{ section.id }} background-input flex flex-column justify-center align-start">
+          {%- if section.settings.title != blank or section.settings.badge != blank -%}
+            <div class="maps__heading maps__heading--{{ section.id }} flex flex-column align-start">
+              {%- if section.settings.badge != blank -%}
+                <span class="flex maps__badge maps__badge--{{ section.id }} font-body-large-bold">{{ section.settings.badge }}</span>
+              {%- endif -%}  
+              {%- if section.settings.title != blank -%}
+                <h2 class="{{ section.settings.heading_size }} font-heading-bold margin0">{{ section.settings.title | escape }}</h2>
+              {%- endif -%}  
+            </div>  
+          {%- endif -%}
+          {%- if section.settings.description != blank -%}
+            <div class="maps__address rte small-margin-bottom">{{ section.settings.description }}</div>
+          {%- endif -%}
+          {%- if section.blocks.size > 0 -%}
+            <div class="maps__info__blocks maps__info__blocks--{{ section.id }} flex flex-column">
+              {%- assign working_time_blocks = section.blocks | where: 'type', 'working_time' -%}
+              {%- if working_time_blocks.size > 0 -%}
+                <div class="flex maps__block-group maps__block-group--{{ section.id }} align-start">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 3.07568C6.61522 3.07568 2.25 7.44091 2.25 12.8257C2.25 18.2105 6.61522 22.5757 12 22.5757C17.3848 22.5757 21.75 18.2105 21.75 12.8257C21.75 7.44091 17.3848 3.07568 12 3.07568ZM12.75 6.82568C12.75 6.41147 12.4142 6.07568 12 6.07568C11.5858 6.07568 11.25 6.41147 11.25 6.82568V12.8257C11.25 13.2399 11.5858 13.5757 12 13.5757H16.5C16.9142 13.5757 17.25 13.2399 17.25 12.8257C17.25 12.4115 16.9142 12.0757 16.5 12.0757H12.75V6.82568Z" fill="currentColor" fill-opacity="0.4"/>
+                  </svg>
+                  <ul class="list-unstyled light">
+                    {%- for block in working_time_blocks -%}
+                      <li {{ block.shopify_attributes }}>
+                        {{ block.settings.title }}
+                      </li>
+                    {%- endfor -%}
+                  </ul>	
+                </div>
+              {%- endif -%}
+              {%- assign physical_address_blocks = section.blocks | where: 'type', 'physical_address' -%}
+              {%- if physical_address_blocks.size > 0 -%}
+                {%- assign physical_address_block = physical_address_blocks | first -%}
+                <div class="flex maps__block-group maps__block-group--{{ section.id }} align-start" {{ physical_address_block.shopify_attributes }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.5397 23.1767C11.57 23.1942 11.5937 23.2077 11.6105 23.2172L11.6384 23.2328C11.8613 23.3551 12.1378 23.3542 12.3608 23.2332L12.3895 23.2172C12.4063 23.2077 12.43 23.1942 12.4603 23.1767C12.5207 23.1417 12.607 23.0907 12.7155 23.0239C12.9325 22.8903 13.2388 22.6933 13.6046 22.4348C14.3351 21.9188 15.3097 21.1531 16.2865 20.153C18.2307 18.1625 20.25 15.1718 20.25 11.3257C20.25 6.76933 16.5563 3.07568 12 3.07568C7.44365 3.07568 3.75 6.76933 3.75 11.3257C3.75 15.1718 5.76932 18.1625 7.71346 20.153C8.69025 21.1531 9.66491 21.9188 10.3954 22.4348C10.7612 22.6933 11.0675 22.8903 11.2845 23.0239C11.393 23.0907 11.4793 23.1417 11.5397 23.1767ZM12 14.3257C13.6569 14.3257 15 12.9825 15 11.3257C15 9.66883 13.6569 8.32568 12 8.32568C10.3431 8.32568 9 9.66883 9 11.3257C9 12.9825 10.3431 14.3257 12 14.3257Z" fill="currentColor" fill-opacity="0.4"/>
+                  </svg>
+                  <div class="rte light">{{ physical_address_block.settings.title }}</div>
+                </div>
+              {%- endif -%}
+            </div>    
+          {%- endif -%}	
+          {%- if section.settings.button_label != blank -%}
+            {%-liquid
+              assign button_link = section.settings.button_link
+              if section.settings.coordinates != blank
+                assign coor_url_encode = section.settings.coordinates | url_encode
+                assign button_link = "https://www.google.com/maps/dir/?api=1&destination=" | append: coor_url_encode
+              endif
+            -%}
+            <a {% if button_link == blank %}role="link" aria-disabled="true" data-no-instant{% else %}href="{{ button_link }}"{% endif %} class="button{% if section.settings.button_style_secondary %} button--secondary{% endif %} button--medium small-margin-top button--bold button--map-{{ section.id }}" target="_blank">
+              <svg class="icon" aria-hidden="true" focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M9.91038 18.5904L14.9458 9.80988C17.1744 5.9237 14.4213 1.03316 10.004 1.03316C5.61856 1.03316 2.85676 5.85475 5.01217 9.74644L9.91038 18.5904ZM10.004 0C4.84496 0 1.59264 5.67261 4.13039 10.2547L9.34236 19.6651C9.58751 20.1078 10.2108 20.1126 10.4625 19.6737L15.82 10.3316C18.4445 5.75498 15.2016 0 10.004 0Z" fill-rule="evenodd"/>
+                <path d="M12.9997 6.79602C12.9997 8.5559 11.6011 9.98256 9.87597 9.98256C8.1508 9.98256 6.75228 8.5559 6.75228 6.79602C6.75228 5.03615 8.1508 3.60949 9.87597 3.60949C11.6011 3.60949 12.9997 5.03615 12.9997 6.79602ZM9.87597 8.9494C11.0418 8.9494 11.9869 7.9853 11.9869 6.79602C11.9869 5.60675 11.0418 4.64265 9.87597 4.64265C8.71015 4.64265 7.76506 5.60675 7.76506 6.79602C7.76506 7.9853 8.71015 8.9494 9.87597 8.9494Z"/>
+              </svg>	
+              <span>{{ section.settings.button_label }}</span>
+            </a>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.coordinates != blank and settings.google_maps_api_key != blank -%}
+          <div class="maps__google-maps flex-grow-1">
+            {%- if section.settings.api_library == 'embed' -%}
+              <iframe class="maps__google-maps--{{ section.id }}" width="100%" height="100%" style="border:0" loading="lazy" allowfullscreen
+                src="https://www.google.com/maps/embed/v1/place?q={{ section.settings.coordinates | escape }}&key={{ settings.google_maps_api_key | escape }}&zoom={{ section.settings.map_zoom }}&maptype={{ section.settings.map_type }}"
+                aria-label="{{ section.settings.accessibility_info | escape }}"></iframe>
+            {%- else -%}
+              <google-maps class="db h100 maps__google-maps--{{ section.id }}" data-section-id="{{ section.id }}" data-coordinates="{{ section.settings.coordinates | escape }}" data-zoom="{{ section.settings.map_zoom }}" data-map-type="{{ section.settings.map_type }}" data-map-id="{{ section.settings.map_id | escape }}">
+                <div id="map-{{ section.id }}" class="maps__google-maps__render-{{ section.id }} w100"></div>
+              </google-maps>
+            {%- endif -%}  
+          </div>
+        {%- else -%}
+          <div class="maps__google-maps maps__google-maps--{{ section.id }} flex-grow-1 flex align-center background-secondary">
+            {%- if section.settings.image != blank -%}
+              <use-animate class="media global-media-settings w100">
+                {%- capture sizes -%}(min-width: {{ settings.page_width }}px) {{ settings.page_width | divided_by: 3 | times: 2 | at_least: 1100 }}px, (min-width: 750px) calc(100vw * 0.67), 100vw{%- endcapture -%}
+                {{ section.settings.image | image_url: width: 1500 | image_tag:
+                  loading: 'lazy',
+                  sizes: sizes,
+                  widths: '165, 360, 535, 700, 875, 1070, 1500'
+                }}
+              </use-animate>
+            {%- else -%}
+              <div class="alert alert--error rte maps__error-message-{{ section.id }}">
+                <ul>
+                  {%- if section.settings.coordinates == blank -%}
+                    <li>{{ 'sections.google_maps.coordinate_empty_error_html' | t: link: "https://support.google.com/maps/answer/18539?hl=en" }}</li>
+                  {%- endif -%}
+                  {%- if settings.google_maps_api_key == blank -%}
+                    <li>{{ 'sections.google_maps.api_key_empty_error_html' | t: link: "https://developers.google.com/maps/documentation/embed/get-api-key" }}</li>
+                  {%- endif -%}  
+                </ul>
+              </div>  
+            {%- endif -%}
+          </div> 
+        {%- endif -%}	
+      </div>
+    </div>
+  </div>  
+</div>
+{%- unless request.design_mode -%}
+  {%- if section.settings.api_library == 'javascript' -%}
+    <script src="{{ 'google-maps.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}  
+{%- endunless -%}  
+{% schema %}
+{
+  "name": "t:sections.maps.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "full_bleed",
+          "label": "t:sections.all.grid_layout.options_1.label"
+        },
+        {
+          "value": "stretched_grid",
+          "label": "t:sections.all.grid_layout.options_2.label"
+        },
+        {
+          "value": "grid",
+          "label": "t:sections.all.grid_layout.options_3.label"
+        }
+      ],
+      "default": "grid",
+      "label": "t:sections.all.grid_layout.label"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Our store",
+      "label": "t:sections.maps.settings.title.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:sections.maps.settings.description.label"
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "t:sections.maps.settings.badge.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.maps.settings.image.label",
+      "info": "t:sections.maps.settings.image.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "overlapping_content_layout",
+      "label": "t:sections.maps.settings.overlapping_content_layout.label",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.maps.settings.google_maps_header.content"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.maps.settings.api_key_description.content"
+    },
+    {
+      "type": "select",
+      "id": "api_library",
+      "label": "t:sections.maps.settings.api_library.label",
+      "info": "t:sections.maps.settings.api_library.info",
+      "options": [
+        {
+          "value": "embed",
+          "label": "t:sections.maps.settings.api_library.options__1.label"
+        },
+        {
+          "value": "javascript",
+          "label": "t:sections.maps.settings.api_library.options__2.label"
+        }
+      ],
+      "default": "embed"
+    },
+    {
+      "type": "text",
+      "id": "coordinates",
+      "label": "t:sections.maps.settings.coordinates.label",
+      "info": "t:sections.maps.settings.coordinates.info"
+    },
+    {
+      "type": "range",
+      "id": "map_height",
+      "label": "t:sections.maps.settings.map_height.label",
+      "info": "t:sections.maps.settings.map_height.info",
+      "min": 300,
+      "max": 600,
+      "step": 25,
+      "unit": "px",
+      "default": 450
+    },
+    {
+      "type": "range",
+      "id": "map_zoom",
+      "label": "t:sections.maps.settings.map_zoom.label",
+      "min": 0,
+      "max": 21,
+      "step": 1,
+      "default": 18
+    },
+    {
+      "type": "radio",
+      "id": "map_type",
+      "label": "t:sections.maps.settings.map_type.label",
+      "options": [
+        {
+          "value": "roadmap",
+          "label": "Roadmap"
+        },
+        {
+          "value": "satellite",
+          "label": "Satellite"
+        }
+      ],
+      "default": "roadmap"
+    },
+    {
+      "type": "text",
+      "id": "map_id",
+      "label": "Map ID",
+      "info": "For how to create map IDs, see [here](https://developers.google.com/maps/documentation/javascript/map-ids/get-map-id).",
+      "visible_if": "{{ section.settings.api_library == 'javascript' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.maps.settings.button_header.content"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:sections.maps.settings.button_label.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_style_secondary",
+      "label": "t:sections.maps.settings.button_style_secondary.label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:sections.maps.settings.button_link.label",
+      "info": "t:sections.maps.settings.button_link.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.maps.settings.accessibility.content"
+    },
+    {
+      "type": "text",
+      "id": "accessibility_info",
+      "label": "t:sections.maps.settings.accessibility.label",
+      "info": "t:sections.maps.settings.accessibility.info",
+      "default": "Google Maps"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "working_time",
+      "name": "t:sections.maps.blocks.working_time.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.maps.blocks.working_time.settings.title.label"
+        }
+      ]
+    },
+    {
+      "type": "physical_address",
+      "name": "t:sections.maps.blocks.physical_address.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "t:sections.maps.blocks.physical_address.settings.address.label",
+          "default": "Your physical address"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.maps.presets.name",
+      "category": "t:categories.map",
+      "blocks": [
+        {
+          "type": "working_time",
+          "settings": {
+            "title": "Mon - Fri, 10am - 9pm"
+          }
+        },
+        {
+          "type": "working_time",
+          "settings": {
+            "title": "Saturday, 11am - 9pm"
+          }
+        },
+        {
+          "type": "working_time",
+          "settings": {
+            "title": "Sunday, 11am - 5pm"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

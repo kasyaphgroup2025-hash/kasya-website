@@ -1,0 +1,8 @@
+{%-liquid
+  assign gift_wrapping_product = all_products[settings.gift_wrapping_product]
+  if gift_wrapping_product != blank
+    assign gift_wrapping_cart_items = cart | line_items_for: gift_wrapping_product
+    echo gift_wrapping_cart_items | json
+    render 'gift-wrapping-bubble-number', gift_wrapping_cart_items: gift_wrapping_cart_items
+  endif
+-%}

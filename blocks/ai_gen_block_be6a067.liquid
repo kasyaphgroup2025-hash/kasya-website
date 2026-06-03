@@ -1,0 +1,865 @@
+{% doc %}
+  @prompt
+    Design an All Collections section in Radiance-style black and white minimalist theme to feature 8 collections total.
+    The section should look elegant, premium, and visually balanced across all devices — especially optimized for mobile view.
+    
+    Layout direction:
+    
+    Show 4 collections per row on desktop, 2 collections per row on mobile.
+    
+    Use consistent black background with subtle white glow or gradient radiance in the center.
+    
+    Each collection card must include:
+    
+    Clean product or model image with soft shadow or white border for depth.
+    
+    Collection name in bold serif font (white text).
+    
+    Short one-line tagline in light gray sans serif (e.g., “Defined by timeless style.”).
+    
+    Button below: white with black text, inverts to black background on hover.
+    
+    Keep ample spacing between cards for a premium editorial look.
+    
+    Add smooth hover animation: slight zoom-in (3%) and soft outer glow effect, same Radiance vibe.
+    
+    Responsiveness:
+    
+    On mobile, arrange 2 items per row with balanced margins and proper padding (no cramped layout).
+    
+    Ensure the glow and text scale down proportionally for small screens.
+    
+    Maintain the same typography, button style, and luxury tone as the hero and Radiance Collection sections for visual unity.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-radiance-collections-{{ ai_gen_id }} {
+    background: {{ block.settings.background_color }};
+    position: relative;
+    overflow: hidden;
+    padding: {{ block.settings.section_padding_top }}px 0 {{ block.settings.section_padding_bottom }}px;
+  }
+
+  .ai-radiance-collections-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(255, 255, 255, {{ block.settings.glow_opacity | divided_by: 100.0 }}) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .ai-radiance-collections__container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .ai-radiance-collections__header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: {{ block.settings.header_spacing }}px;
+  }
+
+  .ai-radiance-collections__title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, serif;
+    font-size: {{ block.settings.heading_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 16px;
+    letter-spacing: 0.5px;
+  }
+
+  .ai-radiance-collections__subtitle-{{ ai_gen_id }} {
+    font-family: {{ block.settings.body_font.family }}, sans-serif;
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.subtitle_color }};
+    margin: 0;
+    font-weight: 300;
+  }
+
+  .ai-radiance-collections__grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: {{ block.settings.card_spacing }}px;
+  }
+
+  .ai-radiance-collection-card-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    background: {{ block.settings.card_background }};
+    border: {{ block.settings.card_border_width }}px solid {{ block.settings.card_border_color }};
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ai-radiance-collection-card-{{ ai_gen_id }}:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 {{ block.settings.hover_glow_size }}px {{ block.settings.hover_glow_color }};
+  }
+
+  .ai-radiance-collection-card__link-{{ ai_gen_id }} {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .ai-radiance-collection-card__image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    padding-bottom: {{ block.settings.image_aspect_ratio }}%;
+    overflow: hidden;
+    background: #1a1a1a;
+  }
+
+  .ai-radiance-collection-card__image-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .ai-radiance-collection-card-{{ ai_gen_id }}:hover .ai-radiance-collection-card__image-{{ ai_gen_id }} {
+    transform: scale(1.05);
+  }
+
+  .ai-radiance-collection-card__image-placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0a0a0a;
+  }
+
+  .ai-radiance-collection-card__image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-radiance-collection-card__content-{{ ai_gen_id }} {
+    padding: {{ block.settings.card_padding }}px;
+    text-align: center;
+  }
+
+  .ai-radiance-collection-card__name-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, serif;
+    font-size: {{ block.settings.card_title_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.card_title_color }};
+    margin: 0 0 8px;
+    letter-spacing: 0.3px;
+  }
+
+  .ai-radiance-collection-card__tagline-{{ ai_gen_id }} {
+    font-family: {{ block.settings.body_font.family }}, sans-serif;
+    font-size: {{ block.settings.card_tagline_size }}px;
+    color: {{ block.settings.card_tagline_color }};
+    margin: 0 0 16px;
+    font-weight: 300;
+    line-height: 1.4;
+  }
+
+  .ai-radiance-collection-card__button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 12px 28px;
+    background: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    font-family: {{ block.settings.body_font.family }}, sans-serif;
+    font-size: {{ block.settings.button_text_size }}px;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    border: {{ block.settings.button_border_width }}px solid {{ block.settings.button_border_color }};
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .ai-radiance-collection-card__button-{{ ai_gen_id }}:hover {
+    background: {{ block.settings.button_hover_background }};
+    color: {{ block.settings.button_hover_text_color }};
+    border-color: {{ block.settings.button_hover_border_color }};
+  }
+
+  .ai-radiance-collection-card__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+    font-style: italic;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-radiance-collections__grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(3, 1fr);
+      gap: {{ block.settings.card_spacing | times: 0.8 }}px;
+    }
+
+    .ai-radiance-collections__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.8 }}px;
+    }
+
+    .ai-radiance-collections__subtitle-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subtitle_size | times: 0.9 }}px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-radiance-collections-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_top | times: 0.6 }}px 0 {{ block.settings.section_padding_bottom | times: 0.6 }}px;
+    }
+
+    .ai-radiance-collections-{{ ai_gen_id }}::before {
+      width: 400px;
+      height: 400px;
+    }
+
+    .ai-radiance-collections__container-{{ ai_gen_id }} {
+      padding: 0 16px;
+    }
+
+    .ai-radiance-collections__header-{{ ai_gen_id }} {
+      margin-bottom: {{ block.settings.header_spacing | times: 0.7 }}px;
+    }
+
+    .ai-radiance-collections__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.6 }}px;
+    }
+
+    .ai-radiance-collections__subtitle-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subtitle_size | times: 0.8 }}px;
+    }
+
+    .ai-radiance-collections__grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+      gap: {{ block.settings.card_spacing | times: 0.6 }}px;
+    }
+
+    .ai-radiance-collection-card__content-{{ ai_gen_id }} {
+      padding: {{ block.settings.card_padding | times: 0.8 }}px;
+    }
+
+    .ai-radiance-collection-card__name-{{ ai_gen_id }} {
+      font-size: {{ block.settings.card_title_size | times: 0.85 }}px;
+    }
+
+    .ai-radiance-collection-card__tagline-{{ ai_gen_id }} {
+      font-size: {{ block.settings.card_tagline_size | times: 0.85 }}px;
+      margin-bottom: 12px;
+    }
+
+    .ai-radiance-collection-card__button-{{ ai_gen_id }} {
+      padding: 10px 20px;
+      font-size: {{ block.settings.button_text_size | times: 0.85 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-radiance-collections-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-radiance-collections__container-{{ ai_gen_id }}">
+    {% if block.settings.section_title != blank or block.settings.section_subtitle != blank %}
+      <div class="ai-radiance-collections__header-{{ ai_gen_id }}">
+        {% if block.settings.section_title != blank %}
+          <h2 class="ai-radiance-collections__title-{{ ai_gen_id }}">
+            {{ block.settings.section_title }}
+          </h2>
+        {% endif %}
+        {% if block.settings.section_subtitle != blank %}
+          <p class="ai-radiance-collections__subtitle-{{ ai_gen_id }}">
+            {{ block.settings.section_subtitle }}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="ai-radiance-collections__grid-{{ ai_gen_id }}">
+      {% for i in (1..8) %}
+        {% liquid
+          assign collection_key = 'collection_' | append: i
+          assign tagline_key = 'collection_' | append: i | append: '_tagline'
+          assign button_text_key = 'collection_' | append: i | append: '_button_text'
+          
+          assign collection = block.settings[collection_key]
+          assign tagline = block.settings[tagline_key]
+          assign button_text = block.settings[button_text_key]
+        %}
+
+        <div class="ai-radiance-collection-card-{{ ai_gen_id }}">
+          {% if collection != blank %}
+            <a href="{{ collection.url }}" class="ai-radiance-collection-card__link-{{ ai_gen_id }}">
+              <div class="ai-radiance-collection-card__image-wrapper-{{ ai_gen_id }}">
+                {% if collection.featured_image %}
+                  <img
+                    src="{{ collection.featured_image | image_url: width: 800 }}"
+                    alt="{{ collection.featured_image.alt | escape }}"
+                    class="ai-radiance-collection-card__image-{{ ai_gen_id }}"
+                    loading="lazy"
+                    width="800"
+                    height="{{ 800 | divided_by: collection.featured_image.aspect_ratio | round }}"
+                  >
+                {% else %}
+                  <div class="ai-radiance-collection-card__image-placeholder-{{ ai_gen_id }}">
+                    {{ 'collection-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="ai-radiance-collection-card__content-{{ ai_gen_id }}">
+                <h3 class="ai-radiance-collection-card__name-{{ ai_gen_id }}">
+                  {{ collection.title }}
+                </h3>
+                {% if tagline != blank %}
+                  <p class="ai-radiance-collection-card__tagline-{{ ai_gen_id }}">
+                    {{ tagline }}
+                  </p>
+                {% endif %}
+                <span class="ai-radiance-collection-card__button-{{ ai_gen_id }}">
+                  {{ button_text }}
+                </span>
+              </div>
+            </a>
+          {% else %}
+            <div class="ai-radiance-collection-card__link-{{ ai_gen_id }}">
+              <div class="ai-radiance-collection-card__image-wrapper-{{ ai_gen_id }}">
+                <div class="ai-radiance-collection-card__image-placeholder-{{ ai_gen_id }}">
+                  {{ 'collection-1' | placeholder_svg_tag }}
+                </div>
+                <div class="ai-radiance-collection-card__empty-state-{{ ai_gen_id }}">
+                  Next, select a collection
+                </div>
+              </div>
+
+              <div class="ai-radiance-collection-card__content-{{ ai_gen_id }}">
+                <h3 class="ai-radiance-collection-card__name-{{ ai_gen_id }}">
+                  Collection {{ i }}
+                </h3>
+                {% if tagline != blank %}
+                  <p class="ai-radiance-collection-card__tagline-{{ ai_gen_id }}">
+                    {{ tagline }}
+                  </p>
+                {% endif %}
+                <span class="ai-radiance-collection-card__button-{{ ai_gen_id }}">
+                  {{ button_text }}
+                </span>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Radiance collections",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Title",
+      "default": "Explore Our Collections"
+    },
+    {
+      "type": "text",
+      "id": "section_subtitle",
+      "label": "Subtitle",
+      "default": "Curated with elegance and timeless style"
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Header spacing",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 40,
+      "unit": "px",
+      "label": "Container width",
+      "default": 1440
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "card_spacing",
+      "min": 12,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Card spacing",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "glow_opacity",
+      "min": 0,
+      "max": 30,
+      "step": 5,
+      "label": "Center glow opacity",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "playfair_display_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Section title size",
+      "default": 48
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Section title color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#a3a3a3"
+    },
+    {
+      "type": "header",
+      "content": "Collection cards"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "range",
+      "id": "card_border_width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Border color",
+      "default": "#262626"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 12,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Card padding",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "image_aspect_ratio",
+      "min": 60,
+      "max": 150,
+      "step": 5,
+      "unit": "%",
+      "label": "Image aspect ratio",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Title size",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Title color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_tagline_size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Tagline size",
+      "default": 13
+    },
+    {
+      "type": "color",
+      "id": "card_tagline_color",
+      "label": "Tagline color",
+      "default": "#a3a3a3"
+    },
+    {
+      "type": "header",
+      "content": "Hover effect"
+    },
+    {
+      "type": "range",
+      "id": "hover_glow_size",
+      "min": 10,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Glow size",
+      "default": 30
+    },
+    {
+      "type": "color",
+      "id": "hover_glow_color",
+      "label": "Glow color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Hover background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_border_color",
+      "label": "Hover border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "min": 0,
+      "max": 3,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Collection 1"
+    },
+    {
+      "type": "collection",
+      "id": "collection_1",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "collection_1_tagline",
+      "label": "Tagline",
+      "default": "Defined by timeless style"
+    },
+    {
+      "type": "text",
+      "id": "collection_1_button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "header",
+      "content": "Collection 2"
+    },
+    {
+      "type": "collection",
+      "id": "collection_2",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "collection_2_tagline",
+      "label": "Tagline",
+      "default": "Elegance meets modern design"
+    },
+    {
+      "type": "text",
+      "id": "collection_2_button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "header",
+      "content": "Collection 3"
+    },
+    {
+      "type": "collection",
+      "id": "collection_3",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "collection_3_tagline",
+      "label": "Tagline",
+      "default": "Crafted for the discerning"
+    },
+    {
+      "type": "text",
+      "id": "collection_3_button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "header",
+      "content": "Collection 4"
+    },
+    {
+      "type": "collection",
+      "id": "collection_4",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "collection_4_tagline",
+      "label": "Tagline",
+      "default": "Luxury in every detail"
+    },
+    {
+      "type": "text",
+      "id": "collection_4_button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "header",
+      "content": "Collection 5"
+    },
+    {
+      "type": "collection",
+      "id": "collection_5",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "collection_5_tagline",
+      "label": "Tagline",
+      "default": "Refined sophistication"
+    },
+    {
+      "type": "text",
+      "id": "collection_5_button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "header",
+      "content": "Collection 6"
+    },
+    {
+      "type": "collection",
+      "id": "collection_6",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "collection_6_tagline",
+      "label": "Tagline",
+      "default": "Minimalist perfection"
+    },
+    {
+      "type": "text",
+      "id": "collection_6_button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "header",
+      "content": "Collection 7"
+    },
+    {
+      "type": "collection",
+      "id": "collection_7",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "collection_7_tagline",
+      "label": "Tagline",
+      "default": "Contemporary classics"
+    },
+    {
+      "type": "text",
+      "id": "collection_7_button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "header",
+      "content": "Collection 8"
+    },
+    {
+      "type": "collection",
+      "id": "collection_8",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "collection_8_tagline",
+      "label": "Tagline",
+      "default": "Timeless essentials"
+    },
+    {
+      "type": "text",
+      "id": "collection_8_button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Radiance collections"
+    }
+  ]
+}
+{% endschema %}

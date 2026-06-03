@@ -1,0 +1,327 @@
+{% comment %}
+  KasyaPH Product Landing FAQ
+  Accordion ordered by purchase hesitation: fit, fabric, risk, logistics.
+{% endcomment %}
+
+<section class="kasya-lp-faq">
+  <div class="kasya-lp-faq__inner">
+    <div class="kasya-lp-faq__header">
+      {% if section.settings.heading != blank %}
+        <h2 class="kasya-lp-faq__heading">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.subheading != blank %}
+        <p class="kasya-lp-faq__subheading">
+          {{ section.settings.subheading }}
+        </p>
+      {% endif %}
+    </div>
+
+    {% if section.blocks.size > 0 %}
+      <div class="kasya-lp-faq__items">
+        {% for block in section.blocks %}
+          {% liquid
+            assign item_open = false
+
+            if block.settings.open_by_default
+              assign item_open = true
+            elsif section.settings.first_item_open_by_default and forloop.first
+              assign item_open = true
+            endif
+          %}
+
+          <details class="kasya-lp-faq__item" {% if item_open %}open{% endif %} {{ block.shopify_attributes }}>
+            <summary class="kasya-lp-faq__summary">
+              <span class="kasya-lp-faq__summary-copy">
+                {% if block.settings.category_label != blank %}
+                  <span class="kasya-lp-faq__category">
+                    {{ block.settings.category_label }}
+                  </span>
+                {% endif %}
+
+                <span class="kasya-lp-faq__question">
+                  {{ block.settings.question }}
+                </span>
+              </span>
+
+              <span class="kasya-lp-faq__indicator" aria-hidden="true"></span>
+            </summary>
+
+            {% if block.settings.answer != blank %}
+              <div class="kasya-lp-faq__answer">
+                {{ block.settings.answer }}
+              </div>
+            {% endif %}
+          </details>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .kasya-lp-faq {
+    background: #ffffff;
+    color: #111111;
+    font-family: inherit;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .kasya-lp-faq * {
+    box-sizing: border-box;
+  }
+
+  .kasya-lp-faq__inner {
+    padding: 20px 16px 132px;
+  }
+
+  .kasya-lp-faq__header {
+    margin-bottom: 14px;
+  }
+
+  .kasya-lp-faq__heading {
+    margin: 0;
+    font-size: 21px;
+    font-weight: 850;
+    letter-spacing: 0.06em;
+    line-height: 1.08;
+    text-transform: uppercase;
+  }
+
+  .kasya-lp-faq__subheading {
+    margin: 8px 0 0;
+    color: #666666;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .kasya-lp-faq__items {
+    border-top: 1px solid #e5e5e5;
+  }
+
+  .kasya-lp-faq__item {
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .kasya-lp-faq__summary {
+    min-height: 58px;
+    padding: 14px 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 24px;
+    gap: 12px;
+    align-items: center;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .kasya-lp-faq__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .kasya-lp-faq__summary-copy {
+    min-width: 0;
+    display: block;
+  }
+
+  .kasya-lp-faq__category {
+    display: block;
+    margin-bottom: 5px;
+    color: #777777;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    line-height: 1.1;
+    text-transform: uppercase;
+  }
+
+  .kasya-lp-faq__question {
+    display: block;
+    font-size: 14px;
+    font-weight: 850;
+    line-height: 1.24;
+  }
+
+  .kasya-lp-faq__indicator {
+    width: 18px;
+    height: 18px;
+    position: relative;
+    justify-self: end;
+  }
+
+  .kasya-lp-faq__indicator::before,
+  .kasya-lp-faq__indicator::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 13px;
+    height: 1.5px;
+    background: #111111;
+    transform: translate(-50%, -50%);
+  }
+
+  .kasya-lp-faq__indicator::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  .kasya-lp-faq__item[open] .kasya-lp-faq__indicator::after {
+    opacity: 0;
+  }
+
+  .kasya-lp-faq__answer {
+    padding: 0 34px 15px 0;
+    color: #444444;
+    font-size: 13px;
+    line-height: 1.48;
+  }
+
+  @media screen and (min-width: 680px) {
+    .kasya-lp-faq__inner {
+      padding: 26px 26px 96px;
+    }
+
+    .kasya-lp-faq__heading {
+      font-size: 25px;
+    }
+
+    .kasya-lp-faq__question {
+      font-size: 15px;
+    }
+
+    .kasya-lp-faq__answer {
+      font-size: 14px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Kasya LP FAQ",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "FREQUENTLY ASKED"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "checkbox",
+      "id": "first_item_open_by_default",
+      "label": "First item open by default",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ",
+      "settings": [
+        {
+          "type": "text",
+          "id": "category_label",
+          "label": "Category label",
+          "default": "Fit & body"
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What size should I get?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer",
+          "default": "Choose your usual size for a relaxed fit. If you prefer extra room around the waist, hips, or tummy area, we recommend sizing up."
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "Open by default",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Kasya LP FAQ",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fit & body",
+            "question": "What size should I get?",
+            "answer": "Choose your usual size for a relaxed fit. If you prefer extra room around the waist, hips, or tummy area, we recommend sizing up.",
+            "open_by_default": true
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fit & body",
+            "question": "Is it good for the tummy area?",
+            "answer": "Yes. The fit is designed to feel relaxed around the waist and tummy area. It is not meant to cling tightly to the body."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fabric & feel",
+            "question": "Is the fabric stretchable?",
+            "answer": "The fabric has a soft, relaxed drape but is not highly stretchable. If you want more room around the waist or hips, sizing up may be better."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fabric & feel",
+            "question": "Is it see-through?",
+            "answer": "The fabric is designed for everyday wear. For lighter colors, we recommend wearing skin-tone undergarments for extra confidence."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fabric & feel",
+            "question": "Will it shrink after washing?",
+            "answer": "Slight shrinkage may happen due to fabric behavior, especially if washed in hot water or dried using high heat. For best care, wash gently and hang to dry."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "category_label": "Risk reversal",
+            "question": "Can I exchange if the size does not fit?",
+            "answer": "Yes, size exchange may be requested within 7 days as long as the item is unworn, unwashed, and has the tags attached. Please review our return and exchange policy before purchase."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "category_label": "Logistics",
+            "question": "How long is delivery?",
+            "answer": "Orders are prepared and shipped from Cavite. Delivery timeline depends on your location and will be shown at checkout."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "category_label": "Logistics",
+            "question": "How do I wash it?",
+            "answer": "Wash gently using mild detergent. Avoid bleach, hot water, and high-heat drying. Hang to dry to help maintain the garment's shape and fabric quality."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

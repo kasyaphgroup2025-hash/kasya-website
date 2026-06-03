@@ -1,0 +1,399 @@
+{%- capture direction -%}{%- render 'direction' -%}{%- endcapture -%}
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}" dir="{{ direction }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+
+    {%- if settings.favicon != blank -%}
+      <link rel="shortcut icon" type="image/png" href="{{ settings.favicon | image_url: width: 96, height: 96 }}">
+      <link rel="apple-touch-icon" type="image/png" href="{{ settings.favicon | image_url: width: 180, height: 180 }}">
+    {%- endif -%}
+
+    {%- liquid
+      assign body_font = settings.type_body_font
+      assign heading_font = settings.type_header_font
+      assign body_font_bold_weight = body_font.weight | plus: 300 | at_most: 1000 | append: ''
+      assign body_font_bold = body_font | font_modify: 'weight', body_font_bold_weight
+      unless body_font_bold
+        assign body_font_bold = body_font | font_modify: 'weight', 'bold'
+      endunless
+      assign body_font_italic = body_font | font_modify: 'style', 'italic'
+      assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
+      if settings.auto_generate_font_weight
+        assign body_font_medium_weight = body_font.weight | plus: 100 | at_most: 600 | at_least: body_font.weight | append: ''
+        assign body_font_medium = body_font | font_modify: 'weight', body_font_medium_weight
+
+        assign body_font_large_weight = body_font.weight | plus: 200 | at_most: 600 | at_least: body_font.weight | append: ''
+        assign body_font_large = body_font | font_modify: 'weight', body_font_large_weight
+        
+        assign heading_font_bold_weight = heading_font.weight | plus: 300 | at_most: 1000 | append: ''
+        assign heading_font_bold = heading_font | font_modify: 'weight', heading_font_bold_weight
+        unless heading_font_bold
+          assign heading_font_bold = heading_font | font_modify: 'weight', 'bold'
+        endunless
+
+        assign heading_font_bold_rte = heading_font_bold
+        
+        assign heading_font_medium_weight = heading_font.weight | plus: 100 | at_most: 600 | at_least: heading_font.weight | append: ''
+        assign heading_font_medium = heading_font | font_modify: 'weight', heading_font_medium_weight
+        
+        assign heading_font_semi_bold_weight = heading_font.weight | plus: 200 | at_most: 600 | at_least: heading_font.weight | append: ''
+        assign heading_font_semi_bold = heading_font | font_modify: 'weight', heading_font_semi_bold_weight
+      else
+        assign body_font_medium = body_font
+        assign body_font_large = body_font
+        
+        assign heading_font_bold = heading_font
+
+        assign heading_font_bold_rte = heading_font | font_modify: 'weight', 'bold'
+        assign heading_font_medium = heading_font
+        
+        assign heading_font_semi_bold = heading_font
+      endif  
+    %}
+
+    {% # theme-check-disable AssetPreload %}
+    {%- unless settings.type_body_font.system? -%}
+      <link rel="preload" as="font" href="{{ body_font | font_url }}" type="font/woff2" crossorigin>
+      {%- if body_font != body_font_bold -%}
+        <link rel="preload" as="font" href="{{ body_font_bold | font_url }}" type="font/woff2" crossorigin>
+      {%- endif -%}
+    {%- endunless -%}
+
+    {%- unless settings.type_header_font.system? -%}
+      {%- if heading_font != body_font and heading_font != body_font_bold -%}
+        <link rel="preload" as="font" href="{{ heading_font | font_url }}" type="font/woff2" crossorigin>
+      {%- endif -%}
+      {%- if heading_font_bold != body_font_bold and heading_font_bold != body_font and heading_font_bold != heading_font -%}
+        <link rel="preload" as="font" href="{{ heading_font_bold | font_url }}" type="font/woff2" crossorigin>
+      {%- endif -%}
+    {%- endunless -%}
+    {% # theme-check-enable AssetPreload %}
+
+    {%- unless request.page_type == 'list-collections' -%}
+      <title>
+        {{ page_title }}
+        {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+        {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      </title>
+
+      {% if page_description %}
+        <meta name="description" content="{{ page_description | escape }}">
+      {% endif %}
+    {%- else -%}  
+      <title>{{ settings.collections_list_meta_title | default: page_title }}</title>
+      <meta name="description" content="{{ settings.collections_list_meta_description | default: page_description | escape }}">
+    {%- endunless -%}
+
+    {%- render 'meta-tags' -%}
+
+    <script>
+      window.shopUrl = '{{ request.origin }}';
+      window.routes = {
+        cart_url: '{{ routes.cart_url }}',
+        cart_add_url: '{{ routes.cart_add_url }}',
+        cart_change_url: '{{ routes.cart_change_url }}',
+        cart_update_url: '{{ routes.cart_update_url }}',
+        predictive_search_url: '{{ routes.predictive_search_url }}',
+        search_url: '{{ routes.search_url }}',
+        product_recommendations_url: '{{ routes.product_recommendations_url }}'
+      };
+
+      window.photoswipeUrls = {
+        lib: '{{ "photoswipe.umd.min.js" | asset_url }}',
+        loaded: false
+      };
+
+      window.hasQuickAddDrawer = {% if request.design_mode and request.page_type == 'product' %}true{% else %}false{% endif %};
+      window.hasQuickViewModal = {% if request.design_mode and request.page_type == 'product' %}true{% else %}false{% endif %};
+
+      window.cartStrings = {
+        error: `{{ 'sections.cart.cart_error' | t }}`,
+        quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`,
+        success: `{{ 'sections.cart.cart_success' | t }}`
+      }
+
+      window.variantStrings = {
+        addToCart: `{{ 'products.product.add_to_cart' | t }}`,
+        soldOut: `{{ 'products.product.sold_out' | t }}`,
+        unavailable: `{{ 'products.product.unavailable' | t }}`,
+        unavailable_with_option: `{{ 'products.product.value_unavailable' | t: option_value: '[value]' }}`
+      }
+
+      window.accessibilityStrings = {
+        imageAvailable: `{{ 'products.product.media.image_available' | t: index: '[index]' }}`,
+        shareSuccess: `{{ 'general.share.success_message' | t }}`,
+        copyToClipboard: `{{ 'general.share.copy_to_clipboard' | t }}`,
+        pauseSlideshow: `{{ 'sections.slideshow.pause_slideshow' | t }}`,
+        playSlideshow: `{{ 'sections.slideshow.play_slideshow' | t }}`,
+        {%- if request.design_mode -%}countdownErrorMsg: `{{ 'general.countdown.error_msg' | t }}`,{%- endif -%}
+        countdownExpiredMsg: `{{ 'general.countdown.expired_msg' | t }}`,
+        passwordVisibilityShow: `{{ 'customer.password_visibility.show' | t | escape }}`,
+        passwordVisibilityHide: `{{ 'customer.password_visibility.hide' | t | escape }}`
+      };
+
+      {%- if settings.recently_viewed_enable -%}
+        window.recentlyViewedStrings = {
+          empty: {{ 'general.floating_bar.recently_viewed_empty' | t | json }}
+        };
+        window.recentlyViewedLimit = {{ settings.recently_viewed_products_to_show }};
+        {%- if request.page_type == 'product' and product -%}
+          window.currentProduct = {
+            id: {{ product.id | json }},
+            url: {{ product.url | json }}{%- if product.featured_media != blank -%},
+            image: {{ product.featured_media | image_url: width: 100 | json }}{%- endif -%}
+          };
+        {%- endif -%}
+      {%- endif -%}  
+
+      {%- if settings.enable_product_compare -%}
+        window.addedCompareStrings = {
+          success: {{ 'templates.compare.success' | t | json }}
+        };
+      {%- endif -%}
+
+      {%- if settings.free_shipping_enable -%}
+        window.freeShippingBarExcludeProducts = {%- if settings.free_shipping_exclude_products != blank and settings.free_shipping_exclude_products.count > 0 -%}{{ settings.free_shipping_exclude_products | map: 'id' | json }}{%- else -%}[]{%- endif -%};
+      {%- endif -%}  
+
+      window.moneyFormat = {% unless settings.currency_code_enabled %}{{ shop.money_format | json }}{% else %}{{ shop.money_with_currency_format | json }}{% endunless %};
+      window.loadedBackgroundColorSwatches = {%- if request.design_mode or template.name == 'collection' or template.name == 'search' -%}true{%- else -%}false{%- endif -%};
+      window.currencyMain = {{ shop.currency | json }};
+      window.appearAnimate = {% if settings.enable_appear_effect %}true{% else %}false{% endif %};
+      window.hideUnavailableOptions = {{ settings.hide_unavailable_options | json }};
+      window.showAddToCartMessage = {% if settings.show_add_to_cart_message %}true{% else %}false{% endif %};
+    </script>
+    {%- if settings.google_maps_api_key != blank -%}
+      <script>
+        (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+          key: "{{ settings.google_maps_api_key }}",
+          v: "weekly"
+        });
+      </script>
+    {%- endif -%}  
+
+    {{ content_for_header }}
+
+    <script src="{{ 'critical-global.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'motion.min.js' | asset_url }}" defer="defer"></script>
+
+    {%- render 'critical-inline-styles', body_font: body_font, body_font_bold: body_font_bold, body_font_medium: body_font_medium, body_font_large: body_font_large, body_font_italic: body_font_italic, body_font_bold_italic: body_font_bold_italic, heading_font: heading_font, heading_font_bold: heading_font_bold, heading_font_medium: heading_font_medium, heading_font_semi_bold: heading_font_semi_bold, heading_font_bold_rte: heading_font_bold_rte, only_variables: false, direction: direction -%}
+
+    {{ 'critical-base.css' | asset_url | stylesheet_tag: preload: true }}
+    <link rel="stylesheet" href="{{ 'component-card.css' | asset_url }}" media="print" onload="this.media='all'">
+    {%- if customer.b2b? -%}
+      {%- unless request.page_type == 'collection' or request.page_type == 'product' or request.page_type == 'search' -%}
+        <link rel="stylesheet" href="{{ 'component-volume-pricing-note.css' | asset_url }}" media="print" onload="this.media='all'">
+      {%- else -%}
+        {{ 'component-volume-pricing-note.css' | asset_url | stylesheet_tag }}
+      {%- endunless -%}  
+    {%- endif -%}  
+   
+    <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+    if (Shopify.designMode) {
+      document.documentElement.classList.add('shopify-design-mode');
+    }
+    </script>
+    {% include "pagefly-app-header" %}
+
+  </head>
+
+  <body class="gradient{% if settings.enable_appear_effect %} has-appear-effect{% endif %}">
+    <a class="skip-to-content-link skip-to-content-link--all button visually-hidden" href="#MainContent" data-no-instant>
+      <span>{{ "accessibility.skip_to_text" | t }}</span>
+    </a>
+
+    {%- render 'symbols' -%}
+
+    {%- sections 'header-group' -%}
+    
+    <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+    
+    {%- liquid
+      sections 'footer-group'
+      if request.design_mode or template.name == 'collection' or template.name == 'search'
+        section 'background-color-swatches'
+      endif
+      if request.design_mode and request.page_type == 'product'
+        section 'quick-view'
+        section 'quick-add-drawer'
+      endif
+      section 'cookies-banner'
+      section 'email-signup-popup'
+    -%}
+    
+    <ul hidden>
+      <li id="a11y-refresh-page-message">{{ 'accessibility.refresh_page' | t }}</li>
+    </ul>
+
+    <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'appear-animate.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'truncate-text.js' | asset_url }}" defer="defer"></script>
+    
+    {%- if settings.cart_type == "drawer" and request.page_type != 'cart' -%}
+      <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
+      {%- section 'cart-drawer' -%}
+      <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+
+    <link rel="stylesheet" href="{{ 'component-popup.css' | asset_url }}" media="print" onload="this.media='all'">
+
+    {%- if settings.cart_type == "notification" and request.page_type != 'cart' -%}
+      <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
+      <modal-dialog id="Cart-Notification-Modal" class="popup-modal cart-notification-modal" hidden>
+        <div role="dialog" aria-modal="true" aria-label="{{ 'templates.compare.popup' | t | escape }}" class="popup-modal__content cart-notification-modal__content" tabindex="-1">
+          <div class="cart-notification__header por flex justify-space-between align-center">
+            <h2 class="text-body flex align-center margin0">
+              {%- render 'icon-checkmark', add_classes: 'cart-notification__header__checkmark' -%}
+              <span>{{ 'general.cart.item_added' | t }}</span>
+            </h2>
+            <button id="ModalClose-Cart-Notification" type="button" class="cart-notification-modal__toggle flex justify-center align-center color-foreground" aria-label="{{ 'accessibility.close' | t }}">{% render 'icon-close', icon_width: 22 %}</button>
+          </div>
+          <cart-notification class="cart-notification-modal__content-info flex flex-column por empty cart-items">
+            <div id="cart-notification-product" class="cart-notification-product cart-item"></div>
+            <div class="cart-notification__links">
+              <a
+                href="{{ routes.cart_url }}"
+                id="cart-notification-button"
+                class="button button--secondary"
+              >
+                <span>{{ 'sections.cart.view_cart' | t }}</span>
+              </a>
+              <form action="{{ routes.cart_url }}" method="post" id="cart-notification-form">
+                <button class="button w100" name="checkout">
+                  {%- render 'icon-lock' -%}
+                  <span>{{ 'sections.cart.checkout' | t }}</span>
+                </button>
+              </form>
+              <div class="cart-notification__continue-wrapper center">
+                <button class="cart-notification__continue unstyled-button link light link--text underlined-link lh1" type="button">{{ 'general.continue_shopping' | t }}</button>
+              </div>
+            </div>
+          </cart-notification>
+        </div>
+      </modal-dialog>
+      <link rel="stylesheet" href="{{ 'component-cart-notification.css' | asset_url }}" media="print" onload="this.media='all'">
+    {%- endif -%}  
+
+    <script src="{{ 'parallax-element.js' | asset_url }}" defer="defer"></script>
+    
+    <toast-message-manager></toast-message-manager>
+    <back-button-menu class="back-button-menu">
+      <button type="button" class="button">{%- render 'icon-picker', icon: 'reply' -%}</button>
+    </back-button-menu>
+
+    {%- render 'icon-close', add_classes: 'hidden icon-close-sample' -%}
+
+    {%- render 'floating-toolbar' -%}
+
+    {%- if settings.enable_product_compare -%}
+      <script src="{{ 'compare-products.js' | asset_url }}" defer="defer"></script>
+      <modal-dialog id="Compare-Modal" class="popup-modal compare-modal" hidden>
+        <div role="dialog" aria-modal="true" aria-label="{{ 'templates.compare.popup' | t | escape }}" class="popup-modal__content compare-modal__content" tabindex="-1">
+          <button id="ModalClose-Compare" type="button" class="popup-modal__toggle compare-modal__toggle" aria-label="{{ 'accessibility.close' | t }}">{% render 'icon-close' %}</button>
+          <div id="compare-modal-assets"></div>
+          <compare-popup class="compare-modal__content-info popup-modal__content-info flex flex-column template-popup por empty">
+            <div class="compare-modal__empty compare-modal__message w100">
+              <p class="alert alert--no-button alert--warning">{{ 'templates.compare.empty' | t }}</p>
+            </div>
+            <div class="compare-modal__warning compare-modal__message w100">
+              <p class="alert alert--no-button alert--warning">{{ 'templates.compare.warning' | t }}</p>
+            </div>
+            <div class="compare-modal__results flex-grow-1 por"></div>
+            <div class="compare-modal__loading loading-overlay__spinner">
+              {%- render 'icon-cart-loading' -%}
+            </div>
+          </compare-popup>
+        </div>
+      </modal-dialog>
+      <link rel="stylesheet" href="{{ 'compare-popup.css' | asset_url }}" media="print" onload="this.media='all'">
+      {%- if request.design_mode -%}
+        {%- section 'product-compare' -%}
+      {%- endif -%}  
+    {%- endif -%}  
+
+    {%- render 'shoppable-reels-popup' -%}
+    <template id="countdown-tpl">
+      {%- render 'countdown-tpl' -%}
+    </template>  
+
+    <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'quick-view.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'card-product-colors.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'details-accordion.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'component-tabs.js' | asset_url }}" defer="defer"></script>
+    {%- if request.design_mode -%}
+      <script src="{{ 'slideshow.js' | asset_url }}" defer="defer"></script>  
+      <script src="{{ 'before-after-image-slider.js' | asset_url }}" defer="defer"></script>
+      <script src="{{ 'google-maps.js' | asset_url }}" defer="defer"></script>
+      <script src="{{ 'scrolling-text.js' | asset_url }}" defer="defer"></script>
+      <script src="{{ 'pinning-list.js' | asset_url }}" defer="defer"></script>
+      <script src="{{ 'video-progress.js' | asset_url }}" defer="defer"></script>
+      <script src="{{ 'shoppable-reels.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    {%- if settings.recently_viewed_enable -%}
+      <script src="{{ 'recently-viewed.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    {%- if settings.predictive_search_enabled -%}
+      <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
+      <link rel="stylesheet" href="{{ 'component-predictive-search.css' | asset_url }}" media="print" onload="this.media='all'">
+    {%- endif -%}
+    <script src="{{ 'discount-code.js' | asset_url }}" defer="defer"></script>
+
+    <link rel="stylesheet" href="{{ 'base.css' | asset_url }}" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="{{ 'component-search-modal.css' | asset_url }}" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="{{ 'component-list-menu.css' | asset_url }}" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="{{ 'component-list-social.css' | asset_url }}" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="{{ 'component-rte.css' | asset_url }}" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="{{ 'disclosure.css' | asset_url }}" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="{{ 'component-menu-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
+    {%- if request.page_type != 'cart' and request.page_type != 'product' -%}
+      <link rel="stylesheet" href="{{ 'component-accordion.css' | asset_url }}" media="print" onload="this.media='all'">
+    {%- endif -%}
+    {%- if settings.predictive_search_enabled or settings.cart_type == "drawer" -%}
+      <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
+      <link rel="stylesheet" href="{{ 'component-loading-overlay.css' | asset_url }}" media="print" onload="this.media='all'">
+    {%- endif -%}
+    {%- if request.page_type != 'cart' -%}
+      {%- if settings.cart_type == 'drawer' -%}
+        <link rel="stylesheet" href="{{ 'component-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
+        <link rel="stylesheet" href="{{ 'component-cart-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
+      {%- endif -%}
+      {%- if settings.cart_type != 'page' -%}
+        <link rel="stylesheet" href="{{ 'component-cart.css' | asset_url }}" media="print" onload="this.media='all'">
+        <link rel="stylesheet" href="{{ 'component-totals.css' | asset_url }}" media="print" onload="this.media='all'">
+        <link rel="stylesheet" href="{{ 'component-discounts.css' | asset_url }}" media="print" onload="this.media='all'">
+      {%- endif -%}
+    {%- endif -%}
+    <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">  
+    <noscript>
+      {{ 'component-list-menu.css' | asset_url | stylesheet_tag }}
+      {{ 'component-list-social.css' | asset_url | stylesheet_tag }}
+      {{ 'component-rte.css' | asset_url | stylesheet_tag }}
+      {{ 'disclosure.css' | asset_url | stylesheet_tag }}
+      {{ 'component-menu-drawer.css' | asset_url | stylesheet_tag }}
+      {{ 'base.css' | asset_url | stylesheet_tag }}
+      {{ 'component-search-modal.css' | asset_url | stylesheet_tag }}
+      {{ 'component-card.css' | asset_url | stylesheet_tag }}
+      {{ 'component-accordion.css' | asset_url | stylesheet_tag }}
+      {%- if settings.predictive_search_enabled -%}
+        {{ 'component-predictive-search.css' | asset_url | stylesheet_tag }}
+      {%- endif -%}  
+      {%- if customer.b2b? -%}
+        {%- unless request.page_type == 'collection' or request.page_type == 'product' or request.page_type == 'search' -%}
+          {{ 'component-volume-pricing-note.css' | asset_url | stylesheet_tag }}
+        {%- endunless -%}  
+      {%- endif -%}  
+      {{ 'no-js.css' | asset_url | stylesheet_tag }}
+    </noscript>
+    <script src="{{ 'instantpage-5.2.0.js' | asset_url }}" type="module" defer></script>
+  </body>
+</html>

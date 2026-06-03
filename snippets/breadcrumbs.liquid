@@ -1,0 +1,80 @@
+{% comment %}
+	Renders breadcrumbs
+
+	Usage:
+	{% render 'breadcrumbs' %}
+{% endcomment %}
+<div class="breadcrumb w100{% if add_classes %} {{ add_classes }}{% endif %} caption-large">
+	{%- unless no_page_width -%}
+	<div class="page-width">
+	{%- endunless -%}	
+		<ol class="breadcrumb__list list-unstyled flex align-center{% if align_classes %} {{ align_classes }}{% endif %}" itemscope itemtype="https://schema.org/BreadcrumbList">
+			{%- liquid
+				assign home_label = 'sections.header.breadcrumbs.home' | t
+				render 'breadcrumb-item', url: routes.root_url, label: home_label, index: 1
+				assign new_index = 2
+				case request.page_type
+					when 'product'
+						if collection
+							render 'breadcrumb-item', url: collection.url, label: collection.title, index: new_index
+							assign new_index = new_index | plus: 1
+						endif
+						assign label = product.title
+					when 'collection'
+						assign label = collection.title
+					when 'list-collections'
+						assign label = section.settings.title | default: page_title
+					when 'blog'
+						assign label = blog.title
+					when 'article'
+						render 'breadcrumb-item', label: blog.title, index: new_index, url: blog.url
+						assign new_index = new_index | plus: 1
+						assign label = article.title
+					when 'page'
+						assign label = page.title
+					when 'search'
+						if search.performed
+							assign label = 'templates.search.title' | t
+						else
+							assign label = 'general.search.search' | t
+						endif
+					when 'cart'
+						assign label = 'sections.cart.title' | t
+					when 'customers/account'	
+						assign label = 'customer.account.title' | t	
+					when 'customers/activate_account'	
+						assign label = 'customer.activate_account.title' | t		
+					when 'customers/addresses'	
+						assign label = 'customer.addresses.title' | t		
+					when 'customers/login'	
+						assign label = 'customer.account.title' | t		
+					when 'customers/order'	
+						assign label = 'customer.order.title' | t: name: order.name
+					when 'customers/register'	
+						assign label = 'customer.register.title' | t
+					when 'customers/reset_password'	
+						assign label = 'customer.reset_password.title' | t	
+					when '404'
+						assign label = 'templates.404.title' | t
+				endcase
+				if label
+					render 'breadcrumb-item', label: label, index: new_index
+				endif	
+			-%}
+		</ol>
+	{%- unless no_page_width -%}	
+	</div>
+	{%- endunless -%}
+</div>
+<style>
+	.breadcrumb__list {
+		gap: 0.5rem 1.2rem;
+	}
+	.shopify-section-header-sticky .breadcrumb {
+		visibility: hidden;
+		pointer-events: none;
+	}
+	.breadcrumb li:last-child {
+		font-weight: var(--font-body-weight-medium);
+	}
+</style>  

@@ -1,0 +1,42 @@
+.totals {
+  row-gap: 1rem;
+}
+
+.totals > * {
+  font-size: 1.6rem;
+  margin: 0;
+}
+
+.totals > h2 {
+  font-size: calc(var(--font-heading-scale) * 2rem);
+  font-weight: var(--font-heading-weight-bold);
+  letter-spacing: 0.72px;
+}
+
+.totals * {
+  line-height: 1;
+}
+
+.totals > * + * {
+  margin-inline-start: 2rem;
+}
+
+.totals__subtotal-value.price {
+  font-size: 2rem;
+}
+
+.cart__ctas + .totals {
+  margin-top: 2rem;
+}
+
+.totals ~ .tax-note {
+  margin: 0.5rem 0 0 auto;
+  color: rgb(var(--color-foreground), 0.65);
+}
+
+@media(min-width: 750px) {
+  .totals > h2 {
+    font-size: calc(var(--font-heading-scale) * 2.4rem);
+  }
+}
+

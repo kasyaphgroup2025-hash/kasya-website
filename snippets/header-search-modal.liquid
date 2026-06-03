@@ -1,0 +1,22 @@
+<details-modal class="header__search{% if settings.predictive_search_enabled %} header__search--has-predictive{% endif %}{% if add_classes %} {{ add_classes }}{% endif %}{% if section.settings.logo_position == 'top-left' %} large-up-hide{% endif %}" data-breakpoint="tablet">
+  <details class="flex">
+    <summary class="header__icon header__icon--search header__icon--summary link header__button-icon modal__toggle flex justify-center align-center{% if section.settings.logo_position == 'top-left' %} large-up-hide{% endif %}" aria-haspopup="dialog" aria-label="{{ 'general.search.search' | t }}">
+      <svg class="modal__toggle-open icon icon-search" aria-hidden="true" focusable="false" role="presentation" width="24" height="24">
+        <use href="#icon-search">
+      </svg>
+    </summary>
+    <div class="search-modal gradient color-{{ settings.predictive_search_color_scheme }}" role="dialog" aria-modal="true" aria-label="{{ 'general.search.search' | t }}">
+      <div class="page-width">
+        <div class="por search-modal__inner" tabindex="-1">
+          {%- render 'header-predictive-search', suffix_id: 'Modal' -%}
+          <button type="button" class="search-modal__close-button modal__close-button link link--text focus-inset flex justify-center align-center" aria-label="{{ 'accessibility.close' | t }}">
+            <svg class="icon icon-close" aria-hidden="true" focusable="false" role="presentation">
+              <use href="#icon-close"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </details>
+  <div class="details-modal-overlay search-modal-overlay"></div>
+</details-modal>

@@ -1,0 +1,1036 @@
+{% doc %}
+  @prompt
+    A magazine-style editorial layout, Can you make it like halloween style with pumpkin and spder web and orange shadow blur anything just look like halloween please include also the button in items , Can you add the black background or anything color but its must dark color like Halloween color style 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-editorial-layout-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+    max-width: 100%;
+    padding: {{ block.settings.section_padding }}px;
+    position: relative;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a0f0a 50%, #0f0a0a 100%);
+    border-radius: {{ block.settings.container_radius }}px;
+  }
+
+  .ai-editorial-layout-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(255, 140, 0, 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(255, 69, 0, 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(139, 69, 19, 0.15) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+    border-radius: {{ block.settings.container_radius }}px;
+  }
+
+  .ai-editorial-layout-{{ ai_gen_id }}::after {
+    content: '🦇';
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 60px;
+    opacity: 0.3;
+    z-index: 0;
+    animation: ai-bat-fly-{{ ai_gen_id }} 5s ease-in-out infinite;
+  }
+
+  @keyframes ai-bat-fly-{{ ai_gen_id }} {
+    0%, 100% {
+      transform: translateX(0) translateY(0);
+    }
+    25% {
+      transform: translateX(-20px) translateY(-10px);
+    }
+    50% {
+      transform: translateX(-40px) translateY(0);
+    }
+    75% {
+      transform: translateX(-20px) translateY(10px);
+    }
+  }
+
+  .ai-editorial-item-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ block.settings.border_radius }}px;
+    box-shadow: 0 4px 20px rgba(255, 140, 0, 0.3), 0 0 40px rgba(255, 69, 0, 0.2);
+    transition: all 0.4s ease;
+    z-index: 1;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d1810 100%);
+    border: 1px solid rgba(255, 140, 0, 0.2);
+  }
+
+  .ai-editorial-item-{{ ai_gen_id }}:hover {
+    box-shadow: 0 8px 30px rgba(255, 69, 0, 0.5), 0 0 60px rgba(255, 140, 0, 0.3);
+    transform: translateY(-5px);
+    border-color: rgba(255, 140, 0, 0.4);
+  }
+
+  .ai-editorial-item-{{ ai_gen_id }}--large {
+    grid-column: span 8;
+    grid-row: span 2;
+  }
+
+  .ai-editorial-item-{{ ai_gen_id }}--medium {
+    grid-column: span 4;
+  }
+
+  .ai-editorial-item-{{ ai_gen_id }}--small {
+    grid-column: span 4;
+  }
+
+  .ai-editorial-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+  }
+
+  .ai-editorial-item-{{ ai_gen_id }}--large .ai-editorial-image-wrapper-{{ ai_gen_id }} {
+    min-height: 600px;
+  }
+
+  .ai-editorial-image-wrapper-{{ ai_gen_id }}::before {
+    content: '🎃';
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 40px;
+    z-index: 3;
+    opacity: 0.9;
+    animation: ai-float-{{ ai_gen_id }} 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px rgba(255, 140, 0, 0.8));
+  }
+
+  .ai-editorial-image-wrapper-{{ ai_gen_id }}::after {
+    content: '🕸️';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 50px;
+    z-index: 3;
+    opacity: 0.8;
+    filter: drop-shadow(0 0 8px rgba(200, 200, 200, 0.5));
+  }
+
+  @keyframes ai-float-{{ ai_gen_id }} {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-10px) rotate(5deg);
+    }
+  }
+
+  .ai-editorial-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.8) contrast(1.15) saturate(1.1);
+  }
+
+  .ai-editorial-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d1810 50%, #1a0f0a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-editorial-placeholder-{{ ai_gen_id }}::before {
+    content: '👻';
+    position: absolute;
+    font-size: 80px;
+    opacity: 0.2;
+    animation: ai-ghost-float-{{ ai_gen_id }} 4s ease-in-out infinite;
+  }
+
+  @keyframes ai-ghost-float-{{ ai_gen_id }} {
+    0%, 100% {
+      transform: translateY(0px);
+      opacity: 0.2;
+    }
+    50% {
+      transform: translateY(-20px);
+      opacity: 0.3;
+    }
+  }
+
+  .ai-editorial-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 200px;
+    max-height: 200px;
+    opacity: 0.2;
+    filter: drop-shadow(0 0 15px rgba(255, 140, 0, 0.6));
+  }
+
+  .ai-editorial-content-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: {{ block.settings.content_padding }}px;
+    background: linear-gradient(to top, rgba(10, 5, 0, 0.98), rgba(20, 10, 0, 0.85) 60%, rgba(20, 10, 0, 0.4) 85%, transparent);
+    color: {{ block.settings.text_color }};
+    z-index: 2;
+  }
+
+  .ai-editorial-category-{{ ai_gen_id }} {
+    font-size: {{ block.settings.category_size }}px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    font-weight: 700;
+    color: #ff8c00;
+    text-shadow: 0 0 15px rgba(255, 140, 0, 0.9), 0 0 25px rgba(255, 69, 0, 0.7), 0 2px 5px rgba(0, 0, 0, 0.8);
+  }
+
+  .ai-editorial-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 8px 0;
+    font-family: {{ block.settings.title_font.family }}, {{ block.settings.title_font.fallback_families }};
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 140, 0, 0.3);
+    color: #ffffff;
+  }
+
+  .ai-editorial-item-{{ ai_gen_id }}--large .ai-editorial-title-{{ ai_gen_id }} {
+    font-size: calc({{ block.settings.title_size }}px * 1.5);
+  }
+
+  .ai-editorial-excerpt-{{ ai_gen_id }} {
+    font-size: {{ block.settings.excerpt_size }}px;
+    line-height: 1.5;
+    margin: 0 0 16px 0;
+    opacity: 0.95;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+    color: #f0f0f0;
+  }
+
+  .ai-editorial-meta-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: {{ block.settings.meta_size }}px;
+    opacity: 0.85;
+    margin-bottom: 16px;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+    color: #e0e0e0;
+  }
+
+  .ai-editorial-button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #ff8c00 0%, #ff4500 100%);
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(255, 140, 0, 0.5), 0 0 20px rgba(255, 69, 0, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 3;
+    border: 2px solid rgba(255, 140, 0, 0.6);
+  }
+
+  .ai-editorial-button-{{ ai_gen_id }}:hover {
+    background: linear-gradient(135deg, #ff4500 0%, #ff8c00 100%);
+    box-shadow: 0 6px 25px rgba(255, 69, 0, 0.7), 0 0 30px rgba(255, 140, 0, 0.5);
+    transform: translateY(-2px);
+    border-color: rgba(255, 140, 0, 0.9);
+  }
+
+  .ai-editorial-link-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .ai-editorial-item-{{ ai_gen_id }}:hover .ai-editorial-image-{{ ai_gen_id }} {
+    transform: scale(1.05);
+    transition: transform 0.6s ease;
+    filter: brightness(0.7) contrast(1.25) saturate(1.2);
+  }
+
+  .ai-editorial-image-{{ ai_gen_id }} {
+    transition: transform 0.6s ease, filter 0.6s ease;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-editorial-layout-{{ ai_gen_id }} {
+      grid-template-columns: repeat(8, 1fr);
+      gap: {{ block.settings.grid_gap | times: 0.75 }}px;
+      padding: {{ block.settings.section_padding | times: 0.75 }}px;
+    }
+
+    .ai-editorial-item-{{ ai_gen_id }}--large {
+      grid-column: span 8;
+    }
+
+    .ai-editorial-item-{{ ai_gen_id }}--medium {
+      grid-column: span 4;
+    }
+
+    .ai-editorial-item-{{ ai_gen_id }}--small {
+      grid-column: span 4;
+    }
+
+    .ai-editorial-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_size }}px * 0.9);
+    }
+
+    .ai-editorial-item-{{ ai_gen_id }}--large .ai-editorial-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_size }}px * 1.2);
+    }
+
+    .ai-editorial-image-wrapper-{{ ai_gen_id }}::before {
+      font-size: 35px;
+    }
+
+    .ai-editorial-image-wrapper-{{ ai_gen_id }}::after {
+      font-size: 40px;
+    }
+
+    .ai-editorial-layout-{{ ai_gen_id }}::after {
+      font-size: 50px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-editorial-layout-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: {{ block.settings.grid_gap | times: 0.5 }}px;
+      padding: {{ block.settings.section_padding | times: 0.5 }}px;
+    }
+
+    .ai-editorial-item-{{ ai_gen_id }}--large,
+    .ai-editorial-item-{{ ai_gen_id }}--medium,
+    .ai-editorial-item-{{ ai_gen_id }}--small {
+      grid-column: span 1;
+    }
+
+    .ai-editorial-image-wrapper-{{ ai_gen_id }} {
+      min-height: 250px;
+    }
+
+    .ai-editorial-item-{{ ai_gen_id }}--large .ai-editorial-image-wrapper-{{ ai_gen_id }} {
+      min-height: 400px;
+    }
+
+    .ai-editorial-content-{{ ai_gen_id }} {
+      padding: {{ block.settings.content_padding | times: 0.75 }}px;
+    }
+
+    .ai-editorial-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_size }}px * 0.8);
+    }
+
+    .ai-editorial-item-{{ ai_gen_id }}--large .ai-editorial-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size }}px;
+    }
+
+    .ai-editorial-excerpt-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-editorial-image-wrapper-{{ ai_gen_id }}::before {
+      font-size: 30px;
+    }
+
+    .ai-editorial-image-wrapper-{{ ai_gen_id }}::after {
+      font-size: 35px;
+    }
+
+    .ai-editorial-button-{{ ai_gen_id }} {
+      padding: 10px 20px;
+      font-size: 12px;
+    }
+
+    .ai-editorial-layout-{{ ai_gen_id }}::after {
+      font-size: 40px;
+      top: 15px;
+      right: 15px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-editorial-layout-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% for i in (1..6) %}
+    {% liquid
+      assign item_enabled_key = 'item_' | append: i | append: '_enabled'
+      assign item_size_key = 'item_' | append: i | append: '_size'
+      assign item_image_key = 'item_' | append: i | append: '_image'
+      assign item_category_key = 'item_' | append: i | append: '_category'
+      assign item_title_key = 'item_' | append: i | append: '_title'
+      assign item_excerpt_key = 'item_' | append: i | append: '_excerpt'
+      assign item_author_key = 'item_' | append: i | append: '_author'
+      assign item_date_key = 'item_' | append: i | append: '_date'
+      assign item_button_text_key = 'item_' | append: i | append: '_button_text'
+      assign item_link_key = 'item_' | append: i | append: '_link'
+
+      assign item_enabled = block.settings[item_enabled_key]
+      assign item_size = block.settings[item_size_key]
+      assign item_image = block.settings[item_image_key]
+      assign item_category = block.settings[item_category_key]
+      assign item_title = block.settings[item_title_key]
+      assign item_excerpt = block.settings[item_excerpt_key]
+      assign item_author = block.settings[item_author_key]
+      assign item_date = block.settings[item_date_key]
+      assign item_button_text = block.settings[item_button_text_key]
+      assign item_link = block.settings[item_link_key]
+    %}
+
+    {% if item_enabled %}
+      <article class="ai-editorial-item-{{ ai_gen_id }} ai-editorial-item-{{ ai_gen_id }}--{{ item_size }}">
+        <div class="ai-editorial-image-wrapper-{{ ai_gen_id }}">
+          {% if item_image %}
+            <img
+              src="{{ item_image | image_url: width: 1200 }}"
+              alt="{{ item_image.alt | escape }}"
+              loading="lazy"
+              width="{{ item_image.width }}"
+              height="{{ item_image.height }}"
+              class="ai-editorial-image-{{ ai_gen_id }}"
+            >
+          {% else %}
+            <div class="ai-editorial-placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="ai-editorial-content-{{ ai_gen_id }}">
+          {% if item_category != blank %}
+            <div class="ai-editorial-category-{{ ai_gen_id }}">{{ item_category }}</div>
+          {% endif %}
+
+          {% if item_title != blank %}
+            <h3 class="ai-editorial-title-{{ ai_gen_id }}">{{ item_title }}</h3>
+          {% endif %}
+
+          {% if item_excerpt != blank and item_size == 'large' %}
+            <p class="ai-editorial-excerpt-{{ ai_gen_id }}">{{ item_excerpt }}</p>
+          {% endif %}
+
+          {% if item_author != blank or item_date != blank %}
+            <div class="ai-editorial-meta-{{ ai_gen_id }}">
+              {% if item_author != blank %}
+                <span>{{ item_author }}</span>
+              {% endif %}
+              {% if item_author != blank and item_date != blank %}
+                <span>•</span>
+              {% endif %}
+              {% if item_date != blank %}
+                <time>{{ item_date }}</time>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {% if item_button_text != blank and item_link != blank %}
+            <a href="{{ item_link }}" class="ai-editorial-button-{{ ai_gen_id }}">
+              {{ item_button_text }}
+            </a>
+          {% endif %}
+        </div>
+
+        {% if item_link != blank %}
+          <a href="{{ item_link }}" class="ai-editorial-link-{{ ai_gen_id }}" aria-label="{{ item_title | escape }}"></a>
+        {% endif %}
+      </article>
+    {% endif %}
+  {% endfor %}
+</div>
+
+{% schema %}
+{
+  "name": "Halloween editorial",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Grid gap",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "container_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Container radius",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Item border radius",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Content style"
+    },
+    {
+      "type": "range",
+      "id": "content_padding",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Content padding",
+      "default": 30
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "font_picker",
+      "id": "title_font",
+      "label": "Title font",
+      "default": "playfair_display_n4"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "category_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Category size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "excerpt_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Excerpt size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "meta_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Meta size",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Item 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_1_enabled",
+      "label": "Enable item 1",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "item_1_size",
+      "label": "Size",
+      "options": [
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "small",
+          "label": "Small"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "item_1_category",
+      "label": "Category",
+      "default": "Spooky Season"
+    },
+    {
+      "type": "text",
+      "id": "item_1_title",
+      "label": "Title",
+      "default": "Halloween Night Collection"
+    },
+    {
+      "type": "textarea",
+      "id": "item_1_excerpt",
+      "label": "Excerpt",
+      "default": "Discover our haunting collection of spooky styles perfect for the scariest night of the year."
+    },
+    {
+      "type": "text",
+      "id": "item_1_author",
+      "label": "Author",
+      "default": "The Pumpkin King"
+    },
+    {
+      "type": "text",
+      "id": "item_1_date",
+      "label": "Date",
+      "default": "Oct 31, 2025"
+    },
+    {
+      "type": "text",
+      "id": "item_1_button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "item_1_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Item 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_2_enabled",
+      "label": "Enable item 2",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "item_2_size",
+      "label": "Size",
+      "options": [
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "small",
+          "label": "Small"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "item_2_category",
+      "label": "Category",
+      "default": "Costumes"
+    },
+    {
+      "type": "text",
+      "id": "item_2_title",
+      "label": "Title",
+      "default": "Trick or Treat Essentials"
+    },
+    {
+      "type": "textarea",
+      "id": "item_2_excerpt",
+      "label": "Excerpt"
+    },
+    {
+      "type": "text",
+      "id": "item_2_author",
+      "label": "Author",
+      "default": "Witch Hazel"
+    },
+    {
+      "type": "text",
+      "id": "item_2_date",
+      "label": "Date",
+      "default": "Oct 28, 2025"
+    },
+    {
+      "type": "text",
+      "id": "item_2_button_text",
+      "label": "Button text",
+      "default": "Explore"
+    },
+    {
+      "type": "url",
+      "id": "item_2_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Item 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_3_enabled",
+      "label": "Enable item 3",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "item_3_size",
+      "label": "Size",
+      "options": [
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "small",
+          "label": "Small"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "item_3_category",
+      "label": "Category",
+      "default": "Decorations"
+    },
+    {
+      "type": "text",
+      "id": "item_3_title",
+      "label": "Title",
+      "default": "Haunted House Decor"
+    },
+    {
+      "type": "textarea",
+      "id": "item_3_excerpt",
+      "label": "Excerpt"
+    },
+    {
+      "type": "text",
+      "id": "item_3_author",
+      "label": "Author",
+      "default": "Count Dracula"
+    },
+    {
+      "type": "text",
+      "id": "item_3_date",
+      "label": "Date",
+      "default": "Oct 25, 2025"
+    },
+    {
+      "type": "text",
+      "id": "item_3_button_text",
+      "label": "Button text",
+      "default": "View More"
+    },
+    {
+      "type": "url",
+      "id": "item_3_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Item 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_4_enabled",
+      "label": "Enable item 4",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "item_4_size",
+      "label": "Size",
+      "options": [
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "small",
+          "label": "Small"
+        }
+      ],
+      "default": "small"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_4_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "item_4_category",
+      "label": "Category",
+      "default": "Treats"
+    },
+    {
+      "type": "text",
+      "id": "item_4_title",
+      "label": "Title",
+      "default": "Spooky Sweets"
+    },
+    {
+      "type": "textarea",
+      "id": "item_4_excerpt",
+      "label": "Excerpt"
+    },
+    {
+      "type": "text",
+      "id": "item_4_author",
+      "label": "Author",
+      "default": "Candy Corn"
+    },
+    {
+      "type": "text",
+      "id": "item_4_date",
+      "label": "Date",
+      "default": "Oct 20, 2025"
+    },
+    {
+      "type": "text",
+      "id": "item_4_button_text",
+      "label": "Button text",
+      "default": "Get Treats"
+    },
+    {
+      "type": "url",
+      "id": "item_4_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Item 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_5_enabled",
+      "label": "Enable item 5",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "item_5_size",
+      "label": "Size",
+      "options": [
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "small",
+          "label": "Small"
+        }
+      ],
+      "default": "small"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_5_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "item_5_category",
+      "label": "Category",
+      "default": "Accessories"
+    },
+    {
+      "type": "text",
+      "id": "item_5_title",
+      "label": "Title",
+      "default": "Creepy Accessories"
+    },
+    {
+      "type": "textarea",
+      "id": "item_5_excerpt",
+      "label": "Excerpt"
+    },
+    {
+      "type": "text",
+      "id": "item_5_author",
+      "label": "Author",
+      "default": "Black Cat"
+    },
+    {
+      "type": "text",
+      "id": "item_5_date",
+      "label": "Date",
+      "default": "Oct 15, 2025"
+    },
+    {
+      "type": "text",
+      "id": "item_5_button_text",
+      "label": "Button text",
+      "default": "Discover"
+    },
+    {
+      "type": "url",
+      "id": "item_5_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Item 6"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_6_enabled",
+      "label": "Enable item 6",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "item_6_size",
+      "label": "Size",
+      "options": [
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "small",
+          "label": "Small"
+        }
+      ],
+      "default": "small"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_6_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "item_6_category",
+      "label": "Category",
+      "default": "Party"
+    },
+    {
+      "type": "text",
+      "id": "item_6_title",
+      "label": "Title",
+      "default": "Monster Mash Party"
+    },
+    {
+      "type": "textarea",
+      "id": "item_6_excerpt",
+      "label": "Excerpt"
+    },
+    {
+      "type": "text",
+      "id": "item_6_author",
+      "label": "Author",
+      "default": "Frankenstein"
+    },
+    {
+      "type": "text",
+      "id": "item_6_date",
+      "label": "Date",
+      "default": "Oct 10, 2025"
+    },
+    {
+      "type": "text",
+      "id": "item_6_button_text",
+      "label": "Button text",
+      "default": "Join Party"
+    },
+    {
+      "type": "url",
+      "id": "item_6_link",
+      "label": "Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Halloween editorial"
+    }
+  ]
+}
+{% endschema %}
