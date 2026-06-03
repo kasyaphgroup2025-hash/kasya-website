@@ -1,25 +1,31 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "home_hero_photo": {
       "type": "home-hero-photo",
       "settings": {
-        "mobile_image": "",
-        "desktop_image": "",
+        "mobile_image": "shopify://shop_images/6.6_MOBILE_CRO.jpg",
         "image_alt": "Kasya Back to Rythm campaign",
         "collection_label": "6.6 COLLECTION",
         "headline_top": "BACK TO",
         "headline_italic": "RYTHM",
         "tagline": "OFFICE-READY, WEEKEND-EASY",
         "primary_button_label": "View Collection",
-        "secondary_button_label": "Shop now",
+        "secondary_button_label": "Shop Now",
         "button_link": "/collections/back-to-rhythm"
       }
     },
     "home_campaign_story": {
       "type": "home-campaign-story",
       "settings": {
-        "mobile_image": "",
-        "desktop_image": "",
         "image_alt": "Campaign story image",
         "kicker": "The story",
         "heading": "Made for movement",
@@ -46,8 +52,6 @@
     "home_shop_the_look": {
       "type": "home-shop-the-look",
       "settings": {
-        "mobile_image": "",
-        "desktop_image": "",
         "image_alt": "Styled Kasya look",
         "kicker": "Shop the look",
         "heading": "One look, all day",
@@ -65,7 +69,6 @@
           "type": "collection_card",
           "settings": {
             "collection": "",
-            "image": "",
             "title": "Dresses",
             "label": "Explore now",
             "link": ""
@@ -75,7 +78,6 @@
           "type": "collection_card",
           "settings": {
             "collection": "",
-            "image": "",
             "title": "Tops",
             "label": "Explore now",
             "link": ""
@@ -85,7 +87,6 @@
           "type": "collection_card",
           "settings": {
             "collection": "",
-            "image": "",
             "title": "Bottoms",
             "label": "Explore now",
             "link": ""
