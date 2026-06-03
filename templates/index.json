@@ -25,13 +25,9 @@
     },
     "home_campaign_story": {
       "type": "home-campaign-story",
+      "disabled": true,
       "settings": {
-        "image_alt": "Campaign story image",
-        "kicker": "The story",
-        "heading": "Made for movement",
-        "copy": "<p>A mobile-first campaign space for editorial copy, launch notes, fabric stories, or collection inspiration.</p>",
-        "button_label": "Read more",
-        "button_link": ""
+        "image_alt": "Campaign story image"
       }
     },
     "home_quick_shop_grid": {
