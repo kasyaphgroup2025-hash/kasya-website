@@ -25,70 +25,7 @@
     },
     "home_quick_shop_grid": {
       "type": "home-quick-shop-grid",
-      "blocks": {
-        "quick_product_1": {
-          "type": "product_card",
-          "settings": {
-            "product": "",
-            "product_name": "Daliah Polo",
-            "product_price": "₱999",
-            "color_1_label": "Black",
-            "color_1": "#111111",
-            "color_2_label": "Ivory",
-            "color_2": "#d8c8ad",
-            "custom_product_url": ""
-          }
-        },
-        "quick_product_2": {
-          "type": "product_card",
-          "settings": {
-            "product": "",
-            "product_name": "Inah Blouse",
-            "product_price": "₱999",
-            "color_1_label": "Stone",
-            "color_1": "#8f8f88",
-            "color_2_label": "Cream",
-            "color_2": "#f0e5b8",
-            "custom_product_url": ""
-          }
-        },
-        "quick_product_3": {
-          "type": "product_card",
-          "settings": {
-            "product": "",
-            "product_name": "Hazel Trouser",
-            "product_price": "₱999",
-            "color_1_label": "Black",
-            "color_1": "#111111",
-            "color_2_label": "Taupe",
-            "color_2": "#c5b497",
-            "custom_product_url": ""
-          }
-        },
-        "quick_product_4": {
-          "type": "product_card",
-          "settings": {
-            "product": "",
-            "product_name": "Demi Barrel Pants",
-            "product_price": "₱999",
-            "color_1_label": "Charcoal",
-            "color_1": "#555555",
-            "color_2_label": "Butter",
-            "color_2": "#efe4a8",
-            "custom_product_url": ""
-          }
-        }
-      },
-      "block_order": [
-        "quick_product_1",
-        "quick_product_2",
-        "quick_product_3",
-        "quick_product_4"
-      ],
-      "settings": {
-        "banner_alt": "Back to Rhythm collection",
-        "banner_title": "Back to Rhythm"
-      }
+      "settings": {}
     },
     "home_shop_the_look": {
       "type": "home-shop-the-look",
