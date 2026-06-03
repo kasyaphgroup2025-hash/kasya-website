@@ -201,14 +201,15 @@
       {%- else -%}
         <div class="home-media home-media--empty"></div>
       {%- endif -%}
-      <h2 class="home-quick-shop__banner-title">{{ section.settings.banner_title | escape }}</h2>
+      {%- assign banner_heading = section.settings.banner_heading | default: section.settings.banner_title | default: 'Back to Rhythm' -%}
+      <h2 class="home-quick-shop__banner-title">{{ banner_heading | escape }}</h2>
     </div>
 
     <div class="home-quick-shop__grid">
       {%- for block in section.blocks limit: 4 -%}
         {%- liquid
           assign product = block.settings.product
-          assign product_url = block.settings.custom_product_url
+          assign product_url = block.settings.custom_url | default: block.settings.custom_product_url
           if product_url == blank and product != blank
             assign product_url = product.url
           endif
@@ -216,7 +217,7 @@
             assign product_url = '#'
           endif
 
-          assign product_title = block.settings.product_name
+          assign product_title = block.settings.product_title | default: block.settings.product_name
           if product_title == blank and product != blank
             assign product_title = product.title
           endif
@@ -237,12 +238,18 @@
             assign image_1 = product.featured_image
           endif
           assign image_2 = block.settings.image_2 | default: image_1
+          assign image_1_alt = block.settings.image_1_alt | default: product_title
+          assign image_2_alt = block.settings.image_2_alt | default: product_title
+          assign color_1_label = block.settings.color_1_label | default: 'Color 1'
+          assign color_2_label = block.settings.color_2_label | default: 'Color 2'
+          assign color_1_swatch = block.settings.color_1_swatch | default: block.settings.color_1 | default: '#111111'
+          assign color_2_swatch = block.settings.color_2_swatch | default: block.settings.color_2 | default: '#d8c8ad'
         -%}
         <article class="home-quick-shop__card" {{ block.shopify_attributes }} data-home-quick-shop-card>
           <a class="home-quick-shop__image-link" href="{{ product_url }}" aria-label="{{ product_title | escape }}">
             {%- if image_1 != blank -%}
               <span class="home-quick-shop__product-image is-active" data-home-quick-shop-image="1">
-                {{ image_1 | image_url: width: 900 | image_tag: loading: 'lazy', widths: '180, 260, 360, 540, 720, 900', alt: product_title }}
+                {{ image_1 | image_url: width: 900 | image_tag: loading: 'lazy', widths: '180, 260, 360, 540, 720, 900', alt: image_1_alt }}
               </span>
             {%- else -%}
               <span class="home-quick-shop__product-image is-active" data-home-quick-shop-image="1"><span class="home-media home-media--empty"></span></span>
@@ -250,7 +257,7 @@
 
             {%- if image_2 != blank -%}
               <span class="home-quick-shop__product-image" data-home-quick-shop-image="2">
-                {{ image_2 | image_url: width: 900 | image_tag: loading: 'lazy', widths: '180, 260, 360, 540, 720, 900', alt: product_title }}
+                {{ image_2 | image_url: width: 900 | image_tag: loading: 'lazy', widths: '180, 260, 360, 540, 720, 900', alt: image_2_alt }}
               </span>
             {%- else -%}
               <span class="home-quick-shop__product-image" data-home-quick-shop-image="2"><span class="home-media home-media--empty"></span></span>
@@ -258,8 +265,8 @@
           </a>
 
           <div class="home-quick-shop__swatches" aria-label="Choose color for {{ product_title | escape }}">
-            <button class="home-quick-shop__swatch is-active" type="button" style="--swatch-color: {{ block.settings.color_1 }};" data-home-quick-shop-swatch="1" aria-label="{{ block.settings.color_1_label | escape }}"></button>
-            <button class="home-quick-shop__swatch" type="button" style="--swatch-color: {{ block.settings.color_2 }};" data-home-quick-shop-swatch="2" aria-label="{{ block.settings.color_2_label | escape }}"></button>
+            <button class="home-quick-shop__swatch is-active" type="button" style="--swatch-color: {{ color_1_swatch }};" data-home-quick-shop-swatch="1" aria-label="{{ color_1_label | escape }}"></button>
+            <button class="home-quick-shop__swatch" type="button" style="--swatch-color: {{ color_2_swatch }};" data-home-quick-shop-swatch="2" aria-label="{{ color_2_label | escape }}"></button>
           </div>
 
           <div class="home-quick-shop__info">
@@ -334,7 +341,7 @@
   "settings": [
     { "type": "image_picker", "id": "banner_image", "label": "Back to Rhythm banner image" },
     { "type": "text", "id": "banner_alt", "label": "Banner image alt text", "default": "Back to Rhythm collection" },
-    { "type": "text", "id": "banner_title", "label": "Banner title", "default": "Back to Rhythm" }
+    { "type": "text", "id": "banner_heading", "label": "Banner heading", "default": "Back to Rhythm" }
   ],
   "blocks": [
     {
@@ -342,15 +349,17 @@
       "name": "Product card",
       "settings": [
         { "type": "product", "id": "product", "label": "Product" },
-        { "type": "text", "id": "product_name", "label": "Manual product name", "default": "Daliah Polo" },
-        { "type": "text", "id": "product_price", "label": "Manual price", "default": "₱999" },
-        { "type": "image_picker", "id": "image_1", "label": "Product image 1" },
-        { "type": "image_picker", "id": "image_2", "label": "Product image 2" },
+        { "type": "url", "id": "custom_url", "label": "Custom URL" },
+        { "type": "text", "id": "product_title", "label": "Product title", "default": "Daliah Polo" },
+        { "type": "text", "id": "product_price", "label": "Product price", "default": "₱999" },
+        { "type": "image_picker", "id": "image_1", "label": "Image 1" },
+        { "type": "text", "id": "image_1_alt", "label": "Image 1 alt text" },
         { "type": "text", "id": "color_1_label", "label": "Color 1 label", "default": "Black" },
-        { "type": "color", "id": "color_1", "label": "Color 1 swatch", "default": "#111111" },
+        { "type": "color", "id": "color_1_swatch", "label": "Color 1 swatch", "default": "#111111" },
+        { "type": "image_picker", "id": "image_2", "label": "Image 2" },
+        { "type": "text", "id": "image_2_alt", "label": "Image 2 alt text" },
         { "type": "text", "id": "color_2_label", "label": "Color 2 label", "default": "Ivory" },
-        { "type": "color", "id": "color_2", "label": "Color 2 swatch", "default": "#d8c8ad" },
-        { "type": "url", "id": "custom_product_url", "label": "Optional custom product URL" }
+        { "type": "color", "id": "color_2_swatch", "label": "Color 2 swatch", "default": "#d8c8ad" }
       ]
     }
   ],
