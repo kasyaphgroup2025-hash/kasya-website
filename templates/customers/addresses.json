@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-addresses",
+      "settings": {
+        "padding_top": 76,
+        "padding_bottom": 52
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

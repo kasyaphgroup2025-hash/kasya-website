@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-register",
+      "settings": {
+        "padding_top": 80,
+        "padding_bottom": 52
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

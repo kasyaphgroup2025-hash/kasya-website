@@ -1,0 +1,28 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-blog",
+      "settings": {
+        "posts_per_page": 6,
+        "show_tags": true,
+        "layout": "collage",
+        "show_image": true,
+        "image_height": "medium",
+        "show_date": true,
+        "show_author": false,
+        "show_comment": true,
+        "share_enable": false,
+        "share_on_facebook": true,
+        "share_on_twitter": true,
+        "share_on_pinterest": true,
+        "share_on_email": true,
+        "share_link": true,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
