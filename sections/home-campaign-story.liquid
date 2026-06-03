@@ -2,6 +2,17 @@
 
 <section class="home-editorial home-campaign-story">
   <div class="home-editorial__inner">
+    <div class="home-campaign-story__lead">
+      <div>
+        {%- if section.settings.kicker != blank -%}
+          <p class="home-editorial__kicker">{{ section.settings.kicker | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="home-editorial__heading">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+      </div>
+    </div>
+
     <div class="home-campaign-story__grid">
       <div class="home-campaign-story__image">
         {%- if section.settings.mobile_image != blank or section.settings.desktop_image != blank -%}
