@@ -1,19 +1,154 @@
 {{ 'homepage-custom.css' | asset_url | stylesheet_tag }}
 
-<section class="home-editorial home-quick-shop" style="--home-products-columns: {{ section.settings.columns_desktop }};">
+<style>
+  .home-quick-shop {
+    background: #030303;
+    color: #ffffff;
+  }
+
+  .home-quick-shop .home-editorial__inner {
+    padding-top: 3.8rem;
+    padding-bottom: 4.2rem;
+  }
+
+  .home-quick-shop__header {
+    display: block;
+    margin-bottom: 2.4rem;
+    padding: 0 2rem;
+  }
+
+  .home-quick-shop__collection-title {
+    margin: 0;
+    color: #ffffff;
+    font-family: "Helvetica Now Condensed", "Helvetica Neue Condensed", "Arial Narrow", sans-serif;
+    font-size: clamp(3.8rem, 12vw, 6.4rem);
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.02;
+    text-transform: none;
+  }
+
+  .home-quick-shop__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    background: #030303;
+  }
+
+  .home-quick-shop__card {
+    min-width: 0;
+    background: linear-gradient(90deg, #151515, #242424);
+  }
+
+  .home-quick-shop__image-link {
+    display: block;
+    aspect-ratio: 0.82;
+    overflow: hidden;
+    background: #0f0f0f;
+  }
+
+  .home-quick-shop__image-link img,
+  .home-quick-shop__image-link .home-media,
+  .home-quick-shop__image-link .home-media--empty {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: cover;
+  }
+
+  .home-quick-shop__swatches {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.45rem;
+    min-height: 1.6rem;
+    margin: 0.7rem 0 0.45rem;
+  }
+
+  .home-quick-shop__swatch {
+    display: block;
+    width: 1.22rem;
+    height: 1.22rem;
+    border: 0.1rem solid rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    background: var(--swatch-color, #d8d8d8);
+  }
+
+  .home-quick-shop__info {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.8rem 1rem;
+    align-items: center;
+    min-height: 0;
+    padding: 0 1.15rem 1.25rem;
+    background: transparent;
+  }
+
+  .home-quick-shop__title {
+    margin: 0;
+    color: #ffffff;
+    font-size: clamp(1.5rem, 4.2vw, 1.9rem);
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.08;
+  }
+
+  .home-quick-shop__price {
+    color: #ffffff;
+    font-size: clamp(1.45rem, 4vw, 1.85rem);
+    font-weight: 800;
+    line-height: 1.08;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .home-quick-shop__button {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.3rem 1rem;
+    border: 0.1rem solid rgba(255, 255, 255, 0.9);
+    border-radius: 0.5rem;
+    background: transparent;
+    color: #ffffff;
+    font-size: 1.12rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1;
+    text-align: center;
+    text-transform: none;
+  }
+
+  @media screen and (min-width: 750px) {
+    .home-quick-shop .home-editorial__inner {
+      padding-top: 5.2rem;
+      padding-bottom: 5.6rem;
+    }
+
+    .home-quick-shop__header {
+      padding-inline: 5.6rem;
+      margin-bottom: 3rem;
+    }
+
+    .home-quick-shop__collection-title {
+      font-size: clamp(5.8rem, 5.6vw, 8.8rem);
+    }
+
+    .home-quick-shop__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .home-quick-shop__info {
+      padding: 0 1.4rem 1.5rem;
+    }
+  }
+</style>
+
+<section class="home-editorial home-quick-shop">
   <div class="home-editorial__inner">
     <div class="home-quick-shop__header">
-      <div>
-        {%- if section.settings.kicker != blank -%}
-          <p class="home-editorial__kicker">{{ section.settings.kicker | escape }}</p>
-        {%- endif -%}
-        {%- if section.settings.heading != blank -%}
-          <h2 class="home-editorial__heading">{{ section.settings.heading | escape }}</h2>
-        {%- endif -%}
-      </div>
-      {%- if section.settings.copy != blank -%}
-        <div class="home-editorial__copy">{{ section.settings.copy }}</div>
-      {%- endif -%}
+      <h2 class="home-quick-shop__collection-title">Back to Rhythm</h2>
     </div>
 
     {%- liquid
@@ -24,8 +159,7 @@
     -%}
 
     <div class="home-quick-shop__grid">
-      {%- for product in products limit: section.settings.products_to_show -%}
-        {%- assign current_variant = product.selected_or_first_available_variant -%}
+      {%- for product in products limit: 4 -%}
         <article class="home-quick-shop__card">
           <a class="home-quick-shop__image-link" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
             {%- if product.featured_image != blank -%}
@@ -34,28 +168,26 @@
               <div class="home-media home-media--empty"></div>
             {%- endif -%}
           </a>
+
+          {%- if section.settings.show_swatches -%}
+            {%- for option in product.options_with_values -%}
+              {%- assign option_name = option.name | downcase -%}
+              {%- if option_name contains 'color' or option_name contains 'colour' -%}
+                <div class="home-quick-shop__swatches" aria-label="Available colors">
+                  {%- for value in option.values limit: 6 -%}
+                    <span class="home-quick-shop__swatch" style="--swatch-color: {{ value | handleize }};" title="{{ value | escape }}"></span>
+                  {%- endfor -%}
+                </div>
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+
           <div class="home-quick-shop__info">
             <h3 class="home-quick-shop__title"><a href="{{ product.url }}">{{ product.title | escape }}</a></h3>
             <div class="home-quick-shop__price">{{ product.price | money }}</div>
-            {%- if section.settings.show_swatches -%}
-              {%- for option in product.options_with_values -%}
-                {%- assign option_name = option.name | downcase -%}
-                {%- if option_name contains 'color' or option_name contains 'colour' -%}
-                  <div class="home-quick-shop__swatches" aria-label="Available colors">
-                    {%- for value in option.values limit: 6 -%}
-                      <span class="home-quick-shop__swatch" style="--swatch-color: {{ value | handleize }};" title="{{ value | escape }}"></span>
-                    {%- endfor -%}
-                  </div>
-                {%- endif -%}
-              {%- endfor -%}
-            {%- endif -%}
             {%- if section.settings.show_quick_shop -%}
-              {%- form 'product', product, class: 'home-quick-shop__form' -%}
-                <input type="hidden" name="id" value="{{ current_variant.id }}">
-                <button class="home-quick-shop__button" type="submit" {% unless current_variant.available %}disabled{% endunless %}>
-                  {%- if current_variant.available -%}{{ section.settings.quick_shop_label | escape }}{%- else -%}Sold out{%- endif -%}
-                </button>
-              {%- endform -%}
+              <a class="home-quick-shop__button" href="{{ product.url }}">Quick Shop</a>
             {%- endif -%}
           </div>
         </article>
@@ -63,10 +195,14 @@
         {%- for i in (1..4) -%}
           <article class="home-quick-shop__card">
             <div class="home-quick-shop__image-link"><div class="home-media home-media--empty"></div></div>
+            <div class="home-quick-shop__swatches" aria-hidden="true">
+              <span class="home-quick-shop__swatch" style="--swatch-color: #111111;"></span>
+              <span class="home-quick-shop__swatch" style="--swatch-color: #d8c8ad;"></span>
+            </div>
             <div class="home-quick-shop__info">
               <h3 class="home-quick-shop__title">Product placeholder</h3>
               <div class="home-quick-shop__price">{{ 0 | money }}</div>
-              <button class="home-quick-shop__button" disabled>{{ section.settings.quick_shop_label | escape }}</button>
+              <span class="home-quick-shop__button">Quick Shop</span>
             </div>
           </article>
         {%- endfor -%}
@@ -82,15 +218,15 @@
   "class": "section-home-quick-shop-grid",
   "settings": [
     { "type": "text", "id": "kicker", "label": "Kicker", "default": "Quick shop" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "New arrivals" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Back to Rhythm" },
     { "type": "richtext", "id": "copy", "label": "Copy", "default": "<p>Choose the pieces that move first.</p>" },
     { "type": "collection", "id": "collection", "label": "Fallback collection" },
     { "type": "product_list", "id": "product_list", "label": "Products", "limit": 12 },
-    { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 2, "max": 12, "step": 1, "default": 8 },
+    { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 2, "max": 12, "step": 1, "default": 4 },
     { "type": "range", "id": "columns_desktop", "label": "Desktop columns", "min": 2, "max": 5, "step": 1, "default": 4 },
     { "type": "checkbox", "id": "show_swatches", "label": "Show color swatches", "default": true },
     { "type": "checkbox", "id": "show_quick_shop", "label": "Show quick shop button", "default": true },
-    { "type": "text", "id": "quick_shop_label", "label": "Quick shop label", "default": "Quick shop" }
+    { "type": "text", "id": "quick_shop_label", "label": "Quick shop label", "default": "Quick Shop" }
   ],
   "presets": [
     { "name": "Home quick shop grid" }
