@@ -22,7 +22,7 @@
         <p class="home-editorial__kicker">{{ section.settings.kicker | escape }}</p>
       {%- endif -%}
       {%- if section.settings.heading != blank -%}
-        <h1 class="home-editorial__heading">{{ section.settings.heading | escape }}</h1>
+        <h1 class="home-editorial__heading home-editorial__heading--display">{{ section.settings.heading | escape }}</h1>
       {%- endif -%}
       {%- if section.settings.copy != blank -%}
         <div class="home-editorial__copy home-hero-photo__copy">{{ section.settings.copy }}</div>
