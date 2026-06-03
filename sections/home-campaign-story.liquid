@@ -1,49 +1,190 @@
 {{ 'homepage-custom.css' | asset_url | stylesheet_tag }}
 
+<style>
+  .home-campaign-story {
+    background: linear-gradient(90deg, #030303 0%, #151515 54%, #030303 100%);
+    color: #ffffff;
+    overflow: hidden;
+  }
+
+  .home-campaign-story .home-editorial__inner {
+    width: 100%;
+    max-width: none;
+    padding: 5.6rem 0 0;
+  }
+
+  .home-campaign-story__headline-wrap {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 2.2rem 3.4rem 7.4rem;
+  }
+
+  .home-campaign-story__headline {
+    margin: 0;
+    max-width: 31rem;
+    color: #ffffff;
+    font-family: var(--font-heading-family, inherit);
+    font-size: clamp(4.2rem, 13vw, 7.6rem);
+    font-weight: 900;
+    letter-spacing: 0;
+    line-height: 1.08;
+    text-align: right;
+    text-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.45);
+  }
+
+  .home-campaign-story__body-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 63.5%) minmax(0, 36.5%);
+    align-items: stretch;
+    background: #030303;
+  }
+
+  .home-campaign-story__image-column {
+    min-width: 0;
+  }
+
+  .home-campaign-story__image {
+    min-height: 31rem;
+    overflow: hidden;
+  }
+
+  .home-campaign-story__image .home-media,
+  .home-campaign-story__image .home-media--empty {
+    min-height: 31rem;
+  }
+
+  .home-campaign-story__image img {
+    object-position: center center;
+  }
+
+  .home-campaign-story__caption {
+    margin: 0;
+    padding: 0.7rem 1rem 0.8rem;
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 1.05rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    background: #030303;
+  }
+
+  .home-campaign-story__copy-column {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    padding: 2.4rem 1.35rem 2.2rem 1.55rem;
+    background: #030303;
+  }
+
+  .home-campaign-story__copy {
+    color: #ffffff;
+    font-size: clamp(1.25rem, 3.65vw, 1.65rem);
+    line-height: 1.36;
+  }
+
+  .home-campaign-story__copy p {
+    margin: 0 0 1.7rem;
+  }
+
+  .home-campaign-story__copy p:last-child {
+    margin-bottom: 0;
+  }
+
+  .home-campaign-story__copy strong {
+    color: #ffffff;
+    font-weight: 800;
+  }
+
+  @media screen and (max-width: 374px) {
+    .home-campaign-story__headline-wrap {
+      padding-left: 4.8rem;
+    }
+
+    .home-campaign-story__body-grid {
+      grid-template-columns: minmax(0, 60%) minmax(0, 40%);
+    }
+
+    .home-campaign-story__copy-column {
+      padding-inline: 1.1rem;
+    }
+
+    .home-campaign-story__copy {
+      font-size: 1.16rem;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .home-campaign-story .home-editorial__inner {
+      padding-top: 8rem;
+    }
+
+    .home-campaign-story__headline-wrap {
+      padding: 0 7vw 5.6rem 42vw;
+    }
+
+    .home-campaign-story__headline {
+      max-width: 48rem;
+      font-size: clamp(6.4rem, 7vw, 11rem);
+    }
+
+    .home-campaign-story__body-grid {
+      grid-template-columns: minmax(0, 64%) minmax(0, 36%);
+    }
+
+    .home-campaign-story__image,
+    .home-campaign-story__image .home-media,
+    .home-campaign-story__image .home-media--empty {
+      min-height: 56rem;
+    }
+
+    .home-campaign-story__copy-column {
+      padding: 4rem 5vw 4rem 3vw;
+    }
+
+    .home-campaign-story__copy {
+      max-width: 34rem;
+      font-size: clamp(1.7rem, 1.55vw, 2.25rem);
+      line-height: 1.42;
+    }
+
+    .home-campaign-story__caption {
+      padding-inline: 1.6rem;
+      font-size: 1.25rem;
+    }
+  }
+</style>
+
 <section class="home-editorial home-campaign-story">
   <div class="home-editorial__inner">
-    <div class="home-campaign-story__lead">
-      <div>
-        {%- if section.settings.kicker != blank -%}
-          <p class="home-editorial__kicker">{{ section.settings.kicker | escape }}</p>
-        {%- endif -%}
-        {%- if section.settings.heading != blank -%}
-          <h2 class="home-editorial__heading">{{ section.settings.heading | escape }}</h2>
-        {%- endif -%}
-      </div>
+    <div class="home-campaign-story__headline-wrap">
+      <h2 class="home-campaign-story__headline">Routine,<br>Redefined.</h2>
     </div>
 
-    <div class="home-campaign-story__grid">
-      <div class="home-campaign-story__image">
-        {%- if section.settings.mobile_image != blank or section.settings.desktop_image != blank -%}
-          {%- assign mobile_image = section.settings.mobile_image | default: section.settings.desktop_image -%}
-          {%- assign desktop_image = section.settings.desktop_image | default: section.settings.mobile_image -%}
-          <picture class="home-media">
-            {%- if desktop_image != blank -%}
-              <source media="(min-width: 750px)" srcset="{{ desktop_image | image_url: width: 1600 }}">
-            {%- endif -%}
-            {{ mobile_image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '375, 550, 750, 900, 1100, 1400', alt: section.settings.image_alt }}
-          </picture>
-        {%- else -%}
-          <div class="home-media home-media--empty"></div>
-        {%- endif -%}
+    <div class="home-campaign-story__body-grid">
+      <div class="home-campaign-story__image-column">
+        <div class="home-campaign-story__image">
+          {%- if section.settings.mobile_image != blank or section.settings.desktop_image != blank -%}
+            {%- assign mobile_image = section.settings.mobile_image | default: section.settings.desktop_image -%}
+            {%- assign desktop_image = section.settings.desktop_image | default: section.settings.mobile_image -%}
+            <picture class="home-media">
+              {%- if desktop_image != blank -%}
+                <source media="(min-width: 750px)" srcset="{{ desktop_image | image_url: width: 1800 }}">
+              {%- endif -%}
+              {{ mobile_image | image_url: width: 1100 | image_tag: loading: 'lazy', widths: '375, 550, 750, 900, 1100, 1400', alt: section.settings.image_alt }}
+            </picture>
+          {%- else -%}
+            <div class="home-media home-media--empty"></div>
+          {%- endif -%}
+        </div>
+        <p class="home-campaign-story__caption">A collection for the quiet pace of everyday elegance.</p>
       </div>
 
-      <div class="home-campaign-story__content">
-        {%- if section.settings.kicker != blank -%}
-          <p class="home-editorial__kicker">{{ section.settings.kicker | escape }}</p>
-        {%- endif -%}
-        {%- if section.settings.heading != blank -%}
-          <h2 class="home-editorial__heading">{{ section.settings.heading | escape }}</h2>
-        {%- endif -%}
-        {%- if section.settings.copy != blank -%}
-          <div class="home-editorial__rte">{{ section.settings.copy }}</div>
-        {%- endif -%}
-        {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
-          <div class="home-campaign-story__button-row">
-            <a class="home-editorial__button home-editorial__button--outline" href="{{ section.settings.button_link }}">{{ section.settings.button_label | escape }}</a>
-          </div>
-        {%- endif -%}
+      <div class="home-campaign-story__copy-column">
+        <div class="home-campaign-story__copy">
+          <p><strong>Back to Rhythm</strong><br>is built for the quiet return to structure, the meetings, the movement, the moments in between.</p>
+          <p>Pieces that work as hard as you do and feel good on repeat.</p>
+          <p>Designed to move with your day. Made to be part of your rhythm.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -57,12 +198,7 @@
   "settings": [
     { "type": "image_picker", "id": "mobile_image", "label": "Mobile image" },
     { "type": "image_picker", "id": "desktop_image", "label": "Desktop image" },
-    { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Campaign story image" },
-    { "type": "text", "id": "kicker", "label": "Kicker", "default": "The story" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Made for movement" },
-    { "type": "richtext", "id": "copy", "label": "Story copy", "default": "<p>A mobile-first campaign space for editorial copy, launch notes, fabric stories, or collection inspiration.</p>" },
-    { "type": "text", "id": "button_label", "label": "Button label", "default": "Read more" },
-    { "type": "url", "id": "button_link", "label": "Button link" }
+    { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Back to Rhythm campaign story image" }
   ],
   "presets": [
     { "name": "Home campaign story" }
