@@ -30,12 +30,14 @@
           "type": "product_card",
           "settings": {
             "product": "",
-            "custom_url": "",
+            "custom_url": "shopify://products/daliah-polo-acid-linen",
             "product_title": "Daliah Polo",
-            "product_price": "₱999",
+            "product_price": "₱699",
+            "image_1": "shopify://shop_images/DALIAH_POLO_-_BLACK.jpg",
             "image_1_alt": "Daliah Polo",
             "color_1_label": "Black",
             "color_1_swatch": "#111111",
+            "image_2": "shopify://shop_images/124.jpg",
             "image_2_alt": "Daliah Polo alternate color",
             "color_2_label": "Ivory",
             "color_2_swatch": "#d8c8ad"
@@ -47,10 +49,11 @@
             "product": "",
             "custom_url": "",
             "product_title": "Inah Blouse",
-            "product_price": "₱999",
+            "product_price": "₱749",
             "image_1_alt": "Inah Blouse",
             "color_1_label": "Stone",
             "color_1_swatch": "#8f8f88",
+            "image_2": "shopify://shop_images/INAH_-_CREAM_1.jpg",
             "image_2_alt": "Inah Blouse alternate color",
             "color_2_label": "Cream",
             "color_2_swatch": "#f0e5b8"
@@ -66,8 +69,9 @@
             "image_1_alt": "Hazel Trouser",
             "color_1_label": "Black",
             "color_1_swatch": "#111111",
+            "image_2": "shopify://shop_images/DSC6959.jpg",
             "image_2_alt": "Hazel Trouser alternate color",
-            "color_2_label": "Taupe",
+            "color_2_label": "Mocha",
             "color_2_swatch": "#c5b497"
           }
         },
@@ -77,10 +81,12 @@
             "product": "",
             "custom_url": "",
             "product_title": "Demi Barrel Pants",
-            "product_price": "₱999",
+            "product_price": "₱899",
+            "image_1": "shopify://shop_images/UPDATED_PDP_SIZE_1_1.jpg",
             "image_1_alt": "Demi Barrel Pants",
-            "color_1_label": "Charcoal",
-            "color_1_swatch": "#555555",
+            "color_1_label": "Black",
+            "color_1_swatch": "#000000",
+            "image_2": "shopify://shop_images/UPDATED_PDP_SIZE_1_1.jpg",
             "image_2_alt": "Demi Barrel Pants alternate color",
             "color_2_label": "Butter",
             "color_2_swatch": "#efe4a8"
@@ -94,6 +100,7 @@
         "quick_product_4"
       ],
       "settings": {
+        "banner_image": "shopify://shop_images/View_the_Collection__1.png",
         "banner_alt": "Back to Rhythm collection",
         "banner_heading": "Back to Rhythm"
       }
