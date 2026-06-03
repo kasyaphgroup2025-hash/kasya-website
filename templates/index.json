@@ -23,13 +23,6 @@
         "button_link": "/collections/back-to-rhythm"
       }
     },
-    "home_campaign_story": {
-      "type": "home-campaign-story",
-      "disabled": true,
-      "settings": {
-        "image_alt": "Campaign story image"
-      }
-    },
     "home_quick_shop_grid": {
       "type": "home-quick-shop-grid",
       "settings": {
@@ -104,7 +97,6 @@
   },
   "order": [
     "home_hero_photo",
-    "home_campaign_story",
     "home_quick_shop_grid",
     "home_shop_the_look",
     "home_other_collections"
