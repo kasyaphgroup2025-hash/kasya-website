@@ -1,118 +1,166 @@
 {{ 'homepage-custom.css' | asset_url | stylesheet_tag }}
 
 <style>
-  .home-quick-shop {
+  #shopify-section-{{ section.id }} .home-quick-shop {
     background: #030303;
     color: #ffffff;
   }
 
-  .home-quick-shop .home-editorial__inner {
-    padding-top: 3.8rem;
+  #shopify-section-{{ section.id }} .home-quick-shop .home-editorial__inner {
+    padding-top: 0;
     padding-bottom: 4.2rem;
   }
 
-  .home-quick-shop__header {
-    display: block;
-    margin-bottom: 2.4rem;
-    padding: 0 2rem;
+  #shopify-section-{{ section.id }} .home-quick-shop__banner {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 18rem;
+    margin-bottom: 0;
+    overflow: hidden;
+    background: linear-gradient(90deg, #171717, #303030 50%, #171717);
   }
 
-  .home-quick-shop__collection-title {
+  #shopify-section-{{ section.id }} .home-quick-shop__banner .home-media,
+  #shopify-section-{{ section.id }} .home-quick-shop__banner .home-media--empty {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__banner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,0,0,0.42), rgba(0,0,0,0.18), rgba(0,0,0,0.42));
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__banner-title {
+    position: relative;
+    z-index: 1;
     margin: 0;
     color: #ffffff;
     font-family: "Helvetica Now Condensed", "Helvetica Neue Condensed", "Arial Narrow", sans-serif;
-    font-size: clamp(3.8rem, 12vw, 6.4rem);
-    font-weight: 800;
+    font-size: clamp(2.9rem, 8.2vw, 4.7rem);
+    font-weight: 600;
     letter-spacing: 0;
-    line-height: 1.02;
-    text-transform: none;
+    line-height: 1;
+    text-align: center;
+    text-shadow: 0 0.18rem 0.7rem rgba(0, 0, 0, 0.48);
   }
 
-  .home-quick-shop__grid {
+  #shopify-section-{{ section.id }} .home-quick-shop__grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0;
     background: #030303;
   }
 
-  .home-quick-shop__card {
+  #shopify-section-{{ section.id }} .home-quick-shop__card {
     min-width: 0;
     background: linear-gradient(90deg, #151515, #242424);
   }
 
-  .home-quick-shop__image-link {
+  #shopify-section-{{ section.id }} .home-quick-shop__image-link {
+    position: relative;
     display: block;
     aspect-ratio: 0.82;
     overflow: hidden;
     background: #0f0f0f;
   }
 
-  .home-quick-shop__image-link img,
-  .home-quick-shop__image-link .home-media,
-  .home-quick-shop__image-link .home-media--empty {
+  #shopify-section-{{ section.id }} .home-quick-shop__product-image,
+  #shopify-section-{{ section.id }} .home-quick-shop__image-link .home-media,
+  #shopify-section-{{ section.id }} .home-quick-shop__image-link .home-media--empty {
     display: block;
     width: 100%;
     height: 100%;
     min-height: 0;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__product-image:not(.is-active) {
+    display: none;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__product-image img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
   }
 
-  .home-quick-shop__swatches {
+  #shopify-section-{{ section.id }} .home-quick-shop__swatches {
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    gap: 0.45rem;
-    min-height: 1.6rem;
-    margin: 0.7rem 0 0.45rem;
+    gap: 0.48rem;
+    min-height: 1.7rem;
+    margin: 0.7rem 0 0.5rem;
   }
 
-  .home-quick-shop__swatch {
+  #shopify-section-{{ section.id }} .home-quick-shop__swatch {
     display: block;
     width: 1.22rem;
     height: 1.22rem;
-    border: 0.1rem solid rgba(255, 255, 255, 0.9);
+    padding: 0;
+    border: 0.1rem solid rgba(255, 255, 255, 0.55);
     border-radius: 50%;
     background: var(--swatch-color, #d8d8d8);
+    cursor: pointer;
   }
 
-  .home-quick-shop__info {
+  #shopify-section-{{ section.id }} .home-quick-shop__swatch.is-active {
+    border-color: #ffffff;
+    box-shadow: 0 0 0 0.14rem #030303, 0 0 0 0.24rem rgba(255, 255, 255, 0.9);
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__info {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: 0.8rem 1rem;
+    gap: 0.75rem 0.9rem;
     align-items: center;
-    min-height: 0;
     padding: 0 1.15rem 1.25rem;
     background: transparent;
+    font-family: "Helvetica Now Condensed", "Helvetica Neue Condensed", "Arial Narrow", sans-serif;
   }
 
-  .home-quick-shop__title {
+  #shopify-section-{{ section.id }} .home-quick-shop__title {
     margin: 0;
     color: #ffffff;
-    font-size: clamp(1.5rem, 4.2vw, 1.9rem);
-    font-weight: 800;
+    font-family: inherit;
+    font-size: clamp(1.35rem, 3.7vw, 1.7rem);
+    font-weight: 700;
     letter-spacing: 0;
     line-height: 1.08;
   }
 
-  .home-quick-shop__price {
+  #shopify-section-{{ section.id }} .home-quick-shop__price {
     color: #ffffff;
-    font-size: clamp(1.45rem, 4vw, 1.85rem);
-    font-weight: 800;
+    font-family: inherit;
+    font-size: clamp(1.32rem, 3.55vw, 1.68rem);
+    font-weight: 700;
     line-height: 1.08;
     text-align: right;
     white-space: nowrap;
   }
 
-  .home-quick-shop__button {
+  #shopify-section-{{ section.id }} .home-quick-shop__button {
     grid-column: 1 / -1;
     width: 100%;
     min-height: 3rem;
-    padding: 0.3rem 1rem;
+    padding: 0.35rem 1rem;
     border: 0.1rem solid rgba(255, 255, 255, 0.9);
     border-radius: 0.5rem;
     background: transparent;
     color: #ffffff;
-    font-size: 1.12rem;
+    font-family: inherit;
+    font-size: 1.08rem;
     font-weight: 500;
     letter-spacing: 0;
     line-height: 1;
@@ -121,87 +169,120 @@
   }
 
   @media screen and (min-width: 750px) {
-    .home-quick-shop .home-editorial__inner {
-      padding-top: 5.2rem;
+    #shopify-section-{{ section.id }} .home-quick-shop .home-editorial__inner {
       padding-bottom: 5.6rem;
     }
 
-    .home-quick-shop__header {
-      padding-inline: 5.6rem;
-      margin-bottom: 3rem;
+    #shopify-section-{{ section.id }} .home-quick-shop__banner {
+      min-height: 30rem;
     }
 
-    .home-quick-shop__collection-title {
-      font-size: clamp(5.8rem, 5.6vw, 8.8rem);
+    #shopify-section-{{ section.id }} .home-quick-shop__banner-title {
+      font-size: clamp(4rem, 4.4vw, 6.2rem);
     }
 
-    .home-quick-shop__grid {
+    #shopify-section-{{ section.id }} .home-quick-shop__grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
-    .home-quick-shop__info {
+    #shopify-section-{{ section.id }} .home-quick-shop__info {
       padding: 0 1.4rem 1.5rem;
     }
   }
 </style>
 
-<section class="home-editorial home-quick-shop">
+<section class="home-editorial home-quick-shop" data-home-quick-shop-section="{{ section.id }}">
   <div class="home-editorial__inner">
-    <div class="home-quick-shop__header">
-      <h2 class="home-quick-shop__collection-title">Back to Rhythm</h2>
+    <div class="home-quick-shop__banner">
+      {%- if section.settings.banner_image != blank -%}
+        <div class="home-media">
+          {{ section.settings.banner_image | image_url: width: 1600 | image_tag: loading: 'lazy', widths: '375, 550, 750, 900, 1200, 1600', alt: section.settings.banner_alt }}
+        </div>
+      {%- else -%}
+        <div class="home-media home-media--empty"></div>
+      {%- endif -%}
+      <h2 class="home-quick-shop__banner-title">{{ section.settings.banner_title | escape }}</h2>
     </div>
 
-    {%- liquid
-      assign products = section.settings.product_list
-      if products == blank and section.settings.collection != blank
-        assign products = section.settings.collection.products
-      endif
-    -%}
-
     <div class="home-quick-shop__grid">
-      {%- for product in products limit: 4 -%}
-        <article class="home-quick-shop__card">
-          <a class="home-quick-shop__image-link" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
-            {%- if product.featured_image != blank -%}
-              {{ product.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '180, 260, 360, 540, 720, 900', alt: product.featured_image.alt | default: product.title }}
+      {%- for block in section.blocks limit: 4 -%}
+        {%- liquid
+          assign product = block.settings.product
+          assign product_url = block.settings.custom_product_url
+          if product_url == blank and product != blank
+            assign product_url = product.url
+          endif
+          if product_url == blank
+            assign product_url = '#'
+          endif
+
+          assign product_title = block.settings.product_name
+          if product_title == blank and product != blank
+            assign product_title = product.title
+          endif
+          if product_title == blank
+            assign product_title = 'Product name'
+          endif
+
+          assign product_price = block.settings.product_price
+          if product_price == blank and product != blank
+            assign product_price = product.price | money
+          endif
+          if product_price == blank
+            assign product_price = '₱999'
+          endif
+
+          assign image_1 = block.settings.image_1
+          if image_1 == blank and product != blank
+            assign image_1 = product.featured_image
+          endif
+          assign image_2 = block.settings.image_2 | default: image_1
+        -%}
+        <article class="home-quick-shop__card" {{ block.shopify_attributes }} data-home-quick-shop-card>
+          <a class="home-quick-shop__image-link" href="{{ product_url }}" aria-label="{{ product_title | escape }}">
+            {%- if image_1 != blank -%}
+              <span class="home-quick-shop__product-image is-active" data-home-quick-shop-image="1">
+                {{ image_1 | image_url: width: 900 | image_tag: loading: 'lazy', widths: '180, 260, 360, 540, 720, 900', alt: product_title }}
+              </span>
             {%- else -%}
-              <div class="home-media home-media--empty"></div>
+              <span class="home-quick-shop__product-image is-active" data-home-quick-shop-image="1"><span class="home-media home-media--empty"></span></span>
+            {%- endif -%}
+
+            {%- if image_2 != blank -%}
+              <span class="home-quick-shop__product-image" data-home-quick-shop-image="2">
+                {{ image_2 | image_url: width: 900 | image_tag: loading: 'lazy', widths: '180, 260, 360, 540, 720, 900', alt: product_title }}
+              </span>
+            {%- else -%}
+              <span class="home-quick-shop__product-image" data-home-quick-shop-image="2"><span class="home-media home-media--empty"></span></span>
             {%- endif -%}
           </a>
 
-          {%- if section.settings.show_swatches -%}
-            {%- for option in product.options_with_values -%}
-              {%- assign option_name = option.name | downcase -%}
-              {%- if option_name contains 'color' or option_name contains 'colour' -%}
-                <div class="home-quick-shop__swatches" aria-label="Available colors">
-                  {%- for value in option.values limit: 6 -%}
-                    <span class="home-quick-shop__swatch" style="--swatch-color: {{ value | handleize }};" title="{{ value | escape }}"></span>
-                  {%- endfor -%}
-                </div>
-                {%- break -%}
-              {%- endif -%}
-            {%- endfor -%}
-          {%- endif -%}
+          <div class="home-quick-shop__swatches" aria-label="Choose color for {{ product_title | escape }}">
+            <button class="home-quick-shop__swatch is-active" type="button" style="--swatch-color: {{ block.settings.color_1 }};" data-home-quick-shop-swatch="1" aria-label="{{ block.settings.color_1_label | escape }}"></button>
+            <button class="home-quick-shop__swatch" type="button" style="--swatch-color: {{ block.settings.color_2 }};" data-home-quick-shop-swatch="2" aria-label="{{ block.settings.color_2_label | escape }}"></button>
+          </div>
 
           <div class="home-quick-shop__info">
-            <h3 class="home-quick-shop__title"><a href="{{ product.url }}">{{ product.title | escape }}</a></h3>
-            <div class="home-quick-shop__price">{{ product.price | money }}</div>
-            {%- if section.settings.show_quick_shop -%}
-              <a class="home-quick-shop__button" href="{{ product.url }}">Quick Shop</a>
-            {%- endif -%}
+            <h3 class="home-quick-shop__title"><a href="{{ product_url }}">{{ product_title | escape }}</a></h3>
+            <div class="home-quick-shop__price">{{ product_price | escape }}</div>
+            <a class="home-quick-shop__button" href="{{ product_url }}">Quick Shop</a>
           </div>
         </article>
       {%- else -%}
-        {%- for i in (1..4) -%}
-          <article class="home-quick-shop__card">
-            <div class="home-quick-shop__image-link"><div class="home-media home-media--empty"></div></div>
+        {%- assign fallback_names = 'Daliah Polo|Inah Blouse|Hazel Trouser|Demi Barrel Pants' | split: '|' -%}
+        {%- for fallback_name in fallback_names -%}
+          <article class="home-quick-shop__card" data-home-quick-shop-card>
+            <a class="home-quick-shop__image-link" href="#" aria-label="{{ fallback_name | escape }}">
+              <span class="home-quick-shop__product-image is-active" data-home-quick-shop-image="1"><span class="home-media home-media--empty"></span></span>
+              <span class="home-quick-shop__product-image" data-home-quick-shop-image="2"><span class="home-media home-media--empty"></span></span>
+            </a>
             <div class="home-quick-shop__swatches" aria-hidden="true">
-              <span class="home-quick-shop__swatch" style="--swatch-color: #111111;"></span>
-              <span class="home-quick-shop__swatch" style="--swatch-color: #d8c8ad;"></span>
+              <button class="home-quick-shop__swatch is-active" type="button" style="--swatch-color: #111111;" data-home-quick-shop-swatch="1"></button>
+              <button class="home-quick-shop__swatch" type="button" style="--swatch-color: #d8c8ad;" data-home-quick-shop-swatch="2"></button>
             </div>
             <div class="home-quick-shop__info">
-              <h3 class="home-quick-shop__title">Product placeholder</h3>
-              <div class="home-quick-shop__price">{{ 0 | money }}</div>
+              <h3 class="home-quick-shop__title">{{ fallback_name }}</h3>
+              <div class="home-quick-shop__price">₱999</div>
               <span class="home-quick-shop__button">Quick Shop</span>
             </div>
           </article>
@@ -211,25 +292,79 @@
   </div>
 </section>
 
+<script>
+  (() => {
+    const initQuickShop = (root = document) => {
+      const section = root.querySelector('[data-home-quick-shop-section="{{ section.id }}"]');
+      if (!section) return;
+
+      section.querySelectorAll('[data-home-quick-shop-card]').forEach((card) => {
+        card.querySelectorAll('[data-home-quick-shop-swatch]').forEach((swatch) => {
+          if (swatch.dataset.homeQuickShopReady === 'true') return;
+          swatch.dataset.homeQuickShopReady = 'true';
+
+          swatch.addEventListener('click', () => {
+            const target = swatch.getAttribute('data-home-quick-shop-swatch');
+
+            card.querySelectorAll('[data-home-quick-shop-swatch]').forEach((item) => {
+              item.classList.toggle('is-active', item === swatch);
+            });
+
+            card.querySelectorAll('[data-home-quick-shop-image]').forEach((image) => {
+              image.classList.toggle('is-active', image.getAttribute('data-home-quick-shop-image') === target);
+            });
+          });
+        });
+      });
+    };
+
+    initQuickShop();
+
+    document.addEventListener('shopify:section:load', (event) => {
+      initQuickShop(event.target);
+    });
+  })();
+</script>
+
 {% schema %}
 {
   "name": "Home quick shop grid",
   "tag": "section",
   "class": "section-home-quick-shop-grid",
   "settings": [
-    { "type": "text", "id": "kicker", "label": "Kicker", "default": "Quick shop" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Back to Rhythm" },
-    { "type": "richtext", "id": "copy", "label": "Copy", "default": "<p>Choose the pieces that move first.</p>" },
-    { "type": "collection", "id": "collection", "label": "Fallback collection" },
-    { "type": "product_list", "id": "product_list", "label": "Products", "limit": 12 },
-    { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 2, "max": 12, "step": 1, "default": 4 },
-    { "type": "range", "id": "columns_desktop", "label": "Desktop columns", "min": 2, "max": 5, "step": 1, "default": 4 },
-    { "type": "checkbox", "id": "show_swatches", "label": "Show color swatches", "default": true },
-    { "type": "checkbox", "id": "show_quick_shop", "label": "Show quick shop button", "default": true },
-    { "type": "text", "id": "quick_shop_label", "label": "Quick shop label", "default": "Quick Shop" }
+    { "type": "image_picker", "id": "banner_image", "label": "Back to Rhythm banner image" },
+    { "type": "text", "id": "banner_alt", "label": "Banner image alt text", "default": "Back to Rhythm collection" },
+    { "type": "text", "id": "banner_title", "label": "Banner title", "default": "Back to Rhythm" }
   ],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Product card",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "product_name", "label": "Manual product name", "default": "Daliah Polo" },
+        { "type": "text", "id": "product_price", "label": "Manual price", "default": "₱999" },
+        { "type": "image_picker", "id": "image_1", "label": "Product image 1" },
+        { "type": "image_picker", "id": "image_2", "label": "Product image 2" },
+        { "type": "text", "id": "color_1_label", "label": "Color 1 label", "default": "Black" },
+        { "type": "color", "id": "color_1", "label": "Color 1 swatch", "default": "#111111" },
+        { "type": "text", "id": "color_2_label", "label": "Color 2 label", "default": "Ivory" },
+        { "type": "color", "id": "color_2", "label": "Color 2 swatch", "default": "#d8c8ad" },
+        { "type": "url", "id": "custom_product_url", "label": "Optional custom product URL" }
+      ]
+    }
+  ],
+  "max_blocks": 4,
   "presets": [
-    { "name": "Home quick shop grid" }
+    {
+      "name": "Home quick shop grid",
+      "blocks": [
+        { "type": "product_card" },
+        { "type": "product_card" },
+        { "type": "product_card" },
+        { "type": "product_card" }
+      ]
+    }
   ]
 }
 {% endschema %}
