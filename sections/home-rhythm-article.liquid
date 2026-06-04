@@ -1,0 +1,215 @@
+{{ 'homepage-custom.css' | asset_url | stylesheet_tag }}
+
+<style>
+  #shopify-section-{{ section.id }} .home-rhythm-article {
+    background: linear-gradient(90deg, #030303 0%, #151515 56%, #030303 100%);
+    color: #ffffff;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .home-rhythm-article .home-editorial__inner {
+    width: 100%;
+    max-width: none;
+    padding: 4.2rem 0 0;
+  }
+
+  #shopify-section-{{ section.id }} .home-rhythm-article__heading-wrap {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 1.6rem 2.4rem 7.2rem;
+  }
+
+  #shopify-section-{{ section.id }} .home-rhythm-article__heading {
+    margin: 0;
+    max-width: 25rem;
+    color: #ffffff;
+    font-family: "Helvetica Now Condensed", "Helvetica Neue Condensed", "Arial Narrow", sans-serif;
+    font-size: clamp(4.4rem, 12.4vw, 5.2rem);
+    font-weight: 900;
+    letter-spacing: 0;
+    line-height: 1;
+    text-align: right;
+    white-space: pre-line;
+  }
+
+  #shopify-section-{{ section.id }} .home-rhythm-article__row {
+    display: grid;
+    grid-template-columns: minmax(0, 62%) minmax(0, 38%);
+    align-items: start;
+    background: #030303;
+  }
+
+  #shopify-section-{{ section.id }} .home-rhythm-article__media-column,
+  #shopify-section-{{ section.id }} .home-rhythm-article__copy-column {
+    min-width: 0;
+  }
+
+  #shopify-section-{{ section.id }} .home-rhythm-article__image {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #101010;
+  }
+
+  #shopify-section-{{ section.id }} .home-rhythm-article__image .home-media,
+  #shopify-section-{{ section.id }} .home-rhythm-article__image .home-media--empty {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+  }
+
+  #shopify-section-{{ section.id }} .home-rhythm-article__image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  #shopify-section-{{ section.id }} .home-rhythm-article__caption {
+    margin: 0;
+    padding: 0.55rem 0.75rem 0.7rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: Optima, "Palatino Linotype", serif;
+    font-size: clamp(1rem, 2.55vw, 1.1rem);
+    line-height: 1.15;
+  }
+
+  #shopify-section-{{ section.id }} .home-rhythm-article__copy-column {
+    padding: 1.15rem 0.9rem 1rem 1.05rem;
+  }
+
+  #shopify-section-{{ section.id }} .home-rhythm-article__copy {
+    color: #ffffff;
+    font-family: Optima, "Palatino Linotype", serif;
+    font-size: clamp(1.1rem, 3vw, 1.3rem);
+    line-height: 1.3;
+  }
+
+  #shopify-section-{{ section.id }} .home-rhythm-article__copy p {
+    margin: 0 0 1rem;
+  }
+
+  #shopify-section-{{ section.id }} .home-rhythm-article__copy p:last-child {
+    margin-bottom: 0;
+  }
+
+  #shopify-section-{{ section.id }} .home-rhythm-article__copy strong {
+    color: #ffffff;
+    font-weight: 800;
+  }
+
+  @media screen and (max-width: 374px) {
+    #shopify-section-{{ section.id }} .home-rhythm-article .home-editorial__inner {
+      padding-top: 3.8rem;
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__heading-wrap {
+      padding: 0 1.4rem 2rem 5.8rem;
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__heading {
+      font-size: clamp(3.8rem, 12vw, 4.6rem);
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__row {
+      grid-template-columns: minmax(0, 60%) minmax(0, 40%);
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__copy-column {
+      padding: 0.9rem 0.75rem 0.8rem 0.85rem;
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__copy {
+      font-size: 1rem;
+      line-height: 1.24;
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__copy p {
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} .home-rhythm-article .home-editorial__inner {
+      padding-top: 6rem;
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__heading-wrap {
+      padding: 0 7vw 3.4rem 46vw;
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__heading {
+      max-width: 42rem;
+      font-size: clamp(6rem, 5.5vw, 8.2rem);
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__row {
+      grid-template-columns: minmax(0, 54%) minmax(0, 46%);
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__copy-column {
+      padding: 3rem 6vw 3rem 3vw;
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__copy {
+      max-width: 32rem;
+      font-size: clamp(1.45rem, 1.2vw, 1.8rem);
+      line-height: 1.35;
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__caption {
+      padding-inline: 1.2rem;
+      font-size: 1.2rem;
+    }
+  }
+</style>
+
+<section class="home-editorial home-rhythm-article">
+  <div class="home-editorial__inner">
+    <div class="home-rhythm-article__heading-wrap">
+      <h2 class="home-rhythm-article__heading">{{ section.settings.heading | escape }}</h2>
+    </div>
+
+    <div class="home-rhythm-article__row">
+      <div class="home-rhythm-article__media-column">
+        <div class="home-rhythm-article__image">
+          {%- if section.settings.article_image != blank -%}
+            <span class="home-media">
+              {{ section.settings.article_image | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '375, 550, 750, 900, 1200', alt: section.settings.image_alt }}
+            </span>
+          {%- else -%}
+            <span class="home-media home-media--empty"></span>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.caption != blank -%}
+          <p class="home-rhythm-article__caption">{{ section.settings.caption | escape }}</p>
+        {%- endif -%}
+      </div>
+
+      <div class="home-rhythm-article__copy-column">
+        <div class="home-rhythm-article__copy">
+          {{ section.settings.body_copy }}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Home rhythm article",
+  "tag": "section",
+  "class": "section-home-rhythm-article",
+  "settings": [
+    { "type": "image_picker", "id": "article_image", "label": "Article image" },
+    { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Back to Rhythm article image" },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "Routine,\nRedefined." },
+    { "type": "richtext", "id": "body_copy", "label": "Body copy", "default": "<p><strong>Back to Rhythm</strong><br>is built for the quiet return to structure, the meetings, the movement, the moments in between.</p><p>Pieces that work as hard as you do and feel good on repeat.</p><p>Designed to move with your day. Made to be part of your rhythm.</p>" },
+    { "type": "text", "id": "caption", "label": "Caption", "default": "A collection for the quiet pace of everyday elegance." }
+  ],
+  "presets": [
+    { "name": "Home rhythm article" }
+  ]
+}
+{% endschema %}
