@@ -39,7 +39,8 @@
     text-align: center;
   }
 
-  #shopify-section-{{ section.id }} .home-shop-the-look__carousel {
+  #shopify-section-{{ section.id }} .home-shop-the-look__carousel,
+  #shopify-section-{{ section.id }} .home-shop-the-look__details-carousel {
     overflow-x: auto;
     overscroll-behavior-inline: contain;
     padding: 0 2rem 0.2rem;
@@ -48,11 +49,13 @@
     scrollbar-width: none;
   }
 
-  #shopify-section-{{ section.id }} .home-shop-the-look__carousel::-webkit-scrollbar {
+  #shopify-section-{{ section.id }} .home-shop-the-look__carousel::-webkit-scrollbar,
+  #shopify-section-{{ section.id }} .home-shop-the-look__details-carousel::-webkit-scrollbar {
     display: none;
   }
 
-  #shopify-section-{{ section.id }} .home-shop-the-look__track {
+  #shopify-section-{{ section.id }} .home-shop-the-look__track,
+  #shopify-section-{{ section.id }} .home-shop-the-look__details-track {
     display: flex;
     gap: 1.4rem;
     width: max-content;
@@ -182,20 +185,166 @@
     background: rgba(255, 255, 255, 0.52);
   }
 
+  #shopify-section-{{ section.id }} .home-shop-the-look__dot.is-active,
   #shopify-section-{{ section.id }} .home-shop-the-look__dot:first-child {
     background: #ffffff;
   }
 
+  #shopify-section-{{ section.id }} .home-shop-the-look__details {
+    margin-top: 2.4rem;
+    color: #1a1a1a;
+  }
+
+  #shopify-section-{{ section.id }} .home-shop-the-look__details-slide {
+    flex: 0 0 90vw;
+    width: 90vw;
+    max-width: 90vw;
+    scroll-snap-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .home-shop-the-look__details-label {
+    margin: 0 0 0.3rem;
+    color: rgba(255, 255, 255, 0.72);
+    font-family: "Helvetica Now Condensed", "Helvetica Neue Condensed", "Arial Narrow", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .home-shop-the-look__details-title {
+    margin: 0;
+    color: #ffffff;
+    font-family: Optima, "Palatino Linotype", serif;
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.05;
+  }
+
+  #shopify-section-{{ section.id }} .home-shop-the-look__details-sentence {
+    margin: 0.2rem 0 0.8rem;
+    color: rgba(255, 255, 255, 0.82);
+    font-family: Optima, "Palatino Linotype", serif;
+    font-size: 1.15rem;
+    line-height: 1.2;
+  }
+
+  #shopify-section-{{ section.id }} .home-shop-the-look__details-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.8rem;
+  }
+
+  #shopify-section-{{ section.id }} .home-shop-the-look__details-main {
+    overflow: hidden;
+    border-radius: 0.35rem;
+    background: #111111;
+    aspect-ratio: 16 / 9;
+  }
+
+  #shopify-section-{{ section.id }} .home-shop-the-look__details-main img,
+  #shopify-section-{{ section.id }} .home-shop-the-look__item-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .home-shop-the-look__items {
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  #shopify-section-{{ section.id }} .home-shop-the-look__item {
+    display: grid;
+    grid-template-columns: 7.2rem minmax(0, 1fr);
+    gap: 0.9rem;
+    align-items: center;
+    padding: 0.7rem;
+    border: 0.1rem solid rgba(0, 0, 0, 0.09);
+    border-radius: 0.7rem;
+    background: rgba(255, 255, 255, 0.94);
+    color: #151515;
+  }
+
+  #shopify-section-{{ section.id }} .home-shop-the-look__item-image {
+    overflow: hidden;
+    border-radius: 0.25rem;
+    background: #e8e8e8;
+    aspect-ratio: 1 / 1;
+  }
+
+  #shopify-section-{{ section.id }} .home-shop-the-look__item-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #eeeeee, #d5d5d5);
+  }
+
+  #shopify-section-{{ section.id }} .home-shop-the-look__item-content {
+    min-width: 0;
+  }
+
+  #shopify-section-{{ section.id }} .home-shop-the-look__item-title {
+    margin: 0;
+    color: #111111;
+    font-family: "Helvetica Now Condensed", "Helvetica Neue Condensed", "Arial Narrow", sans-serif;
+    font-size: 1.28rem;
+    font-weight: 700;
+    line-height: 1.05;
+  }
+
+  #shopify-section-{{ section.id }} .home-shop-the-look__item-description {
+    margin: 0.25rem 0 0.6rem;
+    color: rgba(0, 0, 0, 0.72);
+    font-size: 1.03rem;
+    line-height: 1.18;
+  }
+
+  #shopify-section-{{ section.id }} .home-shop-the-look__item-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.6rem;
+    padding: 0 1rem;
+    border: 0.12rem solid #303030;
+    color: #151515;
+    font-family: "Helvetica Now Condensed", "Helvetica Neue Condensed", "Arial Narrow", sans-serif;
+    font-size: 1.02rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  @media screen and (min-width: 420px) {
+    #shopify-section-{{ section.id }} .home-shop-the-look__details-grid {
+      grid-template-columns: 1.05fr 0.95fr;
+      align-items: stretch;
+    }
+
+    #shopify-section-{{ section.id }} .home-shop-the-look__details-main {
+      aspect-ratio: auto;
+      min-height: 18.6rem;
+    }
+  }
+
   @media screen and (max-width: 374px) {
-    #shopify-section-{{ section.id }} .home-shop-the-look__carousel {
+    #shopify-section-{{ section.id }} .home-shop-the-look__carousel,
+    #shopify-section-{{ section.id }} .home-shop-the-look__details-carousel {
       padding-inline: 1.4rem;
       scroll-padding-inline: 1.4rem;
     }
 
-    #shopify-section-{{ section.id }} .home-shop-the-look__slide {
+    #shopify-section-{{ section.id }} .home-shop-the-look__slide,
+    #shopify-section-{{ section.id }} .home-shop-the-look__details-slide {
       flex-basis: 91vw;
       width: 91vw;
       max-width: 91vw;
+    }
+
+    #shopify-section-{{ section.id }} .home-shop-the-look__slide {
       min-height: 26.5rem;
     }
 
@@ -231,19 +380,25 @@
       font-size: clamp(3.6rem, 4vw, 5.8rem);
     }
 
-    #shopify-section-{{ section.id }} .home-shop-the-look__carousel {
+    #shopify-section-{{ section.id }} .home-shop-the-look__carousel,
+    #shopify-section-{{ section.id }} .home-shop-the-look__details-carousel {
       padding-inline: 5.6rem;
       scroll-padding-inline: 5.6rem;
     }
 
-    #shopify-section-{{ section.id }} .home-shop-the-look__track {
+    #shopify-section-{{ section.id }} .home-shop-the-look__track,
+    #shopify-section-{{ section.id }} .home-shop-the-look__details-track {
       gap: 2rem;
     }
 
-    #shopify-section-{{ section.id }} .home-shop-the-look__slide {
+    #shopify-section-{{ section.id }} .home-shop-the-look__slide,
+    #shopify-section-{{ section.id }} .home-shop-the-look__details-slide {
       flex-basis: min(72vw, 68rem);
       width: min(72vw, 68rem);
       max-width: 68rem;
+    }
+
+    #shopify-section-{{ section.id }} .home-shop-the-look__slide {
       min-height: 38rem;
     }
 
@@ -254,17 +409,26 @@
   }
 </style>
 
-<section class="home-editorial home-shop-the-look">
+{%- liquid
+  assign fallback_titles = 'Morning Loop|Afternoon Pause|After Hours|Weekend Ease' | split: '|'
+  assign fallback_sentences = 'A polished everyday pairing made for first meetings, quick errands, and everything in motion.|Soft structure for the quiet in-between moments that still need to look composed.|Easy pieces that move from office hours to after-work plans without overthinking.|Relaxed polish for slow days, casual plans, and dressing with less effort.' | split: '|'
+  assign fallback_detail_sentences = 'For early starts and everything ahead.|Soft structure for quiet in-between moments.|Easy pieces that move from office hours to after-work plans.|Relaxed polish for slow days and casual plans.' | split: '|'
+  assign fallback_product_1_titles = 'Inah Blouse|Inah Blouse|Daliah Polo|Daliah Polo' | split: '|'
+  assign fallback_product_1_descriptions = 'Breathable, belted, and beautifully structured.|Lightweight ease with a polished everyday finish.|A structured polo top with utility-inspired detail.|Casual structure that still feels refined.' | split: '|'
+  assign fallback_product_2_titles = 'Demi Barrel Pants|Hazel Trouser|Demi Barrel Pants|Hazel Trouser' | split: '|'
+  assign fallback_product_2_descriptions = 'Relaxed silhouette with a clean, modern drape.|A relaxed trouser shape made for movement and comfort.|Soft volume with a clean waist and easy drape.|Comfortable, versatile, and easy to style on repeat.' | split: '|'
+-%}
+
+<section class="home-editorial home-shop-the-look" data-shop-look-section="{{ section.id }}">
   <div class="home-editorial__inner">
     <div class="home-shop-the-look__heading-bar">
       <h2 class="home-shop-the-look__title">{{ section.settings.section_heading | default: 'Shop the Look' | escape }}</h2>
     </div>
 
-    <div class="home-shop-the-look__carousel" aria-label="Shop the Look carousel">
+    <div class="home-shop-the-look__carousel" aria-label="Shop the Look carousel" data-look-carousel>
       <div class="home-shop-the-look__track">
         {%- for block in section.blocks -%}
-          {%- assign button_url = block.settings.button_link | default: '#' -%}
-          <article class="home-shop-the-look__slide" {{ block.shopify_attributes }}>
+          <article class="home-shop-the-look__slide" data-look-slide data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
             <div class="home-shop-the-look__bg" aria-hidden="true">
               {%- if block.settings.look_image != blank -%}
                 <div class="home-media">
@@ -276,11 +440,11 @@
             </div>
 
             <div class="home-shop-the-look__content">
-              <h3 class="home-shop-the-look__look-title">{{ block.settings.look_title | escape }}</h3>
+              <h3 class="home-shop-the-look__look-title">{{ block.settings.look_title | default: fallback_titles[forloop.index0] | escape }}</h3>
               {%- if block.settings.look_sentence != blank -%}
                 <p class="home-shop-the-look__sentence">{{ block.settings.look_sentence | escape }}</p>
               {%- endif -%}
-              <a class="home-shop-the-look__button" href="{{ button_url }}">{{ block.settings.button_label | default: 'Shop Now' | escape }}</a>
+              <a class="home-shop-the-look__button" href="#look-details-{{ section.id }}" data-look-details-link data-index="{{ forloop.index0 }}">{{ block.settings.button_label | default: 'View Look' | escape }}</a>
             </div>
 
             <div class="home-shop-the-look__side-image" aria-hidden="true">
@@ -294,15 +458,13 @@
             </div>
           </article>
         {%- else -%}
-          {%- assign fallback_titles = 'Morning Loop|Afternoon Pause|After Hours|Weekend Ease' | split: '|' -%}
-          {%- assign fallback_sentences = 'A polished everyday pairing made for first meetings, quick errands, and everything in motion.|Soft structure for the quiet in-between moments that still need to look composed.|Easy pieces that move from office hours to after-work plans without overthinking.|Relaxed polish for slow days, casual plans, and dressing with less effort.' | split: '|' -%}
           {%- for fallback_title in fallback_titles -%}
-            <article class="home-shop-the-look__slide">
+            <article class="home-shop-the-look__slide" data-look-slide data-index="{{ forloop.index0 }}">
               <div class="home-shop-the-look__bg" aria-hidden="true"><div class="home-media home-media--empty"></div></div>
               <div class="home-shop-the-look__content">
                 <h3 class="home-shop-the-look__look-title">{{ fallback_title }}</h3>
                 <p class="home-shop-the-look__sentence">{{ fallback_sentences[forloop.index0] }}</p>
-                <a class="home-shop-the-look__button" href="#">Shop Now</a>
+                <a class="home-shop-the-look__button" href="#look-details-{{ section.id }}" data-look-details-link data-index="{{ forloop.index0 }}">View Look</a>
               </div>
               <div class="home-shop-the-look__side-image" aria-hidden="true"><div class="home-media home-media--empty"></div></div>
             </article>
@@ -311,15 +473,183 @@
       </div>
     </div>
 
-    <div class="home-shop-the-look__dots" aria-hidden="true">
+    <div class="home-shop-the-look__dots" aria-hidden="true" data-look-dots>
       {%- if section.blocks.size > 0 -%}
-        {%- for block in section.blocks -%}<span class="home-shop-the-look__dot"></span>{%- endfor -%}
+        {%- for block in section.blocks -%}<span class="home-shop-the-look__dot{% if forloop.first %} is-active{% endif %}"></span>{%- endfor -%}
       {%- else -%}
-        {%- for i in (1..4) -%}<span class="home-shop-the-look__dot"></span>{%- endfor -%}
+        {%- for i in (1..4) -%}<span class="home-shop-the-look__dot{% if forloop.first %} is-active{% endif %}"></span>{%- endfor -%}
       {%- endif -%}
+    </div>
+
+    <div class="home-shop-the-look__details" id="look-details-{{ section.id }}">
+      <div class="home-shop-the-look__details-carousel" aria-label="Look Details carousel" data-look-details-carousel>
+        <div class="home-shop-the-look__details-track">
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign detail_title = block.settings.detail_heading | default: block.settings.look_title | default: fallback_titles[forloop.index0]
+              assign detail_sentence = block.settings.detail_sentence | default: fallback_detail_sentences[forloop.index0]
+              assign product_1_link = '#'
+              if block.settings.product_1_custom_url != blank
+                assign product_1_link = block.settings.product_1_custom_url
+              elsif block.settings.product_1 != blank
+                assign product_1_link = block.settings.product_1.url
+              endif
+              assign product_2_link = '#'
+              if block.settings.product_2_custom_url != blank
+                assign product_2_link = block.settings.product_2_custom_url
+              elsif block.settings.product_2 != blank
+                assign product_2_link = block.settings.product_2.url
+              endif
+              assign product_1_title = block.settings.product_1_title | default: block.settings.product_1.title | default: fallback_product_1_titles[forloop.index0]
+              assign product_2_title = block.settings.product_2_title | default: block.settings.product_2.title | default: fallback_product_2_titles[forloop.index0]
+              assign product_1_description = block.settings.product_1_description | default: fallback_product_1_descriptions[forloop.index0]
+              assign product_2_description = block.settings.product_2_description | default: fallback_product_2_descriptions[forloop.index0]
+            -%}
+            <article class="home-shop-the-look__details-slide" data-look-details-slide data-index="{{ forloop.index0 }}">
+              <p class="home-shop-the-look__details-label">Look Details</p>
+              <h3 class="home-shop-the-look__details-title">{{ detail_title | escape }}</h3>
+              <p class="home-shop-the-look__details-sentence">{{ detail_sentence | escape }}</p>
+
+              <div class="home-shop-the-look__details-grid">
+                <div class="home-shop-the-look__details-main">
+                  {%- if block.settings.detail_main_image != blank -%}
+                    {{ block.settings.detail_main_image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '375, 550, 750, 900, 1000', alt: block.settings.image_alt }}
+                  {%- elsif block.settings.look_image != blank -%}
+                    {{ block.settings.look_image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '375, 550, 750, 900, 1000', alt: block.settings.image_alt }}
+                  {%- else -%}
+                    <div class="home-shop-the-look__item-placeholder"></div>
+                  {%- endif -%}
+                </div>
+
+                <div class="home-shop-the-look__items">
+                  <div class="home-shop-the-look__item">
+                    <div class="home-shop-the-look__item-image">
+                      {%- if block.settings.product_1_image != blank -%}
+                        {{ block.settings.product_1_image | image_url: width: 420 | image_tag: loading: 'lazy', widths: '160, 240, 320, 420', alt: product_1_title }}
+                      {%- elsif block.settings.product_1.featured_image != blank -%}
+                        {{ block.settings.product_1.featured_image | image_url: width: 420 | image_tag: loading: 'lazy', widths: '160, 240, 320, 420', alt: product_1_title }}
+                      {%- else -%}
+                        <div class="home-shop-the-look__item-placeholder"></div>
+                      {%- endif -%}
+                    </div>
+                    <div class="home-shop-the-look__item-content">
+                      <h4 class="home-shop-the-look__item-title">{{ product_1_title | escape }}</h4>
+                      <p class="home-shop-the-look__item-description">{{ product_1_description | escape }}</p>
+                      <a class="home-shop-the-look__item-action" href="{{ product_1_link }}">{{ block.settings.product_1_button_label | default: 'SEE FIT & COLORS' | escape }}</a>
+                    </div>
+                  </div>
+
+                  <div class="home-shop-the-look__item">
+                    <div class="home-shop-the-look__item-image">
+                      {%- if block.settings.product_2_image != blank -%}
+                        {{ block.settings.product_2_image | image_url: width: 420 | image_tag: loading: 'lazy', widths: '160, 240, 320, 420', alt: product_2_title }}
+                      {%- elsif block.settings.product_2.featured_image != blank -%}
+                        {{ block.settings.product_2.featured_image | image_url: width: 420 | image_tag: loading: 'lazy', widths: '160, 240, 320, 420', alt: product_2_title }}
+                      {%- else -%}
+                        <div class="home-shop-the-look__item-placeholder"></div>
+                      {%- endif -%}
+                    </div>
+                    <div class="home-shop-the-look__item-content">
+                      <h4 class="home-shop-the-look__item-title">{{ product_2_title | escape }}</h4>
+                      <p class="home-shop-the-look__item-description">{{ product_2_description | escape }}</p>
+                      <a class="home-shop-the-look__item-action" href="{{ product_2_link }}">{{ block.settings.product_2_button_label | default: 'SEE FIT & COLORS' | escape }}</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          {%- else -%}
+            {%- for fallback_title in fallback_titles -%}
+              <article class="home-shop-the-look__details-slide" data-look-details-slide data-index="{{ forloop.index0 }}">
+                <p class="home-shop-the-look__details-label">Look Details</p>
+                <h3 class="home-shop-the-look__details-title">{{ fallback_title }}</h3>
+                <p class="home-shop-the-look__details-sentence">{{ fallback_detail_sentences[forloop.index0] }}</p>
+                <div class="home-shop-the-look__details-grid">
+                  <div class="home-shop-the-look__details-main"><div class="home-shop-the-look__item-placeholder"></div></div>
+                  <div class="home-shop-the-look__items">
+                    <div class="home-shop-the-look__item"><div class="home-shop-the-look__item-image"><div class="home-shop-the-look__item-placeholder"></div></div><div class="home-shop-the-look__item-content"><h4 class="home-shop-the-look__item-title">{{ fallback_product_1_titles[forloop.index0] }}</h4><p class="home-shop-the-look__item-description">{{ fallback_product_1_descriptions[forloop.index0] }}</p><a class="home-shop-the-look__item-action" href="#">SEE FIT & COLORS</a></div></div>
+                    <div class="home-shop-the-look__item"><div class="home-shop-the-look__item-image"><div class="home-shop-the-look__item-placeholder"></div></div><div class="home-shop-the-look__item-content"><h4 class="home-shop-the-look__item-title">{{ fallback_product_2_titles[forloop.index0] }}</h4><p class="home-shop-the-look__item-description">{{ fallback_product_2_descriptions[forloop.index0] }}</p><a class="home-shop-the-look__item-action" href="#">SEE FIT & COLORS</a></div></div>
+                  </div>
+                </div>
+              </article>
+            {%- endfor -%}
+          {%- endfor -%}
+        </div>
+      </div>
     </div>
   </div>
 </section>
+
+<script>
+  (() => {
+    const section = document.querySelector('[data-shop-look-section="{{ section.id }}"]');
+    if (!section || section.dataset.lookSyncReady === 'true') return;
+    section.dataset.lookSyncReady = 'true';
+
+    const mainCarousel = section.querySelector('[data-look-carousel]');
+    const detailCarousel = section.querySelector('[data-look-details-carousel]');
+    const mainSlides = Array.from(section.querySelectorAll('[data-look-slide]'));
+    const detailSlides = Array.from(section.querySelectorAll('[data-look-details-slide]'));
+    const dots = Array.from(section.querySelectorAll('[data-look-dots] .home-shop-the-look__dot'));
+    let syncing = false;
+
+    const getActiveIndex = (carousel, slides) => {
+      if (!carousel || !slides.length) return 0;
+      const center = carousel.scrollLeft + carousel.clientWidth / 2;
+      return slides.reduce((closestIndex, slide, index) => {
+        const closestSlide = slides[closestIndex];
+        const currentDistance = Math.abs(slide.offsetLeft + slide.offsetWidth / 2 - center);
+        const closestDistance = Math.abs(closestSlide.offsetLeft + closestSlide.offsetWidth / 2 - center);
+        return currentDistance < closestDistance ? index : closestIndex;
+      }, 0);
+    };
+
+    const setDots = (index) => {
+      dots.forEach((dot, dotIndex) => dot.classList.toggle('is-active', dotIndex === index));
+    };
+
+    const scrollToIndex = (carousel, slides, index, behavior = 'smooth') => {
+      const slide = slides[index];
+      if (!carousel || !slide) return;
+      const left = slide.offsetLeft - (carousel.clientWidth - slide.offsetWidth) / 2;
+      carousel.scrollTo({ left, behavior });
+    };
+
+    const syncFrom = (source, index) => {
+      if (syncing) return;
+      syncing = true;
+      setDots(index);
+      if (source !== mainCarousel) scrollToIndex(mainCarousel, mainSlides, index);
+      if (source !== detailCarousel) scrollToIndex(detailCarousel, detailSlides, index);
+      window.setTimeout(() => { syncing = false; }, 240);
+    };
+
+    const bindScroll = (carousel, slides) => {
+      let frame = null;
+      carousel?.addEventListener('scroll', () => {
+        if (syncing || frame) return;
+        frame = window.requestAnimationFrame(() => {
+          const index = getActiveIndex(carousel, slides);
+          syncFrom(carousel, index);
+          frame = null;
+        });
+      }, { passive: true });
+    };
+
+    section.querySelectorAll('[data-look-details-link]').forEach((link) => {
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        const index = Number(link.dataset.index || 0);
+        syncFrom(mainCarousel, index);
+        document.getElementById('look-details-{{ section.id }}')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    bindScroll(mainCarousel, mainSlides);
+    bindScroll(detailCarousel, detailSlides);
+    setDots(0);
+  })();
+</script>
 
 {% schema %}
 {
@@ -338,8 +668,22 @@
         { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Styled Kasya look" },
         { "type": "text", "id": "look_title", "label": "Look title", "default": "Morning Loop" },
         { "type": "textarea", "id": "look_sentence", "label": "Look sentence", "default": "A polished everyday pairing made for first meetings, quick errands, and everything in motion." },
-        { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop Now" },
-        { "type": "url", "id": "button_link", "label": "Button link" }
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "View Look" },
+        { "type": "text", "id": "detail_heading", "label": "Detail heading", "default": "Morning Loop" },
+        { "type": "textarea", "id": "detail_sentence", "label": "Detail sentence", "default": "For early starts and everything ahead." },
+        { "type": "image_picker", "id": "detail_main_image", "label": "Detail main image" },
+        { "type": "product", "id": "product_1", "label": "Product 1" },
+        { "type": "url", "id": "product_1_custom_url", "label": "Product 1 custom URL" },
+        { "type": "image_picker", "id": "product_1_image", "label": "Product 1 image" },
+        { "type": "text", "id": "product_1_title", "label": "Product 1 title", "default": "Inah Blouse" },
+        { "type": "textarea", "id": "product_1_description", "label": "Product 1 description", "default": "Breathable, belted, and beautifully structured." },
+        { "type": "text", "id": "product_1_button_label", "label": "Product 1 button label", "default": "SEE FIT & COLORS" },
+        { "type": "product", "id": "product_2", "label": "Product 2" },
+        { "type": "url", "id": "product_2_custom_url", "label": "Product 2 custom URL" },
+        { "type": "image_picker", "id": "product_2_image", "label": "Product 2 image" },
+        { "type": "text", "id": "product_2_title", "label": "Product 2 title", "default": "Demi Barrel Pants" },
+        { "type": "textarea", "id": "product_2_description", "label": "Product 2 description", "default": "Relaxed silhouette with a clean, modern drape." },
+        { "type": "text", "id": "product_2_button_label", "label": "Product 2 button label", "default": "SEE FIT & COLORS" }
       ]
     }
   ],
@@ -352,28 +696,56 @@
           "type": "look",
           "settings": {
             "look_title": "Morning Loop",
-            "look_sentence": "A polished everyday pairing made for first meetings, quick errands, and everything in motion."
+            "look_sentence": "A polished everyday pairing made for first meetings, quick errands, and everything in motion.",
+            "button_label": "View Look",
+            "detail_heading": "Morning Loop",
+            "detail_sentence": "For early starts and everything ahead.",
+            "product_1_title": "Inah Blouse",
+            "product_1_description": "Breathable, belted, and beautifully structured.",
+            "product_2_title": "Demi Barrel Pants",
+            "product_2_description": "Relaxed silhouette with a clean, modern drape."
           }
         },
         {
           "type": "look",
           "settings": {
             "look_title": "Afternoon Pause",
-            "look_sentence": "Soft structure for the quiet in-between moments that still need to look composed."
+            "look_sentence": "Soft structure for the quiet in-between moments that still need to look composed.",
+            "button_label": "View Look",
+            "detail_heading": "Afternoon Pause",
+            "detail_sentence": "Soft structure for quiet in-between moments.",
+            "product_1_title": "Inah Blouse",
+            "product_1_description": "Lightweight ease with a polished everyday finish.",
+            "product_2_title": "Hazel Trouser",
+            "product_2_description": "A relaxed trouser shape made for movement and comfort."
           }
         },
         {
           "type": "look",
           "settings": {
             "look_title": "After Hours",
-            "look_sentence": "Easy pieces that move from office hours to after-work plans without overthinking."
+            "look_sentence": "Easy pieces that move from office hours to after-work plans without overthinking.",
+            "button_label": "View Look",
+            "detail_heading": "After Hours",
+            "detail_sentence": "Easy pieces that move from office hours to after-work plans.",
+            "product_1_title": "Daliah Polo",
+            "product_1_description": "A structured polo top with utility-inspired detail.",
+            "product_2_title": "Demi Barrel Pants",
+            "product_2_description": "Soft volume with a clean waist and easy drape."
           }
         },
         {
           "type": "look",
           "settings": {
             "look_title": "Weekend Ease",
-            "look_sentence": "Relaxed polish for slow days, casual plans, and dressing with less effort."
+            "look_sentence": "Relaxed polish for slow days, casual plans, and dressing with less effort.",
+            "button_label": "View Look",
+            "detail_heading": "Weekend Ease",
+            "detail_sentence": "Relaxed polish for slow days and casual plans.",
+            "product_1_title": "Daliah Polo",
+            "product_1_description": "Casual structure that still feels refined.",
+            "product_2_title": "Hazel Trouser",
+            "product_2_description": "Comfortable, versatile, and easy to style on repeat."
           }
         }
       ]
