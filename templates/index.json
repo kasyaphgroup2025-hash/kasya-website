@@ -27,9 +27,10 @@
     "home_rhythm_article": {
       "type": "home-rhythm-article",
       "settings": {
+        "article_image": "shopify://shop_images/DSC7377.jpg",
         "image_alt": "Back to Rhythm article image",
         "heading": "Routine,\nRedefined.",
-        "body_copy": "<p><strong>Back to Rhythm</strong><br>is built for the quiet return to structure, the meetings, the movement, the moments in between.</p><p>Pieces that work as hard as you do and feel good on repeat.</p><p>Designed to move with your day. Made to be part of your rhythm.</p>",
+        "body_copy": "<p><strong>Back to Rhythm</strong><br/>is built for the quiet return to structure, the meetings, the movement, the moments in between.</p><p>Pieces that work as hard as you do and feel good on repeat.</p><p>Designed to move with your day. Made to be part of your rhythm.</p>",
         "caption": "A collection for the quiet pace of everyday elegance."
       }
     },
