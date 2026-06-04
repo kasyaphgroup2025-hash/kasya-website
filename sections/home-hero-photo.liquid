@@ -261,7 +261,7 @@
 
 {%- liquid
   assign primary_button_link = section.settings.primary_button_link | default: '#home-quick-shop-grid'
-  assign secondary_button_link = section.settings.secondary_button_link | default: section.settings.button_link | default: '/collections/back-to-rhythm'
+  assign secondary_button_link = section.settings.secondary_button_link | default: '#home-shop-the-look'
 -%}
 
 <section class="home-editorial home-hero-photo" aria-label="{{ section.settings.headline_top | escape }} {{ section.settings.headline_italic | escape }}">
@@ -361,6 +361,31 @@
 
         event.preventDefault();
         quickShop.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    const findShopLook = () => {
+      const shopLook = document.getElementById('home-shop-the-look') || document.querySelector('.section-home-shop-the-look, .home-shop-the-look');
+
+      if (shopLook && !shopLook.id) {
+        shopLook.id = 'home-shop-the-look';
+      }
+
+      return shopLook;
+    };
+
+    findShopLook();
+
+    document.querySelectorAll('a[href="#home-shop-the-look"]').forEach((link) => {
+      if (link.dataset.homeShopLookScrollReady === 'true') return;
+      link.dataset.homeShopLookScrollReady = 'true';
+
+      link.addEventListener('click', (event) => {
+        const shopLook = findShopLook();
+        if (!shopLook) return;
+
+        event.preventDefault();
+        shopLook.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
 
