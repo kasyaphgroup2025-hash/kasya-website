@@ -1,4 +1,6 @@
 {{ 'homepage-custom.css' | asset_url | stylesheet_tag }}
+{{ 'component-loading-overlay.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
 
 <style>
   #shopify-section-{{ section.id }} .home-quick-shop {
@@ -150,8 +152,15 @@
     white-space: nowrap;
   }
 
-  #shopify-section-{{ section.id }} .home-quick-shop__button {
+  #shopify-section-{{ section.id }} .home-quick-shop__quick-add {
+    display: block;
     grid-column: 1 / -1;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
     min-height: 3rem;
     padding: 0.35rem 1rem;
@@ -166,6 +175,17 @@
     line-height: 1;
     text-align: center;
     text-transform: none;
+    cursor: pointer;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__button[disabled],
+  #shopify-section-{{ section.id }} .home-quick-shop__button[aria-disabled="true"] {
+    opacity: 0.62;
+    cursor: not-allowed;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__button .loading-overlay__spinner {
+    margin-left: 0.6rem;
   }
 
   @media screen and (min-width: 750px) {
@@ -215,6 +235,11 @@
           endif
           if product_url == blank
             assign product_url = '#'
+          endif
+
+          assign quick_add_url = ''
+          if product != blank
+            assign quick_add_url = product.url
           endif
 
           assign product_title = block.settings.product_title | default: block.settings.product_name
@@ -272,7 +297,18 @@
           <div class="home-quick-shop__info">
             <h3 class="home-quick-shop__title"><a href="{{ product_url }}">{{ product_title | escape }}</a></h3>
             <div class="home-quick-shop__price">{{ product_price | escape }}</div>
-            <a class="home-quick-shop__button" href="{{ product_url }}">Quick Shop</a>
+            {%- if quick_add_url != blank -%}
+              <quick-add-drawer-opener class="home-quick-shop__quick-add">
+                <button class="home-quick-shop__button" type="button" aria-haspopup="dialog" aria-label="Quick shop {{ product_title | escape }}" data-product-url="{{ quick_add_url }}">
+                  <span>Quick Shop</span>
+                  <div class="loading-overlay__spinner hidden">
+                    {%- render 'icon-cart-loading' -%}
+                  </div>
+                </button>
+              </quick-add-drawer-opener>
+            {%- else -%}
+              <span class="home-quick-shop__button" role="button" aria-disabled="true">Quick Shop</span>
+            {%- endif -%}
           </div>
         </article>
       {%- else -%}
@@ -290,7 +326,7 @@
             <div class="home-quick-shop__info">
               <h3 class="home-quick-shop__title">{{ fallback_name }}</h3>
               <div class="home-quick-shop__price">₱999</div>
-              <span class="home-quick-shop__button">Quick Shop</span>
+              <span class="home-quick-shop__button" role="button" aria-disabled="true">Quick Shop</span>
             </div>
           </article>
         {%- endfor -%}
