@@ -633,7 +633,14 @@
         return `₱${(Number(cents || 0) / 100).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       };
 
-      const normalizeKey = (value) => String(value || '').trim().toLowerCase();
+      const normalizeKey = (value) => {
+        return String(value || '')
+          .trim()
+          .toLowerCase()
+          .replace(/[\s_-]+/g, ' ')
+          .replace(/[^a-z0-9 ]/g, '')
+          .trim();
+      };
 
       const normalizeProduct = (product) => {
         if (!product) return null;
@@ -678,7 +685,9 @@
         const script = card.querySelector('[data-home-quick-shop-color-images]');
         if (!script) return [];
         try {
-          return JSON.parse(script.textContent).filter((image) => image && image.label && image.src);
+          return JSON.parse(script.textContent)
+            .map((image, index) => ({ ...image, index }))
+            .filter((image) => image && image.src);
         } catch (error) {
           return [];
         }
@@ -686,16 +695,41 @@
 
       const renderSelectorImage = (image, fallbackTitle) => {
         if (image && image.src) {
-          imageNode.innerHTML = `<img src="${image.src}" alt="${image.alt || fallbackTitle}">`;
+          const existingImage = imageNode.querySelector('img');
+          if (existingImage) {
+            existingImage.src = image.src;
+            existingImage.removeAttribute('srcset');
+            existingImage.removeAttribute('sizes');
+            existingImage.alt = image.alt || fallbackTitle;
+          } else {
+            imageNode.innerHTML = `<img src="${image.src}" alt="${image.alt || fallbackTitle}">`;
+          }
           return;
         }
         imageNode.innerHTML = fallbackSelectorImage;
       };
 
       const updateSelectorImageForSelectedColor = (fallbackTitle) => {
-        const selectedValues = Array.from(fields.querySelectorAll('select')).map((select) => normalizeKey(select.value));
-        const image = currentColorImages.find((item) => selectedValues.includes(normalizeKey(item.label)));
-        renderSelectorImage(image, fallbackTitle);
+        const selects = Array.from(fields.querySelectorAll('select'));
+        const colorSelect = selects.find((select) => normalizeKey(select.dataset.optionName).includes('color')) || selects.find((select) => {
+          return currentColorImages.some((item) => normalizeKey(item.label) === normalizeKey(select.value));
+        });
+
+        if (!colorSelect || !colorSelect.value) {
+          renderSelectorImage(null, fallbackTitle);
+          return;
+        }
+
+        const selectedColor = normalizeKey(colorSelect.value);
+        const directMatch = currentColorImages.find((item) => normalizeKey(item.label) === selectedColor);
+        const looseMatch = currentColorImages.find((item) => {
+          const label = normalizeKey(item.label);
+          return label && (label.includes(selectedColor) || selectedColor.includes(label));
+        });
+        const selectedIndex = Array.from(colorSelect.options).filter((option) => option.value).findIndex((option) => option.value === colorSelect.value);
+        const indexMatch = selectedIndex >= 0 ? currentColorImages[selectedIndex] : null;
+
+        renderSelectorImage(directMatch || looseMatch || indexMatch || null, fallbackTitle);
       };
 
       const getSelectedOptions = () => {
@@ -795,6 +829,7 @@
           const select = document.createElement('select');
           select.id = selectId;
           select.dataset.optionPosition = String(index + 1);
+          select.dataset.optionName = option.name || '';
           select.innerHTML = `<option value="">Select ${option.name}</option>`;
 
           option.values.forEach((value) => {
@@ -812,6 +847,7 @@
           fields.appendChild(field);
         });
 
+        updateSelectorImageForSelectedColor(title);
         submitButton.disabled = true;
         submitButton.textContent = 'Add to Cart';
         errorNode.hidden = true;
