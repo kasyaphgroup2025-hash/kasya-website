@@ -24,6 +24,15 @@
         "button_link": "/collections/back-to-rhythm"
       }
     },
+    "home_rhythm_article": {
+      "type": "home-rhythm-article",
+      "settings": {
+        "image_alt": "Back to Rhythm article image",
+        "heading": "Routine,\nRedefined.",
+        "body_copy": "<p><strong>Back to Rhythm</strong><br>is built for the quiet return to structure, the meetings, the movement, the moments in between.</p><p>Pieces that work as hard as you do and feel good on repeat.</p><p>Designed to move with your day. Made to be part of your rhythm.</p>",
+        "caption": "A collection for the quiet pace of everyday elegance."
+      }
+    },
     "home_quick_shop_grid": {
       "type": "home-quick-shop-grid",
       "blocks": {
@@ -212,6 +221,7 @@
   },
   "order": [
     "home_hero_photo",
+    "home_rhythm_article",
     "home_quick_shop_grid",
     "home_shop_the_look",
     "home_other_collections"
