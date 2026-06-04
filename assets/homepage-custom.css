@@ -16,7 +16,12 @@
 
 @media screen and (max-width: 749px) {
   .section-home-quick-shop-grid .home-quick-shop {
-    padding-top: 2rem;
+    padding-top: 0;
+  }
+
+  .section-home-quick-shop-grid .home-quick-shop__banner {
+    margin-top: 2rem !important;
+    margin-bottom: 2rem !important;
   }
 
   .section-home-other-collections .home-other-collections {
