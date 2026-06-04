@@ -2,12 +2,28 @@
 
 <style>
   #shopify-section-{{ section.id }} .home-rhythm-article {
+    position: relative;
+    isolation: isolate;
     background: linear-gradient(90deg, #030303 0%, #151515 56%, #030303 100%);
     color: #ffffff;
     overflow: hidden;
   }
 
+  #shopify-section-{{ section.id }} .home-rhythm-article::after {
+    content: "";
+    position: absolute;
+    top: -18%;
+    right: -18%;
+    bottom: -18%;
+    width: min(58vw, 58rem);
+    background: radial-gradient(circle at 82% 36%, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.045) 34%, rgba(255, 255, 255, 0) 68%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
   #shopify-section-{{ section.id }} .home-rhythm-article .home-editorial__inner {
+    position: relative;
+    z-index: 1;
     width: 100%;
     max-width: none;
     padding: 4.2rem 0 0;
