@@ -185,8 +185,7 @@
     background: rgba(255, 255, 255, 0.52);
   }
 
-  #shopify-section-{{ section.id }} .home-shop-the-look__dot.is-active,
-  #shopify-section-{{ section.id }} .home-shop-the-look__dot:first-child {
+  #shopify-section-{{ section.id }} .home-shop-the-look__dot.is-active {
     background: #ffffff;
   }
 
@@ -232,15 +231,16 @@
 
   #shopify-section-{{ section.id }} .home-shop-the-look__details-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.8rem;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.7rem;
+    align-items: stretch;
   }
 
   #shopify-section-{{ section.id }} .home-shop-the-look__details-main {
     overflow: hidden;
     border-radius: 0.35rem;
     background: #111111;
-    aspect-ratio: 16 / 9;
+    min-height: 17rem;
   }
 
   #shopify-section-{{ section.id }} .home-shop-the-look__details-main img,
@@ -248,7 +248,14 @@
     display: block;
     width: 100%;
     height: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .home-shop-the-look__details-main img {
     object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .home-shop-the-look__item-image img {
+    object-fit: contain;
   }
 
   #shopify-section-{{ section.id }} .home-shop-the-look__items {
@@ -258,10 +265,11 @@
 
   #shopify-section-{{ section.id }} .home-shop-the-look__item {
     display: grid;
-    grid-template-columns: 7.2rem minmax(0, 1fr);
-    gap: 0.9rem;
+    grid-template-columns: minmax(4.8rem, 34%) minmax(0, 1fr);
+    gap: 0.55rem;
     align-items: center;
-    padding: 0.7rem;
+    min-height: 8.15rem;
+    padding: 0.55rem;
     border: 0.1rem solid rgba(0, 0, 0, 0.09);
     border-radius: 0.7rem;
     background: rgba(255, 255, 255, 0.94);
@@ -289,44 +297,45 @@
     margin: 0;
     color: #111111;
     font-family: "Helvetica Now Condensed", "Helvetica Neue Condensed", "Arial Narrow", sans-serif;
-    font-size: 1.28rem;
+    font-size: clamp(1rem, 3vw, 1.18rem);
     font-weight: 700;
     line-height: 1.05;
   }
 
   #shopify-section-{{ section.id }} .home-shop-the-look__item-description {
-    margin: 0.25rem 0 0.6rem;
+    margin: 0.22rem 0 0.48rem;
     color: rgba(0, 0, 0, 0.72);
-    font-size: 1.03rem;
-    line-height: 1.18;
+    font-size: clamp(0.86rem, 2.55vw, 1rem);
+    line-height: 1.12;
   }
 
   #shopify-section-{{ section.id }} .home-shop-the-look__item-action {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 2.6rem;
-    padding: 0 1rem;
+    min-height: 2.25rem;
+    max-width: 100%;
+    padding: 0 0.72rem;
     border: 0.12rem solid #303030;
     color: #151515;
     font-family: "Helvetica Now Condensed", "Helvetica Neue Condensed", "Arial Narrow", sans-serif;
-    font-size: 1.02rem;
+    font-size: clamp(0.78rem, 2.35vw, 0.94rem);
     font-weight: 800;
     letter-spacing: 0.02em;
     line-height: 1;
+    text-align: center;
     text-decoration: none;
     text-transform: uppercase;
   }
 
-  @media screen and (min-width: 420px) {
+  @media screen and (max-width: 339px) {
     #shopify-section-{{ section.id }} .home-shop-the-look__details-grid {
-      grid-template-columns: 1.05fr 0.95fr;
-      align-items: stretch;
+      grid-template-columns: minmax(0, 1fr);
     }
 
     #shopify-section-{{ section.id }} .home-shop-the-look__details-main {
-      aspect-ratio: auto;
-      min-height: 18.6rem;
+      aspect-ratio: 16 / 9;
+      min-height: 0;
     }
   }
 
@@ -405,6 +414,10 @@
     #shopify-section-{{ section.id }} .home-shop-the-look__content {
       min-height: 38rem;
       padding-left: 3.2rem;
+    }
+
+    #shopify-section-{{ section.id }} .home-shop-the-look__details-main {
+      min-height: 22rem;
     }
   }
 </style>
@@ -488,20 +501,10 @@
             {%- liquid
               assign detail_title = block.settings.detail_heading | default: block.settings.look_title | default: fallback_titles[forloop.index0]
               assign detail_sentence = block.settings.detail_sentence | default: fallback_detail_sentences[forloop.index0]
-              assign product_1_link = '#'
-              if block.settings.product_1_custom_url != blank
-                assign product_1_link = block.settings.product_1_custom_url
-              elsif block.settings.product_1 != blank
-                assign product_1_link = block.settings.product_1.url
-              endif
-              assign product_2_link = '#'
-              if block.settings.product_2_custom_url != blank
-                assign product_2_link = block.settings.product_2_custom_url
-              elsif block.settings.product_2 != blank
-                assign product_2_link = block.settings.product_2.url
-              endif
-              assign product_1_title = block.settings.product_1_title | default: block.settings.product_1.title | default: fallback_product_1_titles[forloop.index0]
-              assign product_2_title = block.settings.product_2_title | default: block.settings.product_2.title | default: fallback_product_2_titles[forloop.index0]
+              assign product_1_link = block.settings.product_1_button_link | default: '#'
+              assign product_2_link = block.settings.product_2_button_link | default: '#'
+              assign product_1_title = block.settings.product_1_title | default: fallback_product_1_titles[forloop.index0]
+              assign product_2_title = block.settings.product_2_title | default: fallback_product_2_titles[forloop.index0]
               assign product_1_description = block.settings.product_1_description | default: fallback_product_1_descriptions[forloop.index0]
               assign product_2_description = block.settings.product_2_description | default: fallback_product_2_descriptions[forloop.index0]
             -%}
@@ -526,8 +529,6 @@
                     <div class="home-shop-the-look__item-image">
                       {%- if block.settings.product_1_image != blank -%}
                         {{ block.settings.product_1_image | image_url: width: 420 | image_tag: loading: 'lazy', widths: '160, 240, 320, 420', alt: product_1_title }}
-                      {%- elsif block.settings.product_1.featured_image != blank -%}
-                        {{ block.settings.product_1.featured_image | image_url: width: 420 | image_tag: loading: 'lazy', widths: '160, 240, 320, 420', alt: product_1_title }}
                       {%- else -%}
                         <div class="home-shop-the-look__item-placeholder"></div>
                       {%- endif -%}
@@ -543,8 +544,6 @@
                     <div class="home-shop-the-look__item-image">
                       {%- if block.settings.product_2_image != blank -%}
                         {{ block.settings.product_2_image | image_url: width: 420 | image_tag: loading: 'lazy', widths: '160, 240, 320, 420', alt: product_2_title }}
-                      {%- elsif block.settings.product_2.featured_image != blank -%}
-                        {{ block.settings.product_2.featured_image | image_url: width: 420 | image_tag: loading: 'lazy', widths: '160, 240, 320, 420', alt: product_2_title }}
                       {%- else -%}
                         <div class="home-shop-the-look__item-placeholder"></div>
                       {%- endif -%}
@@ -672,18 +671,16 @@
         { "type": "text", "id": "detail_heading", "label": "Detail heading", "default": "Morning Loop" },
         { "type": "textarea", "id": "detail_sentence", "label": "Detail sentence", "default": "For early starts and everything ahead." },
         { "type": "image_picker", "id": "detail_main_image", "label": "Detail main image" },
-        { "type": "product", "id": "product_1", "label": "Product 1" },
-        { "type": "url", "id": "product_1_custom_url", "label": "Product 1 custom URL" },
         { "type": "image_picker", "id": "product_1_image", "label": "Product 1 image" },
         { "type": "text", "id": "product_1_title", "label": "Product 1 title", "default": "Inah Blouse" },
         { "type": "textarea", "id": "product_1_description", "label": "Product 1 description", "default": "Breathable, belted, and beautifully structured." },
         { "type": "text", "id": "product_1_button_label", "label": "Product 1 button label", "default": "SEE FIT & COLORS" },
-        { "type": "product", "id": "product_2", "label": "Product 2" },
-        { "type": "url", "id": "product_2_custom_url", "label": "Product 2 custom URL" },
+        { "type": "url", "id": "product_1_button_link", "label": "Product 1 button link" },
         { "type": "image_picker", "id": "product_2_image", "label": "Product 2 image" },
         { "type": "text", "id": "product_2_title", "label": "Product 2 title", "default": "Demi Barrel Pants" },
         { "type": "textarea", "id": "product_2_description", "label": "Product 2 description", "default": "Relaxed silhouette with a clean, modern drape." },
-        { "type": "text", "id": "product_2_button_label", "label": "Product 2 button label", "default": "SEE FIT & COLORS" }
+        { "type": "text", "id": "product_2_button_label", "label": "Product 2 button label", "default": "SEE FIT & COLORS" },
+        { "type": "url", "id": "product_2_button_link", "label": "Product 2 button link" }
       ]
     }
   ],
