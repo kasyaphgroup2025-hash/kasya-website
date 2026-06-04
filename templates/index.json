@@ -175,7 +175,7 @@
             "collection": "",
             "title": "Summer Collection",
             "label": "Explore now",
-            "link": ""
+            "link": "shopify://collections/summer-collection"
           }
         },
         "collection_card_2": {
@@ -184,7 +184,7 @@
             "collection": "",
             "title": "Everyday Edit",
             "label": "Explore now",
-            "link": ""
+            "link": "shopify://collections/everyday-edit"
           }
         },
         "collection_card_3": {
@@ -193,7 +193,7 @@
             "collection": "",
             "title": "Premiere Collection",
             "label": "Explore now",
-            "link": ""
+            "link": "shopify://collections/premiere-collection"
           }
         }
       },
