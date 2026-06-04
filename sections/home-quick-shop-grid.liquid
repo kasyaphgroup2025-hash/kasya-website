@@ -1,6 +1,5 @@
 {{ 'homepage-custom.css' | asset_url | stylesheet_tag }}
 {{ 'component-loading-overlay.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
 
 <style>
   #shopify-section-{{ section.id }} .home-quick-shop {
@@ -178,8 +177,154 @@
     cursor: pointer;
   }
 
-  #shopify-section-{{ section.id }} .home-quick-shop__button .loading-overlay__spinner {
-    margin-left: 0.6rem;
+  #shopify-section-{{ section.id }} .home-quick-shop__selector[hidden] {
+    display: none;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+    padding: 1.8rem;
+    background: rgba(0, 0, 0, 0.42);
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector-panel {
+    width: min(100%, 38rem);
+    border-radius: 1rem;
+    background: #ffffff;
+    color: #171717;
+    box-shadow: 0 1.4rem 4rem rgba(0, 0, 0, 0.28);
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem 1.6rem;
+    border-bottom: 0.1rem solid rgba(0, 0, 0, 0.08);
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector-title {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.4rem;
+    height: 3.4rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #171717;
+    cursor: pointer;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector-body {
+    display: grid;
+    gap: 1.4rem;
+    padding: 1.6rem;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector-summary {
+    display: grid;
+    grid-template-columns: 8.2rem minmax(0, 1fr);
+    gap: 1.2rem;
+    align-items: center;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector-image {
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 0.8rem;
+    background: #f2f2f2;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector-product {
+    margin: 0 0 0.45rem;
+    font-size: 1.9rem;
+    font-weight: 600;
+    line-height: 1.16;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector-price {
+    font-size: 1.7rem;
+    line-height: 1.1;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector-warning {
+    margin: 0;
+    color: #d60000;
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector-fields {
+    display: grid;
+    gap: 1rem;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector-field {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector-field label {
+    color: #171717;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector-field select {
+    width: 100%;
+    min-height: 4.2rem;
+    padding: 0 1.1rem;
+    border: 0.1rem solid rgba(0, 0, 0, 0.2);
+    border-radius: 0.4rem;
+    background: #ffffff;
+    color: #171717;
+    font-size: 1.45rem;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector-submit {
+    width: 100%;
+    min-height: 4.4rem;
+    border: 0;
+    border-radius: 0;
+    background: #000000;
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector-submit[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__selector-error {
+    margin: 0;
+    color: #d60000;
+    font-size: 1.25rem;
+    line-height: 1.25;
   }
 
   @media screen and (min-width: 750px) {
@@ -243,22 +388,6 @@
             assign product_title = 'Product name'
           endif
 
-          assign quick_add_url = ''
-          if product != blank
-            assign quick_add_url = product.url
-          else
-            assign product_title_downcase = product_title | downcase
-            if product_title_downcase contains 'daliah'
-              assign quick_add_url = '/products/daliah-polo-acid-linen'
-            elsif product_title_downcase contains 'inah'
-              assign quick_add_url = '/products/inah-blouse-viscose-linen'
-            elsif product_title_downcase contains 'hazel'
-              assign quick_add_url = '/products/hazel-trouser-viscose-linen'
-            elsif product_title_downcase contains 'demi'
-              assign quick_add_url = '/products/demi-barrel-pants-acid-linen'
-            endif
-          endif
-
           assign product_price = block.settings.product_price
           if product_price == blank and product != blank
             assign product_price = product.price | money
@@ -306,19 +435,23 @@
           <div class="home-quick-shop__info">
             <h3 class="home-quick-shop__title"><a href="{{ product_url }}">{{ product_title | escape }}</a></h3>
             <div class="home-quick-shop__price">{{ product_price | escape }}</div>
-            {%- if quick_add_url != blank -%}
-              <quick-add-drawer-opener class="home-quick-shop__quick-add">
-                <button class="home-quick-shop__button" type="button" aria-haspopup="dialog" aria-label="Quick shop {{ product_title | escape }}" data-product-url="{{ quick_add_url }}">
-                  <span>Quick Shop</span>
-                  <div class="loading-overlay__spinner hidden">
-                    {%- render 'icon-cart-loading' -%}
-                  </div>
-                </button>
-              </quick-add-drawer-opener>
-            {%- else -%}
-              <a class="home-quick-shop__button" href="#" role="button">Quick Shop</a>
-            {%- endif -%}
+            <div class="home-quick-shop__quick-add">
+              <button class="home-quick-shop__button" type="button" aria-haspopup="dialog" aria-label="Quick shop {{ product_title | escape }}" data-home-quick-shop-open {% if product == blank %}data-no-product="true"{% endif %}>
+                <span>Quick Shop</span>
+              </button>
+            </div>
           </div>
+
+          {%- if product != blank -%}
+            <script type="application/json" data-home-quick-shop-product-json>
+              {
+                "title": {{ product.title | json }},
+                "price": {{ product.price | money | json }},
+                "options": {{ product.options_with_values | json }},
+                "variants": {{ product.variants | json }}
+              }
+            </script>
+          {%- endif -%}
         </article>
       {%- else -%}
         {%- assign fallback_names = 'Daliah Polo|Inah Blouse|Hazel Trouser|Demi Barrel Pants' | split: '|' -%}
@@ -335,26 +468,196 @@
             <div class="home-quick-shop__info">
               <h3 class="home-quick-shop__title">{{ fallback_name }}</h3>
               <div class="home-quick-shop__price">₱999</div>
-              <a class="home-quick-shop__button" href="#" role="button">Quick Shop</a>
+              <button class="home-quick-shop__button" type="button" data-home-quick-shop-open data-no-product="true">Quick Shop</button>
             </div>
           </article>
         {%- endfor -%}
       {%- endfor -%}
     </div>
   </div>
+
+  <div class="home-quick-shop__selector" data-home-quick-shop-selector hidden>
+    <div class="home-quick-shop__selector-panel" role="dialog" aria-modal="true" aria-label="Quick shop selector">
+      <div class="home-quick-shop__selector-header">
+        <h2 class="home-quick-shop__selector-title">Quick Shop</h2>
+        <button class="home-quick-shop__selector-close" type="button" aria-label="Close" data-home-quick-shop-close>&times;</button>
+      </div>
+      <form class="home-quick-shop__selector-body" data-home-quick-shop-form>
+        <div class="home-quick-shop__selector-summary">
+          <div class="home-quick-shop__selector-image" data-home-quick-shop-selector-image></div>
+          <div>
+            <p class="home-quick-shop__selector-product" data-home-quick-shop-selector-title></p>
+            <div class="home-quick-shop__selector-price" data-home-quick-shop-selector-price></div>
+          </div>
+        </div>
+        <p class="home-quick-shop__selector-warning">Choose your size</p>
+        <div class="home-quick-shop__selector-fields" data-home-quick-shop-selector-fields></div>
+        <p class="home-quick-shop__selector-error" data-home-quick-shop-selector-error hidden></p>
+        <button class="home-quick-shop__selector-submit" type="submit" disabled data-home-quick-shop-submit>Add to Cart</button>
+      </form>
+    </div>
+  </div>
 </section>
 
 <script>
   (() => {
+    const sectionId = '{{ section.id }}';
+
     const initQuickShop = (root = document) => {
-      const section = root.querySelector('[data-home-quick-shop-section="{{ section.id }}"]');
-      if (!section) return;
+      const section = root.querySelector(`[data-home-quick-shop-section="${sectionId}"]`);
+      if (!section || section.dataset.homeQuickShopInitialized === 'true') return;
+      section.dataset.homeQuickShopInitialized = 'true';
+
+      const selector = section.querySelector('[data-home-quick-shop-selector]');
+      const form = section.querySelector('[data-home-quick-shop-form]');
+      const fields = section.querySelector('[data-home-quick-shop-selector-fields]');
+      const titleNode = section.querySelector('[data-home-quick-shop-selector-title]');
+      const priceNode = section.querySelector('[data-home-quick-shop-selector-price]');
+      const imageNode = section.querySelector('[data-home-quick-shop-selector-image]');
+      const errorNode = section.querySelector('[data-home-quick-shop-selector-error]');
+      const submitButton = section.querySelector('[data-home-quick-shop-submit]');
+      let currentProduct = null;
+      let selectedVariant = null;
+
+      const moneyFromCents = (cents) => {
+        if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
+          return window.Shopify.formatMoney(cents, window.money_format || '{{ shop.money_format | replace: "'", "\\'" }}');
+        }
+        return `₱${(Number(cents || 0) / 100).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      };
+
+      const parseProduct = (card) => {
+        const script = card.querySelector('[data-home-quick-shop-product-json]');
+        if (!script) return null;
+        try {
+          return JSON.parse(script.textContent);
+        } catch (error) {
+          return null;
+        }
+      };
+
+      const getSelectedOptions = () => {
+        return Array.from(fields.querySelectorAll('select')).map((select) => select.value);
+      };
+
+      const findVariant = () => {
+        if (!currentProduct) return null;
+        const selectedOptions = getSelectedOptions();
+        if (selectedOptions.some((option) => !option)) return null;
+        return currentProduct.variants.find((variant) => {
+          return selectedOptions.every((option, index) => variant[`option${index + 1}`] === option);
+        }) || null;
+      };
+
+      const updateVariantState = () => {
+        selectedVariant = findVariant();
+        const isAvailable = Boolean(selectedVariant && selectedVariant.available);
+        submitButton.disabled = !isAvailable;
+        submitButton.textContent = selectedVariant && !selectedVariant.available ? 'Sold Out' : 'Add to Cart';
+        errorNode.hidden = true;
+        errorNode.textContent = '';
+      };
+
+      const closeSelector = () => {
+        selector.hidden = true;
+        document.documentElement.classList.remove('overflow-hidden');
+      };
+
+      const openSelector = (card) => {
+        const product = parseProduct(card);
+        if (!product) {
+          currentProduct = null;
+          selectedVariant = null;
+          titleNode.textContent = 'Select a product in the theme editor';
+          priceNode.textContent = '';
+          imageNode.innerHTML = '';
+          fields.innerHTML = '';
+          submitButton.disabled = true;
+          errorNode.textContent = 'Quick Shop needs a real Shopify product selected in this block.';
+          errorNode.hidden = false;
+          selector.hidden = false;
+          return;
+        }
+
+        currentProduct = product;
+        const title = card.querySelector('.home-quick-shop__title')?.textContent?.trim() || product.title;
+        const price = card.querySelector('.home-quick-shop__price')?.textContent?.trim() || product.price;
+        const activeImage = card.querySelector('.home-quick-shop__product-image.is-active img');
+
+        titleNode.textContent = title;
+        priceNode.textContent = price;
+        imageNode.innerHTML = activeImage ? `<img src="${activeImage.currentSrc || activeImage.src}" alt="${activeImage.alt || title}">` : '';
+        fields.innerHTML = '';
+
+        product.options.forEach((option, index) => {
+          const field = document.createElement('div');
+          field.className = 'home-quick-shop__selector-field';
+
+          const label = document.createElement('label');
+          const selectId = `HomeQuickShop-${sectionId}-${index}`;
+          label.setAttribute('for', selectId);
+          label.textContent = option.name;
+
+          const select = document.createElement('select');
+          select.id = selectId;
+          select.dataset.optionPosition = String(index + 1);
+          select.innerHTML = `<option value="">Select ${option.name}</option>`;
+
+          option.values.forEach((value) => {
+            const optionNode = document.createElement('option');
+            optionNode.value = value;
+            optionNode.textContent = value;
+            select.appendChild(optionNode);
+          });
+
+          select.addEventListener('change', updateVariantState);
+          field.append(label, select);
+          fields.appendChild(field);
+        });
+
+        submitButton.disabled = true;
+        submitButton.textContent = 'Add to Cart';
+        errorNode.hidden = true;
+        errorNode.textContent = '';
+        selector.hidden = false;
+        document.documentElement.classList.add('overflow-hidden');
+      };
+
+      const addToCart = (variantId) => {
+        const cart = document.querySelector('cart-drawer') || document.querySelector('cart-notification') || document.querySelector('cart-items');
+        const formData = new FormData();
+        formData.append('id', variantId);
+        formData.append('quantity', '1');
+
+        if (cart && typeof cart.getSectionsToRender === 'function') {
+          formData.append('sections', cart.getSectionsToRender().map((section) => section.id));
+          formData.append('sections_url', window.location.pathname);
+          if (typeof cart.setActiveElement === 'function') cart.setActiveElement(document.activeElement);
+        }
+
+        const config = typeof fetchConfig === 'function' ? fetchConfig('javascript') : { method: 'POST', headers: { Accept: 'application/json' } };
+        config.headers = config.headers || {};
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        delete config.headers['Content-Type'];
+        config.body = formData;
+
+        return fetch(window.routes.cart_add_url, config)
+          .then((response) => response.json())
+          .then((response) => {
+            if (response.status) throw new Error(response.description || response.message || 'Unable to add to cart.');
+            closeSelector();
+            if (cart && typeof cart.renderContents === 'function') {
+              cart.classList.remove('is-empty');
+              cart.renderContents(response);
+            } else if (cart && typeof cart.open === 'function') {
+              cart.open();
+            }
+            document.dispatchEvent(new CustomEvent('afterCartChanged', { detail: { productVariantId: variantId, source: 'home-quick-shop', cartData: response } }));
+          });
+      };
 
       section.querySelectorAll('[data-home-quick-shop-card]').forEach((card) => {
         card.querySelectorAll('[data-home-quick-shop-swatch]').forEach((swatch) => {
-          if (swatch.dataset.homeQuickShopReady === 'true') return;
-          swatch.dataset.homeQuickShopReady = 'true';
-
           swatch.addEventListener('click', () => {
             const target = swatch.getAttribute('data-home-quick-shop-swatch');
 
@@ -367,12 +670,37 @@
             });
           });
         });
+
+        const button = card.querySelector('[data-home-quick-shop-open]');
+        if (button) {
+          button.addEventListener('click', () => openSelector(card));
+        }
+      });
+
+      section.querySelector('[data-home-quick-shop-close]')?.addEventListener('click', closeSelector);
+      selector.addEventListener('click', (event) => {
+        if (event.target === selector) closeSelector();
+      });
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (!selectedVariant || !selectedVariant.available) return;
+
+        submitButton.disabled = true;
+        submitButton.textContent = 'Adding...';
+        addToCart(selectedVariant.id).catch((error) => {
+          errorNode.textContent = error.message || 'Unable to add to cart.';
+          errorNode.hidden = false;
+          updateVariantState();
+        });
       });
     };
 
     initQuickShop();
 
     document.addEventListener('shopify:section:load', (event) => {
+      const section = event.target.querySelector(`[data-home-quick-shop-section="${sectionId}"]`);
+      if (section) section.dataset.homeQuickShopInitialized = 'false';
       initQuickShop(event.target);
     });
   })();
