@@ -224,6 +224,10 @@
         {%- liquid
           assign product = block.settings.product
           assign product_url = block.settings.custom_url | default: block.settings.custom_product_url
+          if product_url contains 'shopify://products/'
+            assign product_handle = product_url | split: 'shopify://products/' | last
+            assign product_url = '/products/' | append: product_handle
+          endif
           if product_url == blank and product != blank
             assign product_url = product.url
           endif
@@ -242,8 +246,6 @@
           assign quick_add_url = ''
           if product != blank
             assign quick_add_url = product.url
-          elsif product_url != '#'
-            assign quick_add_url = product_url
           else
             assign product_title_downcase = product_title | downcase
             if product_title_downcase contains 'daliah'
