@@ -108,15 +108,56 @@
     },
     "home_shop_the_look": {
       "type": "home-shop-the-look",
+      "blocks": {
+        "look_1": {
+          "type": "look",
+          "settings": {
+            "image_alt": "Morning Loop look",
+            "look_title": "Morning Loop",
+            "look_sentence": "A polished everyday pairing made for first meetings, quick errands, and everything in motion.",
+            "button_label": "Shop Now",
+            "button_link": ""
+          }
+        },
+        "look_2": {
+          "type": "look",
+          "settings": {
+            "image_alt": "Afternoon Pause look",
+            "look_title": "Afternoon Pause",
+            "look_sentence": "Soft structure for the quiet in-between moments that still need to look composed.",
+            "button_label": "Shop Now",
+            "button_link": ""
+          }
+        },
+        "look_3": {
+          "type": "look",
+          "settings": {
+            "image_alt": "After Hours look",
+            "look_title": "After Hours",
+            "look_sentence": "Easy pieces that move from office hours to after-work plans without overthinking.",
+            "button_label": "Shop Now",
+            "button_link": ""
+          }
+        },
+        "look_4": {
+          "type": "look",
+          "settings": {
+            "image_alt": "Weekend Ease look",
+            "look_title": "Weekend Ease",
+            "look_sentence": "Relaxed polish for slow days, casual plans, and dressing with less effort.",
+            "button_label": "Shop Now",
+            "button_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "look_1",
+        "look_2",
+        "look_3",
+        "look_4"
+      ],
       "settings": {
-        "image_alt": "Styled Kasya look",
-        "kicker": "Shop the look",
-        "heading": "One look, all day",
-        "copy": "<p>Pair soft structure with pieces selected for the full outfit.</p>",
-        "product_list": [],
-        "products_to_show": 3,
-        "button_label": "Shop collection",
-        "button_link": ""
+        "section_heading": "Shop the Look"
       }
     },
     "home_other_collections": {
