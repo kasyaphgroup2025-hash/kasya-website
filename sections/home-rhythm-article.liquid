@@ -163,6 +163,90 @@
       font-size: 1.2rem;
     }
   }
+
+  @media screen and (min-width: 990px) {
+    body.home-hero-header-enabled .section-header .header__inline-menu nav,
+    body.home-hero-header-enabled .section-header .header__inline-menu .list-menu--inline {
+      min-width: 0;
+    }
+
+    body.home-hero-header-enabled .section-header .header__inline-menu .list-menu--inline {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: clamp(1.8rem, 2.2vw, 3.2rem);
+    }
+
+    body.home-hero-header-enabled .section-header .header__inline-menu .list-menu--inline > li {
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+
+    body.home-hero-header-enabled .section-header .header__menu-item--top {
+      padding-left: 0;
+      padding-right: 0;
+      white-space: nowrap;
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article {
+      background: linear-gradient(90deg, #030303 0%, #101010 54%, #030303 100%);
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article .home-editorial__inner {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(34rem, 0.78fr);
+      grid-template-areas:
+        "media heading"
+        "media copy";
+      column-gap: clamp(4rem, 5.2vw, 7.2rem);
+      width: min(100%, 136rem);
+      max-width: 136rem;
+      margin: 0 auto;
+      padding: clamp(5.6rem, 5vw, 7.6rem) 3.2rem 0;
+      align-items: start;
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__heading-wrap {
+      grid-area: heading;
+      justify-content: flex-start;
+      padding: clamp(2rem, 3.4vw, 4.6rem) 0 clamp(2rem, 2.6vw, 3.2rem);
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__heading {
+      max-width: 42rem;
+      font-size: clamp(5.6rem, 4.2vw, 7.4rem);
+      line-height: 0.98;
+      text-align: left;
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__row {
+      display: contents;
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__media-column {
+      grid-area: media;
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__copy-column {
+      grid-area: copy;
+      padding: 0;
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__image {
+      max-height: min(70rem, 68vw);
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__copy {
+      max-width: 43rem;
+      font-size: clamp(1.55rem, 1vw, 1.8rem);
+      line-height: 1.42;
+    }
+
+    #shopify-section-{{ section.id }} .home-rhythm-article__caption {
+      padding: 0.9rem 0 1rem;
+      font-size: 1.25rem;
+    }
+  }
 </style>
 
 <section class="home-editorial home-rhythm-article">
