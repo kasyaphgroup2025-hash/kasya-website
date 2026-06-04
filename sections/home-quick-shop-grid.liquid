@@ -178,12 +178,6 @@
     cursor: pointer;
   }
 
-  #shopify-section-{{ section.id }} .home-quick-shop__button[disabled],
-  #shopify-section-{{ section.id }} .home-quick-shop__button[aria-disabled="true"] {
-    opacity: 0.62;
-    cursor: not-allowed;
-  }
-
   #shopify-section-{{ section.id }} .home-quick-shop__button .loading-overlay__spinner {
     margin-left: 0.6rem;
   }
@@ -237,17 +231,30 @@
             assign product_url = '#'
           endif
 
-          assign quick_add_url = ''
-          if product != blank
-            assign quick_add_url = product.url
-          endif
-
           assign product_title = block.settings.product_title | default: block.settings.product_name
           if product_title == blank and product != blank
             assign product_title = product.title
           endif
           if product_title == blank
             assign product_title = 'Product name'
+          endif
+
+          assign quick_add_url = ''
+          if product != blank
+            assign quick_add_url = product.url
+          elsif product_url != '#'
+            assign quick_add_url = product_url
+          else
+            assign product_title_downcase = product_title | downcase
+            if product_title_downcase contains 'daliah'
+              assign quick_add_url = '/products/daliah-polo-acid-linen'
+            elsif product_title_downcase contains 'inah'
+              assign quick_add_url = '/products/inah-blouse-viscose-linen'
+            elsif product_title_downcase contains 'hazel'
+              assign quick_add_url = '/products/hazel-trouser-viscose-linen'
+            elsif product_title_downcase contains 'demi'
+              assign quick_add_url = '/products/demi-barrel-pants-acid-linen'
+            endif
           endif
 
           assign product_price = block.settings.product_price
@@ -307,7 +314,7 @@
                 </button>
               </quick-add-drawer-opener>
             {%- else -%}
-              <span class="home-quick-shop__button" role="button" aria-disabled="true">Quick Shop</span>
+              <a class="home-quick-shop__button" href="#" role="button">Quick Shop</a>
             {%- endif -%}
           </div>
         </article>
@@ -326,7 +333,7 @@
             <div class="home-quick-shop__info">
               <h3 class="home-quick-shop__title">{{ fallback_name }}</h3>
               <div class="home-quick-shop__price">₱999</div>
-              <span class="home-quick-shop__button" role="button" aria-disabled="true">Quick Shop</span>
+              <a class="home-quick-shop__button" href="#" role="button">Quick Shop</a>
             </div>
           </article>
         {%- endfor -%}
