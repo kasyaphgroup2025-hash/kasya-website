@@ -14,13 +14,18 @@
   margin-top: 0;
 }
 
+.section-home-quick-shop-grid {
+  background: #030405;
+}
+
 @media screen and (max-width: 749px) {
   .section-home-quick-shop-grid .home-quick-shop {
-    padding-top: 0;
+    padding-top: 2rem;
+    background: #030405;
   }
 
   .section-home-quick-shop-grid .home-quick-shop__banner {
-    margin-top: 2rem !important;
+    margin-top: 0 !important;
     margin-bottom: 2rem !important;
   }
 
