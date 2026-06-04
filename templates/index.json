@@ -43,7 +43,7 @@
           "type": "product_card",
           "settings": {
             "product": "",
-            "custom_url": "",
+            "custom_url": "shopify://products/daliah-polo-acid-linen",
             "product_title": "Daliah Polo",
             "product_price": "₱699",
             "image_1": "shopify://shop_images/DALIAH_POLO_-_BLACK.jpg",
@@ -60,7 +60,7 @@
           "type": "product_card",
           "settings": {
             "product": "",
-            "custom_url": "",
+            "custom_url": "shopify://products/inah-blouse-viscose-linen",
             "product_title": "Inah Blouse",
             "product_price": "₱749",
             "image_1": "shopify://shop_images/ChatGPT_Image_Jun_4_2026_08_21_06_AM-2.png",
@@ -77,7 +77,7 @@
           "type": "product_card",
           "settings": {
             "product": "",
-            "custom_url": "",
+            "custom_url": "shopify://products/hazel-trouser-viscose-linen",
             "product_title": "Hazel Trouser",
             "product_price": "₱999",
             "image_1": "shopify://shop_images/hazel_acid_linen_canva.jpg",
@@ -94,7 +94,7 @@
           "type": "product_card",
           "settings": {
             "product": "",
-            "custom_url": "",
+            "custom_url": "shopify://products/demi-barrel-pants-acid-linen",
             "product_title": "Demi Barrel Pants",
             "product_price": "₱899",
             "image_1": "shopify://shop_images/barrel_1_1.png",
