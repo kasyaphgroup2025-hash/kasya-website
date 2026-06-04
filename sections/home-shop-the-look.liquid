@@ -426,10 +426,6 @@
   assign fallback_titles = 'Morning Loop|Afternoon Pause|After Hours|Weekend Ease' | split: '|'
   assign fallback_sentences = 'A polished everyday pairing made for first meetings, quick errands, and everything in motion.|Soft structure for the quiet in-between moments that still need to look composed.|Easy pieces that move from office hours to after-work plans without overthinking.|Relaxed polish for slow days, casual plans, and dressing with less effort.' | split: '|'
   assign fallback_detail_sentences = 'For early starts and everything ahead.|Soft structure for quiet in-between moments.|Easy pieces that move from office hours to after-work plans.|Relaxed polish for slow days and casual plans.' | split: '|'
-  assign fallback_product_1_titles = 'Inah Blouse|Inah Blouse|Daliah Polo|Daliah Polo' | split: '|'
-  assign fallback_product_1_descriptions = 'Breathable, belted, and beautifully structured.|Lightweight ease with a polished everyday finish.|A structured polo top with utility-inspired detail.|Casual structure that still feels refined.' | split: '|'
-  assign fallback_product_2_titles = 'Demi Barrel Pants|Hazel Trouser|Demi Barrel Pants|Hazel Trouser' | split: '|'
-  assign fallback_product_2_descriptions = 'Relaxed silhouette with a clean, modern drape.|A relaxed trouser shape made for movement and comfort.|Soft volume with a clean waist and easy drape.|Comfortable, versatile, and easy to style on repeat.' | split: '|'
 -%}
 
 <section class="home-editorial home-shop-the-look" data-shop-look-section="{{ section.id }}">
@@ -503,10 +499,10 @@
               assign detail_sentence = block.settings.detail_sentence | default: fallback_detail_sentences[forloop.index0]
               assign product_1_link = block.settings.product_1_button_link | default: '#'
               assign product_2_link = block.settings.product_2_button_link | default: '#'
-              assign product_1_title = block.settings.product_1_title | default: fallback_product_1_titles[forloop.index0]
-              assign product_2_title = block.settings.product_2_title | default: fallback_product_2_titles[forloop.index0]
-              assign product_1_description = block.settings.product_1_description | default: fallback_product_1_descriptions[forloop.index0]
-              assign product_2_description = block.settings.product_2_description | default: fallback_product_2_descriptions[forloop.index0]
+              assign product_1_title = block.settings.product_1_title
+              assign product_2_title = block.settings.product_2_title
+              assign product_1_description = block.settings.product_1_description
+              assign product_2_description = block.settings.product_2_description
             -%}
             <article class="home-shop-the-look__details-slide" data-look-details-slide data-index="{{ forloop.index0 }}">
               <p class="home-shop-the-look__details-label">Look Details</p>
@@ -534,8 +530,8 @@
                       {%- endif -%}
                     </div>
                     <div class="home-shop-the-look__item-content">
-                      <h4 class="home-shop-the-look__item-title">{{ product_1_title | escape }}</h4>
-                      <p class="home-shop-the-look__item-description">{{ product_1_description | escape }}</p>
+                      {%- if product_1_title != blank -%}<h4 class="home-shop-the-look__item-title">{{ product_1_title | escape }}</h4>{%- endif -%}
+                      {%- if product_1_description != blank -%}<p class="home-shop-the-look__item-description">{{ product_1_description | escape }}</p>{%- endif -%}
                       <a class="home-shop-the-look__item-action" href="{{ product_1_link }}">{{ block.settings.product_1_button_label | default: 'SEE FIT & COLORS' | escape }}</a>
                     </div>
                   </div>
@@ -549,8 +545,8 @@
                       {%- endif -%}
                     </div>
                     <div class="home-shop-the-look__item-content">
-                      <h4 class="home-shop-the-look__item-title">{{ product_2_title | escape }}</h4>
-                      <p class="home-shop-the-look__item-description">{{ product_2_description | escape }}</p>
+                      {%- if product_2_title != blank -%}<h4 class="home-shop-the-look__item-title">{{ product_2_title | escape }}</h4>{%- endif -%}
+                      {%- if product_2_description != blank -%}<p class="home-shop-the-look__item-description">{{ product_2_description | escape }}</p>{%- endif -%}
                       <a class="home-shop-the-look__item-action" href="{{ product_2_link }}">{{ block.settings.product_2_button_label | default: 'SEE FIT & COLORS' | escape }}</a>
                     </div>
                   </div>
@@ -566,8 +562,8 @@
                 <div class="home-shop-the-look__details-grid">
                   <div class="home-shop-the-look__details-main"><div class="home-shop-the-look__item-placeholder"></div></div>
                   <div class="home-shop-the-look__items">
-                    <div class="home-shop-the-look__item"><div class="home-shop-the-look__item-image"><div class="home-shop-the-look__item-placeholder"></div></div><div class="home-shop-the-look__item-content"><h4 class="home-shop-the-look__item-title">{{ fallback_product_1_titles[forloop.index0] }}</h4><p class="home-shop-the-look__item-description">{{ fallback_product_1_descriptions[forloop.index0] }}</p><a class="home-shop-the-look__item-action" href="#">SEE FIT & COLORS</a></div></div>
-                    <div class="home-shop-the-look__item"><div class="home-shop-the-look__item-image"><div class="home-shop-the-look__item-placeholder"></div></div><div class="home-shop-the-look__item-content"><h4 class="home-shop-the-look__item-title">{{ fallback_product_2_titles[forloop.index0] }}</h4><p class="home-shop-the-look__item-description">{{ fallback_product_2_descriptions[forloop.index0] }}</p><a class="home-shop-the-look__item-action" href="#">SEE FIT & COLORS</a></div></div>
+                    <div class="home-shop-the-look__item"><div class="home-shop-the-look__item-image"><div class="home-shop-the-look__item-placeholder"></div></div><div class="home-shop-the-look__item-content"><a class="home-shop-the-look__item-action" href="#">SEE FIT & COLORS</a></div></div>
+                    <div class="home-shop-the-look__item"><div class="home-shop-the-look__item-image"><div class="home-shop-the-look__item-placeholder"></div></div><div class="home-shop-the-look__item-content"><a class="home-shop-the-look__item-action" href="#">SEE FIT & COLORS</a></div></div>
                   </div>
                 </div>
               </article>
