@@ -64,36 +64,73 @@
 
   @media screen and (max-width: 749px) {
     body.home-hero-header-enabled .section-header .header {
-      display: grid !important;
-      grid-template-columns: minmax(4.4rem, 1fr) auto minmax(4.4rem, 1fr) !important;
-      align-items: center;
-      column-gap: 0;
+      display: block !important;
+      min-height: 7.2rem;
+      padding-left: max(1.4rem, env(safe-area-inset-left));
+      padding-right: max(1.4rem, env(safe-area-inset-right));
     }
 
-    body.home-hero-header-enabled .section-header .header__heading,
-    body.home-hero-header-enabled .section-header .header__heading-link {
-      grid-column: 2;
-      justify-self: center;
-      margin: 0;
+    body.home-hero-header-enabled .section-header .header__inner {
+      min-height: 7.2rem;
+    }
+
+    body.home-hero-header-enabled .section-header .header__left-icons {
+      position: absolute;
+      left: max(1.2rem, env(safe-area-inset-left));
+      top: 50%;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      transform: translateY(-50%);
+    }
+
+    body.home-hero-header-enabled .section-header .header__left-icons .header__icon--account,
+    body.home-hero-header-enabled .section-header .header__left-icons .header__account,
+    body.home-hero-header-enabled .section-header .header__left-icons [href*="/account"] {
+      display: none !important;
+    }
+
+    body.home-hero-header-enabled .section-header .header__left-icons .header__icon--menu {
+      width: 4.2rem;
+      height: 4.2rem;
     }
 
     body.home-hero-header-enabled .section-header .header__heading {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1;
+      position: absolute !important;
+      left: 50% !important;
+      top: 50%;
+      z-index: 2;
+      margin: 0 !important;
+      transform: translate(-50%, -50%) !important;
+    }
+
+    body.home-hero-header-enabled .section-header .header__heading-link {
+      justify-content: center;
+      margin: 0 !important;
     }
 
     body.home-hero-header-enabled .section-header .header__icons {
-      grid-column: 3;
-      justify-self: end;
-      gap: 0.1rem;
-      z-index: 2;
+      position: absolute;
+      right: max(1.2rem, env(safe-area-inset-right));
+      top: 50%;
+      z-index: 3;
+      display: flex !important;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 1.2rem;
+      transform: translateY(-50%);
+    }
+
+    body.home-hero-header-enabled .section-header .header__icons .header__icon--account,
+    body.home-hero-header-enabled .section-header .header__icons .header__account,
+    body.home-hero-header-enabled .section-header .header__icons [href*="/account"] {
+      display: none !important;
     }
 
     body.home-hero-header-enabled .section-header .header__icons .header__icon {
-      width: 3.6rem;
-      height: 3.6rem;
+      width: 3.4rem;
+      height: 3.4rem;
     }
 
     body.home-hero-header-enabled .section-header .header__icons .header__icon svg {
