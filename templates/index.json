@@ -20,7 +20,9 @@
         "headline_italic": "RYTHM",
         "tagline": "OFFICE-READY, WEEKEND-EASY",
         "primary_button_label": "View Collection",
+        "primary_button_link": "",
         "secondary_button_label": "Shop Now",
+        "secondary_button_link": "",
         "button_link": "/collections/back-to-rhythm"
       }
     },
@@ -128,8 +130,19 @@
             "image_alt": "Morning Loop look",
             "look_title": "Morning Loop",
             "look_sentence": "A polished everyday pairing made for first meetings, quick errands, and everything in motion.",
-            "button_label": "Shop Now",
-            "button_link": ""
+            "button_label": "View Look",
+            "detail_heading": "Morning Loop",
+            "detail_sentence": "For early starts and everything ahead.",
+            "product_1": "",
+            "product_1_custom_url": "",
+            "product_1_title": "Inah Blouse",
+            "product_1_description": "Breathable, belted, and beautifully structured.",
+            "product_1_button_label": "SEE FIT & COLORS",
+            "product_2": "",
+            "product_2_custom_url": "",
+            "product_2_title": "Demi Barrel Pants",
+            "product_2_description": "Relaxed silhouette with a clean, modern drape.",
+            "product_2_button_label": "SEE FIT & COLORS"
           }
         },
         "look_2": {
@@ -139,8 +152,19 @@
             "image_alt": "Afternoon Pause look",
             "look_title": "Afternoon Pause",
             "look_sentence": "Soft structure for the quiet in-between moments that still need to look composed.",
-            "button_label": "Shop Now",
-            "button_link": ""
+            "button_label": "View Look",
+            "detail_heading": "Morning Loop",
+            "detail_sentence": "For early starts and everything ahead.",
+            "product_1": "",
+            "product_1_custom_url": "",
+            "product_1_title": "Inah Blouse",
+            "product_1_description": "Breathable, belted, and beautifully structured.",
+            "product_1_button_label": "SEE FIT & COLORS",
+            "product_2": "",
+            "product_2_custom_url": "",
+            "product_2_title": "Demi Barrel Pants",
+            "product_2_description": "Relaxed silhouette with a clean, modern drape.",
+            "product_2_button_label": "SEE FIT & COLORS"
           }
         },
         "look_3": {
@@ -150,8 +174,19 @@
             "image_alt": "After Hours look",
             "look_title": "After Hours",
             "look_sentence": "Easy pieces that move from office hours to after-work plans without overthinking.",
-            "button_label": "Shop Now",
-            "button_link": ""
+            "button_label": "View Look",
+            "detail_heading": "Morning Loop",
+            "detail_sentence": "For early starts and everything ahead.",
+            "product_1": "",
+            "product_1_custom_url": "",
+            "product_1_title": "Inah Blouse",
+            "product_1_description": "Breathable, belted, and beautifully structured.",
+            "product_1_button_label": "SEE FIT & COLORS",
+            "product_2": "",
+            "product_2_custom_url": "",
+            "product_2_title": "Demi Barrel Pants",
+            "product_2_description": "Relaxed silhouette with a clean, modern drape.",
+            "product_2_button_label": "SEE FIT & COLORS"
           }
         },
         "look_4": {
@@ -161,8 +196,19 @@
             "image_alt": "Weekend Ease look",
             "look_title": "Weekend Ease",
             "look_sentence": "Relaxed polish for slow days, casual plans, and dressing with less effort.",
-            "button_label": "Shop Now",
-            "button_link": ""
+            "button_label": "View Look",
+            "detail_heading": "Morning Loop",
+            "detail_sentence": "For early starts and everything ahead.",
+            "product_1": "",
+            "product_1_custom_url": "",
+            "product_1_title": "Inah Blouse",
+            "product_1_description": "Breathable, belted, and beautifully structured.",
+            "product_1_button_label": "SEE FIT & COLORS",
+            "product_2": "",
+            "product_2_custom_url": "",
+            "product_2_title": "Demi Barrel Pants",
+            "product_2_description": "Relaxed silhouette with a clean, modern drape.",
+            "product_2_button_label": "SEE FIT & COLORS"
           }
         }
       },
