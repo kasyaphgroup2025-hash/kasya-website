@@ -148,6 +148,21 @@
     line-height: 1.08;
   }
 
+  #shopify-section-{{ section.id }} .home-quick-shop__title-button {
+    display: inline;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+    text-align: left;
+    cursor: pointer;
+    appearance: none;
+  }
+
   #shopify-section-{{ section.id }} .home-quick-shop__price {
     color: #ffffff;
     font-family: inherit;
@@ -495,7 +510,9 @@
           </div>
 
           <div class="home-quick-shop__info">
-            <h3 class="home-quick-shop__title"><a href="{{ product_url }}">{{ product_title | escape }}</a></h3>
+            <h3 class="home-quick-shop__title">
+              <button class="home-quick-shop__title-button" type="button" aria-haspopup="dialog" aria-label="Open quick shop for {{ product_title | escape }}" data-home-quick-shop-open data-home-quick-shop-product-url="{{ product_json_url }}">{{ product_title | escape }}</button>
+            </h3>
             <div class="home-quick-shop__price">{{ product_price | escape }}</div>
             <div class="home-quick-shop__quick-add">
               <button class="home-quick-shop__button" type="button" aria-haspopup="dialog" aria-label="Quick shop {{ product_title | escape }}" data-home-quick-shop-open data-home-quick-shop-product-url="{{ product_json_url }}">
@@ -503,6 +520,21 @@
               </button>
             </div>
           </div>
+
+          <script type="application/json" data-home-quick-shop-color-images>
+            [
+              {
+                "label": {{ color_1_label | json }},
+                "src": {%- if image_1 != blank -%}{{ image_1 | image_url: width: 900 | json }}{%- else -%}null{%- endif -%},
+                "alt": {{ image_1_alt | json }}
+              },
+              {
+                "label": {{ color_2_label | json }},
+                "src": {%- if image_2 != blank -%}{{ image_2 | image_url: width: 900 | json }}{%- else -%}null{%- endif -%},
+                "alt": {{ image_2_alt | json }}
+              }
+            ]
+          </script>
 
           {%- if product != blank -%}
             <script type="application/json" data-home-quick-shop-product-json>
@@ -528,7 +560,7 @@
               <button class="home-quick-shop__swatch" type="button" style="--swatch-color: #d8c8ad;" data-home-quick-shop-swatch="2"></button>
             </div>
             <div class="home-quick-shop__info">
-              <h3 class="home-quick-shop__title">{{ fallback_name }}</h3>
+              <h3 class="home-quick-shop__title"><button class="home-quick-shop__title-button" type="button" aria-label="Open quick shop for {{ fallback_name | escape }}" data-home-quick-shop-open>{{ fallback_name }}</button></h3>
               <div class="home-quick-shop__price">₱999</div>
               <button class="home-quick-shop__button" type="button" data-home-quick-shop-open>Quick Shop</button>
             </div>
@@ -591,6 +623,8 @@
       let currentProduct = null;
       let selectedVariant = null;
       let hasHomepageCartAdd = false;
+      let currentColorImages = [];
+      let fallbackSelectorImage = '';
 
       const moneyFromCents = (cents) => {
         if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
@@ -598,6 +632,8 @@
         }
         return `₱${(Number(cents || 0) / 100).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       };
+
+      const normalizeKey = (value) => String(value || '').trim().toLowerCase();
 
       const normalizeProduct = (product) => {
         if (!product) return null;
@@ -636,6 +672,30 @@
         } catch (error) {
           return null;
         }
+      };
+
+      const parseColorImages = (card) => {
+        const script = card.querySelector('[data-home-quick-shop-color-images]');
+        if (!script) return [];
+        try {
+          return JSON.parse(script.textContent).filter((image) => image && image.label && image.src);
+        } catch (error) {
+          return [];
+        }
+      };
+
+      const renderSelectorImage = (image, fallbackTitle) => {
+        if (image && image.src) {
+          imageNode.innerHTML = `<img src="${image.src}" alt="${image.alt || fallbackTitle}">`;
+          return;
+        }
+        imageNode.innerHTML = fallbackSelectorImage;
+      };
+
+      const updateSelectorImageForSelectedColor = (fallbackTitle) => {
+        const selectedValues = Array.from(fields.querySelectorAll('select')).map((select) => normalizeKey(select.value));
+        const image = currentColorImages.find((item) => selectedValues.includes(normalizeKey(item.label)));
+        renderSelectorImage(image, fallbackTitle);
       };
 
       const getSelectedOptions = () => {
@@ -698,6 +758,8 @@
         if (!product) {
           currentProduct = null;
           selectedVariant = null;
+          currentColorImages = [];
+          fallbackSelectorImage = '';
           titleNode.textContent = card.querySelector('.home-quick-shop__title')?.textContent?.trim() || 'Product options unavailable';
           priceNode.textContent = '';
           imageNode.innerHTML = '';
@@ -710,13 +772,15 @@
         }
 
         currentProduct = product;
+        currentColorImages = parseColorImages(card);
         const title = card.querySelector('.home-quick-shop__title')?.textContent?.trim() || product.title;
         const manualPrice = card.querySelector('.home-quick-shop__price')?.textContent?.trim();
         const activeImage = card.querySelector('.home-quick-shop__product-image.is-active img');
 
         titleNode.textContent = title;
         priceNode.textContent = manualPrice || moneyFromCents(product.price);
-        imageNode.innerHTML = activeImage ? `<img src="${activeImage.currentSrc || activeImage.src}" alt="${activeImage.alt || title}">` : '';
+        fallbackSelectorImage = activeImage ? `<img src="${activeImage.currentSrc || activeImage.src}" alt="${activeImage.alt || title}">` : '';
+        imageNode.innerHTML = fallbackSelectorImage;
         fields.innerHTML = '';
 
         product.options.forEach((option, index) => {
@@ -740,7 +804,10 @@
             select.appendChild(optionNode);
           });
 
-          select.addEventListener('change', updateVariantState);
+          select.addEventListener('change', () => {
+            updateVariantState();
+            updateSelectorImageForSelectedColor(title);
+          });
           field.append(label, select);
           fields.appendChild(field);
         });
