@@ -62,6 +62,46 @@
     filter: brightness(0) invert(1);
   }
 
+  @media screen and (max-width: 749px) {
+    body.home-hero-header-enabled .section-header .header {
+      display: grid !important;
+      grid-template-columns: minmax(4.4rem, 1fr) auto minmax(4.4rem, 1fr) !important;
+      align-items: center;
+      column-gap: 0;
+    }
+
+    body.home-hero-header-enabled .section-header .header__heading,
+    body.home-hero-header-enabled .section-header .header__heading-link {
+      grid-column: 2;
+      justify-self: center;
+      margin: 0;
+    }
+
+    body.home-hero-header-enabled .section-header .header__heading {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+    }
+
+    body.home-hero-header-enabled .section-header .header__icons {
+      grid-column: 3;
+      justify-self: end;
+      gap: 0.1rem;
+      z-index: 2;
+    }
+
+    body.home-hero-header-enabled .section-header .header__icons .header__icon {
+      width: 3.6rem;
+      height: 3.6rem;
+    }
+
+    body.home-hero-header-enabled .section-header .header__icons .header__icon svg {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
   .home-hero-photo {
     min-height: 100svh;
     isolation: isolate;
@@ -182,6 +222,11 @@
   }
 </style>
 
+{%- liquid
+  assign primary_button_link = section.settings.primary_button_link | default: '#home-quick-shop-grid'
+  assign secondary_button_link = section.settings.secondary_button_link | default: section.settings.button_link | default: '/collections/back-to-rhythm'
+-%}
+
 <section class="home-editorial home-hero-photo" aria-label="{{ section.settings.headline_top | escape }} {{ section.settings.headline_italic | escape }}">
   <div class="home-hero-photo__media">
     {%- if section.settings.mobile_image != blank or section.settings.desktop_image != blank -%}
@@ -215,12 +260,12 @@
 
       <div class="home-hero-photo__actions">
         {%- if section.settings.primary_button_label != blank -%}
-          <a class="home-hero-photo__button home-hero-photo__button--outline" href="{{ section.settings.button_link | default: '/collections/back-to-rhythm' }}">
+          <a class="home-hero-photo__button home-hero-photo__button--outline" href="{{ primary_button_link }}">
             {{ section.settings.primary_button_label | escape }}
           </a>
         {%- endif -%}
         {%- if section.settings.secondary_button_label != blank -%}
-          <a class="home-hero-photo__button home-hero-photo__button--light" href="{{ section.settings.button_link | default: '/collections/back-to-rhythm' }}">
+          <a class="home-hero-photo__button home-hero-photo__button--light" href="{{ secondary_button_link }}">
             {{ section.settings.secondary_button_label | escape }}
           </a>
         {%- endif -%}
@@ -269,6 +314,19 @@
       }
     }, { passive: true });
 
+    document.querySelectorAll('a[href="#home-quick-shop-grid"]').forEach((link) => {
+      if (link.dataset.homeQuickShopScrollReady === 'true') return;
+      link.dataset.homeQuickShopScrollReady = 'true';
+
+      link.addEventListener('click', (event) => {
+        const quickShop = document.querySelector('.section-home-quick-shop-grid, .home-quick-shop');
+        if (!quickShop) return;
+
+        event.preventDefault();
+        quickShop.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
     updateHeader();
   })();
 </script>
@@ -287,8 +345,10 @@
     { "type": "text", "id": "headline_italic", "label": "Headline italic line", "default": "RYTHM" },
     { "type": "text", "id": "tagline", "label": "Tagline", "default": "OFFICE-READY, WEEKEND-EASY" },
     { "type": "text", "id": "primary_button_label", "label": "First button label", "default": "View Collection" },
-    { "type": "text", "id": "secondary_button_label", "label": "Second button label", "default": "Shop now" },
-    { "type": "url", "id": "button_link", "label": "Button link" }
+    { "type": "url", "id": "primary_button_link", "label": "First button link", "default": "#home-quick-shop-grid" },
+    { "type": "text", "id": "secondary_button_label", "label": "Second button label", "default": "Shop Now" },
+    { "type": "url", "id": "secondary_button_link", "label": "Second button link", "default": "/collections/back-to-rhythm" },
+    { "type": "url", "id": "button_link", "label": "Legacy button link" }
   ],
   "presets": [
     { "name": "Home hero photo" }
