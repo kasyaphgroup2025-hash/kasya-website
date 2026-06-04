@@ -677,3 +677,32 @@
     font-size: clamp(8rem, 8vw, 13rem);
   }
 }
+
+.section-home-rhythm-article,
+.section-home-quick-shop-grid,
+.section-home-shop-the-look,
+.section-home-other-collections {
+  background:
+    radial-gradient(circle at 86% 18%, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04) 30%, rgba(255, 255, 255, 0) 58%),
+    linear-gradient(90deg, #030405 0%, #080808 48%, #1b1b1b 100%);
+}
+
+.section-home-quick-shop-grid .home-quick-shop,
+.section-home-shop-the-look .home-shop-the-look,
+.section-home-other-collections .home-other-collections {
+  background:
+    radial-gradient(circle at 84% 16%, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.035) 30%, rgba(255, 255, 255, 0) 58%),
+    linear-gradient(90deg, #030405 0%, #090909 46%, #1f1f1f 100%);
+}
+
+.section-home-other-collections .home-other-collections__header {
+  background: transparent;
+}
+
+@media screen and (max-width: 749px) {
+  .section-home-quick-shop-grid .home-quick-shop {
+    background:
+      radial-gradient(circle at 84% 16%, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.035) 30%, rgba(255, 255, 255, 0) 58%),
+      linear-gradient(90deg, #030405 0%, #090909 46%, #1f1f1f 100%);
+  }
+}
