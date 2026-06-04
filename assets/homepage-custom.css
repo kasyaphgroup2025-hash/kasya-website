@@ -14,6 +14,16 @@
   margin-top: 0;
 }
 
+@media screen and (max-width: 749px) {
+  .section-home-quick-shop-grid .home-quick-shop {
+    padding-top: 2rem;
+  }
+
+  .section-home-other-collections .home-other-collections {
+    margin-bottom: 2rem;
+  }
+}
+
 .home-editorial * {
   box-sizing: border-box;
 }
