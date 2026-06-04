@@ -40,10 +40,6 @@
   }
 
   #shopify-section-{{ section.id }} .home-shop-the-look__carousel {
-    display: grid;
-    grid-auto-columns: minmax(0, 90vw);
-    grid-auto-flow: column;
-    gap: 1.4rem;
     overflow-x: auto;
     overscroll-behavior-inline: contain;
     padding: 0 2rem 0.2rem;
@@ -56,8 +52,17 @@
     display: none;
   }
 
+  #shopify-section-{{ section.id }} .home-shop-the-look__track {
+    display: flex;
+    gap: 1.4rem;
+    width: max-content;
+  }
+
   #shopify-section-{{ section.id }} .home-shop-the-look__slide {
     position: relative;
+    flex: 0 0 90vw;
+    width: 90vw;
+    max-width: 90vw;
     min-height: 29rem;
     overflow: hidden;
     border-radius: 2rem;
@@ -95,45 +100,49 @@
     z-index: 2;
     display: flex;
     min-height: 29rem;
-    width: 58%;
+    width: 56%;
     flex-direction: column;
     justify-content: center;
-    gap: 1rem;
-    padding: 2.4rem 1.4rem 2.4rem 2.2rem;
+    gap: 0.9rem;
+    padding: 2.2rem 1.2rem 2.2rem 2.1rem;
   }
 
   #shopify-section-{{ section.id }} .home-shop-the-look__look-title {
     margin: 0;
     color: #ffffff;
     font-family: "Helvetica Now Condensed", "Helvetica Neue Condensed", "Arial Narrow", sans-serif;
-    font-size: clamp(2.7rem, 9.2vw, 4.4rem);
+    font-size: clamp(2.6rem, 8.2vw, 4.1rem);
     font-style: italic;
     font-weight: 500;
     letter-spacing: 0;
-    line-height: 0.95;
+    line-height: 0.98;
+    overflow-wrap: normal;
+    word-break: normal;
   }
 
   #shopify-section-{{ section.id }} .home-shop-the-look__sentence {
     margin: 0;
     max-width: 18rem;
     color: rgba(255, 255, 255, 0.9);
-    font-size: clamp(1.15rem, 3.4vw, 1.45rem);
+    font-size: clamp(1.08rem, 3vw, 1.35rem);
     font-style: italic;
     line-height: 1.18;
+    overflow-wrap: normal;
+    word-break: normal;
   }
 
   #shopify-section-{{ section.id }} .home-shop-the-look__button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: min(100%, 13.5rem);
-    min-height: 4.2rem;
-    margin-top: 1rem;
+    width: min(100%, 13.2rem);
+    min-height: 4rem;
+    margin-top: 0.85rem;
     border: 0.12rem solid rgba(255, 255, 255, 0.92);
     background: rgba(0, 0, 0, 0.12);
     color: #ffffff;
     font-family: "Helvetica Now Condensed", "Helvetica Neue Condensed", "Arial Narrow", sans-serif;
-    font-size: 1.8rem;
+    font-size: 1.7rem;
     font-weight: 500;
     line-height: 1;
     text-align: center;
@@ -144,9 +153,9 @@
     position: absolute;
     z-index: 1;
     top: 2.2rem;
-    right: 1.6rem;
+    right: 1.5rem;
     bottom: 2.2rem;
-    width: 43%;
+    width: 42%;
     overflow: hidden;
     border-radius: 1.6rem;
     background: #181818;
@@ -179,30 +188,32 @@
 
   @media screen and (max-width: 374px) {
     #shopify-section-{{ section.id }} .home-shop-the-look__carousel {
-      grid-auto-columns: minmax(0, 91vw);
       padding-inline: 1.4rem;
       scroll-padding-inline: 1.4rem;
     }
 
-    #shopify-section-{{ section.id }} .home-shop-the-look__slide,
-    #shopify-section-{{ section.id }} .home-shop-the-look__content {
+    #shopify-section-{{ section.id }} .home-shop-the-look__slide {
+      flex-basis: 91vw;
+      width: 91vw;
+      max-width: 91vw;
       min-height: 26.5rem;
     }
 
     #shopify-section-{{ section.id }} .home-shop-the-look__content {
-      width: 60%;
-      padding-left: 1.6rem;
+      min-height: 26.5rem;
+      width: 58%;
+      padding-left: 1.55rem;
     }
 
     #shopify-section-{{ section.id }} .home-shop-the-look__side-image {
-      right: 1.1rem;
+      right: 1rem;
       width: 41%;
     }
 
     #shopify-section-{{ section.id }} .home-shop-the-look__button {
-      width: min(100%, 12rem);
-      min-height: 3.8rem;
-      font-size: 1.55rem;
+      width: min(100%, 11.8rem);
+      min-height: 3.7rem;
+      font-size: 1.5rem;
     }
   }
 
@@ -221,18 +232,23 @@
     }
 
     #shopify-section-{{ section.id }} .home-shop-the-look__carousel {
-      grid-auto-columns: minmax(42rem, 52vw);
-      gap: 2rem;
       padding-inline: 5.6rem;
       scroll-padding-inline: 5.6rem;
     }
 
-    #shopify-section-{{ section.id }} .home-shop-the-look__slide,
-    #shopify-section-{{ section.id }} .home-shop-the-look__content {
+    #shopify-section-{{ section.id }} .home-shop-the-look__track {
+      gap: 2rem;
+    }
+
+    #shopify-section-{{ section.id }} .home-shop-the-look__slide {
+      flex-basis: min(72vw, 68rem);
+      width: min(72vw, 68rem);
+      max-width: 68rem;
       min-height: 38rem;
     }
 
     #shopify-section-{{ section.id }} .home-shop-the-look__content {
+      min-height: 38rem;
       padding-left: 3.2rem;
     }
   }
@@ -245,52 +261,54 @@
     </div>
 
     <div class="home-shop-the-look__carousel" aria-label="Shop the Look carousel">
-      {%- for block in section.blocks -%}
-        {%- assign button_url = block.settings.button_link | default: '#' -%}
-        <article class="home-shop-the-look__slide" {{ block.shopify_attributes }}>
-          <div class="home-shop-the-look__bg" aria-hidden="true">
-            {%- if block.settings.look_image != blank -%}
-              <div class="home-media">
-                {{ block.settings.look_image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '375, 550, 750, 900, 1100, 1400', alt: block.settings.image_alt }}
-              </div>
-            {%- else -%}
-              <div class="home-media home-media--empty"></div>
-            {%- endif -%}
-          </div>
-
-          <div class="home-shop-the-look__content">
-            <h3 class="home-shop-the-look__look-title">{{ block.settings.look_title | escape }}</h3>
-            {%- if block.settings.look_sentence != blank -%}
-              <p class="home-shop-the-look__sentence">{{ block.settings.look_sentence | escape }}</p>
-            {%- endif -%}
-            <a class="home-shop-the-look__button" href="{{ button_url }}">{{ block.settings.button_label | default: 'Shop Now' | escape }}</a>
-          </div>
-
-          <div class="home-shop-the-look__side-image" aria-hidden="true">
-            {%- if block.settings.look_image != blank -%}
-              <div class="home-media">
-                {{ block.settings.look_image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '260, 360, 540, 720, 800', alt: block.settings.image_alt }}
-              </div>
-            {%- else -%}
-              <div class="home-media home-media--empty"></div>
-            {%- endif -%}
-          </div>
-        </article>
-      {%- else -%}
-        {%- assign fallback_titles = 'Morning Loop|Afternoon Pause|After Hours|Weekend Ease' | split: '|' -%}
-        {%- assign fallback_sentences = 'A polished everyday pairing made for first meetings, quick errands, and everything in motion.|Soft structure for the quiet in-between moments that still need to look composed.|Easy pieces that move from office hours to after-work plans without overthinking.|Relaxed polish for slow days, casual plans, and dressing with less effort.' | split: '|' -%}
-        {%- for fallback_title in fallback_titles -%}
-          <article class="home-shop-the-look__slide">
-            <div class="home-shop-the-look__bg" aria-hidden="true"><div class="home-media home-media--empty"></div></div>
-            <div class="home-shop-the-look__content">
-              <h3 class="home-shop-the-look__look-title">{{ fallback_title }}</h3>
-              <p class="home-shop-the-look__sentence">{{ fallback_sentences[forloop.index0] }}</p>
-              <a class="home-shop-the-look__button" href="#">Shop Now</a>
+      <div class="home-shop-the-look__track">
+        {%- for block in section.blocks -%}
+          {%- assign button_url = block.settings.button_link | default: '#' -%}
+          <article class="home-shop-the-look__slide" {{ block.shopify_attributes }}>
+            <div class="home-shop-the-look__bg" aria-hidden="true">
+              {%- if block.settings.look_image != blank -%}
+                <div class="home-media">
+                  {{ block.settings.look_image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '375, 550, 750, 900, 1100, 1400', alt: block.settings.image_alt }}
+                </div>
+              {%- else -%}
+                <div class="home-media home-media--empty"></div>
+              {%- endif -%}
             </div>
-            <div class="home-shop-the-look__side-image" aria-hidden="true"><div class="home-media home-media--empty"></div></div>
+
+            <div class="home-shop-the-look__content">
+              <h3 class="home-shop-the-look__look-title">{{ block.settings.look_title | escape }}</h3>
+              {%- if block.settings.look_sentence != blank -%}
+                <p class="home-shop-the-look__sentence">{{ block.settings.look_sentence | escape }}</p>
+              {%- endif -%}
+              <a class="home-shop-the-look__button" href="{{ button_url }}">{{ block.settings.button_label | default: 'Shop Now' | escape }}</a>
+            </div>
+
+            <div class="home-shop-the-look__side-image" aria-hidden="true">
+              {%- if block.settings.look_image != blank -%}
+                <div class="home-media">
+                  {{ block.settings.look_image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '260, 360, 540, 720, 800', alt: block.settings.image_alt }}
+                </div>
+              {%- else -%}
+                <div class="home-media home-media--empty"></div>
+              {%- endif -%}
+            </div>
           </article>
+        {%- else -%}
+          {%- assign fallback_titles = 'Morning Loop|Afternoon Pause|After Hours|Weekend Ease' | split: '|' -%}
+          {%- assign fallback_sentences = 'A polished everyday pairing made for first meetings, quick errands, and everything in motion.|Soft structure for the quiet in-between moments that still need to look composed.|Easy pieces that move from office hours to after-work plans without overthinking.|Relaxed polish for slow days, casual plans, and dressing with less effort.' | split: '|' -%}
+          {%- for fallback_title in fallback_titles -%}
+            <article class="home-shop-the-look__slide">
+              <div class="home-shop-the-look__bg" aria-hidden="true"><div class="home-media home-media--empty"></div></div>
+              <div class="home-shop-the-look__content">
+                <h3 class="home-shop-the-look__look-title">{{ fallback_title }}</h3>
+                <p class="home-shop-the-look__sentence">{{ fallback_sentences[forloop.index0] }}</p>
+                <a class="home-shop-the-look__button" href="#">Shop Now</a>
+              </div>
+              <div class="home-shop-the-look__side-image" aria-hidden="true"><div class="home-media home-media--empty"></div></div>
+            </article>
+          {%- endfor -%}
         {%- endfor -%}
-      {%- endfor -%}
+      </div>
     </div>
 
     <div class="home-shop-the-look__dots" aria-hidden="true">
