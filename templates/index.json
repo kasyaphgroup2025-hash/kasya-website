@@ -183,6 +183,7 @@
           "type": "collection_card",
           "settings": {
             "collection": "",
+            "image": "shopify://shop_images/compressed.png",
             "title": "Summer Collection",
             "label": "Explore now",
             "link": "shopify://collections/summer-collection"
@@ -192,6 +193,7 @@
           "type": "collection_card",
           "settings": {
             "collection": "",
+            "image": "shopify://shop_images/compressed_1.png",
             "title": "Everyday Edit",
             "label": "Explore now",
             "link": "shopify://collections/everyday-edit"
@@ -201,6 +203,7 @@
           "type": "collection_card",
           "settings": {
             "collection": "",
+            "image": "shopify://shop_images/4_1_1.png",
             "title": "Premiere Collection",
             "label": "Explore now",
             "link": "shopify://collections/premiere-collection"
