@@ -73,9 +73,16 @@
   #shopify-section-{{ section.id }} .home-quick-shop__image-link {
     position: relative;
     display: block;
+    width: 100%;
     aspect-ratio: 0.82;
     overflow: hidden;
+    padding: 0;
+    border: 0;
     background: #0f0f0f;
+    color: inherit;
+    cursor: pointer;
+    text-align: inherit;
+    appearance: none;
   }
 
   #shopify-section-{{ section.id }} .home-quick-shop__product-image,
@@ -418,7 +425,7 @@
           assign color_2_swatch = block.settings.color_2_swatch | default: block.settings.color_2 | default: '#d8c8ad'
         -%}
         <article class="home-quick-shop__card" {{ block.shopify_attributes }} data-home-quick-shop-card>
-          <a class="home-quick-shop__image-link" href="{{ product_url }}" aria-label="{{ product_title | escape }}">
+          <button class="home-quick-shop__image-link" type="button" aria-haspopup="dialog" aria-label="Open quick shop for {{ product_title | escape }}" data-home-quick-shop-open data-home-quick-shop-product-url="{{ product_json_url }}">
             {%- if image_1 != blank -%}
               <span class="home-quick-shop__product-image is-active" data-home-quick-shop-image="1">
                 {{ image_1 | image_url: width: 900 | image_tag: loading: 'lazy', widths: '180, 260, 360, 540, 720, 900', alt: image_1_alt }}
@@ -434,7 +441,7 @@
             {%- else -%}
               <span class="home-quick-shop__product-image" data-home-quick-shop-image="2"><span class="home-media home-media--empty"></span></span>
             {%- endif -%}
-          </a>
+          </button>
 
           <div class="home-quick-shop__swatches" aria-label="Choose color for {{ product_title | escape }}">
             <button class="home-quick-shop__swatch is-active" type="button" style="--swatch-color: {{ color_1_swatch }};" data-home-quick-shop-swatch="1" aria-label="{{ color_1_label | escape }}"></button>
@@ -466,10 +473,10 @@
         {%- assign fallback_names = 'Daliah Polo|Inah Blouse|Hazel Trouser|Demi Barrel Pants' | split: '|' -%}
         {%- for fallback_name in fallback_names -%}
           <article class="home-quick-shop__card" data-home-quick-shop-card>
-            <a class="home-quick-shop__image-link" href="#" aria-label="{{ fallback_name | escape }}">
+            <button class="home-quick-shop__image-link" type="button" aria-label="Open quick shop for {{ fallback_name | escape }}" data-home-quick-shop-open>
               <span class="home-quick-shop__product-image is-active" data-home-quick-shop-image="1"><span class="home-media home-media--empty"></span></span>
               <span class="home-quick-shop__product-image" data-home-quick-shop-image="2"><span class="home-media home-media--empty"></span></span>
-            </a>
+            </button>
             <div class="home-quick-shop__swatches" aria-hidden="true">
               <button class="home-quick-shop__swatch is-active" type="button" style="--swatch-color: #111111;" data-home-quick-shop-swatch="1"></button>
               <button class="home-quick-shop__swatch" type="button" style="--swatch-color: #d8c8ad;" data-home-quick-shop-swatch="2"></button>
@@ -705,10 +712,9 @@
           });
         });
 
-        const button = card.querySelector('[data-home-quick-shop-open]');
-        if (button) {
+        card.querySelectorAll('[data-home-quick-shop-open]').forEach((button) => {
           button.addEventListener('click', () => openSelector(card));
-        }
+        });
       });
 
       section.querySelector('[data-home-quick-shop-close]')?.addEventListener('click', closeSelector);
