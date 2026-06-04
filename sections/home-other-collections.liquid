@@ -1,8 +1,19 @@
 {{ 'homepage-custom.css' | asset_url | stylesheet_tag }}
 
 <style>
+  #shopify-section-{{ section.id }} {
+    padding-top: 3.2rem;
+    background-color: #000000;
+    background-image:
+      radial-gradient(circle at 88% 18%, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03) 28%, transparent 55%),
+      linear-gradient(90deg, #000000 0%, #080808 45%, #1b1b1b 100%);
+  }
+
   #shopify-section-{{ section.id }} .home-other-collections {
-    background: linear-gradient(90deg, #111111, #2d2d2d 52%, #111111);
+    background-color: #000000;
+    background-image:
+      radial-gradient(circle at 88% 18%, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04) 28%, transparent 55%),
+      linear-gradient(90deg, #000000 0%, #080808 45%, #1b1b1b 100%);
     color: #ffffff;
   }
 
@@ -107,6 +118,10 @@
   }
 
   @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: 4.8rem;
+    }
+
     #shopify-section-{{ section.id }} .home-other-collections .home-editorial__inner {
       padding-top: 5.2rem;
     }
