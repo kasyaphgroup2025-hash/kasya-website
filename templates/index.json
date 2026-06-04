@@ -173,7 +173,7 @@
           "type": "collection_card",
           "settings": {
             "collection": "",
-            "title": "Dresses",
+            "title": "Summer Collection",
             "label": "Explore now",
             "link": ""
           }
@@ -182,7 +182,7 @@
           "type": "collection_card",
           "settings": {
             "collection": "",
-            "title": "Tops",
+            "title": "Everyday Edit",
             "label": "Explore now",
             "link": ""
           }
@@ -191,7 +191,7 @@
           "type": "collection_card",
           "settings": {
             "collection": "",
-            "title": "Bottoms",
+            "title": "Premiere Collection",
             "label": "Explore now",
             "link": ""
           }
@@ -204,7 +204,7 @@
       ],
       "settings": {
         "kicker": "Keep exploring",
-        "heading": "Other collections",
+        "heading": "Other Collections",
         "copy": "<p>Move through the edits by mood, fabric, or occasion.</p>",
         "columns_desktop": 3
       }
