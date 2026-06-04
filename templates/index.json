@@ -12,7 +12,8 @@
     "home_hero_photo": {
       "type": "home-hero-photo",
       "settings": {
-        "mobile_image": "shopify://shop_images/6.6_MOBILE_CRO.jpg",
+        "mobile_image": "shopify://shop_images/6.6_MOBILE_CRO_38ec4f15-4b2b-42d9-8ad1-8e2b5bf894ef.jpg",
+        "desktop_image": "shopify://shop_images/6.6_MOBILE_CRO_688885ce-cea8-41fb-8a35-f6f27dd2ff02.jpg",
         "image_alt": "Kasya Back to Rythm campaign",
         "collection_label": "6.6 COLLECTION",
         "headline_top": "BACK TO",
