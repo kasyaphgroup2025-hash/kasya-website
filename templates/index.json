@@ -112,6 +112,7 @@
         "look_1": {
           "type": "look",
           "settings": {
+            "look_image": "shopify://shop_images/ChatGPT_Image_Jun_3_2026_03_38_12_PM.png",
             "image_alt": "Morning Loop look",
             "look_title": "Morning Loop",
             "look_sentence": "A polished everyday pairing made for first meetings, quick errands, and everything in motion.",
@@ -122,6 +123,7 @@
         "look_2": {
           "type": "look",
           "settings": {
+            "look_image": "shopify://shop_images/ChatGPT_Image_Jun_3_2026_06_22_29_PM.png",
             "image_alt": "Afternoon Pause look",
             "look_title": "Afternoon Pause",
             "look_sentence": "Soft structure for the quiet in-between moments that still need to look composed.",
@@ -132,6 +134,7 @@
         "look_3": {
           "type": "look",
           "settings": {
+            "look_image": "shopify://shop_images/ChatGPT_Image_Jun_3_2026_06_33_03_PM.png",
             "image_alt": "After Hours look",
             "look_title": "After Hours",
             "look_sentence": "Easy pieces that move from office hours to after-work plans without overthinking.",
@@ -142,6 +145,7 @@
         "look_4": {
           "type": "look",
           "settings": {
+            "look_image": "shopify://shop_images/ChatGPT_Image_Jun_3_2026_06_38_35_PM.png",
             "image_alt": "Weekend Ease look",
             "look_title": "Weekend Ease",
             "look_sentence": "Relaxed polish for slow days, casual plans, and dressing with less effort.",
