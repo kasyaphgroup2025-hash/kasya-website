@@ -327,6 +327,52 @@
     line-height: 1.25;
   }
 
+  #shopify-section-{{ section.id }} .home-quick-shop__floating-cart[hidden] {
+    display: none;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__floating-cart {
+    position: fixed;
+    right: 1.6rem;
+    bottom: 8.8rem;
+    z-index: 70;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.8rem;
+    height: 4.8rem;
+    padding: 0;
+    border: 0.1rem solid rgba(255, 255, 255, 0.24);
+    border-radius: 50%;
+    background: #050505;
+    color: #ffffff;
+    box-shadow: 0 0.8rem 2.6rem rgba(0, 0, 0, 0.34);
+    cursor: pointer;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__floating-cart svg {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  #shopify-section-{{ section.id }} .home-quick-shop__floating-count {
+    position: absolute;
+    top: -0.4rem;
+    right: -0.3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.8rem;
+    height: 1.8rem;
+    padding: 0 0.45rem;
+    border-radius: 999rem;
+    background: #ffffff;
+    color: #050505;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
   @media screen and (min-width: 750px) {
     #shopify-section-{{ section.id }} .home-quick-shop .home-editorial__inner {
       padding-bottom: 5.6rem;
@@ -492,6 +538,14 @@
     </div>
   </div>
 
+  <button class="home-quick-shop__floating-cart" type="button" aria-label="Open cart" data-home-quick-shop-floating-cart hidden>
+    <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6.3 8.2H18L16.9 18H7.4L6.3 8.2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M9 8.2V6.4C9 4.7 10.3 3.4 12 3.4C13.7 3.4 15 4.7 15 6.4V8.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+    <span class="home-quick-shop__floating-count" data-home-quick-shop-floating-count>0</span>
+  </button>
+
   <div class="home-quick-shop__selector" data-home-quick-shop-selector hidden>
     <div class="home-quick-shop__selector-panel" role="dialog" aria-modal="true" aria-label="Choose product options">
       <div class="home-quick-shop__selector-header">
@@ -531,8 +585,11 @@
       const imageNode = section.querySelector('[data-home-quick-shop-selector-image]');
       const errorNode = section.querySelector('[data-home-quick-shop-selector-error]');
       const submitButton = section.querySelector('[data-home-quick-shop-submit]');
+      const floatingCartButton = section.querySelector('[data-home-quick-shop-floating-cart]');
+      const floatingCartCount = section.querySelector('[data-home-quick-shop-floating-count]');
       let currentProduct = null;
       let selectedVariant = null;
+      let hasHomepageCartAdd = false;
 
       const moneyFromCents = (cents) => {
         if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
@@ -607,6 +664,34 @@
         document.documentElement.classList.remove('overflow-hidden');
       };
 
+      const getCartDrawer = () => document.querySelector('cart-drawer') || document.querySelector('cart-notification') || document.querySelector('cart-items');
+
+      const getCartItemCount = () => {
+        const bubble = document.querySelector('#cart-icon-bubble .cart-count-bubble span[aria-hidden="true"]') || document.querySelector('#cart-icon-bubble .cart-count-bubble span');
+        const count = bubble ? parseInt(bubble.textContent.replace(/\D/g, ''), 10) : 0;
+        return Number.isFinite(count) ? count : 0;
+      };
+
+      const isCartDrawerOpen = () => {
+        const drawer = document.querySelector('cart-drawer');
+        return Boolean(drawer && (drawer.classList.contains('animate') || drawer.classList.contains('active') || drawer.hasAttribute('open')));
+      };
+
+      const updateFloatingCart = () => {
+        if (!floatingCartButton) return;
+        const count = getCartItemCount();
+        if (floatingCartCount) floatingCartCount.textContent = String(count);
+        floatingCartButton.hidden = !hasHomepageCartAdd || count <= 0 || isCartDrawerOpen();
+      };
+
+      const openExistingCartDrawer = () => {
+        const cart = getCartDrawer();
+        if (cart && typeof cart.open === 'function') {
+          cart.open(floatingCartButton);
+          setTimeout(updateFloatingCart, 50);
+        }
+      };
+
       const openSelector = async (card) => {
         const product = await parseProduct(card);
         if (!product) {
@@ -668,7 +753,7 @@
       };
 
       const addToCart = (variantId) => {
-        const cart = document.querySelector('cart-drawer') || document.querySelector('cart-notification') || document.querySelector('cart-items');
+        const cart = getCartDrawer();
         if (!cart || typeof cart.renderContents !== 'function' || typeof cart.getSectionsToRender !== 'function') {
           throw new Error('Existing cart drawer is unavailable.');
         }
@@ -691,8 +776,10 @@
           .then((response) => {
             if (response.status) throw new Error(response.description || response.message || 'Unable to add to cart.');
             closeSelector();
+            hasHomepageCartAdd = true;
             cart.classList.remove('is-empty');
             cart.renderContents(response);
+            setTimeout(updateFloatingCart, 350);
             document.dispatchEvent(new CustomEvent('afterCartChanged', { detail: { productVariantId: variantId, source: 'home-quick-shop', cartData: response } }));
           });
       };
@@ -721,6 +808,13 @@
       selector.addEventListener('click', (event) => {
         if (event.target === selector) closeSelector();
       });
+      floatingCartButton?.addEventListener('click', openExistingCartDrawer);
+      document.querySelector('cart-drawer')?.addEventListener('transitionend', updateFloatingCart);
+      document.querySelector('cart-drawer')?.querySelector('#CartDrawer-Overlay')?.addEventListener('click', () => setTimeout(updateFloatingCart, 350));
+      document.addEventListener('keyup', (event) => {
+        if (event.code && event.code.toUpperCase() === 'ESCAPE') setTimeout(updateFloatingCart, 350);
+      });
+      document.addEventListener('afterCartChanged', () => setTimeout(updateFloatingCart, 350));
 
       form.addEventListener('submit', (event) => {
         event.preventDefault();
