@@ -1,8 +1,30 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "pf-be1d19b1": {
       "type": "pf-be1d19b1",
-      "settings": {}
+      "settings": {
+        "pf_1e3aacf8_value": "Join our VIP list to unlock early releases and exclusive member-only discounts.",
+        "pf_a69dfc75_value": "Thoughtfully made pieces you can wear today.",
+        "pf_7afd1e3a_value": "Get Early Access Before Everyone Else",
+        "pf_4e620878_value": "Get Early Access",
+        "pf_53b97d25_value": "Linen Skirt<br>",
+        "pf_ab1caf29_value": "Linen Blouse",
+        "pf_71f8c883_value": "Linen Pants",
+        "pf_c2ec4237_timeData_w_text": "Weeks",
+        "pf_c2ec4237_timeData_h_text": "Hours",
+        "pf_c2ec4237_timeData_d_text": "Days",
+        "pf_c2ec4237_timeData_m_text": "Mins",
+        "pf_c2ec4237_timeData_s_text": "Secs"
+      }
     }
   },
   "order": [
