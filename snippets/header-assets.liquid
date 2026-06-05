@@ -250,7 +250,84 @@
       .header__left-icons {
         margin-inline-start: -1rem;
       }
-    {%- endif -%}     
+    {%- endif -%}
+
+    .header__inline-menu,
+    .header__inline-menu nav,
+    .header__inline-menu .list-menu--inline {
+      min-width: 0;
+    }
+
+    .header__inline-menu .list-menu--inline {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: clamp(1.8rem, 2.2vw, 2.8rem);
+    }
+
+    .header__inline-menu .list-menu--inline > li {
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+
+    .header__inline-menu .header__menu-item--top,
+    .header__inline-menu summary.header__menu-item--top {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.6rem;
+      padding-inline: 0;
+      white-space: nowrap;
+    }
+
+    .header__inline-menu summary.header__menu-item--top {
+      padding-inline-end: 0;
+    }
+
+    .header__inline-menu .header__menu-item--top .icon-caret {
+      position: static !important;
+      inset: auto !important;
+      flex: 0 0 auto;
+      width: 1.4rem;
+      height: 1.4rem;
+      margin: 0 0 0 0.2rem;
+      transform: none !important;
+      color: currentColor;
+    }
+
+    .mega-menu__content,
+    .header__submenu,
+    .list-menu--disclosure {
+      --color-background: 255, 255, 255;
+      --color-foreground: 0, 0, 0;
+      background: #ffffff !important;
+      color: #000000 !important;
+    }
+
+    .mega-menu__content a,
+    .mega-menu__content .link,
+    .mega-menu__content .list-menu__item,
+    .mega-menu__content .mega-menu__link,
+    .mega-menu__content .header-menu__link-sub,
+    .header__submenu a,
+    .header__submenu .link,
+    .header__submenu .list-menu__item,
+    .list-menu--disclosure a,
+    .list-menu--disclosure .list-menu__item {
+      color: #000000 !important;
+    }
+
+    .mega-menu__content a:hover,
+    .mega-menu__content .list-menu__item:hover,
+    .header__submenu a:hover,
+    .header__submenu .list-menu__item:hover,
+    .list-menu--disclosure a:hover,
+    .list-menu--disclosure .list-menu__item:hover,
+    .mega-menu__content a[aria-current='page'],
+    .header__submenu a[aria-current='page'] {
+      color: #000000 !important;
+      opacity: 0.72;
+    }
   }
 </style>
 {%- if section.settings.enable_customer_support_region -%}
