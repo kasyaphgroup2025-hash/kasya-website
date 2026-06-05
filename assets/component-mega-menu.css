@@ -198,3 +198,99 @@ div.mega-menu__promotion-info {
 .mega-menu__promotion-info__button-link {
   z-index: 1;
 }
+
+@media screen and (min-width: 990px) {
+  .section-header .header__inline-menu,
+  .section-header .header__inline-menu nav,
+  .section-header .header__inline-menu .list-menu--inline {
+    min-width: 0;
+  }
+
+  .section-header .header__inline-menu .list-menu--inline {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: clamp(1.8rem, 2.2vw, 2.8rem) !important;
+  }
+
+  .section-header .header__inline-menu .list-menu--inline > li {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .section-header .header__inline-menu .header__menu-item--top,
+  .section-header .header__inline-menu summary.header__menu-item--top {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 0.6rem !important;
+    padding-inline: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  .section-header .header__inline-menu summary.header__menu-item--top {
+    padding-inline-end: 0 !important;
+  }
+
+  .section-header .header__inline-menu .header__menu-item--top > .icon-caret,
+  .section-header .header__inline-menu summary.header__menu-item--top > .icon-caret,
+  .section-header .header__inline-menu .list-menu__item > .icon-caret {
+    position: static !important;
+    inset: auto !important;
+    display: inline-block !important;
+    flex: 0 0 auto !important;
+    width: 1.4rem !important;
+    height: 1.4rem !important;
+    margin: 0 0 0 0.2rem !important;
+    transform: none !important;
+    color: currentColor !important;
+    vertical-align: middle !important;
+  }
+
+  .section-header .header__inline-menu .mega-menu__content,
+  .section-header .header__inline-menu .header__submenu,
+  .section-header .header__inline-menu .header__submenu.list-menu,
+  .section-header .header__inline-menu .list-menu--disclosure,
+  .section-header .header__inline-menu details[open] > .header__submenu,
+  .section-header .header__inline-menu details[open] > .mega-menu__content {
+    --color-background: 255, 255, 255 !important;
+    --color-foreground: 0, 0, 0 !important;
+    --color-link: 0, 0, 0 !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .section-header .header__inline-menu .mega-menu__content a,
+  .section-header .header__inline-menu .mega-menu__content .link,
+  .section-header .header__inline-menu .mega-menu__content .list-menu__item,
+  .section-header .header__inline-menu .mega-menu__content .mega-menu__link,
+  .section-header .header__inline-menu .mega-menu__content .header-menu__link-sub,
+  .section-header .header__inline-menu .header__submenu a,
+  .section-header .header__inline-menu .header__submenu .link,
+  .section-header .header__inline-menu .header__submenu .list-menu__item,
+  .section-header .header__inline-menu .list-menu--disclosure a,
+  .section-header .header__inline-menu .list-menu--disclosure .list-menu__item,
+  .section-header .header__inline-menu details[open] .header__submenu a,
+  .section-header .header__inline-menu details[open] .header__submenu span,
+  .section-header .header__inline-menu details[open] .mega-menu__content a,
+  .section-header .header__inline-menu details[open] .mega-menu__content span {
+    color: #000000 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .section-header .header__inline-menu .mega-menu__content a:hover,
+  .section-header .header__inline-menu .mega-menu__content .list-menu__item:hover,
+  .section-header .header__inline-menu .header__submenu a:hover,
+  .section-header .header__inline-menu .header__submenu .list-menu__item:hover,
+  .section-header .header__inline-menu .list-menu--disclosure a:hover,
+  .section-header .header__inline-menu .list-menu--disclosure .list-menu__item:hover,
+  .section-header .header__inline-menu .mega-menu__content a[aria-current='page'],
+  .section-header .header__inline-menu .header__submenu a[aria-current='page'] {
+    color: #000000 !important;
+    opacity: 0.75 !important;
+  }
+}
