@@ -1,1 +1,380 @@
-{"sections":{"kasya_lp_product_hero":{"type":"kasya-lp-product-hero","settings":{"product":"","show_header":false,"logo_text":"KASYA","product_label":"KASYA BASICS","heading":"INAH BLOUSE","subtitle":"Viscose Linen","rating_text":"","description":"Effortless everyday style designed for comfort, movement, and repeat wear","default_color":"Black","color_option_name":"Color","size_option_name":"Size","show_size_chart":true,"size_helper_text":"Choose your usual size for a relaxed fit. Size up if you prefer extra room around the waist or tummy.","size_chart_trigger_text":"Not sure about your size? View size chart","size_chart_note":"Measurements may vary slightly due to fabric behavior and manual production.","cta_text":"ADD TO CART","enable_sticky_atc":true}},"kasya_lp_fit_confidence":{"type":"kasya-lp-fit-confidence","blocks":{"fit_note_1":{"type":"fit_note","settings":{"note":"Relaxed body fit"}},"fit_note_2":{"type":"fit_note","settings":{"note":"Adjustable waist tie"}},"fit_note_3":{"type":"fit_note","settings":{"note":"True to size for a relaxed fit"}},"fit_note_4":{"type":"fit_note","settings":{"note":"Size up if you prefer extra room"}}},"block_order":["fit_note_1","fit_note_2","fit_note_3","fit_note_4"],"settings":{"heading":"HOW IT FITS","subheading":"See how the garment falls from every angle before choosing your size.","front_label":"FRONT VIEW","front_description":"Shows the boat neckline and waist tie detail.","side_label":"SIDE VIEW","side_description":"Shows how the blouse falls around the waist and hips.","back_label":"BACK VIEW","back_description":"Shows how it falls from behind.","model_info":"Model is 5'2 and wears size M."}},"kasya_lp_fabric_quality":{"type":"kasya-lp-fabric-quality","blocks":{"fabric_note_1":{"type":"fabric_note","settings":{"icon":"≈","title":"Soft drape","description":"Falls naturally without feeling stiff or bulky."}},"fabric_note_2":{"type":"fabric_note","settings":{"icon":"◯","title":"Breathable feel","description":"Comfortable enough for warm days and long wear."}},"fabric_note_3":{"type":"fabric_note","settings":{"icon":"✱","title":"Everyday structure","description":"Polished enough for errands, work, and casual plans."}},"fabric_note_4":{"type":"fabric_note","settings":{"icon":"✓","title":"Easy care","description":"Wash gently and hang to dry to help maintain shape and fabric quality."}}},"block_order":["fabric_note_1","fabric_note_2","fabric_note_3","fabric_note_4"],"settings":{"heading":"FABRIC & QUALITY","subheading":"Viscose linen-feel fabric with a relaxed drape, made for everyday comfort.","main_note":"Designed to feel light, breathable, and comfortable for daily wear while still giving enough structure to look polished.","show_feature_notes":true}},"kasya_lp_lifestyle":{"type":"kasya-lp-lifestyle","blocks":{"lifestyle_1":{"type":"lifestyle_card","settings":{"title":"Office Day","description":"Polished enough for work, relaxed enough for long hours."}},"lifestyle_2":{"type":"lifestyle_card","settings":{"title":"Errands","description":"Easy to move in while still looking put-together."}},"lifestyle_3":{"type":"lifestyle_card","settings":{"title":"Family Lunch","description":"Comfortable, modest, and effortless to style."}},"lifestyle_4":{"type":"lifestyle_card","settings":{"title":"Travel","description":"Relaxed fit that moves with you through a long day."}}},"block_order":["lifestyle_1","lifestyle_2","lifestyle_3","lifestyle_4"],"settings":{"heading":"WHERE TO WEAR IT","subheading":"Everyday moments made easier, softer, and more put-together."}},"kasya_lp_reviews":{"type":"kasya-lp-reviews","blocks":{"review_1":{"type":"review","settings":{"rating":5,"name":"Angelo B.","title":"Comfortable","comment":"Love the pants, super versatile, can pair it with any top.","date_text":"","size_text":"Large","fit_text":"Wideleg Fit"}},"review_2":{"type":"review","settings":{"rating":5,"name":"Jojima F.","title":"Versatile","comment":"Sobrang comfortable po talaga.","date_text":"","size_text":"Medium","fit_text":"True to size"}},"review_3":{"type":"review","settings":{"rating":4,"name":"Mary L.","title":"Good","comment":"Experienced some shrinkage, but still loved the product nonetheless.","date_text":"","size_text":"XL","fit_text":"Size smaller"}}},"block_order":["review_1","review_2","review_3"],"disabled":true,"settings":{"heading":"Reviews","average_rating_text":"(4.8)","show_average_stars":true,"background_color":"#fbf8f4","view_more_text":"View more","view_more_link":"","show_view_more":true}},"kasya_lp_reassurance":{"type":"kasya-lp-reassurance","blocks":{"reassurance_1":{"type":"reassurance_item","settings":{"icon":"shipping","title":"Ships within","description":"7 business days"}},"reassurance_2":{"type":"reassurance_item","settings":{"icon":"payment","title":"Easy Payment","description":"COD, GCash, and card payments available."}},"reassurance_3":{"type":"reassurance_item","settings":{"icon":"return","title":"Returns accepted","description":"for unworn items with tags attached"}},"reassurance_4":{"type":"reassurance_item","settings":{"icon":"message","title":"Need help?","description":"Message us for sizing assistance"}}},"block_order":["reassurance_1","reassurance_2","reassurance_3","reassurance_4"],"settings":{"heading":"Shipping & Return","subheading":"A quick guide before checkout.","background_color":"#ffffff","card_color":"#ffffff"}},"kasya_lp_faq":{"type":"kasya-lp-faq","blocks":{"faq_1":{"type":"faq","settings":{"category_label":"Fit & body","question":"What size should I get?","answer":"Choose your usual size for a relaxed fit. If you prefer extra room around the bust, arms, or tummy area, we recommend sizing up.","open_by_default":true}},"faq_2":{"type":"faq","settings":{"category_label":"Fit & body","question":"Is it good for bust area?","answer":"Yes. The fit is designed to feel relaxed around the bust area without clinging too tightly. If you prefer more room, we recommend sizing up.","open_by_default":false}},"faq_3":{"type":"faq","settings":{"category_label":"Fabric & feel","question":"Is the fabric stretchable?","answer":"The fabric has a soft, relaxed drape but is not highly stretchable. If you want more room around the waist or hips, sizing up may be better.","open_by_default":false}},"faq_4":{"type":"faq","settings":{"category_label":"Fabric & feel","question":"Is it see-through?","answer":"The fabric is designed for everyday wear. For lighter colors, we recommend wearing skin-tone undergarments for extra confidence.","open_by_default":false}},"faq_5":{"type":"faq","settings":{"category_label":"Fabric & feel","question":"Will it shrink after washing?","answer":"Slight shrinkage may happen due to fabric behavior, especially if washed in hot water or dried using high heat. For best care, wash gently and hang to dry.","open_by_default":false}},"faq_6":{"type":"faq","settings":{"category_label":"Risk reversal","question":"Can I exchange if the size does not fit?","answer":"Yes, size exchange may be requested within 7 days as long as the item is unworn, unwashed, and has the tags attached. Please review our return and exchange policy before purchase.","open_by_default":false}},"faq_7":{"type":"faq","settings":{"category_label":"Logistics","question":"How long is delivery?","answer":"Orders are prepared and shipped from Cavite. Delivery timeline depends on your location and will be shown at checkout.","open_by_default":false}},"faq_8":{"type":"faq","settings":{"category_label":"Logistics","question":"How do I wash it?","answer":"Wash gently using mild detergent. Avoid bleach, hot water, and high-heat drying. Hang to dry to help maintain the garment's shape and fabric quality.","open_by_default":false}}},"block_order":["faq_1","faq_2","faq_3","faq_4","faq_5","faq_6","faq_7","faq_8"],"settings":{"heading":"FREQUENTLY ASKED","subheading":"","first_item_open_by_default":true}}},"order":["kasya_lp_product_hero","kasya_lp_fit_confidence","kasya_lp_fabric_quality","kasya_lp_lifestyle","kasya_lp_reviews","kasya_lp_reassurance","kasya_lp_faq"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "kasya_lp_product_hero": {
+      "type": "kasya-lp-product-hero",
+      "settings": {
+        "product": "",
+        "show_header": false,
+        "logo_text": "KASYA",
+        "product_label": "KASYA BASICS",
+        "heading": "INAH BLOUSE",
+        "subtitle": "Viscose Linen",
+        "rating_text": "",
+        "description": "Effortless everyday style designed for comfort, movement, and repeat wear",
+        "default_color": "Black",
+        "color_option_name": "Color",
+        "size_option_name": "Size",
+        "show_size_chart": true,
+        "size_helper_text": "Choose your usual size for a relaxed fit. Size up if you prefer extra room around the waist or tummy.",
+        "size_chart_trigger_text": "Not sure about your size? View size chart",
+        "size_chart_note": "Measurements may vary slightly due to fabric behavior and manual production.",
+        "cta_text": "ADD TO CART",
+        "enable_sticky_atc": true
+      }
+    },
+    "kasya_lp_fit_confidence": {
+      "type": "kasya-lp-fit-confidence",
+      "blocks": {
+        "fit_note_1": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Relaxed body fit"
+          }
+        },
+        "fit_note_2": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Adjustable waist tie"
+          }
+        },
+        "fit_note_3": {
+          "type": "fit_note",
+          "settings": {
+            "note": "True to size for a relaxed fit"
+          }
+        },
+        "fit_note_4": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Size up if you prefer extra room"
+          }
+        }
+      },
+      "block_order": [
+        "fit_note_1",
+        "fit_note_2",
+        "fit_note_3",
+        "fit_note_4"
+      ],
+      "settings": {
+        "heading": "HOW IT FITS",
+        "subheading": "See how the garment falls from every angle before choosing your size.",
+        "front_label": "FRONT VIEW",
+        "front_description": "Shows the boat neckline and waist tie detail.",
+        "side_label": "SIDE VIEW",
+        "side_description": "Shows how the blouse falls around the waist and hips.",
+        "back_label": "BACK VIEW",
+        "back_description": "Shows how it falls from behind.",
+        "model_info": "Model is 5'2 and wears size M."
+      }
+    },
+    "kasya_lp_fabric_quality": {
+      "type": "kasya-lp-fabric-quality",
+      "blocks": {
+        "fabric_note_1": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "≈",
+            "title": "Soft drape",
+            "description": "Falls naturally without feeling stiff or bulky."
+          }
+        },
+        "fabric_note_2": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "◯",
+            "title": "Breathable feel",
+            "description": "Comfortable enough for warm days and long wear."
+          }
+        },
+        "fabric_note_3": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "✱",
+            "title": "Everyday structure",
+            "description": "Polished enough for errands, work, and casual plans."
+          }
+        },
+        "fabric_note_4": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "✓",
+            "title": "Easy care",
+            "description": "Wash gently and hang to dry to help maintain shape and fabric quality."
+          }
+        }
+      },
+      "block_order": [
+        "fabric_note_1",
+        "fabric_note_2",
+        "fabric_note_3",
+        "fabric_note_4"
+      ],
+      "settings": {
+        "heading": "FABRIC & QUALITY",
+        "subheading": "Viscose linen-feel fabric with a relaxed drape, made for everyday comfort.",
+        "main_note": "Designed to feel light, breathable, and comfortable for daily wear while still giving enough structure to look polished.",
+        "show_feature_notes": true
+      }
+    },
+    "kasya_lp_lifestyle": {
+      "type": "kasya-lp-lifestyle",
+      "blocks": {
+        "lifestyle_1": {
+          "type": "lifestyle_card",
+          "settings": {
+            "title": "Office Day",
+            "description": "Polished enough for work, relaxed enough for long hours."
+          }
+        },
+        "lifestyle_2": {
+          "type": "lifestyle_card",
+          "settings": {
+            "title": "Errands",
+            "description": "Easy to move in while still looking put-together."
+          }
+        },
+        "lifestyle_3": {
+          "type": "lifestyle_card",
+          "settings": {
+            "title": "Family Lunch",
+            "description": "Comfortable, modest, and effortless to style."
+          }
+        },
+        "lifestyle_4": {
+          "type": "lifestyle_card",
+          "settings": {
+            "title": "Travel",
+            "description": "Relaxed fit that moves with you through a long day."
+          }
+        }
+      },
+      "block_order": [
+        "lifestyle_1",
+        "lifestyle_2",
+        "lifestyle_3",
+        "lifestyle_4"
+      ],
+      "disabled": true,
+      "settings": {
+        "heading": "WHERE TO WEAR IT",
+        "subheading": "Everyday moments made easier, softer, and more put-together."
+      }
+    },
+    "kasya_lp_reviews": {
+      "type": "kasya-lp-reviews",
+      "blocks": {
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "name": "Angelo B.",
+            "title": "Comfortable",
+            "comment": "Love the pants, super versatile, can pair it with any top.",
+            "date_text": "",
+            "size_text": "Large",
+            "fit_text": "Wideleg Fit"
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "name": "Jojima F.",
+            "title": "Versatile",
+            "comment": "Sobrang comfortable po talaga.",
+            "date_text": "",
+            "size_text": "Medium",
+            "fit_text": "True to size"
+          }
+        },
+        "review_3": {
+          "type": "review",
+          "settings": {
+            "rating": 4,
+            "name": "Mary L.",
+            "title": "Good",
+            "comment": "Experienced some shrinkage, but still loved the product nonetheless.",
+            "date_text": "",
+            "size_text": "XL",
+            "fit_text": "Size smaller"
+          }
+        }
+      },
+      "block_order": [
+        "review_1",
+        "review_2",
+        "review_3"
+      ],
+      "disabled": true,
+      "settings": {
+        "heading": "Reviews",
+        "average_rating_text": "(4.8)",
+        "show_average_stars": true,
+        "background_color": "#fbf8f4",
+        "view_more_text": "View more",
+        "view_more_link": "",
+        "show_view_more": true
+      }
+    },
+    "kasya_lp_reassurance": {
+      "type": "kasya-lp-reassurance",
+      "blocks": {
+        "reassurance_1": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "shipping",
+            "title": "Ships within",
+            "description": "7 business days"
+          }
+        },
+        "reassurance_2": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "payment",
+            "title": "Easy Payment",
+            "description": "COD, GCash, and card payments available."
+          }
+        },
+        "reassurance_3": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "return",
+            "title": "Returns accepted",
+            "description": "for unworn items with tags attached"
+          }
+        },
+        "reassurance_4": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "message",
+            "title": "Need help?",
+            "description": "Message us for sizing assistance"
+          }
+        }
+      },
+      "block_order": [
+        "reassurance_1",
+        "reassurance_2",
+        "reassurance_3",
+        "reassurance_4"
+      ],
+      "settings": {
+        "heading": "Shipping & Return",
+        "subheading": "A quick guide before checkout.",
+        "background_color": "#ffffff",
+        "card_color": "#ffffff"
+      }
+    },
+    "kasya_lp_faq": {
+      "type": "kasya-lp-faq",
+      "blocks": {
+        "faq_1": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fit & body",
+            "question": "What size should I get?",
+            "answer": "Choose your usual size for a relaxed fit. If you prefer extra room around the bust, arms, or tummy area, we recommend sizing up.",
+            "open_by_default": true
+          }
+        },
+        "faq_2": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fit & body",
+            "question": "Is it good for bust area?",
+            "answer": "Yes. The fit is designed to feel relaxed around the bust area without clinging too tightly. If you prefer more room, we recommend sizing up.",
+            "open_by_default": false
+          }
+        },
+        "faq_3": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fabric & feel",
+            "question": "Is the fabric stretchable?",
+            "answer": "The fabric has a soft, relaxed drape but is not highly stretchable. If you want more room around the waist or hips, sizing up may be better.",
+            "open_by_default": false
+          }
+        },
+        "faq_4": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fabric & feel",
+            "question": "Is it see-through?",
+            "answer": "The fabric is designed for everyday wear. For lighter colors, we recommend wearing skin-tone undergarments for extra confidence.",
+            "open_by_default": false
+          }
+        },
+        "faq_5": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fabric & feel",
+            "question": "Will it shrink after washing?",
+            "answer": "Slight shrinkage may happen due to fabric behavior, especially if washed in hot water or dried using high heat. For best care, wash gently and hang to dry.",
+            "open_by_default": false
+          }
+        },
+        "faq_6": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Risk reversal",
+            "question": "Can I exchange if the size does not fit?",
+            "answer": "Yes, size exchange may be requested within 7 days as long as the item is unworn, unwashed, and has the tags attached. Please review our return and exchange policy before purchase.",
+            "open_by_default": false
+          }
+        },
+        "faq_7": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Logistics",
+            "question": "How long is delivery?",
+            "answer": "Orders are prepared and shipped from Cavite. Delivery timeline depends on your location and will be shown at checkout.",
+            "open_by_default": false
+          }
+        },
+        "faq_8": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Logistics",
+            "question": "How do I wash it?",
+            "answer": "Wash gently using mild detergent. Avoid bleach, hot water, and high-heat drying. Hang to dry to help maintain the garment's shape and fabric quality.",
+            "open_by_default": false
+          }
+        }
+      },
+      "block_order": [
+        "faq_1",
+        "faq_2",
+        "faq_3",
+        "faq_4",
+        "faq_5",
+        "faq_6",
+        "faq_7",
+        "faq_8"
+      ],
+      "settings": {
+        "heading": "FREQUENTLY ASKED",
+        "subheading": "",
+        "first_item_open_by_default": true
+      }
+    }
+  },
+  "order": [
+    "kasya_lp_product_hero",
+    "kasya_lp_fit_confidence",
+    "kasya_lp_fabric_quality",
+    "kasya_lp_lifestyle",
+    "kasya_lp_reviews",
+    "kasya_lp_reassurance",
+    "kasya_lp_faq"
+  ]
+}
