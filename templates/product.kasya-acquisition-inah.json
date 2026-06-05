@@ -132,6 +132,7 @@
         "lifestyle_1": {
           "type": "lifestyle_card",
           "settings": {
+            "image": "shopify://shop_images/Inah_AcidBlack.png",
             "title": "Office Day",
             "description": "Polished enough for work, relaxed enough for long hours."
           }
@@ -139,6 +140,7 @@
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
+            "image": "shopify://shop_images/Inah_AcidBlack_1.png",
             "title": "Errands",
             "description": "Easy to move in while still looking put-together."
           }
@@ -146,6 +148,7 @@
         "lifestyle_3": {
           "type": "lifestyle_card",
           "settings": {
+            "image": "shopify://shop_images/Inah_AcidBlack_2.png",
             "title": "Family Lunch",
             "description": "Comfortable, modest, and effortless to style."
           }
@@ -153,6 +156,7 @@
         "lifestyle_4": {
           "type": "lifestyle_card",
           "settings": {
+            "image": "shopify://shop_images/Inah_AcidBlack_3.png",
             "title": "Travel",
             "description": "Relaxed fit that moves with you through a long day."
           }
@@ -164,7 +168,6 @@
         "lifestyle_3",
         "lifestyle_4"
       ],
-      "disabled": true,
       "settings": {
         "heading": "WHERE TO WEAR IT",
         "subheading": "Everyday moments made easier, softer, and more put-together."
