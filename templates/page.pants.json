@@ -143,6 +143,30 @@
             "lightbox_button_background": "#ffffff"
           }
         },
+        "text_outside_image_qei94z": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/54_927a46d8-fb9c-427f-a76d-cf773078ecde.jpg",
+            "link": "shopify://products/gaby-wide-leg-pants-viscose-linen",
+            "text": "Gaby Wide-Leg Pants – Viscose Linen",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        },
         "text_outside_image_LTdAG3": {
           "type": "text-outside-image",
           "settings": {
@@ -293,6 +317,7 @@
         "text_outside_image_C8gQp4",
         "text_outside_image_aintfa",
         "text_outside_image_ce4JeD",
+        "text_outside_image_qei94z",
         "text_outside_image_LTdAG3",
         "text_outside_image_bEx6Bk",
         "text_outside_image_kGz7wD",
