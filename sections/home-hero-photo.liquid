@@ -10,4 +10,23 @@
   }
 
   body.home-hero-header-enabled .section-header .header-wrapper,
- 
+  body.home-hero-header-enabled .section-header .header {
+    background: transparent !important;
+    box-shadow: none;
+    transition: background-color 240ms ease, box-shadow 240ms ease;
+  }
+
+  body.home-hero-header-enabled .section-header .header {
+    position: relative !important;
+    inset: auto !important;
+    top: 0 !important;
+    width: 100%;
+  }
+
+  body.home-hero-header-enabled.home-hero-header-solid .section-header .header-wrapper,
+  body.home-hero-header-enabled.home-hero-header-solid .section-header .header {
+    background: rgba(0, 0, 0, 0.94) !important;
+  }
+
+  body.home-hero-header-enabled.home-hero-header-solid .section-header {
+    box-shadow: 0 
