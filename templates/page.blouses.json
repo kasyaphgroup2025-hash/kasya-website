@@ -46,78 +46,6 @@
     "gallery_pK4yNe": {
       "type": "gallery",
       "blocks": {
-        "text_outside_image_bJheBd": {
-          "type": "text-outside-image",
-          "settings": {
-            "image": "shopify://shop_images/48_abf8c910-5c4a-47fa-a8b2-ad32cc4d5cde.jpg",
-            "link": "shopify://products/black-soft-linen-amara-blouse",
-            "text": "Amara Blouse – Soft Linen",
-            "text_style": "caption-with-letter-spacing",
-            "text_size": "small",
-            "heading": "",
-            "heading_size": "h4",
-            "heading_uppercase": false,
-            "button_label": "",
-            "button_style": "primary",
-            "button_size": "small",
-            "horizontal_alignment": "center",
-            "vertical_alignment": "bottom",
-            "heading_color": "#000000",
-            "caption_color": "#000000",
-            "button_foreground": "#ffffff",
-            "button_background": "#000000",
-            "lightbox_button_color": "#000000",
-            "lightbox_button_background": "#ffffff"
-          }
-        },
-        "text_outside_image_xQ3xmN": {
-          "type": "text-outside-image",
-          "settings": {
-            "image": "shopify://shop_images/6_a983bafc-32c4-4e20-9d2e-6f99713f374f.jpg",
-            "link": "shopify://products/black-soft-linen-ava-blouse",
-            "text": "Ava Blouse – Soft Linen",
-            "text_style": "caption-with-letter-spacing",
-            "text_size": "small",
-            "heading": "",
-            "heading_size": "h4",
-            "heading_uppercase": false,
-            "button_label": "",
-            "button_style": "primary",
-            "button_size": "normal",
-            "horizontal_alignment": "center",
-            "vertical_alignment": "bottom",
-            "heading_color": "#000000",
-            "caption_color": "#000000",
-            "button_foreground": "#ffffff",
-            "button_background": "#000000",
-            "lightbox_button_color": "#000000",
-            "lightbox_button_background": "#ffffff"
-          }
-        },
-        "text_outside_image_fHjaDQ": {
-          "type": "text-outside-image",
-          "settings": {
-            "image": "shopify://shop_images/27_1a26a878-79ec-42fa-ab5d-98fe28687db9.jpg",
-            "link": "shopify://products/black-soft-linen-aliyah-blouse",
-            "text": "Aliyah Blouse – Soft Linen",
-            "text_style": "caption-with-letter-spacing",
-            "text_size": "small",
-            "heading": "",
-            "heading_size": "h4",
-            "heading_uppercase": false,
-            "button_label": "",
-            "button_style": "primary",
-            "button_size": "normal",
-            "horizontal_alignment": "center",
-            "vertical_alignment": "bottom",
-            "heading_color": "#000000",
-            "caption_color": "#000000",
-            "button_foreground": "#ffffff",
-            "button_background": "#000000",
-            "lightbox_button_color": "#000000",
-            "lightbox_button_background": "#ffffff"
-          }
-        },
         "text_outside_image_iYFPCL": {
           "type": "text-outside-image",
           "settings": {
@@ -213,91 +141,13 @@
             "lightbox_button_color": "#000000",
             "lightbox_button_background": "#ffffff"
           }
-        },
-        "text_outside_image_aAygBc": {
-          "type": "text-outside-image",
-          "settings": {
-            "image": "shopify://shop_images/169_9911f9bc-92ee-4736-baf1-502d291480ed.jpg",
-            "link": "shopify://products/bea-blouse",
-            "text": "Bea Blouse – Soft Linen",
-            "text_style": "caption-with-letter-spacing",
-            "text_size": "small",
-            "heading": "",
-            "heading_size": "h4",
-            "heading_uppercase": false,
-            "button_label": "",
-            "button_style": "primary",
-            "button_size": "normal",
-            "horizontal_alignment": "center",
-            "vertical_alignment": "bottom",
-            "heading_color": "#000000",
-            "caption_color": "#000000",
-            "button_foreground": "#ffffff",
-            "button_background": "#000000",
-            "lightbox_button_color": "#000000",
-            "lightbox_button_background": "#ffffff"
-          }
-        },
-        "text_outside_image_4QwPYA": {
-          "type": "text-outside-image",
-          "settings": {
-            "image": "shopify://shop_images/336.png",
-            "link": "shopify://products/bea-choco-plain-blouse-copy",
-            "text": "Bea Blouse – Crumpled Linen",
-            "text_style": "caption-with-letter-spacing",
-            "text_size": "small",
-            "heading": "",
-            "heading_size": "h4",
-            "heading_uppercase": false,
-            "button_label": "",
-            "button_style": "primary",
-            "button_size": "normal",
-            "horizontal_alignment": "center",
-            "vertical_alignment": "bottom",
-            "heading_color": "#000000",
-            "caption_color": "#000000",
-            "button_foreground": "#ffffff",
-            "button_background": "#000000",
-            "lightbox_button_color": "#000000",
-            "lightbox_button_background": "#ffffff"
-          }
-        },
-        "text_outside_image_aLUpzK": {
-          "type": "text-outside-image",
-          "settings": {
-            "image": "shopify://shop_images/Nov_8_New_release_details_-_Chelsea.png",
-            "link": "shopify://products/celine-polo-by-kasyaph",
-            "text": "Celine Polo Blouse- Soft Linen",
-            "text_style": "caption-with-letter-spacing",
-            "text_size": "small",
-            "heading": "",
-            "heading_size": "h4",
-            "heading_uppercase": false,
-            "button_label": "",
-            "button_style": "primary",
-            "button_size": "normal",
-            "horizontal_alignment": "center",
-            "vertical_alignment": "bottom",
-            "heading_color": "#000000",
-            "caption_color": "#000000",
-            "button_foreground": "#ffffff",
-            "button_background": "#000000",
-            "lightbox_button_color": "#000000",
-            "lightbox_button_background": "#ffffff"
-          }
         }
       },
       "block_order": [
-        "text_outside_image_bJheBd",
-        "text_outside_image_xQ3xmN",
-        "text_outside_image_fHjaDQ",
         "text_outside_image_iYFPCL",
         "text_outside_image_ibWCeV",
         "text_outside_image_yVHq78",
-        "text_outside_image_MyKpQz",
-        "text_outside_image_aAygBc",
-        "text_outside_image_4QwPYA",
-        "text_outside_image_aLUpzK"
+        "text_outside_image_MyKpQz"
       ],
       "name": "t:names.gallery_classic_grid",
       "settings": {
