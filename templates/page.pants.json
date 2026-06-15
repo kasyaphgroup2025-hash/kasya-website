@@ -70,30 +70,6 @@
             "lightbox_button_background": "#ffffff"
           }
         },
-        "text_outside_image_C8gQp4": {
-          "type": "text-outside-image",
-          "settings": {
-            "image": "shopify://shop_images/221_86d41ef5-5e98-48e4-a78c-b6b061796e66.jpg",
-            "link": "shopify://products/wideleg-stripes-by-kasyaph",
-            "text": "Costa Wide-Leg Pants – Linen",
-            "text_style": "caption-with-letter-spacing",
-            "text_size": "medium",
-            "heading": "",
-            "heading_size": "h4",
-            "heading_uppercase": false,
-            "button_label": "",
-            "button_style": "primary",
-            "button_size": "normal",
-            "horizontal_alignment": "center",
-            "vertical_alignment": "bottom",
-            "heading_color": "#000000",
-            "caption_color": "#000000",
-            "button_foreground": "#ffffff",
-            "button_background": "#000000",
-            "lightbox_button_color": "#000000",
-            "lightbox_button_background": "#ffffff"
-          }
-        },
         "text_outside_image_aintfa": {
           "type": "text-outside-image",
           "disabled": true,
@@ -101,30 +77,6 @@
             "image": "shopify://shop_images/IMG_4049_3a4efe82-04f3-4fe0-9164-cb072f0c2a08.png",
             "link": "shopify://products/wideleg-linen-pants-by-kasyaph",
             "text": "Skintone wide-Leg pants - soft linen",
-            "text_style": "caption-with-letter-spacing",
-            "text_size": "medium",
-            "heading": "",
-            "heading_size": "h4",
-            "heading_uppercase": false,
-            "button_label": "",
-            "button_style": "primary",
-            "button_size": "normal",
-            "horizontal_alignment": "center",
-            "vertical_alignment": "bottom",
-            "heading_color": "#000000",
-            "caption_color": "#000000",
-            "button_foreground": "#ffffff",
-            "button_background": "#000000",
-            "lightbox_button_color": "#000000",
-            "lightbox_button_background": "#ffffff"
-          }
-        },
-        "text_outside_image_ce4JeD": {
-          "type": "text-outside-image",
-          "settings": {
-            "image": "shopify://shop_images/FRONT_795ec16c-c86d-4d60-b976-63b58135f705.jpg",
-            "link": "shopify://products/red-floral-wideleg-linen-pants-by-kasyaph",
-            "text": "Wide-Leg Pants – Floral Linen",
             "text_style": "caption-with-letter-spacing",
             "text_size": "medium",
             "heading": "",
@@ -314,9 +266,7 @@
       },
       "block_order": [
         "text_outside_image_r8Npiq",
-        "text_outside_image_C8gQp4",
         "text_outside_image_aintfa",
-        "text_outside_image_ce4JeD",
         "text_outside_image_qei94z",
         "text_outside_image_LTdAG3",
         "text_outside_image_bEx6Bk",
