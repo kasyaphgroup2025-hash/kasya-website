@@ -70,6 +70,78 @@
             "lightbox_button_background": "#ffffff"
           }
         },
+        "text_outside_image_4NqaKf": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/76_117725f0-741f-4c2f-a186-7d598bf06ee1.jpg",
+            "link": "shopify://products/gwen-boxy-polo-blouse-viscose-linen",
+            "text": "Gwen Boxy Polo Blouse - Viscose Linen",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "small",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        },
+        "text_outside_image_jtVPra": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/153_3e322e79-58ab-4066-bb70-ee6d40b75b49.jpg",
+            "link": "shopify://products/fabi-empire-blouse-soft-linen",
+            "text": "Fabi Empire Blouse  – Soft Linen",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "small",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        },
+        "text_outside_image_eq6kK3": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/47_bde6d4b2-e82d-4e47-ba3b-ab2441d3328b.jpg",
+            "link": "shopify://products/farah-sleeveless-blouse-soft-linen",
+            "text": "Farah Sleeveless Blouse  – Soft Linen",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "small",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        },
         "text_outside_image_DLCi6R": {
           "type": "text-outside-image",
           "settings": {
@@ -169,6 +241,9 @@
       },
       "block_order": [
         "text_outside_image_iYFPCL",
+        "text_outside_image_4NqaKf",
+        "text_outside_image_jtVPra",
+        "text_outside_image_eq6kK3",
         "text_outside_image_DLCi6R",
         "text_outside_image_ibWCeV",
         "text_outside_image_yVHq78",
