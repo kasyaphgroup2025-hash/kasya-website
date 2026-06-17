@@ -1,1 +1,229 @@
-{"sections":{"main":{"type":"main-page","disabled":true,"settings":{"section_width":"grid","content_alignment":"left","color_scheme":"","padding_top":80,"padding_bottom":40}},"1752910218d7d0dcd0":{"type":"apps","settings":{"include_margins":true}},"17621796018fa62765":{"type":"apps","blocks":{"klaviyo_email_marketing_sms_form_embed_block_JiJK9Y":{"type":"shopify:\/\/apps\/klaviyo-email-marketing-sms\/blocks\/form-embed-block\/2632fe16-c075-4321-a88b-50b567f42507","settings":{"formId":""}}},"block_order":["klaviyo_email_marketing_sms_form_embed_block_JiJK9Y"],"settings":{"include_margins":true}},"gallery_n73aLk":{"type":"gallery","blocks":{"text_outside_image_Xtr9md":{"type":"text-outside-image","settings":{"image":"shopify:\/\/shop_images\/Nov_8_New_release_details_-_Celine.png","link":"shopify:\/\/products\/chelsea-dress-by-kasyaph","text":"Chelsea Midi Dress- Soft Linen","text_style":"caption-with-letter-spacing","text_size":"medium","heading":"","heading_size":"h4","heading_uppercase":false,"button_label":"","button_style":"primary","button_size":"normal","horizontal_alignment":"center","vertical_alignment":"bottom","heading_color":"#000000","caption_color":"#000000","button_foreground":"#ffffff","button_background":"#000000","lightbox_button_color":"#000000","lightbox_button_background":"#ffffff"}},"text_outside_image_LUVtyT":{"type":"text-outside-image","settings":{"image":"shopify:\/\/shop_images\/FRONT_3.png","link":"shopify:\/\/products\/black-claire-soft-linen-dress","text":"Claire Maxi Dress – Soft Linen","text_style":"caption-with-letter-spacing","text_size":"medium","heading":"","heading_size":"h4","heading_uppercase":false,"button_label":"","button_style":"primary","button_size":"normal","horizontal_alignment":"center","vertical_alignment":"bottom","heading_color":"#000000","caption_color":"#000000","button_foreground":"#ffffff","button_background":"#000000","lightbox_button_color":"#000000","lightbox_button_background":"#ffffff"}},"text_outside_image_eQtwB4":{"type":"text-outside-image","settings":{"image":"shopify:\/\/shop_images\/CREATIVE_1.jpg","link":"shopify:\/\/products\/amanda-dress-white-floral-copy","text":"Amanda Dress Red Floral","text_style":"caption-with-letter-spacing","text_size":"medium","heading":"","heading_size":"h4","heading_uppercase":false,"button_label":"","button_style":"primary","button_size":"normal","horizontal_alignment":"center","vertical_alignment":"bottom","heading_color":"#000000","caption_color":"#000000","button_foreground":"#ffffff","button_background":"#000000","lightbox_button_color":"#000000","lightbox_button_background":"#ffffff"}},"text_outside_image_PzYyGN":{"type":"text-outside-image","disabled":true,"settings":{"link":"","text":"","text_style":"caption-with-letter-spacing","text_size":"medium","heading":"Our collection","heading_size":"h4","heading_uppercase":false,"button_label":"","button_style":"primary","button_size":"normal","horizontal_alignment":"center","vertical_alignment":"bottom","heading_color":"#000000","caption_color":"#000000","button_foreground":"#ffffff","button_background":"#000000","lightbox_button_color":"#000000","lightbox_button_background":"#ffffff"}},"text_outside_image_RQDCqC":{"type":"text-outside-image","disabled":true,"settings":{"link":"","text":"","text_style":"caption-with-letter-spacing","text_size":"medium","heading":"Our collection","heading_size":"h4","heading_uppercase":false,"button_label":"","button_style":"primary","button_size":"normal","horizontal_alignment":"center","vertical_alignment":"bottom","heading_color":"#000000","caption_color":"#000000","button_foreground":"#ffffff","button_background":"#000000","lightbox_button_color":"#000000","lightbox_button_background":"#ffffff"}},"text_outside_image_awFjEr":{"type":"text-outside-image","disabled":true,"settings":{"link":"","text":"","text_style":"caption-with-letter-spacing","text_size":"medium","heading":"Our collection","heading_size":"h4","heading_uppercase":false,"button_label":"","button_style":"primary","button_size":"normal","horizontal_alignment":"center","vertical_alignment":"bottom","heading_color":"#000000","caption_color":"#000000","button_foreground":"#ffffff","button_background":"#000000","lightbox_button_color":"#000000","lightbox_button_background":"#ffffff"}}},"block_order":["text_outside_image_Xtr9md","text_outside_image_LUVtyT","text_outside_image_eQtwB4","text_outside_image_PzYyGN","text_outside_image_RQDCqC","text_outside_image_awFjEr"],"name":"t:names.gallery_classic_grid","settings":{"title":"Gallery","heading_size":"h1","flexible_columns_layout":"grid","columns_desktop":4,"columns_tablet":"3","full_width":false,"auto_fit":false,"disable_item_space":false,"enable_section_box_layout":false,"enable_images_lightbox":false,"color_scheme":"","image_ratio":"portrait","columns_mobile":"2","swipe_on_mobile":false,"padding_top":36,"padding_bottom":36}}},"order":["main","1752910218d7d0dcd0","17621796018fa62765","gallery_n73aLk"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "section_width": "grid",
+        "content_alignment": "left",
+        "color_scheme": "",
+        "padding_top": 80,
+        "padding_bottom": 40
+      }
+    },
+    "1752910218d7d0dcd0": {
+      "type": "apps",
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "17621796018fa62765": {
+      "type": "apps",
+      "blocks": {
+        "klaviyo_email_marketing_sms_form_embed_block_JiJK9Y": {
+          "type": "shopify://apps/klaviyo-email-marketing-sms/blocks/form-embed-block/2632fe16-c075-4321-a88b-50b567f42507",
+          "settings": {
+            "formId": ""
+          }
+        }
+      },
+      "block_order": [
+        "klaviyo_email_marketing_sms_form_embed_block_JiJK9Y"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "gallery_n73aLk": {
+      "type": "gallery",
+      "blocks": {
+        "text_outside_image_LUVtyT": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/FRONT_3.png",
+            "link": "shopify://products/black-claire-soft-linen-dress",
+            "text": "Claire Maxi Dress – Soft Linen",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        },
+        "text_outside_image_nDHPzF": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/25_8d7f0285-9c87-4047-a300-af0560192671.jpg",
+            "link": "shopify://products/faye-sleeveless-maxi-dress-soft-linen",
+            "text": "Faye Sleeveless Maxi Dress - soft linen",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        },
+        "text_outside_image_fjq7Ez": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/102_40e09509-124f-4266-bf03-aee8417a42d4.jpg",
+            "link": "shopify://products/freya-maxi-dress-soft-linen",
+            "text": "Freya Maxi Dress - soft linen",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        },
+        "text_outside_image_PzYyGN": {
+          "type": "text-outside-image",
+          "disabled": true,
+          "settings": {
+            "link": "",
+            "text": "",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium",
+            "heading": "Our collection",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        },
+        "text_outside_image_RQDCqC": {
+          "type": "text-outside-image",
+          "disabled": true,
+          "settings": {
+            "link": "",
+            "text": "",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium",
+            "heading": "Our collection",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        },
+        "text_outside_image_awFjEr": {
+          "type": "text-outside-image",
+          "disabled": true,
+          "settings": {
+            "link": "",
+            "text": "",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium",
+            "heading": "Our collection",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "text_outside_image_LUVtyT",
+        "text_outside_image_nDHPzF",
+        "text_outside_image_fjq7Ez",
+        "text_outside_image_PzYyGN",
+        "text_outside_image_RQDCqC",
+        "text_outside_image_awFjEr"
+      ],
+      "name": "t:names.gallery_classic_grid",
+      "settings": {
+        "title": "Gallery",
+        "heading_size": "h1",
+        "flexible_columns_layout": "grid",
+        "columns_desktop": 4,
+        "columns_tablet": "3",
+        "full_width": false,
+        "auto_fit": false,
+        "disable_item_space": false,
+        "enable_section_box_layout": false,
+        "enable_images_lightbox": false,
+        "color_scheme": "",
+        "image_ratio": "portrait",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "1752910218d7d0dcd0",
+    "17621796018fa62765",
+    "gallery_n73aLk"
+  ]
+}
