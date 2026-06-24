@@ -168,7 +168,7 @@
         "desktop_filter_default": "show",
         "filter_include_group_name": true,
         "filter_collapse": "expand",
-        "enable_sorting": true,
+        "enable_sorting": false,
         "categories_filter": "",
         "categories_filter_type": "dropdown",
         "show_collection_description": false,
