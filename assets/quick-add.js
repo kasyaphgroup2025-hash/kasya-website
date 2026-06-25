@@ -36,7 +36,7 @@ if (!customElements.get('quick-add-drawer-opener')) {
           quickAddDrawer.dataset.discountedSummerQuickShop = isDiscountedSummerQuickShop ? 'true' : '';
           quickAddDrawer.setInnerHTML(newQuickAddDrawer);
           if (isDiscountedSummerQuickShop) {
-            quickAddDrawer.prepareDiscountedSummerQuickShop();
+            quickAddDrawer.applyDiscountedSummerQuickShop();
           } else {
             quickAddDrawer.resetDiscountedSummerQuickShop();
           }
@@ -45,7 +45,7 @@ if (!customElements.get('quick-add-drawer-opener')) {
           document.body.appendChild(newQuickAddDrawer);
           HTMLUpdateUtility.reinjectsScripts(document.querySelector('quick-add-drawer'));
           newQuickAddDrawer.runAfterUpdateHtml();
-          if (isDiscountedSummerQuickShop) newQuickAddDrawer.prepareDiscountedSummerQuickShop();
+          if (isDiscountedSummerQuickShop) newQuickAddDrawer.applyDiscountedSummerQuickShop();
           setTimeout(() => {
             newQuickAddDrawer.open(this.button);
           }, 300);
@@ -102,6 +102,14 @@ if (!customElements.get('quick-add-drawer')) {
       window?.ProductModel?.loadShopifyXR();
       this.removeDOMElements();
       this.removeGalleryListSemantic();
+    }
+
+    applyDiscountedSummerQuickShop() {
+      try {
+        this.prepareDiscountedSummerQuickShop();
+      } catch (error) {
+        console.error('Discounted Summer Quick Shop setup failed', error);
+      }
     }
 
     prepareDiscountedSummerQuickShop() {
