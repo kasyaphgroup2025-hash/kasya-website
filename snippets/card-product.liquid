@@ -258,6 +258,16 @@
                   endunless
                 endunless  
               -%}
+              {%- liquid
+                assign is_discounted_summer_collection = false
+                if collection.handle == 'summer-collection-1' or request.path contains '/collections/summer-collection-1'
+                  assign is_discounted_summer_collection = true
+                endif
+                assign quick_add_button_label = 'products.product.add_to_cart' | t
+                if is_discounted_summer_collection
+                  assign quick_add_button_label = 'Quick Shop'
+                endif
+              -%}
               {%- if card_product.available -%}
                 {%- assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id -%}
                 {%- if card_product.variants.size == 1 -%}
@@ -276,13 +286,13 @@
                       >
                         {%- unless settings.cart_button_text == 'visible' -%}
                           {%- if enable_compare or full_on_mobile != true -%}
-                            <span class="{{ cart_text_classes }}">{{ "products.product.add_to_cart" | t }}</span>
+                            <span class="{{ cart_text_classes }}">{{ quick_add_button_label }}</span>
                             {%- render 'icon-cart-in-card', add_classes: cart_icon_classes -%}
                           {%- else -%}
-                            <span>{{ "products.product.add_to_cart" | t }}</span>
+                            <span>{{ quick_add_button_label }}</span>
                           {%- endif -%}
                         {%- else -%}  
-                          <span>{{ "products.product.add_to_cart" | t }}</span>  
+                          <span>{{ quick_add_button_label }}</span>  
                         {%- endunless -%}
                         <div class="loading-overlay__spinner hidden">
                           {%- render 'icon-cart-loading' -%}
@@ -291,7 +301,12 @@
                     {%- endform -%}
                   </product-form>
                 {%- else -%}
-                  <quick-add-drawer-opener class="quick-button quick-button--add{% unless enable_compare %} flex-grow-1{% endunless %}">
+                  {%- comment -%}
+                    Discounted Summer Collection-specific Quick Shop trigger.
+                    Scoped by collection handle/request path so other collection and
+                    product-page quick-add behavior stays unchanged.
+                  {%- endcomment -%}
+                  <quick-add-drawer-opener class="quick-button quick-button--add{% unless enable_compare %} flex-grow-1{% endunless %}"{% if is_discounted_summer_collection %} data-discounted-summer-quick-shop="true"{% endif %}>
                     <button
                       id="{{ product_form_id }}-submit"
                       type="submit"
@@ -300,16 +315,17 @@
                       aria-haspopup="dialog"
                       aria-label="{{ "products.product.add_to_cart" | t | escape }}"
                       data-product-url="{{ card_product.url }}"
+                      {% if is_discounted_summer_collection %}data-discounted-summer-quick-shop="true"{% endif %}
                     >
                       {%- unless settings.cart_button_text == 'visible' -%}
                         {%- if enable_compare or full_on_mobile != true -%}
-                          <span class="{{ cart_text_classes }}">{{ "products.product.add_to_cart" | t }}</span>
+                          <span class="{{ cart_text_classes }}">{{ quick_add_button_label }}</span>
                           {%- render 'icon-cart-in-card', add_classes: cart_icon_classes -%}
                         {%- else -%}
-                          <span>{{ "products.product.add_to_cart" | t }}</span>
+                          <span>{{ quick_add_button_label }}</span>
                         {%- endif -%}
                       {%- else -%}  
-                        <span>{{ "products.product.add_to_cart" | t }}</span>  
+                        <span>{{ quick_add_button_label }}</span>  
                       {%- endunless -%}
                       <div class="loading-overlay__spinner hidden">
                         {%- render 'icon-cart-loading' -%}
