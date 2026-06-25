@@ -117,15 +117,21 @@ if (!customElements.get('quick-add-drawer')) {
       this.discountedSummerQuickShopCleanup?.();
 
       const drawerHeading = this.querySelector('.drawer__heading');
-      if (drawerHeading) drawerHeading.textContent = 'Choose Size & Color';
+      if (drawerHeading) {
+        drawerHeading.textContent = 'CHOOSE SIZE & COLOR';
+        drawerHeading.style.color = 'red';
+        drawerHeading.style.fontWeight = '700';
+        drawerHeading.style.textTransform = 'uppercase';
+      }
 
       const productInfo = this.querySelector('product-info');
       const variantPicker = productInfo?.querySelector('variant-radios, variant-selects');
       const productForm = productInfo?.querySelector('product-form');
+      const form = productForm?.querySelector('form');
       const submitButton = productForm?.querySelector('[type="submit"]');
       const variantInput = productForm?.querySelector('input[name="id"]');
       const selectedVariantScript = productInfo?.querySelector('[data-selected-variant]');
-      if (!productInfo || !variantPicker || !productForm || !submitButton || !variantInput) return;
+      if (!productInfo || !variantPicker || !productForm || !form || !submitButton || !variantInput) return;
 
       const optionGroups = Array.from(variantPicker.querySelectorAll('.product-form__input--variant-picker')).map((group) => {
         const legendText = group.querySelector('legend, .form__label')?.textContent || '';
@@ -137,7 +143,11 @@ if (!customElements.get('quick-add-drawer')) {
       });
       const sizeGroups = optionGroups.filter(({ normalizedName }) => normalizedName.includes('size'));
       const colorGroups = optionGroups.filter(({ normalizedName }) => normalizedName.includes('color') || normalizedName.includes('colour'));
-      const requiredGroups = [...sizeGroups, ...colorGroups];
+      const requiredOptionGroups = [
+        ...sizeGroups.map((optionGroup) => ({ ...optionGroup, neutralText: 'Please select' })),
+        ...colorGroups.map((optionGroup) => ({ ...optionGroup, neutralText: 'Please select' })),
+      ];
+      const requiredGroups = requiredOptionGroups.map(({ group }) => group);
 
       if (!sizeGroups.length || !colorGroups.length) return;
 
@@ -162,17 +172,27 @@ if (!customElements.get('quick-add-drawer')) {
       const hasRequiredSelections = () => requiredGroups.every(groupHasSelection);
 
       const resetRequiredSelections = () => {
-        requiredGroups.forEach((group) => {
+        requiredOptionGroups.forEach(({ group, neutralText }) => {
           group.querySelectorAll('input[type="radio"]:checked').forEach((radio) => {
             radio.checked = false;
+            radio.removeAttribute('checked');
           });
           const select = group.querySelector('select');
-          if (select) select.selectedIndex = -1;
+          if (select) {
+            select.selectedIndex = -1;
+            select.querySelectorAll('option[selected]').forEach((option) => option.removeAttribute('selected'));
+          }
+          group.querySelectorAll('.selected, .active, .is-active, .checked').forEach((element) => {
+            element.classList.remove('selected', 'active', 'is-active', 'checked');
+            element.removeAttribute('aria-current');
+            element.removeAttribute('aria-selected');
+            element.removeAttribute('aria-pressed');
+          });
           const selectedLabel = group.querySelector('.product-form__input__option-value');
-          if (selectedLabel) selectedLabel.textContent = '';
+          if (selectedLabel) selectedLabel.textContent = neutralText;
         });
         clearVariantInput();
-        disableSubmit('Choose Size & Color');
+        disableSubmit();
       };
 
       const onPickerChange = (event) => {
@@ -182,7 +202,14 @@ if (!customElements.get('quick-add-drawer')) {
         }
         event.stopPropagation();
         clearVariantInput();
-        disableSubmit('Choose Size & Color');
+        disableSubmit();
+      };
+
+      const onFormSubmit = (event) => {
+        if (hasRequiredSelections()) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        resetRequiredSelections();
       };
 
       const onVariantChanged = (event) => {
@@ -197,12 +224,16 @@ if (!customElements.get('quick-add-drawer')) {
       };
 
       variantPicker.addEventListener('change', onPickerChange, true);
+      form.addEventListener('submit', onFormSubmit, true);
       document.addEventListener('afterVariantChanged', onVariantChanged);
       this.discountedSummerQuickShopCleanup = () => {
         variantPicker.removeEventListener('change', onPickerChange, true);
+        form.removeEventListener('submit', onFormSubmit, true);
         document.removeEventListener('afterVariantChanged', onVariantChanged);
       };
       resetRequiredSelections();
+      requestAnimationFrame(resetRequiredSelections);
+      setTimeout(resetRequiredSelections, 75);
       // Discounted Summer Collection-specific behavior ends.
     }
 
@@ -210,7 +241,12 @@ if (!customElements.get('quick-add-drawer')) {
       this.discountedSummerQuickShopCleanup?.();
       this.discountedSummerQuickShopCleanup = null;
       const drawerHeading = this.querySelector('.drawer__heading');
-      if (drawerHeading && this.defaultHeading) drawerHeading.textContent = this.defaultHeading;
+      if (drawerHeading && this.defaultHeading) {
+        drawerHeading.textContent = this.defaultHeading;
+        drawerHeading.style.color = '';
+        drawerHeading.style.fontWeight = '';
+        drawerHeading.style.textTransform = '';
+      }
     }
 
     assignProductElement() {
