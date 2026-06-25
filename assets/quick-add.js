@@ -228,16 +228,6 @@ if (!customElements.get('quick-add-drawer')) {
         resetRequiredSelections();
       };
 
-      const onDynamicCheckoutClick = (event) => {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        if (!hasRequiredSelections() || !variantInput.value) {
-          resetRequiredSelections();
-          return;
-        }
-        submitButton.click();
-      };
-
       const onVariantChanged = (event) => {
         if (event.detail.sectionId !== productInfo.dataset.section || !hasRequiredSelections()) return;
         if (event.detail.variant?.available) {
@@ -253,12 +243,10 @@ if (!customElements.get('quick-add-drawer')) {
 
       variantPicker.addEventListener('change', onPickerChange, true);
       form.addEventListener('submit', onFormSubmit, true);
-      dynamicCheckout?.addEventListener('click', onDynamicCheckoutClick, true);
       document.addEventListener('afterVariantChanged', onVariantChanged);
       this.discountedSummerQuickShopCleanup = () => {
         variantPicker.removeEventListener('change', onPickerChange, true);
         form.removeEventListener('submit', onFormSubmit, true);
-        dynamicCheckout?.removeEventListener('click', onDynamicCheckoutClick, true);
         document.removeEventListener('afterVariantChanged', onVariantChanged);
       };
       resetRequiredSelections();
