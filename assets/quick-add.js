@@ -129,6 +129,7 @@ if (!customElements.get('quick-add-drawer')) {
       const productForm = productInfo?.querySelector('product-form');
       const form = productForm?.querySelector('form');
       const submitButton = productForm?.querySelector('[type="submit"]');
+      const dynamicCheckout = form?.querySelector('.shopify-payment-button');
       const variantInput = productForm?.querySelector('input[name="id"]');
       const selectedVariantScript = productInfo?.querySelector('[data-selected-variant]');
       if (!productInfo || !variantPicker || !productForm || !form || !submitButton || !variantInput) return;
@@ -155,6 +156,18 @@ if (!customElements.get('quick-add-drawer')) {
         submitButton.setAttribute('disabled', 'disabled');
         submitButton.setAttribute('aria-disabled', 'true');
         if (text && productForm.submitButtonText) productForm.submitButtonText.textContent = text;
+      };
+
+      const setDynamicCheckoutDisabled = (disabled = true) => {
+        if (!dynamicCheckout) return;
+        dynamicCheckout.querySelectorAll('button, input, [role="button"]').forEach((button) => {
+          button.toggleAttribute('disabled', disabled);
+          button.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+          button.classList.toggle('disabled', disabled);
+        });
+        dynamicCheckout.classList.toggle('disabled', disabled);
+        dynamicCheckout.style.pointerEvents = disabled ? 'none' : '';
+        dynamicCheckout.style.opacity = disabled ? '0.5' : '';
       };
 
       const clearVariantInput = () => {
@@ -193,16 +206,19 @@ if (!customElements.get('quick-add-drawer')) {
         });
         clearVariantInput();
         disableSubmit();
+        setDynamicCheckoutDisabled(true);
       };
 
       const onPickerChange = (event) => {
         if (hasRequiredSelections()) {
           disableSubmit();
+          setDynamicCheckoutDisabled(true);
           return;
         }
         event.stopPropagation();
         clearVariantInput();
         disableSubmit();
+        setDynamicCheckoutDisabled(true);
       };
 
       const onFormSubmit = (event) => {
@@ -212,23 +228,37 @@ if (!customElements.get('quick-add-drawer')) {
         resetRequiredSelections();
       };
 
+      const onDynamicCheckoutClick = (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (!hasRequiredSelections() || !variantInput.value) {
+          resetRequiredSelections();
+          return;
+        }
+        submitButton.click();
+      };
+
       const onVariantChanged = (event) => {
         if (event.detail.sectionId !== productInfo.dataset.section || !hasRequiredSelections()) return;
         if (event.detail.variant?.available) {
           submitButton.removeAttribute('disabled');
           submitButton.removeAttribute('aria-disabled');
+          setDynamicCheckoutDisabled(false);
           if (productForm.submitButtonText) productForm.submitButtonText.textContent = window.variantStrings.addToCart;
         } else {
           disableSubmit(window.variantStrings.soldOut);
+          setDynamicCheckoutDisabled(true);
         }
       };
 
       variantPicker.addEventListener('change', onPickerChange, true);
       form.addEventListener('submit', onFormSubmit, true);
+      dynamicCheckout?.addEventListener('click', onDynamicCheckoutClick, true);
       document.addEventListener('afterVariantChanged', onVariantChanged);
       this.discountedSummerQuickShopCleanup = () => {
         variantPicker.removeEventListener('change', onPickerChange, true);
         form.removeEventListener('submit', onFormSubmit, true);
+        dynamicCheckout?.removeEventListener('click', onDynamicCheckoutClick, true);
         document.removeEventListener('afterVariantChanged', onVariantChanged);
       };
       resetRequiredSelections();
