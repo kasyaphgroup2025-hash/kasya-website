@@ -241,27 +241,56 @@
                       assign use_animate = false
                     endif  
                   -%} 
-                  {%- render 'card-product',
-                    card_product: card_product,
-                    media_aspect_ratio: section.settings.image_ratio,
-                    show_secondary_image: section.settings.show_secondary_image,
-                    show_vendor: section.settings.show_vendor,
-                    show_rating: section.settings.show_rating,
-                    no_lazy_load: no_lazy_load,
-                    show_quick_add: section.settings.enable_quick_add,
-                    enable_compare: enable_compare,
-                    show_quick_view: section.settings.enable_quick_view,
-                    section_id: section.id,
-                    show_color_swatches: section.settings.show_color_swatches,
-                    color_swatches_style: section.settings.color_swatches_style,
-                    include_collection: include_collection,
-                    full_on_mobile: full_on_mobile,
-                    small_space_on_large_screen: small_space_on_large_screen,
-                    allow_effect: use_animate,
-                    parent_color_scheme: parent_color_scheme,
-                    inherit_color_scheme: section.settings.inherit_card_color_scheme,
-                    card_color_scheme: section.settings.card_color_scheme
-                  -%}
+                  {%- if collection.handle == 'summer-collection-1' -%}
+                    {%- comment -%}
+                      Discounted Summer Collection-specific Quick Shop card.
+                      The duplicated snippet keeps this behavior scoped to this
+                      collection handle even when it uses the standard template.
+                    {%- endcomment -%}
+                    {%- render 'card-product-discounted-summer',
+                      card_product: card_product,
+                      media_aspect_ratio: section.settings.image_ratio,
+                      show_secondary_image: section.settings.show_secondary_image,
+                      show_vendor: section.settings.show_vendor,
+                      show_rating: section.settings.show_rating,
+                      no_lazy_load: no_lazy_load,
+                      show_quick_add: section.settings.enable_quick_add,
+                      enable_compare: enable_compare,
+                      show_quick_view: section.settings.enable_quick_view,
+                      section_id: section.id,
+                      show_color_swatches: section.settings.show_color_swatches,
+                      color_swatches_style: section.settings.color_swatches_style,
+                      include_collection: include_collection,
+                      full_on_mobile: full_on_mobile,
+                      small_space_on_large_screen: small_space_on_large_screen,
+                      allow_effect: use_animate,
+                      parent_color_scheme: parent_color_scheme,
+                      inherit_color_scheme: section.settings.inherit_card_color_scheme,
+                      card_color_scheme: section.settings.card_color_scheme
+                    -%}
+                  {%- else -%}
+                    {%- render 'card-product',
+                      card_product: card_product,
+                      media_aspect_ratio: section.settings.image_ratio,
+                      show_secondary_image: section.settings.show_secondary_image,
+                      show_vendor: section.settings.show_vendor,
+                      show_rating: section.settings.show_rating,
+                      no_lazy_load: no_lazy_load,
+                      show_quick_add: section.settings.enable_quick_add,
+                      enable_compare: enable_compare,
+                      show_quick_view: section.settings.enable_quick_view,
+                      section_id: section.id,
+                      show_color_swatches: section.settings.show_color_swatches,
+                      color_swatches_style: section.settings.color_swatches_style,
+                      include_collection: include_collection,
+                      full_on_mobile: full_on_mobile,
+                      small_space_on_large_screen: small_space_on_large_screen,
+                      allow_effect: use_animate,
+                      parent_color_scheme: parent_color_scheme,
+                      inherit_color_scheme: section.settings.inherit_card_color_scheme,
+                      card_color_scheme: section.settings.card_color_scheme
+                    -%}
+                  {%- endif -%}
                 </li>
               {%- endfor -%}
               {%-liquid
