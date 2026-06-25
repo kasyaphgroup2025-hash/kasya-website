@@ -13,6 +13,7 @@ if (!customElements.get('quick-add-drawer-opener')) {
     }
 
     onClick(e) {
+      const isDiscountedSummerQuickShop = this.dataset.discountedSummerQuickShop === 'true' || this.button.dataset.discountedSummerQuickShop === 'true';
       this.button.setAttribute('aria-disabled', true);
       this.button.classList.add('loading');
       this.button.querySelector('.loading-overlay__spinner').classList.remove('hidden');
@@ -27,14 +28,24 @@ if (!customElements.get('quick-add-drawer-opener')) {
       .then((response) => response.text())
       .then((responseText) => {
         const newQuickAddDrawer = getDomHtmlFromText(responseText, 'quick-add-drawer');
+        if (isDiscountedSummerQuickShop) {
+          newQuickAddDrawer.dataset.discountedSummerQuickShop = 'true';
+        }
         if(window.hasQuickAddDrawer) {
           const quickAddDrawer = document.querySelector('quick-add-drawer');
+          quickAddDrawer.dataset.discountedSummerQuickShop = isDiscountedSummerQuickShop ? 'true' : '';
           quickAddDrawer.setInnerHTML(newQuickAddDrawer);
+          if (isDiscountedSummerQuickShop) {
+            quickAddDrawer.prepareDiscountedSummerQuickShop();
+          } else {
+            quickAddDrawer.resetDiscountedSummerQuickShop();
+          }
           quickAddDrawer.open(this.button);
         } else {
           document.body.appendChild(newQuickAddDrawer);
           HTMLUpdateUtility.reinjectsScripts(document.querySelector('quick-add-drawer'));
           newQuickAddDrawer.runAfterUpdateHtml();
+          if (isDiscountedSummerQuickShop) newQuickAddDrawer.prepareDiscountedSummerQuickShop();
           setTimeout(() => {
             newQuickAddDrawer.open(this.button);
           }, 300);
@@ -56,6 +67,7 @@ if (!customElements.get('quick-add-drawer')) {
 
       this.querySelector('.drawer__overlay').addEventListener('click', this.close.bind(this));
       this.postProcessHtmlCallbacks = [];
+      this.defaultHeading = this.querySelector('.drawer__heading')?.textContent;
     }
 
     connectedCallback() {
@@ -90,6 +102,107 @@ if (!customElements.get('quick-add-drawer')) {
       window?.ProductModel?.loadShopifyXR();
       this.removeDOMElements();
       this.removeGalleryListSemantic();
+    }
+
+    prepareDiscountedSummerQuickShop() {
+      // Discounted Summer Collection-specific behavior starts.
+      this.discountedSummerQuickShopCleanup?.();
+
+      const drawerHeading = this.querySelector('.drawer__heading');
+      if (drawerHeading) drawerHeading.textContent = 'Choose Size & Color';
+
+      const productInfo = this.querySelector('product-info');
+      const variantPicker = productInfo?.querySelector('variant-radios, variant-selects');
+      const productForm = productInfo?.querySelector('product-form');
+      const submitButton = productForm?.querySelector('[type="submit"]');
+      const variantInput = productForm?.querySelector('input[name="id"]');
+      const selectedVariantScript = productInfo?.querySelector('[data-selected-variant]');
+      if (!productInfo || !variantPicker || !productForm || !submitButton || !variantInput) return;
+
+      const optionGroups = Array.from(variantPicker.querySelectorAll('.product-form__input--variant-picker')).map((group) => {
+        const legendText = group.querySelector('legend, .form__label')?.textContent || '';
+        const inputName = group.querySelector('input[type="radio"], select')?.getAttribute('name') || '';
+        return {
+          group,
+          normalizedName: `${legendText} ${inputName}`.toLowerCase(),
+        };
+      });
+      const sizeGroups = optionGroups.filter(({ normalizedName }) => normalizedName.includes('size'));
+      const colorGroups = optionGroups.filter(({ normalizedName }) => normalizedName.includes('color') || normalizedName.includes('colour'));
+      const requiredGroups = [...sizeGroups, ...colorGroups];
+
+      if (!sizeGroups.length || !colorGroups.length) return;
+
+      const disableSubmit = (text) => {
+        submitButton.setAttribute('disabled', 'disabled');
+        submitButton.setAttribute('aria-disabled', 'true');
+        if (text && productForm.submitButtonText) productForm.submitButtonText.textContent = text;
+      };
+
+      const clearVariantInput = () => {
+        variantInput.value = '';
+        if (selectedVariantScript) selectedVariantScript.textContent = '';
+        variantInput.dispatchEvent(new Event('change', { bubbles: true }));
+      };
+
+      const groupHasSelection = (group) => {
+        const selectedRadio = group.querySelector('input[type="radio"]:checked');
+        const select = group.querySelector('select');
+        return Boolean(selectedRadio || (select && select.value));
+      };
+
+      const hasRequiredSelections = () => requiredGroups.every(groupHasSelection);
+
+      const resetRequiredSelections = () => {
+        requiredGroups.forEach((group) => {
+          group.querySelectorAll('input[type="radio"]:checked').forEach((radio) => {
+            radio.checked = false;
+          });
+          const select = group.querySelector('select');
+          if (select) select.selectedIndex = -1;
+          const selectedLabel = group.querySelector('.product-form__input__option-value');
+          if (selectedLabel) selectedLabel.textContent = '';
+        });
+        clearVariantInput();
+        disableSubmit('Choose Size & Color');
+      };
+
+      const onPickerChange = (event) => {
+        if (hasRequiredSelections()) {
+          disableSubmit();
+          return;
+        }
+        event.stopPropagation();
+        clearVariantInput();
+        disableSubmit('Choose Size & Color');
+      };
+
+      const onVariantChanged = (event) => {
+        if (event.detail.sectionId !== productInfo.dataset.section || !hasRequiredSelections()) return;
+        if (event.detail.variant?.available) {
+          submitButton.removeAttribute('disabled');
+          submitButton.removeAttribute('aria-disabled');
+          if (productForm.submitButtonText) productForm.submitButtonText.textContent = window.variantStrings.addToCart;
+        } else {
+          disableSubmit(window.variantStrings.soldOut);
+        }
+      };
+
+      variantPicker.addEventListener('change', onPickerChange, true);
+      document.addEventListener('afterVariantChanged', onVariantChanged);
+      this.discountedSummerQuickShopCleanup = () => {
+        variantPicker.removeEventListener('change', onPickerChange, true);
+        document.removeEventListener('afterVariantChanged', onVariantChanged);
+      };
+      resetRequiredSelections();
+      // Discounted Summer Collection-specific behavior ends.
+    }
+
+    resetDiscountedSummerQuickShop() {
+      this.discountedSummerQuickShopCleanup?.();
+      this.discountedSummerQuickShopCleanup = null;
+      const drawerHeading = this.querySelector('.drawer__heading');
+      if (drawerHeading && this.defaultHeading) drawerHeading.textContent = this.defaultHeading;
     }
 
     assignProductElement() {

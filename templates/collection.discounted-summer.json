@@ -1,0 +1,470 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "banner": {
+      "type": "main-collection-banner",
+      "blocks": {
+        "e83d1f32-c65d-42e6-9d33-6b71803d16dc": {
+          "type": "collection_icon",
+          "disabled": true,
+          "settings": {
+            "collection": "black-friday-mega-sale-up-to-50-off-on-selected-skirts-more",
+            "icon": "computers"
+          }
+        },
+        "4fbcac9e-c27d-4d4e-9549-35730111dffe": {
+          "type": "collection_icon",
+          "disabled": true,
+          "settings": {
+            "collection": "",
+            "icon": "cellphone"
+          }
+        },
+        "46b183e0-1c4a-4c4b-9f1a-a99484771399": {
+          "type": "collection_icon",
+          "disabled": true,
+          "settings": {
+            "collection": "",
+            "icon": "book_open"
+          }
+        },
+        "b2983b3f-e3c1-4c57-83cf-9bb714e21839": {
+          "type": "collection_icon",
+          "disabled": true,
+          "settings": {
+            "collection": "",
+            "icon": "audio"
+          }
+        },
+        "6706735a-b87e-41b5-9761-42fdf16ade06": {
+          "type": "collection_icon",
+          "disabled": true,
+          "settings": {
+            "collection": "",
+            "icon": "camera"
+          }
+        },
+        "72b9ace9-3125-4441-89a4-8d956338dc7e": {
+          "type": "collection_icon",
+          "disabled": true,
+          "settings": {
+            "collection": "",
+            "icon": "appliances"
+          }
+        },
+        "2e123320-75bd-49bd-93ca-e935641e26fc": {
+          "type": "collection_icon",
+          "disabled": true,
+          "settings": {
+            "collection": "",
+            "icon": "laptop"
+          }
+        },
+        "28e78e22-1d7d-4efb-9b2d-b58b653de9ef": {
+          "type": "collection_icon",
+          "disabled": true,
+          "settings": {
+            "collection": "",
+            "icon": "box"
+          }
+        }
+      },
+      "block_order": [
+        "e83d1f32-c65d-42e6-9d33-6b71803d16dc",
+        "4fbcac9e-c27d-4d4e-9549-35730111dffe",
+        "46b183e0-1c4a-4c4b-9f1a-a99484771399",
+        "b2983b3f-e3c1-4c57-83cf-9bb714e21839",
+        "6706735a-b87e-41b5-9761-42fdf16ade06",
+        "72b9ace9-3125-4441-89a4-8d956338dc7e",
+        "2e123320-75bd-49bd-93ca-e935641e26fc",
+        "28e78e22-1d7d-4efb-9b2d-b58b653de9ef"
+      ],
+      "settings": {
+        "collection_tree_data": "",
+        "page_heading_collection_image_height": "25",
+        "preload_background_image": false,
+        "enable_parallax_scrolling_effect": true,
+        "show_number_of_products": true,
+        "icon_size": "small",
+        "icon_border_shape": "square",
+        "collection_icon_color_scheme": "background-1",
+        "enable_transparent_header": false,
+        "text_color_transparent": "#ffffff"
+      }
+    },
+    "1757706598f602ab2c": {
+      "type": "apps",
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "product-grid": {
+      "type": "main-collection-product-grid-discounted-summer",
+      "blocks": {
+        "b956e729-3f73-41ea-8f6f-4162743c81b7": {
+          "type": "category_filter_icon",
+          "settings": {
+            "trigger": "Computers & tablets",
+            "icon": "computers"
+          }
+        },
+        "35ce6bc3-b36c-404c-9cd4-aa917dfe7802": {
+          "type": "category_filter_icon",
+          "settings": {
+            "trigger": "Cellphones & accessories",
+            "icon": "cellphone"
+          }
+        },
+        "4ea7a827-8579-4c44-ae4c-37eb6fdcb9cc": {
+          "type": "category_filter_icon",
+          "settings": {
+            "trigger": "Cameras, camcorders",
+            "icon": "camera"
+          }
+        },
+        "54ca538a-6880-4ba5-96a8-07839008ca90": {
+          "type": "category_filter_icon",
+          "settings": {
+            "trigger": "Others",
+            "icon": "newspaper"
+          }
+        }
+      },
+      "block_order": [
+        "b956e729-3f73-41ea-8f6f-4162743c81b7",
+        "35ce6bc3-b36c-404c-9cd4-aa917dfe7802",
+        "4ea7a827-8579-4c44-ae4c-37eb6fdcb9cc",
+        "54ca538a-6880-4ba5-96a8-07839008ca90"
+      ],
+      "settings": {
+        "products_per_page": 16,
+        "columns_desktop": 4,
+        "pagination_style": "numbers",
+        "preload_first_image": true,
+        "inherit_color_scheme": true,
+        "color_scheme": "",
+        "image_ratio": "adapt",
+        "show_secondary_image": true,
+        "show_vendor": true,
+        "show_rating": true,
+        "include_collection_in_url": true,
+        "enable_quick_add": true,
+        "enable_compare": false,
+        "enable_quick_view": true,
+        "show_color_swatches": true,
+        "color_swatches_style": "custom",
+        "inherit_card_color_scheme": true,
+        "card_color_scheme": "",
+        "enable_filtering": false,
+        "filter_type": "vertical",
+        "desktop_filter_default": "show",
+        "filter_include_group_name": true,
+        "filter_collapse": "expand",
+        "enable_sorting": false,
+        "categories_filter": "",
+        "categories_filter_type": "dropdown",
+        "show_collection_description": false,
+        "description_position": "above",
+        "description_style": "body",
+        "description_alignment": "left",
+        "truncate_description": 0,
+        "read_more_button": "Read more",
+        "columns_tablet": "3",
+        "columns_mobile": "2",
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
+    "80c7fe04-64c4-420c-aa28-d0c1d28eb7e8": {
+      "type": "scrolling-text",
+      "blocks": {
+        "template--20124662661421__80c7fe04-64c4-420c-aa28-d0c1d28eb7e8-normal_text-1": {
+          "type": "normal_text",
+          "settings": {
+            "title": "<strong>Your text 1</strong>",
+            "link": "#",
+            "use_outline_text": false,
+            "text_stroke": 2,
+            "gradient_color": "linear-gradient(270deg, rgba(11, 11, 11, 1), rgba(253, 212, 32, 1) 51.04%, rgba(143, 202, 72, 1) 100%)"
+          }
+        },
+        "ddbff642-45a9-41aa-9709-8b0ae6636866": {
+          "type": "normal_text",
+          "settings": {
+            "title": "<strong>-</strong>",
+            "link": "",
+            "use_outline_text": false,
+            "text_stroke": 5,
+            "gradient_color": "linear-gradient(270deg, rgba(122, 158, 228, 1), rgba(244, 86, 86, 1) 97.77%)"
+          }
+        },
+        "a9fc78f8-8846-4864-b16b-982c3cd38d17": {
+          "type": "normal_text",
+          "settings": {
+            "title": "<strong>Your text 2</strong>",
+            "link": "#",
+            "use_outline_text": false,
+            "text_stroke": 2,
+            "gradient_color": "linear-gradient(270deg, rgba(241, 92, 49, 1), rgba(253, 212, 32, 1) 51.04%, rgba(72, 202, 202, 1) 100%)"
+          }
+        },
+        "c83d5217-3322-4bfa-a194-daf253cbea5a": {
+          "type": "normal_text",
+          "settings": {
+            "title": "<strong>-</strong>",
+            "link": "",
+            "use_outline_text": false,
+            "text_stroke": 5,
+            "gradient_color": "linear-gradient(270deg, rgba(122, 158, 228, 1), rgba(244, 86, 86, 1) 97.77%)"
+          }
+        },
+        "87f4a1c8-7d1c-464e-b1af-c7dadedb54ad": {
+          "type": "normal_text",
+          "settings": {
+            "title": "<strong>Your text 3</strong>",
+            "link": "#",
+            "use_outline_text": false,
+            "text_stroke": 5,
+            "gradient_color": "linear-gradient(270deg, rgba(241, 49, 118, 1), rgba(253, 212, 32, 1) 51.04%, rgba(143, 202, 72, 1) 100%)"
+          }
+        },
+        "cdf1448d-c5b2-4df8-9dae-8e7dca3fe6d6": {
+          "type": "normal_text",
+          "settings": {
+            "title": "<strong>-</strong>",
+            "link": "",
+            "use_outline_text": false,
+            "text_stroke": 5,
+            "gradient_color": "linear-gradient(270deg, rgba(122, 158, 228, 1), rgba(244, 86, 86, 1) 97.77%)"
+          }
+        }
+      },
+      "block_order": [
+        "template--20124662661421__80c7fe04-64c4-420c-aa28-d0c1d28eb7e8-normal_text-1",
+        "ddbff642-45a9-41aa-9709-8b0ae6636866",
+        "a9fc78f8-8846-4864-b16b-982c3cd38d17",
+        "c83d5217-3322-4bfa-a194-daf253cbea5a",
+        "87f4a1c8-7d1c-464e-b1af-c7dadedb54ad",
+        "cdf1448d-c5b2-4df8-9dae-8e7dca3fe6d6"
+      ],
+      "disabled": true,
+      "settings": {
+        "layout": "full_bleed",
+        "scrolling_speed_desktop": 30,
+        "scrolling_speed": 10,
+        "pause_on_hover": true,
+        "direction": "normal",
+        "spacing": 5,
+        "hide_when_empty_content": true,
+        "enable_section_box_layout": false,
+        "thumbnail_ratio": "circle",
+        "color_scheme": "",
+        "font_size": 48,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
+    "featured_collection_MUhPma": {
+      "type": "featured-collection",
+      "disabled": true,
+      "name": "t:sections.featured-collection.presets.name",
+      "settings": {
+        "title": "Bundle Deals, Straight Savings",
+        "subtitle": "",
+        "collection": "bundles",
+        "heading_size": "h1",
+        "products_to_show": 7,
+        "columns_desktop": 4,
+        "full_width": true,
+        "show_view_all": true,
+        "enable_desktop_slider": true,
+        "enable_section_box_layout": false,
+        "color_scheme": "",
+        "image_position_desktop": "left",
+        "image_size": "large",
+        "image_height": "42",
+        "image_height_mobile": "34",
+        "banner_link": "",
+        "hide_banner_mobile": false,
+        "image_ratio": "portrait",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "enable_quick_add": true,
+        "enable_compare": true,
+        "enable_quick_view": true,
+        "show_color_swatches": true,
+        "color_swatches_style": "custom",
+        "inherit_card_color_scheme": true,
+        "card_color_scheme": "",
+        "columns_tablet": "3",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "image_with_text_dJFfFf": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_FpJgNT": {
+          "type": "heading",
+          "settings": {
+            "heading": "Want to choose your own bundle? I got you. ",
+            "heading_size": "h2",
+            "enable_bold_heading": true
+          }
+        },
+        "text_KggNy4": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Pick the pieces you love with our linen blouse, mix and match your favorite, and enjoy them all in one exclusive KasyaPH bundle — at a price that makes sense.</p>",
+            "text_style": "body"
+          }
+        },
+        "button_TcKTR7": {
+          "type": "button",
+          "settings": {
+            "button_label": "CHECK THE BUNDLE",
+            "button_link": "shopify://products/blouse-bundle-pick-any-3-styles",
+            "button_style": "solid",
+            "button_open_new_tab": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_FpJgNT",
+        "text_KggNy4",
+        "button_TcKTR7"
+      ],
+      "disabled": true,
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "grid_layout": "grid",
+        "image": "shopify://shop_images/NewCollectionP1_26d0ef62-47b4-4980-88ce-c3dc3b718920.png",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "hide_when_empty_image": false,
+        "preload": false,
+        "border_radius": 40,
+        "mobile_content_alignment": "left",
+        "border_radius_mobile": 16,
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "color_heading": "#000000",
+        "gradient_heading": "",
+        "color_text": "#000000",
+        "color_highlight_text": "#da2127",
+        "color_caption": "#000000",
+        "color_countdown": "#000000",
+        "color_icon": "#000000",
+        "color_button_text": "#ffffff",
+        "color_button": "#000000",
+        "background_container": "#ffffff",
+        "gradient_background_container": "",
+        "background_section": "#ffffff",
+        "gradient_background_section": "",
+        "enable_parallax_scrolling_effect": true,
+        "overlay_color": "#1e40af"
+      }
+    },
+    "collection_list_jkrzQT": {
+      "type": "collection-list",
+      "blocks": {
+        "featured_collection_XbhVXH": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "frontpage",
+            "custom_title": ""
+          }
+        },
+        "featured_collection_7MMjhJ": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "wideleg-linen-pants-collection",
+            "custom_title": ""
+          }
+        },
+        "featured_collection_X88M4M": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "all-new-colors-collection",
+            "custom_title": ""
+          }
+        },
+        "featured_collection_MVJnaU": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "new-release-top-collection",
+            "custom_title": ""
+          }
+        },
+        "featured_collection_DWYYfR": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "claire-soft-linen-dress-collection",
+            "custom_title": ""
+          }
+        },
+        "featured_collection_C3YBG3": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "linen-blouse-collection",
+            "custom_title": ""
+          }
+        }
+      },
+      "block_order": [
+        "featured_collection_XbhVXH",
+        "featured_collection_7MMjhJ",
+        "featured_collection_X88M4M",
+        "featured_collection_MVJnaU",
+        "featured_collection_DWYYfR",
+        "featured_collection_C3YBG3"
+      ],
+      "disabled": true,
+      "name": "t:sections.collection-list.presets.name",
+      "settings": {
+        "title": "THE KASYA PH COLLECTIONS",
+        "subtitle": "",
+        "heading_size": "h1",
+        "image_ratio": "portrait",
+        "columns_desktop": 2,
+        "full_width": true,
+        "enable_section_box_layout": false,
+        "enable_desktop_slider": true,
+        "preload": false,
+        "color_scheme": "",
+        "show_view_all": false,
+        "collection_card_show_title": true,
+        "show_products_count": true,
+        "columns_tablet": "2",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "1757706598f602ab2c",
+    "product-grid",
+    "80c7fe04-64c4-420c-aa28-d0c1d28eb7e8",
+    "featured_collection_MUhPma",
+    "image_with_text_dJFfFf",
+    "collection_list_jkrzQT"
+  ]
+}
