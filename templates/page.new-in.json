@@ -70,6 +70,30 @@
             "lightbox_button_background": "#fff"
           }
         },
+        "text_outside_image_bkxCAp": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/DALIAH_POLO_-_BLACK_1.jpg",
+            "link": "shopify://products/daliah-polo-acid-linen",
+            "text": "Daliah Polo - Acid Linen",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000",
+            "caption_color": "#000",
+            "button_foreground": "#fff",
+            "button_background": "#000",
+            "lightbox_button_color": "#000",
+            "lightbox_button_background": "#fff"
+          }
+        },
         "text_outside_image_KWdgJz": {
           "type": "text-outside-image",
           "settings": {
@@ -241,6 +265,7 @@
       },
       "block_order": [
         "text_outside_image_xmWJx6",
+        "text_outside_image_bkxCAp",
         "text_outside_image_KWdgJz",
         "text_outside_image_Ryya7P",
         "text_outside_image_cbk8UU",
