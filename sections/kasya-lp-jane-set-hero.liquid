@@ -64,9 +64,7 @@
         </div>
 
         <div class="jane-set-hero__pricing">
-          <span class="jane-set-hero__compare-price">{{ section.settings.compare_at_price_text }}</span>
           <strong class="jane-set-hero__set-price">{{ section.settings.set_price_text }}</strong>
-          <span class="jane-set-hero__discount">{{ section.settings.discount_badge_text }}</span>
         </div>
       </div>
 
@@ -191,23 +189,9 @@
     scrollbar-width: none;
   }
 
-  .jane-set-hero__slides::-webkit-scrollbar {
-    display: none;
-  }
-
-  .jane-set-hero__slide {
-    flex: 0 0 100%;
-    margin: 0;
-    scroll-snap-align: start;
-  }
-
-  .jane-set-hero__slide img {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-  }
+  .jane-set-hero__slides::-webkit-scrollbar { display: none; }
+  .jane-set-hero__slide { flex: 0 0 100%; margin: 0; scroll-snap-align: start; }
+  .jane-set-hero__slide img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
 
   .jane-set-hero__gallery-button {
     position: absolute;
@@ -224,17 +208,9 @@
     transform: translateY(-50%);
   }
 
-  .jane-set-hero__gallery-button--prev {
-    left: 10px;
-  }
-
-  .jane-set-hero__gallery-button--next {
-    right: 10px;
-  }
-
-  .jane-set-hero__gallery-button[hidden] {
-    display: none;
-  }
+  .jane-set-hero__gallery-button--prev { left: 10px; }
+  .jane-set-hero__gallery-button--next { right: 10px; }
+  .jane-set-hero__gallery-button[hidden] { display: none; }
 
   .jane-set-hero__dots {
     position: absolute;
@@ -247,31 +223,10 @@
     pointer-events: none;
   }
 
-  .jane-set-hero__dot {
-    width: 8px;
-    height: 8px;
-    border: 0;
-    border-radius: 50%;
-    padding: 0;
-    background: rgba(255, 255, 255, 0.58);
-  }
-
-  .jane-set-hero__dot.is-active {
-    background: #ffffff;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.16);
-  }
-
-  .jane-set-hero__content {
-    padding: 24px 26px 30px;
-  }
-
-  .jane-set-hero__eyebrow {
-    margin: 0;
-    color: #333333;
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
+  .jane-set-hero__dot { width: 8px; height: 8px; border: 0; border-radius: 50%; padding: 0; background: rgba(255, 255, 255, 0.58); }
+  .jane-set-hero__dot.is-active { background: #ffffff; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.16); }
+  .jane-set-hero__content { padding: 24px 26px 30px; }
+  .jane-set-hero__eyebrow { margin: 0; color: #333333; font-size: 14px; font-weight: 700; text-transform: uppercase; }
 
   .jane-set-hero__heading-row {
     display: grid;
@@ -281,85 +236,15 @@
     margin-top: 18px;
   }
 
-  .jane-set-hero__heading {
-    margin: 0;
-    font-size: 38px;
-    font-weight: 800;
-    line-height: 1.05;
-    text-transform: uppercase;
-    overflow-wrap: anywhere;
-  }
-
-  .jane-set-hero__subtitle {
-    margin: 8px 0 0;
-    color: #333333;
-    font-size: 18px;
-  }
-
-  .jane-set-hero__pricing {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 6px;
-    white-space: nowrap;
-  }
-
-  .jane-set-hero__compare-price {
-    color: var(--jane-muted);
-    font-size: 16px;
-    text-decoration: line-through;
-  }
-
-  .jane-set-hero__set-price {
-    color: var(--jane-accent);
-    font-size: 34px;
-    line-height: 1;
-  }
-
-  .jane-set-hero__discount {
-    padding: 5px 9px;
-    border-radius: 4px;
-    background: var(--jane-accent);
-    color: #ffffff;
-    font-size: 12px;
-    font-weight: 800;
-  }
-
-  .jane-set-hero__description {
-    margin: 20px 0 0;
-    color: #292929;
-    font-size: 17px;
-    font-style: italic;
-    line-height: 1.5;
-  }
-
-  .jane-set-hero__form {
-    margin-top: 26px;
-    border-top: 1px solid var(--jane-line);
-    padding-top: 20px;
-  }
-
-  .jane-set-hero__group {
-    min-width: 0;
-    margin: 0 0 24px;
-    border: 0;
-    padding: 0;
-  }
-
-  .jane-set-hero__group legend {
-    margin-bottom: 11px;
-    padding: 0;
-    font-size: 14px;
-    font-weight: 800;
-    text-transform: uppercase;
-  }
-
-  .jane-set-hero__colors,
-  .jane-set-hero__sizes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 9px;
-  }
+  .jane-set-hero__heading { margin: 0; font-size: 38px; font-weight: 800; line-height: 1.05; text-transform: uppercase; overflow-wrap: anywhere; }
+  .jane-set-hero__subtitle { margin: 8px 0 0; color: #333333; font-size: 18px; }
+  .jane-set-hero__pricing { display: flex; align-items: flex-end; white-space: nowrap; }
+  .jane-set-hero__set-price { color: var(--jane-accent); font-size: 34px; line-height: 1; }
+  .jane-set-hero__description { margin: 20px 0 0; color: #292929; font-size: 17px; font-style: italic; line-height: 1.5; }
+  .jane-set-hero__form { margin-top: 26px; border-top: 1px solid var(--jane-line); padding-top: 20px; }
+  .jane-set-hero__group { min-width: 0; margin: 0 0 24px; border: 0; padding: 0; }
+  .jane-set-hero__group legend { margin-bottom: 11px; padding: 0; font-size: 14px; font-weight: 800; text-transform: uppercase; }
+  .jane-set-hero__colors, .jane-set-hero__sizes { display: flex; flex-wrap: wrap; gap: 9px; }
 
   .jane-set-hero__color,
   .jane-set-hero__size {
@@ -373,40 +258,12 @@
     font-weight: 700;
   }
 
-  .jane-set-hero__color {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-  }
-
-  .jane-set-hero__size {
-    min-width: 62px;
-    padding: 9px 13px;
-  }
-
-  .jane-set-hero__color.is-selected,
-  .jane-set-hero__size.is-selected {
-    border-color: #000000;
-    box-shadow: inset 0 0 0 1px #000000;
-  }
-
-  .jane-set-hero__size.is-unavailable {
-    opacity: 0.38;
-    text-decoration: line-through;
-  }
-
-  .jane-set-hero__swatch {
-    width: 22px;
-    height: 22px;
-    border: 1px solid rgba(0, 0, 0, 0.16);
-    border-radius: 50%;
-    background: #000000;
-  }
-
-  .jane-set-hero__swatch--taupe {
-    background: #b8a38e;
-  }
+  .jane-set-hero__color { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; }
+  .jane-set-hero__size { min-width: 62px; padding: 9px 13px; }
+  .jane-set-hero__color.is-selected, .jane-set-hero__size.is-selected { border-color: #000000; box-shadow: inset 0 0 0 1px #000000; }
+  .jane-set-hero__size.is-unavailable { opacity: 0.38; text-decoration: line-through; }
+  .jane-set-hero__swatch { width: 22px; height: 22px; border: 1px solid rgba(0, 0, 0, 0.16); border-radius: 50%; background: #000000; }
+  .jane-set-hero__swatch--taupe { background: #b8a38e; }
 
   .jane-set-hero__submit {
     width: 100%;
@@ -421,40 +278,15 @@
     text-transform: uppercase;
   }
 
-  .jane-set-hero__submit:disabled {
-    cursor: not-allowed;
-    opacity: 0.42;
-  }
-
-  .jane-set-hero__error {
-    margin: 10px 0 0;
-    color: #b42318;
-    font-size: 13px;
-    line-height: 1.4;
-    text-align: center;
-  }
+  .jane-set-hero__submit:disabled { cursor: not-allowed; opacity: 0.42; }
+  .jane-set-hero__error { margin: 10px 0 0; color: #b42318; font-size: 13px; line-height: 1.4; text-align: center; }
 
   @media screen and (max-width: 520px) {
-    .jane-set-hero__content {
-      padding: 20px 18px 26px;
-    }
-
-    .jane-set-hero__heading-row {
-      grid-template-columns: 1fr;
-      gap: 14px;
-    }
-
-    .jane-set-hero__heading {
-      font-size: 32px;
-    }
-
-    .jane-set-hero__pricing {
-      align-items: flex-start;
-    }
-
-    .jane-set-hero__set-price {
-      font-size: 30px;
-    }
+    .jane-set-hero__content { padding: 20px 18px 26px; }
+    .jane-set-hero__heading-row { grid-template-columns: 1fr; gap: 14px; }
+    .jane-set-hero__heading { font-size: 32px; }
+    .jane-set-hero__pricing { align-items: flex-start; }
+    .jane-set-hero__set-price { font-size: 30px; }
   }
 </style>
 
@@ -482,13 +314,8 @@
     let selectedPantsSize = '';
     let adding = false;
 
-    function variantsFor(role) {
-      return products[selectedColor]?.[role] || [];
-    }
-
-    function findVariant(role, size) {
-      return variantsFor(role).find(variant => normalize(variant.size) === normalize(size)) || null;
-    }
+    function variantsFor(role) { return products[selectedColor]?.[role] || []; }
+    function findVariant(role, size) { return variantsFor(role).find(variant => normalize(variant.size) === normalize(size)) || null; }
 
     function selectionState() {
       const topVariant = findVariant('top', selectedTopSize);
@@ -503,71 +330,41 @@
         const variant = findVariant(role, size);
         const selected = normalize(size) === normalize(selectedSize);
         const available = Boolean(variant?.available);
-
-        return `
-          <button
-            type="button"
-            class="jane-set-hero__size ${selected ? 'is-selected' : ''} ${available ? '' : 'is-unavailable'}"
-            data-jane-size="${size}"
-            data-jane-role="${role}"
-            aria-pressed="${selected}"
-            aria-disabled="${!available}"
-          >
-            ${size}
-          </button>
-        `;
+        return `<button type="button" class="jane-set-hero__size ${selected ? 'is-selected' : ''} ${available ? '' : 'is-unavailable'}" data-jane-size="${size}" data-jane-role="${role}" aria-pressed="${selected}" aria-disabled="${!available}">${size}</button>`;
       }).join('');
     }
 
     function updateControls() {
       renderSizes(topSizes, 'top', selectedTopSize);
       renderSizes(pantsSizes, 'pants', selectedPantsSize);
-
       const { complete, available } = selectionState();
       submitButton.disabled = adding || !available;
-      if (!adding) {
-        submitText.textContent = complete && !available ? 'SOLD OUT / UNAVAILABLE' : 'ADD SET TO CART';
-      }
+      if (!adding) submitText.textContent = complete && !available ? 'SOLD OUT / UNAVAILABLE' : 'ADD SET TO CART';
     }
 
-    function clearError() {
-      errorMessage.hidden = true;
-      errorMessage.textContent = '';
-    }
-
-    function showError(message) {
-      errorMessage.textContent = message;
-      errorMessage.hidden = false;
-    }
+    function clearError() { errorMessage.hidden = true; errorMessage.textContent = ''; }
+    function showError(message) { errorMessage.textContent = message; errorMessage.hidden = false; }
 
     colorContainer.addEventListener('click', event => {
       const button = event.target.closest('[data-color]');
       if (!button) return;
-
       selectedColor = button.dataset.color;
       selectedTopSize = '';
       selectedPantsSize = '';
       clearError();
-
       colorContainer.querySelectorAll('[data-color]').forEach(option => {
         const selected = option === button;
         option.classList.toggle('is-selected', selected);
         option.setAttribute('aria-pressed', String(selected));
       });
-
       updateControls();
     });
 
     section.addEventListener('click', event => {
       const button = event.target.closest('[data-jane-size]');
       if (!button || !selectedColor) return;
-
-      if (button.dataset.janeRole === 'top') {
-        selectedTopSize = button.dataset.janeSize;
-      } else {
-        selectedPantsSize = button.dataset.janeSize;
-      }
-
+      if (button.dataset.janeRole === 'top') selectedTopSize = button.dataset.janeSize;
+      else selectedPantsSize = button.dataset.janeSize;
       clearError();
       updateControls();
     });
@@ -575,23 +372,14 @@
     form.addEventListener('submit', async event => {
       event.preventDefault();
       if (adding) return;
-
       const { topVariant, pantsVariant, complete, available } = selectionState();
-      if (!complete) {
-        showError('Please select a color, top size, and pants size.');
-        return;
-      }
-      if (!available) {
-        showError('This size combination is currently unavailable.');
-        updateControls();
-        return;
-      }
+      if (!complete) { showError('Please select a color, top size, and pants size.'); return; }
+      if (!available) { showError('This size combination is currently unavailable.'); updateControls(); return; }
 
       adding = true;
       clearError();
       submitButton.disabled = true;
       submitText.textContent = 'ADDING...';
-
       const sharedProperties = {
         _set_name: 'Jane Coordinates Set',
         _set_color: selectedColor,
@@ -602,31 +390,18 @@
       try {
         const response = await fetch('/cart/add.js', {
           method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
           body: JSON.stringify({
             items: [
-              {
-                id: topVariant.id,
-                quantity: 1,
-                properties: { ...sharedProperties, _set_role: 'Top' }
-              },
-              {
-                id: pantsVariant.id,
-                quantity: 1,
-                properties: { ...sharedProperties, _set_role: 'Pants' }
-              }
+              { id: topVariant.id, quantity: 1, properties: { ...sharedProperties, _set_role: 'Top' } },
+              { id: pantsVariant.id, quantity: 1, properties: { ...sharedProperties, _set_role: 'Pants' } }
             ]
           })
         });
-
         if (!response.ok) {
           const error = await response.json().catch(() => ({}));
           throw new Error(error.description || error.message || 'Unable to add this set to cart.');
         }
-
         window.location.assign('/cart');
       } catch (error) {
         adding = false;
@@ -642,23 +417,16 @@
     const slideCount = slides?.children.length || 0;
 
     if (slides && dots) {
-      dots.innerHTML = Array.from({ length: slideCount }, (_, index) => {
-        return `<span class="jane-set-hero__dot ${index === 0 ? 'is-active' : ''}"></span>`;
-      }).join('');
-
+      dots.innerHTML = Array.from({ length: slideCount }, (_, index) => `<span class="jane-set-hero__dot ${index === 0 ? 'is-active' : ''}"></span>`).join('');
       const updateDots = () => {
         const index = slides.clientWidth ? Math.round(slides.scrollLeft / slides.clientWidth) : 0;
-        dots.querySelectorAll('.jane-set-hero__dot').forEach((dot, dotIndex) => {
-          dot.classList.toggle('is-active', dotIndex === index);
-        });
+        dots.querySelectorAll('.jane-set-hero__dot').forEach((dot, dotIndex) => dot.classList.toggle('is-active', dotIndex === index));
       };
-
       const move = direction => {
         const current = slides.clientWidth ? Math.round(slides.scrollLeft / slides.clientWidth) : 0;
         const target = (current + direction + slideCount) % slideCount;
         slides.scrollTo({ left: target * slides.clientWidth, behavior: 'smooth' });
       };
-
       previous.hidden = slideCount < 2;
       next.hidden = slideCount < 2;
       previous.addEventListener('click', () => move(-1));
@@ -674,78 +442,17 @@
 {
   "name": "Kasya LP Jane Set Hero",
   "settings": [
-    {
-      "type": "product",
-      "id": "product",
-      "label": "Visible Jane Set parent product"
-    },
-    {
-      "type": "product",
-      "id": "black_top_product",
-      "label": "Black Jane Blouse product"
-    },
-    {
-      "type": "product",
-      "id": "black_pants_product",
-      "label": "Black Jane Pants product"
-    },
-    {
-      "type": "product",
-      "id": "taupe_top_product",
-      "label": "Taupe Jane Blouse product"
-    },
-    {
-      "type": "product",
-      "id": "taupe_pants_product",
-      "label": "Taupe Jane Pants product"
-    },
-    {
-      "type": "text",
-      "id": "set_price_text",
-      "label": "Set price",
-      "default": "₱1,699"
-    },
-    {
-      "type": "text",
-      "id": "compare_at_price_text",
-      "label": "Compare-at price",
-      "default": "₱1,889"
-    },
-    {
-      "type": "text",
-      "id": "discount_badge_text",
-      "label": "Discount badge",
-      "default": "10% OFF"
-    },
-    {
-      "type": "text",
-      "id": "product_label",
-      "label": "Product label",
-      "default": "KASYA SETS"
-    },
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "JANE COORDINATES SET"
-    },
-    {
-      "type": "text",
-      "id": "subtitle",
-      "label": "Subtitle",
-      "default": "Premium ITY"
-    },
-    {
-      "type": "textarea",
-      "id": "description",
-      "label": "Description",
-      "default": "A polished blouse and pants set designed for effortless comfort and versatile everyday wear."
-    }
+    { "type": "product", "id": "product", "label": "Visible Jane Set parent product" },
+    { "type": "product", "id": "black_top_product", "label": "Black Jane Blouse product" },
+    { "type": "product", "id": "black_pants_product", "label": "Black Jane Pants product" },
+    { "type": "product", "id": "taupe_top_product", "label": "Taupe Jane Blouse product" },
+    { "type": "product", "id": "taupe_pants_product", "label": "Taupe Jane Pants product" },
+    { "type": "text", "id": "set_price_text", "label": "Set price", "default": "₱1,699" },
+    { "type": "text", "id": "product_label", "label": "Product label", "default": "KASYA SETS" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "JANE COORDINATES SET" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Premium ITY" },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "A polished blouse and pants set designed for effortless comfort and versatile everyday wear." }
   ],
-  "presets": [
-    {
-      "name": "Kasya LP Jane Set Hero"
-    }
-  ]
+  "presets": [{ "name": "Kasya LP Jane Set Hero" }]
 }
 {% endschema %}
