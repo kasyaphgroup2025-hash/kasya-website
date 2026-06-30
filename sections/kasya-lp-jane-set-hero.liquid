@@ -629,7 +629,9 @@
     const sizes = ['Medium', 'Large', 'XL', '2XL', '3XL'];
     const shotOrder = ['front', 'side', 'back', 'sitting', 'fabric close up'];
     const normalize = value => String(value || '').trim().toLowerCase();
+    const defaultPreviewColor = {{ section.settings.default_media_preview_color | default: 'Black' | json }};
     let selectedColor = '';
+    let previewColor = defaultPreviewColor;
     let selectedTopSize = '';
     let selectedPantsSize = '';
     let adding = false;
@@ -783,6 +785,7 @@
       if (!button) return;
 
       selectedColor = button.dataset.color;
+      previewColor = selectedColor;
       selectedTopSize = '';
       selectedPantsSize = '';
       clearError();
@@ -793,8 +796,8 @@
         option.setAttribute('aria-pressed', String(selected));
       });
 
-      renderGalleryForColor(selectedColor);
-      announceSelectedColor();
+      renderGalleryForColor(previewColor);
+      announceMediaColor(previewColor);
       updateControls();
     });
 
@@ -817,8 +820,12 @@
       if (adding) return;
 
       const { topVariant, pantsVariant, complete, available } = selectionState();
+      if (!selectedColor) {
+        showError('Please select a color.');
+        return;
+      }
       if (!complete) {
-        showError('Please select a color, top size, and pants size.');
+        showError('Please select a top size and pants size.');
         return;
       }
       if (!available) {
@@ -977,11 +984,11 @@
       next.hidden = images.length < 2;
     }
 
-    function announceSelectedColor() {
-      const imageMap = getProductMediaShotMapForColor(selectedColor);
+    function announceMediaColor(color) {
+      const imageMap = getProductMediaShotMapForColor(color);
       const colorState = {
-        color: selectedColor,
-        displayColor: selectedColor,
+        color,
+        displayColor: color,
         images: {
           front: imageMap.front || '',
           side: imageMap.side || '',
@@ -1016,7 +1023,8 @@
       previous.addEventListener('click', () => move(-1));
       next.addEventListener('click', () => move(1));
       slides.addEventListener('scroll', () => window.requestAnimationFrame(updateDots));
-      renderGalleryForColor('');
+      renderGalleryForColor(previewColor);
+      announceMediaColor(previewColor);
     }
 
     updateControls();
@@ -1041,6 +1049,22 @@
       "type": "product",
       "id": "pants_product",
       "label": "Jane Pants component product"
+    },
+    {
+      "type": "select",
+      "id": "default_media_preview_color",
+      "label": "Default media preview color",
+      "default": "Black",
+      "options": [
+        {
+          "value": "Black",
+          "label": "Black"
+        },
+        {
+          "value": "Taupe",
+          "label": "Taupe"
+        }
+      ]
     },
     {
       "type": "text",
