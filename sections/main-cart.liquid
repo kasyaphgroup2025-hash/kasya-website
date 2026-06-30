@@ -109,7 +109,35 @@
                       </tr>
                     </thead>
                     <tbody>
+                      {%- assign rendered_jane_set_ids = '|' -%}
                       {%- for item in cart.items -%}
+                        {%- if item.properties._set_id != blank and item.properties._set_name == 'Jane Set' -%}
+                          {%- capture jane_set_token -%}|{{ item.properties._set_id }}|{%- endcapture -%}
+                          {%- if rendered_jane_set_ids contains jane_set_token -%}
+                            {%- continue -%}
+                          {%- endif -%}
+
+                          {%- assign jane_set_top = false -%}
+                          {%- assign jane_set_pants = false -%}
+                          {%- for component in cart.items -%}
+                            {%- if component.properties._set_id == item.properties._set_id and component.properties._set_name == 'Jane Set' -%}
+                              {%- if component.properties._set_role == 'Top' -%}
+                                {%- assign jane_set_top = component -%}
+                              {%- elsif component.properties._set_role == 'Pants' -%}
+                                {%- assign jane_set_pants = component -%}
+                              {%- endif -%}
+                            {%- endif -%}
+                          {%- endfor -%}
+
+                          {%- render 'jane-set-cart-item',
+                            set_id: item.properties._set_id,
+                            top_item: jane_set_top,
+                            pants_item: jane_set_pants,
+                            in_drawer: false
+                          -%}
+                          {%- assign rendered_jane_set_ids = rendered_jane_set_ids | append: item.properties._set_id | append: '|' -%}
+                          {%- continue -%}
+                        {%- endif -%}
                         <tr class="cart-item" id="CartItem-{{ item.index | plus: 1 }}">
                           <td class="cart-item__media">
                             {% if item.image %}

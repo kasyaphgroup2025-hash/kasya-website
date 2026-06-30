@@ -81,7 +81,8 @@
                   {
                     "id": {{ variant.id | json }},
                     "size": {{ variant.option1 | json }},
-                    "available": {{ variant.available | json }}
+                    "available": {{ variant.available | json }},
+                    "sku": {{ variant.sku | json }}
                   }{% unless forloop.last %},{% endunless %}
                 {% endfor %}
               ],
@@ -90,7 +91,8 @@
                   {
                     "id": {{ variant.id | json }},
                     "size": {{ variant.option1 | json }},
-                    "available": {{ variant.available | json }}
+                    "available": {{ variant.available | json }},
+                    "sku": {{ variant.sku | json }}
                   }{% unless forloop.last %},{% endunless %}
                 {% endfor %}
               ]
@@ -101,7 +103,8 @@
                   {
                     "id": {{ variant.id | json }},
                     "size": {{ variant.option1 | json }},
-                    "available": {{ variant.available | json }}
+                    "available": {{ variant.available | json }},
+                    "sku": {{ variant.sku | json }}
                   }{% unless forloop.last %},{% endunless %}
                 {% endfor %}
               ],
@@ -110,7 +113,8 @@
                   {
                     "id": {{ variant.id | json }},
                     "size": {{ variant.option1 | json }},
-                    "available": {{ variant.available | json }}
+                    "available": {{ variant.available | json }},
+                    "sku": {{ variant.sku | json }}
                   }{% unless forloop.last %},{% endunless %}
                 {% endfor %}
               ]
@@ -576,13 +580,17 @@
       submitText.textContent = 'ADDING...';
 
       const sharedProperties = {
-        _set_name: 'Jane Coordinates Set',
+        _set_id: `jane-set-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        _set_name: 'Jane Set',
         _set_color: selectedColor,
+        _set_display_price: '₱1,699',
         _top_size: selectedTopSize,
         _pants_size: selectedPantsSize
       };
 
       try {
+        const cart = document.querySelector('cart-drawer');
+        const sections = cart?.getSectionsToRender().map(section => section.id) || [];
         const response = await fetch('/cart/add.js', {
           method: 'POST',
           headers: {
@@ -590,6 +598,8 @@
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
+            sections,
+            sections_url: window.location.pathname,
             items: [
               {
                 id: topVariant.id,
@@ -610,7 +620,17 @@
           throw new Error(error.description || error.message || 'Unable to add this set to cart.');
         }
 
-        window.location.assign('/cart');
+        const cartResponse = await response.json();
+        if (cart && typeof cart.renderContents === 'function' && cartResponse.sections) {
+          cart.setActiveElement?.(document.activeElement);
+          cart.classList.remove('is-empty');
+          cart.renderContents(cartResponse);
+          document.dispatchEvent(new CustomEvent('afterCartChanged', {
+            detail: { source: 'jane-set-hero', cartData: cartResponse }
+          }));
+        } else {
+          window.location.assign('/cart');
+        }
       } catch (error) {
         adding = false;
         showError(error.message || 'Unable to add this set to cart. Please try again.');
