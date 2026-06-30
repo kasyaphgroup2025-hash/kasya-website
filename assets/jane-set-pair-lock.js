@@ -3,10 +3,12 @@
   const ACTIVE_POLL_INTERVAL = 1500;
   const IDLE_POLL_INTERVAL = 5000;
   let isSyncingJaneSet = false;
-  let checkTimer = null;
+  let janeSetSyncTimer = null;
+  let janeSetRetryTimer = null;
   let pollTimer = null;
   let previousQuantities = new Map();
   let hasJaneSetItems = false;
+  let latestQuantityIntent = null;
 
   function isJaneSetItem(item) {
     return Boolean(
@@ -38,6 +40,16 @@
 
     if (topChanged && !pantsChanged) return top.quantity;
     if (pantsChanged && !topChanged) return pants.quantity;
+
+    if (Number.isInteger(latestQuantityIntent?.quantity)) {
+      return latestQuantityIntent.quantity;
+    }
+    if (latestQuantityIntent?.direction === 'decrease') {
+      return Math.min(top.quantity, pants.quantity);
+    }
+    if (latestQuantityIntent?.direction === 'increase') {
+      return Math.max(top.quantity, pants.quantity);
+    }
     return Math.max(top.quantity, pants.quantity);
   }
 
@@ -82,6 +94,7 @@
 
       const cart = await response.json();
       snapshotQuantities(cart.items);
+      latestQuantityIntent = null;
 
       document.dispatchEvent(new CustomEvent('afterCartChanged', {
         detail: {
@@ -126,8 +139,14 @@
   }
 
   function scheduleCheck(delay = CHECK_DELAY) {
-    window.clearTimeout(checkTimer);
-    checkTimer = window.setTimeout(checkJaneSets, delay);
+    window.clearTimeout(janeSetSyncTimer);
+    janeSetSyncTimer = window.setTimeout(checkJaneSets, delay);
+  }
+
+  function scheduleInteractionChecks() {
+    scheduleCheck(180);
+    window.clearTimeout(janeSetRetryTimer);
+    janeSetRetryTimer = window.setTimeout(checkJaneSets, 650);
   }
 
   function schedulePoll() {
@@ -144,12 +163,59 @@
   document.addEventListener('cart:updated', () => {
     if (!isSyncingJaneSet) scheduleCheck();
   });
-  document.addEventListener('change', () => scheduleCheck(250), true);
+  function actionDirection(element) {
+    const actionText = [
+      element.getAttribute('name'),
+      element.getAttribute('aria-label'),
+      element.getAttribute('title'),
+      element.className,
+      element.textContent
+    ].filter(Boolean).join(' ').toLowerCase();
+
+    if (/(minus|decrease|decrement|remove|delete|trash)/.test(actionText)) return 'decrease';
+    if (/(plus|increase|increment)/.test(actionText)) return 'increase';
+    return null;
+  }
+
+  function isCartSurface(element) {
+    return Boolean(element?.closest?.(
+      'cart-drawer, cart-items, [class*="aov" i], [id*="aov" i], [class*="cart" i], [id*="cart" i]'
+    ));
+  }
+
+  document.addEventListener('change', event => {
+    if (!isCartSurface(event.target)) return;
+    const quantity = Number.parseInt(event.target.value, 10);
+    latestQuantityIntent = {
+      quantity: Number.isInteger(quantity) && quantity >= 0 ? quantity : null,
+      direction: null
+    };
+    scheduleInteractionChecks();
+  }, true);
   document.addEventListener('click', event => {
-    if (event.target.closest('button, a, [role="button"]')) scheduleCheck(350);
+    const control = event.target.closest('button, a, [role="button"]');
+    if (!control || !isCartSurface(control)) return;
+
+    const direction = actionDirection(control);
+    if (!direction) return;
+    latestQuantityIntent = { quantity: null, direction };
+    scheduleInteractionChecks();
   }, true);
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) scheduleCheck(0);
+  });
+
+  const cartObserver = new MutationObserver(mutations => {
+    if (isSyncingJaneSet) return;
+    if (mutations.some(mutation => isCartSurface(mutation.target))) {
+      scheduleCheck(250);
+    }
+  });
+  cartObserver.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['value', 'aria-valuenow']
   });
 
   scheduleCheck(0);

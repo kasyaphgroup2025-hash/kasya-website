@@ -1,7 +1,7 @@
 {% comment %}
   Jane Set acquisition hero.
-  The visible parent product supplies page media while four hidden component
-  products supply the two size-specific variants added to cart.
+  The visible parent product supplies page media while two hidden component
+  products supply the color-and-size variants added to cart.
 {% endcomment %}
 
 {% liquid
@@ -10,10 +10,8 @@
     assign parent_product = product
   endif
 
-  assign black_top_product = section.settings.black_top_product
-  assign black_pants_product = section.settings.black_pants_product
-  assign taupe_top_product = section.settings.taupe_top_product
-  assign taupe_pants_product = section.settings.taupe_pants_product
+  assign blouse_product = section.settings.blouse_product
+  assign pants_product = section.settings.pants_product
 %}
 
 <section class="jane-set-hero" data-jane-set-hero="{{ section.id }}">
@@ -75,44 +73,26 @@
       <form class="jane-set-hero__form" data-jane-set-form novalidate>
         <script type="application/json" data-jane-components>
           {
-            "Black": {
-              "top": [
-                {% for variant in black_top_product.variants %}
+            "top": {
+              "optionNames": {{ blouse_product.options | json }},
+              "variants": [
+                {% for variant in blouse_product.variants %}
                   {
                     "id": {{ variant.id | json }},
-                    "size": {{ variant.option1 | json }},
-                    "available": {{ variant.available | json }},
-                    "sku": {{ variant.sku | json }}
-                  }{% unless forloop.last %},{% endunless %}
-                {% endfor %}
-              ],
-              "pants": [
-                {% for variant in black_pants_product.variants %}
-                  {
-                    "id": {{ variant.id | json }},
-                    "size": {{ variant.option1 | json }},
+                    "options": {{ variant.options | json }},
                     "available": {{ variant.available | json }},
                     "sku": {{ variant.sku | json }}
                   }{% unless forloop.last %},{% endunless %}
                 {% endfor %}
               ]
             },
-            "Taupe": {
-              "top": [
-                {% for variant in taupe_top_product.variants %}
+            "pants": {
+              "optionNames": {{ pants_product.options | json }},
+              "variants": [
+                {% for variant in pants_product.variants %}
                   {
                     "id": {{ variant.id | json }},
-                    "size": {{ variant.option1 | json }},
-                    "available": {{ variant.available | json }},
-                    "sku": {{ variant.sku | json }}
-                  }{% unless forloop.last %},{% endunless %}
-                {% endfor %}
-              ],
-              "pants": [
-                {% for variant in taupe_pants_product.variants %}
-                  {
-                    "id": {{ variant.id | json }},
-                    "size": {{ variant.option1 | json }},
+                    "options": {{ variant.options | json }},
                     "available": {{ variant.available | json }},
                     "sku": {{ variant.sku | json }}
                   }{% unless forloop.last %},{% endunless %}
@@ -632,12 +612,36 @@
     let selectedPantsSize = '';
     let adding = false;
 
-    function variantsFor(role) {
-      return products[selectedColor]?.[role] || [];
+    function optionIndex(optionNames, name) {
+      return (optionNames || []).findIndex(optionName => {
+        const normalizedName = normalize(optionName);
+        return normalizedName === normalize(name) ||
+          (name === 'Color' && normalizedName === 'colour');
+      });
+    }
+
+    function matchesSelection(component, variant, size) {
+      const optionNames = component.optionNames || [];
+      const variantOptions = variant.options || [];
+      const colorIndex = optionIndex(optionNames, 'Color');
+      const sizeIndex = optionIndex(optionNames, 'Size');
+
+      if (colorIndex >= 0 && sizeIndex >= 0) {
+        return normalize(variantOptions[colorIndex]) === normalize(selectedColor) &&
+          normalize(variantOptions[sizeIndex]) === normalize(size);
+      }
+
+      // Shopify normally provides option names; this supports imported products
+      // whose option metadata is missing while still requiring both exact values.
+      return variantOptions.some(value => normalize(value) === normalize(selectedColor)) &&
+        variantOptions.some(value => normalize(value) === normalize(size));
     }
 
     function findVariant(role, size) {
-      return variantsFor(role).find(variant => normalize(variant.size) === normalize(size)) || null;
+      const component = products[role] || {};
+      return (component.variants || []).find(variant =>
+        matchesSelection(component, variant, size)
+      ) || null;
     }
 
     function selectionState() {
@@ -912,23 +916,13 @@
     },
     {
       "type": "product",
-      "id": "black_top_product",
-      "label": "Black Jane Blouse product"
+      "id": "blouse_product",
+      "label": "Jane Blouse component product"
     },
     {
       "type": "product",
-      "id": "black_pants_product",
-      "label": "Black Jane Pants product"
-    },
-    {
-      "type": "product",
-      "id": "taupe_top_product",
-      "label": "Taupe Jane Blouse product"
-    },
-    {
-      "type": "product",
-      "id": "taupe_pants_product",
-      "label": "Taupe Jane Pants product"
+      "id": "pants_product",
+      "label": "Jane Pants component product"
     },
     {
       "type": "text",
