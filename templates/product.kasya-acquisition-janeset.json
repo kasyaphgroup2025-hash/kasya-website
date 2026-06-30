@@ -10,7 +10,7 @@
 {
   "sections": {
     "kasya_lp_product_hero": {
-      "type": "kasya-lp-product-hero",
+      "type": "kasya-lp-jane-set-hero",
       "settings": {
         "product": "",
         "show_header": false,

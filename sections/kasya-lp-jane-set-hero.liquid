@@ -1,0 +1,1747 @@
+{% comment %}
+  KasyaPH Universal Product Landing Hero
+  Hero only. Uses Shopify's product form and the selected real variant ID.
+{% endcomment %}
+
+{% liquid
+  assign lp_product = section.settings.product
+
+  if lp_product == blank and product
+    assign lp_product = product
+  endif
+
+  if lp_product != blank
+    assign selected_variant = lp_product.selected_or_first_available_variant
+    assign product_form_id = 'kasya-lp-product-form-' | append: section.id
+    assign size_chart_image = section.settings.size_chart_image
+    assign size_chart_alt = section.settings.size_chart_trigger_text
+
+    for media in lp_product.media
+      if media.media_type == 'image' and media.preview_image != blank and media.alt == 'LP | Size Chart'
+        assign size_chart_image = media.preview_image
+        assign size_chart_alt = media.alt
+        break
+      endif
+    endfor
+  endif
+%}
+
+<section class="kasya-product-hero{% if section.settings.enable_sticky_atc %} kasya-product-hero--sticky-enabled{% endif %}" data-kasya-hero data-section-id="{{ section.id }}">
+  {% if lp_product == blank %}
+    <div class="kasya-product-hero__empty">
+      <p>Select a product in this section's settings.</p>
+    </div>
+  {% else %}
+    {% if section.settings.show_header %}
+      <header class="kasya-product-hero__header">
+        <button class="kasya-product-hero__menu" type="button" aria-label="Open menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <a class="kasya-product-hero__logo" href="/">
+          {{ section.settings.logo_text }}
+        </a>
+
+        <a class="kasya-product-hero__cart" href="/cart" aria-label="Cart">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6.2 6.2h15l-1.7 8.4H7.7L6.2 6.2Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+            <path d="M6.2 6.2 5.7 3.5H2.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            <circle cx="9" cy="20" r="1.35" fill="currentColor"/>
+            <circle cx="18" cy="20" r="1.35" fill="currentColor"/>
+          </svg>
+        </a>
+      </header>
+    {% endif %}
+
+    <div class="kasya-product-hero__gallery" data-gallery>
+      <div class="kasya-product-hero__slider" data-slider>
+        {% if lp_product.featured_image != blank %}
+          <div class="kasya-product-hero__slide">
+            <img
+              src="{{ lp_product.featured_image | image_url: width: 1400 }}"
+              alt="{{ lp_product.title | escape }}"
+              width="1400"
+              height="1750"
+              loading="eager"
+            >
+          </div>
+        {% endif %}
+      </div>
+
+      <button
+        type="button"
+        class="kasya-product-hero__arrow kasya-product-hero__arrow--prev"
+        aria-label="Previous image"
+        data-gallery-prev
+        hidden
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="m15 18-6-6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        class="kasya-product-hero__arrow kasya-product-hero__arrow--next"
+        aria-label="Next image"
+        data-gallery-next
+        hidden
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <div class="kasya-product-hero__dots" data-dots></div>
+    </div>
+
+    <div class="kasya-product-hero__info">
+      <div class="kasya-product-hero__meta-row">
+        {% if section.settings.product_label != blank %}
+          <p class="kasya-product-hero__label">
+            {{ section.settings.product_label }}
+          </p>
+        {% endif %}
+
+        {% if section.settings.rating_text != blank %}
+          <a class="kasya-product-hero__rating" href="#kasya-lp-reviews" aria-label="Read customer reviews" data-reviews-link>
+            <span>★★★★★</span>
+            <small>{{ section.settings.rating_text }}</small>
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="kasya-product-hero__title-row">
+        <div>
+          <h1 class="kasya-product-hero__title">
+            {{ section.settings.heading | default: lp_product.title }}
+          </h1>
+
+          {% if section.settings.subtitle != blank %}
+            <p class="kasya-product-hero__subtitle">
+              {{ section.settings.subtitle }}
+            </p>
+          {% endif %}
+        </div>
+
+        <div class="kasya-product-hero__price" data-price>
+          {{ selected_variant.price | money }}
+        </div>
+      </div>
+
+      {% if section.settings.description != blank %}
+        <p class="kasya-product-hero__description">
+          {{ section.settings.description }}
+        </p>
+      {% endif %}
+
+      <product-form class="kasya-product-hero__product-form product-form" data-hide-errors="true">
+        <div class="loading-overlay__spinner hidden" aria-hidden="true"></div>
+
+        {% form 'product', lp_product, id: product_form_id, class: 'kasya-product-hero__form', novalidate: 'novalidate', data-type: 'add-to-cart-form' %}
+          <input type="hidden" name="id" value="{{ selected_variant.id }}" data-variant-id>
+          <input type="hidden" name="quantity" value="1">
+
+        <script type="application/json" data-product-options>
+          {{ lp_product.options | json }}
+        </script>
+
+        <script type="application/json" data-variants>
+          [
+            {% for variant in lp_product.variants %}
+              {
+                "id": {{ variant.id | json }},
+                "available": {{ variant.available | json }},
+                "options": {{ variant.options | json }},
+                "price": {{ variant.price | money | json }},
+                "sku": {{ variant.sku | json }},
+                "featured_image": {% if variant.featured_image %}{{ variant.featured_image | image_url: width: 1400 | json }}{% else %}null{% endif %}
+              }{% unless forloop.last %},{% endunless %}
+            {% endfor %}
+          ]
+        </script>
+
+        <script type="application/json" data-product-media>
+          [
+            {% assign lp_media_count = 0 %}
+            {% for media in lp_product.media %}
+              {% if media.media_type == 'image' and media.preview_image != blank %}
+                {% if lp_media_count > 0 %},{% endif %}
+                {% assign lp_media_count = lp_media_count | plus: 1 %}
+                {
+                  "alt": {{ media.alt | json }},
+                  "src": {{ media.preview_image | image_url: width: 1400 | json }}
+                }
+              {% endif %}
+            {% endfor %}
+          ]
+        </script>
+
+        <script type="application/json" data-color-blocks>
+          [
+            {% for block in section.blocks %}
+              {
+                "display_name": {{ block.settings.display_name | json }},
+                "option_value": {{ block.settings.option_value | json }},
+                "swatch": {% if block.settings.swatch_color != blank %}{{ block.settings.swatch_color | json }}{% else %}null{% endif %},
+                "image_1": {% if block.settings.image_1 != blank %}{{ block.settings.image_1 | image_url: width: 1400 | json }}{% else %}null{% endif %},
+                "image_2": {% if block.settings.image_2 != blank %}{{ block.settings.image_2 | image_url: width: 1400 | json }}{% else %}null{% endif %},
+                "image_3": {% if block.settings.image_3 != blank %}{{ block.settings.image_3 | image_url: width: 1400 | json }}{% else %}null{% endif %},
+                "image_4": {% if block.settings.image_4 != blank %}{{ block.settings.image_4 | image_url: width: 1400 | json }}{% else %}null{% endif %},
+                "image_5": {% if block.settings.image_5 != blank %}{{ block.settings.image_5 | image_url: width: 1400 | json }}{% else %}null{% endif %},
+                "images": [
+                  {% assign image_count = 0 %}
+
+                  {% if block.settings.image_1 != blank %}
+                    {% assign image_count = image_count | plus: 1 %}
+                    {{ block.settings.image_1 | image_url: width: 1400 | json }}
+                  {% endif %}
+
+                  {% if block.settings.image_2 != blank %}
+                    {% if image_count > 0 %},{% endif %}
+                    {% assign image_count = image_count | plus: 1 %}
+                    {{ block.settings.image_2 | image_url: width: 1400 | json }}
+                  {% endif %}
+
+                  {% if block.settings.image_3 != blank %}
+                    {% if image_count > 0 %},{% endif %}
+                    {% assign image_count = image_count | plus: 1 %}
+                    {{ block.settings.image_3 | image_url: width: 1400 | json }}
+                  {% endif %}
+
+                  {% if block.settings.image_4 != blank %}
+                    {% if image_count > 0 %},{% endif %}
+                    {% assign image_count = image_count | plus: 1 %}
+                    {{ block.settings.image_4 | image_url: width: 1400 | json }}
+                  {% endif %}
+
+                  {% if block.settings.image_5 != blank %}
+                    {% if image_count > 0 %},{% endif %}
+                    {% assign image_count = image_count | plus: 1 %}
+                    {{ block.settings.image_5 | image_url: width: 1400 | json }}
+                  {% endif %}
+                ]
+              }{% unless forloop.last %},{% endunless %}
+            {% endfor %}
+          ]
+        </script>
+
+        <div class="kasya-product-hero__swatches-wrap">
+          <div class="kasya-product-hero__swatches" data-color-swatches></div>
+
+          <p class="kasya-product-hero__selected-color">
+            COLOR: <span data-selected-color>{{ section.settings.default_color }}</span>
+          </p>
+        </div>
+
+        <div class="kasya-product-hero__sizes-wrap" data-size-wrap>
+          <p class="kasya-product-hero__option-label">SIZE</p>
+          <div class="kasya-product-hero__sizes" data-size-options></div>
+        </div>
+
+        {% if section.settings.size_helper_text != blank %}
+          <p class="kasya-product-hero__size-helper">
+            {{ section.settings.size_helper_text }}
+          </p>
+        {% endif %}
+
+        {% if section.settings.show_size_chart and size_chart_image != blank %}
+          <div class="kasya-product-hero__size-chart" data-size-chart>
+            <button
+              type="button"
+              class="kasya-product-hero__size-chart-toggle"
+              aria-expanded="false"
+              data-size-chart-toggle
+            >
+              <span data-size-chart-toggle-text>{{ section.settings.size_chart_trigger_text }}</span>
+              <span class="kasya-product-hero__size-chart-icon" aria-hidden="true">⌄</span>
+            </button>
+
+            <div class="kasya-product-hero__size-chart-panel" data-size-chart-panel hidden>
+              <img
+                data-size-chart-image
+                data-size-chart-src="{{ size_chart_image | image_url: width: 1200 }}"
+                alt="{{ size_chart_alt | escape }}"
+                width="1200"
+                height="900"
+                loading="lazy"
+              >
+
+              {% if section.settings.size_chart_note != blank %}
+                <p class="kasya-product-hero__size-chart-note">
+                  {{ section.settings.size_chart_note }}
+                </p>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+
+        <button
+          type="submit"
+          class="kasya-product-hero__add"
+          data-submit
+          {% unless selected_variant.available %}disabled{% endunless %}
+        >
+          <span class="kasya-product-hero__add-icon">
+            <svg width="25" height="25" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6.2 6.2h15l-1.7 8.4H7.7L6.2 6.2Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+              <path d="M6.2 6.2 5.7 3.5H2.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              <circle cx="9" cy="20" r="1.35" fill="currentColor"/>
+              <circle cx="18" cy="20" r="1.35" fill="currentColor"/>
+            </svg>
+          </span>
+          <span data-submit-text>{{ section.settings.cta_text }}</span>
+        </button>
+        {% endform %}
+      </product-form>
+    </div>
+
+    {% if section.settings.enable_sticky_atc %}
+      <div class="kasya-product-hero__sticky-atc" data-sticky-atc>
+        <div class="kasya-product-hero__sticky-context" data-sticky-context>
+          {{ section.settings.default_color | upcase }} — {{ selected_variant.price | money }}
+        </div>
+
+        <button
+          type="submit"
+          form="{{ product_form_id }}"
+          class="kasya-product-hero__sticky-button"
+          data-sticky-submit
+          {% unless selected_variant.available %}disabled{% endunless %}
+        >
+          <span data-sticky-submit-text>{{ section.settings.cta_text }}</span>
+        </button>
+      </div>
+    {% endif %}
+  {% endif %}
+</section>
+
+<style>
+  .kasya-product-hero {
+    --kasya-black: #000000;
+    --kasya-text: #111111;
+    --kasya-muted: #555555;
+    --kasya-line: #eeeeee;
+    --kasya-accent: #e83b3b;
+    --kasya-bg: #ffffff;
+
+    background: var(--kasya-bg);
+    color: var(--kasya-text);
+    font-family: inherit;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .kasya-product-hero * {
+    box-sizing: border-box;
+  }
+
+  .kasya-product-hero__empty {
+    padding: 32px 18px;
+    text-align: center;
+  }
+
+  .kasya-product-hero__header {
+    height: 72px;
+    padding: 0 22px;
+    display: grid;
+    grid-template-columns: 44px 1fr 44px;
+    align-items: center;
+    background: #fff;
+  }
+
+  .kasya-product-hero__menu {
+    width: 36px;
+    height: 36px;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+
+  .kasya-product-hero__menu span {
+    display: block;
+    width: 31px;
+    height: 3px;
+    background: #000;
+  }
+
+  .kasya-product-hero__logo {
+    justify-self: center;
+    text-decoration: none;
+    color: #111;
+    font-family: serif;
+    font-size: 28px;
+    letter-spacing: 0.32em;
+    line-height: 1;
+  }
+
+  .kasya-product-hero__cart {
+    justify-self: end;
+    color: #111;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .kasya-product-hero__gallery {
+    width: 100%;
+    background: #f2f2f2;
+    position: relative;
+  }
+
+  .kasya-product-hero__slider {
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .kasya-product-hero__slider::-webkit-scrollbar {
+    display: none;
+  }
+
+  .kasya-product-hero__slide {
+    flex: 0 0 100%;
+    width: 100%;
+    scroll-snap-align: start;
+    background: #f2f2f2;
+  }
+
+  .kasya-product-hero__slide img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  .kasya-product-hero__arrow {
+    position: absolute;
+    top: 48%;
+    z-index: 3;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    color: #000000;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+    transform: translateY(-50%);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .kasya-product-hero__arrow[hidden] {
+    display: none;
+  }
+
+  .kasya-product-hero__arrow--prev {
+    left: 10px;
+  }
+
+  .kasya-product-hero__arrow--next {
+    right: 10px;
+  }
+
+  .kasya-product-hero__arrow:focus-visible {
+    outline: 2px solid #000000;
+    outline-offset: 2px;
+  }
+
+  .kasya-product-hero__dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    min-height: 18px;
+    margin-top: -24px;
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .kasya-product-hero__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    border: 0;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.55);
+    pointer-events: auto;
+  }
+
+  .kasya-product-hero__dot.is-active {
+    background: #ffffff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+  }
+
+  .kasya-product-hero__info {
+    padding: 22px 26px 22px;
+    background: #fff;
+  }
+
+  .kasya-product-hero__meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  .kasya-product-hero__label {
+    margin: 0;
+    font-size: 16px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #333;
+  }
+
+  .kasya-product-hero__rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    color: #000;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .kasya-product-hero__rating span {
+    font-size: 14px;
+    letter-spacing: 0.12em;
+  }
+
+  .kasya-product-hero__rating small {
+    font-size: 14px;
+    color: #333;
+  }
+
+  .kasya-product-hero__title-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 14px;
+    margin-top: 22px;
+  }
+
+  .kasya-product-hero__title {
+    margin: 0;
+    font-size: clamp(34px, 5vw, 44px);
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+  }
+
+  .kasya-product-hero__subtitle {
+    margin: 8px 0 0;
+    font-size: 18px;
+    line-height: 1.25;
+    color: #333;
+  }
+
+  .kasya-product-hero__price {
+    font-size: clamp(28px, 4.8vw, 38px);
+    line-height: 1;
+    font-weight: 900;
+    color: var(--kasya-accent);
+    white-space: nowrap;
+  }
+
+  .kasya-product-hero__description {
+    margin: 20px 0 0;
+    max-width: 620px;
+    font-size: 18px;
+    line-height: 1.45;
+    letter-spacing: 0.03em;
+    font-style: italic;
+    color: #222;
+  }
+
+  .kasya-product-hero__form {
+    margin-top: 26px;
+  }
+
+  .kasya-product-hero__swatches-wrap {
+    border-top: 1px solid var(--kasya-line);
+    padding-top: 18px;
+  }
+
+  .kasya-product-hero__swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-width: 360px;
+  }
+
+  .kasya-product-hero__swatch {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    background: var(--swatch);
+    padding: 0;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+  }
+
+  .kasya-product-hero__swatch.is-selected {
+    border-color: #000;
+    box-shadow: inset 0 0 0 1px #fff;
+  }
+
+  .kasya-product-hero__selected-color {
+    margin: 10px 0 0;
+    font-size: 17px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .kasya-product-hero__selected-color span {
+    font-weight: 400;
+  }
+
+  .kasya-product-hero__sizes-wrap {
+    margin-top: 24px;
+  }
+
+  .kasya-product-hero__option-label {
+    margin: 0 0 12px;
+    font-size: 15px;
+    letter-spacing: 0.12em;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .kasya-product-hero__sizes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .kasya-product-hero__size {
+    min-height: 46px;
+    min-width: 58px;
+    padding: 10px 14px;
+    border: 1px solid #d6d6d6;
+    border-radius: 999px;
+    background: #fff;
+    color: #111;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .kasya-product-hero__size.is-selected {
+    background: #000;
+    border-color: #000;
+    color: #fff;
+  }
+
+  .kasya-product-hero__size.is-disabled {
+    opacity: 0.35;
+    text-decoration: line-through;
+    cursor: not-allowed;
+  }
+
+  .kasya-product-hero__size-helper {
+    margin: 12px 0 0;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .kasya-product-hero__size-chart {
+    margin-top: 12px;
+    border-top: 1px solid var(--kasya-line);
+    border-bottom: 1px solid var(--kasya-line);
+  }
+
+  .kasya-product-hero__size-chart-toggle {
+    width: 100%;
+    min-height: 44px;
+    border: 0;
+    background: transparent;
+    color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  .kasya-product-hero__size-chart-icon {
+    font-size: 18px;
+    line-height: 1;
+    transition: transform 180ms ease;
+  }
+
+  .kasya-product-hero__size-chart-toggle[aria-expanded="true"] .kasya-product-hero__size-chart-icon {
+    transform: rotate(180deg);
+  }
+
+  .kasya-product-hero__size-chart-panel {
+    padding-bottom: 14px;
+  }
+
+  .kasya-product-hero__size-chart-panel img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    background: #f5f5f5;
+  }
+
+  .kasya-product-hero__size-chart-note {
+    margin: 10px 0 0;
+    color: #666;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .kasya-product-hero__add {
+    width: calc(100% - 48px);
+    min-height: 76px;
+    margin: 24px auto 0;
+    border: 0;
+    border-radius: 24px 24px 0 0;
+    background: #000;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    font-size: 25px;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .kasya-product-hero__add:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .kasya-product-hero__add-icon {
+    display: inline-flex;
+  }
+
+  .kasya-product-hero__sticky-atc {
+    display: none;
+  }
+
+  @media screen and (max-width: 430px) {
+    body.kasya-sticky-atc-enabled {
+      padding-bottom: calc(96px + env(safe-area-inset-bottom));
+    }
+
+    .kasya-product-hero--sticky-enabled {
+      padding-bottom: 0;
+    }
+
+    .kasya-product-hero__header {
+      height: 64px;
+      padding: 0 18px;
+    }
+
+    .kasya-product-hero__logo {
+      font-size: 24px;
+    }
+
+    .kasya-product-hero__info {
+      padding: 16px 18px 18px;
+    }
+
+    .kasya-product-hero__label,
+    .kasya-product-hero__rating small {
+      font-size: 13px;
+    }
+
+    .kasya-product-hero__title-row {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .kasya-product-hero__title {
+      font-size: 32px;
+      letter-spacing: 0.06em;
+    }
+
+    .kasya-product-hero__subtitle {
+      font-size: 16px;
+    }
+
+    .kasya-product-hero__price {
+      font-size: 30px;
+    }
+
+    .kasya-product-hero__arrow {
+      width: 32px;
+      height: 32px;
+    }
+
+    .kasya-product-hero__arrow--prev {
+      left: 8px;
+    }
+
+    .kasya-product-hero__arrow--next {
+      right: 8px;
+    }
+
+    .kasya-product-hero__description {
+      margin-top: 18px;
+      font-size: 16px;
+      letter-spacing: 0.02em;
+    }
+
+    .kasya-product-hero__swatch {
+      width: 36px;
+      height: 36px;
+    }
+
+    .kasya-product-hero__swatches-wrap {
+      padding-top: 16px;
+    }
+
+    .kasya-product-hero__selected-color {
+      margin-top: 8px;
+      font-size: 14px;
+    }
+
+    .kasya-product-hero__size-helper {
+      font-size: 13px;
+    }
+
+    .kasya-product-hero__size-chart-toggle {
+      min-height: 42px;
+      font-size: 13px;
+    }
+
+    .kasya-product-hero__add {
+      width: calc(100% - 44px);
+      font-size: 22px;
+      min-height: 68px;
+    }
+
+    .kasya-product-hero__sticky-atc {
+      position: fixed;
+      left: 50%;
+      right: auto;
+      bottom: 0;
+      z-index: 30;
+      width: 100%;
+      max-width: 760px;
+      padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.96);
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(12px);
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+      transition: opacity 180ms ease, visibility 180ms ease;
+    }
+
+    .kasya-product-hero__sticky-atc.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+      visibility: visible;
+    }
+
+    .kasya-product-hero__sticky-context {
+      min-width: 0;
+      color: #111;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      line-height: 1.25;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .kasya-product-hero__sticky-button {
+      min-height: 46px;
+      min-width: 138px;
+      border: 0;
+      border-radius: 999px;
+      background: #000;
+      color: #fff;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      padding: 0 18px;
+      text-transform: uppercase;
+    }
+
+    .kasya-product-hero__sticky-button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const section = document.querySelector('[data-section-id="{{ section.id }}"]');
+    if (!section) return;
+
+    const slider = section.querySelector('[data-slider]');
+    const dots = section.querySelector('[data-dots]');
+    const prevButton = section.querySelector('[data-gallery-prev]');
+    const nextButton = section.querySelector('[data-gallery-next]');
+    const reviewsLink = section.querySelector('[data-reviews-link]');
+    const variantInput = section.querySelector('[data-variant-id]');
+    const priceEl = section.querySelector('[data-price]');
+    const submitButton = section.querySelector('[data-submit]');
+    const submitText = section.querySelector('[data-submit-text]');
+    const stickyAtc = section.querySelector('[data-sticky-atc]');
+    const stickyContext = section.querySelector('[data-sticky-context]');
+    const stickySubmitButton = section.querySelector('[data-sticky-submit]');
+    const stickySubmitText = section.querySelector('[data-sticky-submit-text]');
+    const colorSwatchesContainer = section.querySelector('[data-color-swatches]');
+    const selectedColorText = section.querySelector('[data-selected-color]');
+    const sizeOptionsContainer = section.querySelector('[data-size-options]');
+    const sizeChartToggle = section.querySelector('[data-size-chart-toggle]');
+    const sizeChartToggleText = section.querySelector('[data-size-chart-toggle-text]');
+    const sizeChartPanel = section.querySelector('[data-size-chart-panel]');
+    const sizeChartImage = section.querySelector('[data-size-chart-image]');
+    const optionNamesEl = section.querySelector('[data-product-options]');
+    const variantsEl = section.querySelector('[data-variants]');
+    const productMediaEl = section.querySelector('[data-product-media]');
+    const colorBlocksEl = section.querySelector('[data-color-blocks]');
+
+    if (!slider || !dots || !variantInput || !optionNamesEl || !variantsEl || !colorBlocksEl) return;
+
+    if (stickyAtc) {
+      document.body.classList.add('kasya-sticky-atc-enabled');
+    }
+
+    const optionNames = JSON.parse(optionNamesEl.textContent || '[]');
+    const variants = JSON.parse(variantsEl.textContent || '[]');
+    const productMedia = productMediaEl ? JSON.parse(productMediaEl.textContent || '[]') : [];
+    const colorBlocksRaw = JSON.parse(colorBlocksEl.textContent || '[]');
+    const colorBlocks = colorBlocksRaw.filter(block => block && block.option_value);
+
+    const defaultColor = {{ section.settings.default_color | json }};
+    const colorOptionName = {{ section.settings.color_option_name | json }};
+    const sizeOptionName = {{ section.settings.size_option_name | json }};
+    const ctaText = {{ section.settings.cta_text | json }};
+    const sizeChartTriggerText = {{ section.settings.size_chart_trigger_text | json }};
+    const sizeChartHideText = 'Hide size chart';
+    const fallbackImage = {% if lp_product.featured_image != blank %}{{ lp_product.featured_image | image_url: width: 1400 | json }}{% else %}null{% endif %};
+    const lpShotOrder = ['front', 'side', 'back', 'sitting', 'fabric close up'];
+
+    const lower = value => String(value || '').trim().toLowerCase();
+
+    function normalizeColorName(value) {
+      return String(value || '')
+        .trim()
+        .replace(/([a-z])([A-Z])/g, '$1 $2')
+        .replace(/[-_]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .toLowerCase()
+        .trim();
+    }
+
+    function getAutomaticSwatchColor(colorValue) {
+      const value = normalizeColorName(colorValue);
+      const compactValue = value.replace(/\s+/g, '');
+
+      if (value.includes('black')) return '#000000';
+
+      const swatchMap = [
+        { names: ['dusty lilac', 'soft lilac', 'light lilac', 'lilac', 'lavender'], color: '#C8B4D9' },
+        { names: ['dusty purple', 'muted purple'], color: '#A58AAF' },
+        { names: ['nude beige', 'skin tone', 'skintone', 'flesh', 'skin'], color: '#D8B79B' },
+        { names: ['light nude', 'warm nude', 'nude'], color: '#D8BEA2' },
+        { names: ['light beige', 'beige'], color: '#DCC5A1' },
+        { names: ['mocha beige'], color: '#B89C84' },
+        { names: ['greige'], color: '#B7AEA3' },
+        { names: ['stone'], color: '#B9AEA0' },
+        { names: ['sand'], color: '#D6C2A3' },
+        { names: ['taupe'], color: '#B8A38E' },
+        { names: ['dark teal', 'deep teal', 'blue green', 'petrol', 'teal'], color: '#0F5C5C' },
+        { names: ['emerald'], color: '#0F6B4F' },
+        { names: ['forest green', 'forest'], color: '#0F5132' },
+        { names: ['dark green'], color: '#123F2E' },
+        { names: ['moss green'], color: '#637A45' },
+        { names: ['olive green', 'olive'], color: '#5F6F3A' },
+        { names: ['deep navy', 'navy blue', 'navy'], color: '#101E4A' },
+        { names: ['royal blue'], color: '#172A78' },
+        { names: ['blue'], color: '#2F5D9C' },
+        { names: ['light gray', 'light grey'], color: '#B8B8B8' },
+        { names: ['gray', 'grey', 'charcoal'], color: '#7A7A7A' },
+        { names: ['off white', 'white', 'cream'], color: '#F4EFE8' },
+        { names: ['khaki'], color: '#B5A06A' },
+        { names: ['choco brown', 'chocolate brown', 'brown'], color: '#7A4A2A' },
+        { names: ['mocha'], color: '#8B6F5A' },
+        { names: ['camel'], color: '#B57A45' },
+        { names: ['coffee'], color: '#5A3825' },
+        { names: ['burgundy'], color: '#6F1D1B' },
+        { names: ['wine red', 'maroon', 'red'], color: '#8B0000' },
+        { names: ['old rose', 'dusty pink', 'rose'], color: '#C98C8C' },
+        { names: ['pink'], color: '#E8A7B7' },
+        { names: ['blush'], color: '#F0C7B7' },
+        { names: ['green'], color: '#0F5132' },
+        { names: ['sage'], color: '#9CAF88' },
+        { names: ['peach'], color: '#F4BE98' },
+        { names: ['mustard'], color: '#C99700' }
+      ];
+
+      const match = swatchMap.find(item => {
+        return item.names.some(name => {
+          const normalizedName = normalizeColorName(name);
+          const compactName = normalizedName.replace(/\s+/g, '');
+          return value.includes(normalizedName) || compactValue.includes(compactName);
+        });
+      });
+
+      return match ? match.color : '#000000';
+    }
+
+    function getSwatchColor(block, displayName, colorValue) {
+      const manualSwatch = block && block.swatch ? String(block.swatch).trim() : '';
+      const colorName = displayName || colorValue;
+      const manualIsBlack = ['#000', '#000000'].includes(lower(manualSwatch));
+      const nameIsBlack = normalizeColorName(colorName).includes('black');
+
+      if (manualSwatch && (!manualIsBlack || nameIsBlack)) return manualSwatch;
+
+      return getAutomaticSwatchColor(colorName);
+    }
+
+    function findOptionIndex(targetName, fallbackKeyword) {
+      let index = optionNames.findIndex(name => lower(name) === lower(targetName));
+      if (index !== -1) return index;
+
+      index = optionNames.findIndex(name => lower(name).includes(lower(fallbackKeyword)));
+      if (index !== -1) return index;
+
+      return -1;
+    }
+
+    const colorIndex = findOptionIndex(colorOptionName, 'color');
+    let sizeIndex = findOptionIndex(sizeOptionName, 'size');
+
+    if (sizeIndex === -1) {
+      sizeIndex = optionNames.findIndex((name, index) => index !== colorIndex);
+    }
+
+    let selectedColor = defaultColor || '';
+    let selectedSize = '';
+
+    function getColorBlock(colorValue) {
+      return colorBlocks.find(block => {
+        return lower(block.option_value) === lower(colorValue) || lower(block.display_name) === lower(colorValue);
+      });
+    }
+
+    function parseProductMediaAlt(altText) {
+      const parts = String(altText || '').split('|').map(part => part.trim());
+      if (parts.length !== 3 || lower(parts[0]) !== 'lp') return null;
+
+      return {
+        color: parts[1],
+        shot: normalizeColorName(parts[2])
+      };
+    }
+
+    function getProductMediaShotMapForColor(colorValue, block, shotOrder = lpShotOrder) {
+      const colorNames = [colorValue, block && block.option_value, block && block.display_name]
+        .filter(Boolean)
+        .map(value => lower(value));
+      const uniqueColorNames = [...new Set(colorNames)];
+      const allowedShots = new Set(shotOrder);
+      const images = {};
+
+      productMedia.forEach(item => {
+        const parsed = parseProductMediaAlt(item.alt);
+        if (!parsed || !item.src) return;
+        if (!uniqueColorNames.includes(lower(parsed.color))) return;
+        if (!allowedShots.has(parsed.shot) || images[parsed.shot]) return;
+
+        images[parsed.shot] = item.src;
+      });
+
+      return images;
+    }
+
+    function getProductMediaImagesForColor(colorValue, block, shotOrder = lpShotOrder) {
+      const imageMap = getProductMediaShotMapForColor(colorValue, block, shotOrder);
+
+      return shotOrder.map(shot => imageMap[shot]).filter(Boolean);
+    }
+
+    function getManualFitImageMapForBlock(block) {
+      if (!block) return {};
+
+      return {
+        front: block.image_1,
+        side: block.image_2,
+        back: block.image_3
+      };
+    }
+
+    function getFitImageMapForColor(colorValue) {
+      const fitShotOrder = ['front', 'side', 'back'];
+      const block = getColorBlock(colorValue);
+      const defaultBlock = getColorBlock(defaultColor);
+      const selectedMediaImages = getProductMediaShotMapForColor(colorValue, block, fitShotOrder);
+      const selectedManualImages = getManualFitImageMapForBlock(block);
+      const defaultMediaImages = lower(colorValue) === lower(defaultColor)
+        ? {}
+        : getProductMediaShotMapForColor(defaultColor, defaultBlock, fitShotOrder);
+      const defaultManualImages = lower(colorValue) === lower(defaultColor)
+        ? {}
+        : getManualFitImageMapForBlock(defaultBlock);
+
+      return fitShotOrder.reduce((images, shot) => {
+        images[shot] = selectedMediaImages[shot] ||
+          selectedManualImages[shot] ||
+          defaultMediaImages[shot] ||
+          defaultManualImages[shot] ||
+          '';
+        return images;
+      }, {});
+    }
+
+    function getFabricCloseupForColor(colorValue) {
+      const block = getColorBlock(colorValue);
+      const fabricImages = getProductMediaImagesForColor(colorValue, block, ['fabric close up']);
+
+      return fabricImages[0] || '';
+    }
+
+    function getAvailableColorsFromVariants() {
+      if (colorIndex === -1) return [];
+      return [...new Set(variants.map(variant => variant.options[colorIndex]).filter(Boolean))];
+    }
+
+    function getAvailableSizesForColor(colorValue) {
+      if (sizeIndex === -1) return [];
+
+      const sizes = [];
+
+      variants.forEach(variant => {
+        const variantColor = colorIndex === -1 ? null : variant.options[colorIndex];
+        const variantSize = variant.options[sizeIndex];
+
+        if (!variantSize) return;
+
+        if (colorIndex === -1 || lower(variantColor) === lower(colorValue)) {
+          if (!sizes.includes(variantSize)) sizes.push(variantSize);
+        }
+      });
+
+      return sizes;
+    }
+
+    function findVariant() {
+      let match = variants.find(variant => {
+        const colorMatches = colorIndex === -1 || lower(variant.options[colorIndex]) === lower(selectedColor);
+        const sizeMatches = sizeIndex === -1 || lower(variant.options[sizeIndex]) === lower(selectedSize);
+        return colorMatches && sizeMatches && variant.available;
+      });
+
+      if (match) return match;
+
+      match = variants.find(variant => {
+        const colorMatches = colorIndex === -1 || lower(variant.options[colorIndex]) === lower(selectedColor);
+        const sizeMatches = sizeIndex === -1 || lower(variant.options[sizeIndex]) === lower(selectedSize);
+        return colorMatches && sizeMatches;
+      });
+
+      return match || variants[0];
+    }
+
+    function getImagesForColor(colorValue) {
+      const block = getColorBlock(colorValue);
+      const productMediaImages = getProductMediaImagesForColor(colorValue, block);
+
+      if (productMediaImages.length > 0) return productMediaImages;
+
+      const orderedImageKeys = ['image_1', 'image_2', 'image_3', 'image_4', 'image_5'];
+      const orderedImages = block
+        ? orderedImageKeys.map(key => block[key]).filter(Boolean)
+        : [];
+      const legacyImages = block && Array.isArray(block.images) ? block.images.filter(Boolean) : [];
+      const images = orderedImages.length ? orderedImages : legacyImages;
+
+      if (images.length > 0) return images;
+
+      const selectedVariantImage = findVariant();
+
+      if (
+        selectedVariantImage &&
+        selectedVariantImage.featured_image &&
+        (colorIndex === -1 || lower(selectedVariantImage.options[colorIndex]) === lower(colorValue))
+      ) {
+        return [selectedVariantImage.featured_image];
+      }
+
+      const variant = variants.find(item => {
+        return colorIndex !== -1 && lower(item.options[colorIndex]) === lower(colorValue) && item.featured_image;
+      });
+
+      if (variant && variant.featured_image) return [variant.featured_image];
+
+      return fallbackImage ? [fallbackImage] : [];
+    }
+
+    function renderSlider(colorValue) {
+      const images = getImagesForColor(colorValue);
+
+      slider.innerHTML = images.map((src, index) => `
+        <div class="kasya-product-hero__slide">
+          <img
+            src="${src}"
+            alt="{{ lp_product.title | escape }} ${index + 1}"
+            width="1400"
+            height="1750"
+            loading="${index === 0 ? 'eager' : 'lazy'}"
+          >
+        </div>
+      `).join('');
+
+      dots.innerHTML = images.map((_, index) => `
+        <button
+          type="button"
+          class="kasya-product-hero__dot ${index === 0 ? 'is-active' : ''}"
+          aria-label="Go to image ${index + 1}"
+          data-dot-index="${index}"
+        ></button>
+      `).join('');
+
+      slider.scrollTo({ left: 0, behavior: 'auto' });
+      updateCarouselControls();
+    }
+
+    function getCurrentSlideIndex() {
+      const slides = slider.querySelectorAll('.kasya-product-hero__slide');
+      if (!slides.length || !slider.clientWidth) return 0;
+
+      return Math.min(slides.length - 1, Math.max(0, Math.round(slider.scrollLeft / slider.clientWidth)));
+    }
+
+    function updateCarouselControls() {
+      const slides = slider.querySelectorAll('.kasya-product-hero__slide');
+      const hasMultipleImages = slides.length > 1;
+
+      if (prevButton) {
+        prevButton.hidden = !hasMultipleImages;
+      }
+
+      if (nextButton) {
+        nextButton.hidden = !hasMultipleImages;
+      }
+    }
+
+    function scrollToSlide(index) {
+      const slides = slider.querySelectorAll('.kasya-product-hero__slide');
+      if (!slides.length) return;
+
+      const targetIndex = (index + slides.length) % slides.length;
+
+      slider.scrollTo({
+        left: slider.clientWidth * targetIndex,
+        behavior: 'smooth'
+      });
+    }
+
+    function updateDots() {
+      const slides = slider.querySelectorAll('.kasya-product-hero__slide');
+      if (!slides.length) return;
+
+      const index = getCurrentSlideIndex();
+
+      dots.querySelectorAll('.kasya-product-hero__dot').forEach((dot, dotIndex) => {
+        dot.classList.toggle('is-active', dotIndex === index);
+      });
+
+      updateCarouselControls();
+    }
+
+    function renderColors() {
+      const variantColors = getAvailableColorsFromVariants();
+      const sourceColors = colorBlocks.length ? colorBlocks.map(block => block.option_value) : variantColors;
+      const uniqueColors = [...new Set(sourceColors.filter(Boolean))];
+
+      colorSwatchesContainer.innerHTML = uniqueColors.map(colorValue => {
+        const block = getColorBlock(colorValue);
+        const displayName = block ? block.display_name : colorValue;
+        const swatch = getSwatchColor(block, displayName, colorValue);
+
+        return `
+          <button
+            type="button"
+            class="kasya-product-hero__swatch"
+            style="--swatch: ${swatch};"
+            aria-label="${displayName}"
+            title="${displayName}"
+            data-color-value="${colorValue}"
+            data-color-display="${displayName}"
+          ></button>
+        `;
+      }).join('');
+    }
+
+    function isSizeAvailable(sizeValue) {
+      return variants.some(variant => {
+        const colorMatches = colorIndex === -1 || lower(variant.options[colorIndex]) === lower(selectedColor);
+        const sizeMatches = sizeIndex === -1 || lower(variant.options[sizeIndex]) === lower(sizeValue);
+        return colorMatches && sizeMatches && variant.available;
+      });
+    }
+
+    function renderSizes() {
+      const sizes = getAvailableSizesForColor(selectedColor);
+
+      if (!sizes.length) {
+        sizeOptionsContainer.innerHTML = '';
+        return;
+      }
+
+      if (!selectedSize || !sizes.includes(selectedSize)) {
+        const firstAvailableSize = sizes.find(size => isSizeAvailable(size));
+        selectedSize = firstAvailableSize || sizes[0];
+      }
+
+      sizeOptionsContainer.innerHTML = sizes.map(size => {
+        const available = isSizeAvailable(size);
+
+        return `
+          <button
+            type="button"
+            class="kasya-product-hero__size ${lower(size) === lower(selectedSize) ? 'is-selected' : ''} ${available ? '' : 'is-disabled'}"
+            data-size-value="${size}"
+            ${available ? '' : 'aria-disabled="true"'}
+          >
+            ${size}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function updateSelectedClasses() {
+      section.querySelectorAll('[data-color-value]').forEach(button => {
+        button.classList.toggle('is-selected', lower(button.dataset.colorValue) === lower(selectedColor));
+      });
+
+      section.querySelectorAll('[data-size-value]').forEach(button => {
+        button.classList.toggle('is-selected', lower(button.dataset.sizeValue) === lower(selectedSize));
+      });
+    }
+
+    function updateVariantState() {
+      const variant = findVariant();
+
+      if (!variant) return;
+
+      variantInput.value = variant.id;
+      priceEl.textContent = variant.price;
+
+      if (stickyAtc && stickyContext) {
+        const block = getColorBlock(selectedColor);
+        const displayColor = String((block && block.display_name) || selectedColor || '').toUpperCase();
+        const displaySize = selectedSize ? ` / ${String(selectedSize).toUpperCase()}` : '';
+        stickyContext.textContent = `${displayColor}${displaySize} — ${variant.price}`;
+      }
+
+      if (variant.available) {
+        submitButton.disabled = false;
+        submitText.textContent = ctaText;
+
+        if (stickySubmitButton && stickySubmitText) {
+          stickySubmitButton.disabled = false;
+          stickySubmitText.textContent = ctaText;
+        }
+      } else {
+        submitButton.disabled = true;
+        submitText.textContent = 'SOLD OUT';
+
+        if (stickySubmitButton && stickySubmitText) {
+          stickySubmitButton.disabled = true;
+          stickySubmitText.textContent = 'SOLD OUT';
+        }
+      }
+    }
+
+    function announceSelectedColor() {
+      const block = getColorBlock(selectedColor);
+      const displayColor = String((block && block.display_name) || selectedColor || '');
+      const colorState = {
+        color: selectedColor,
+        displayColor,
+        images: getFitImageMapForColor(selectedColor),
+        fabricCloseup: getFabricCloseupForColor(selectedColor),
+        featuredImage: fallbackImage
+      };
+
+      window.KasyaLPSelectedColor = colorState;
+      document.dispatchEvent(new CustomEvent('kasya:hero-color-change', {
+        detail: colorState
+      }));
+    }
+
+    function initializeStickyVisibility() {
+      if (!stickyAtc || !submitButton) return;
+
+      const setStickyVisibility = isVisible => {
+        stickyAtc.classList.toggle('is-visible', isVisible);
+      };
+
+      if (!('IntersectionObserver' in window)) {
+        const updateFromScroll = () => {
+          const rect = submitButton.getBoundingClientRect();
+          setStickyVisibility(rect.bottom <= 0);
+        };
+
+        updateFromScroll();
+        window.addEventListener('scroll', updateFromScroll, { passive: true });
+        window.addEventListener('resize', updateFromScroll);
+        return;
+      }
+
+      const observer = new IntersectionObserver(entries => {
+        const entry = entries[0];
+        const buttonAboveViewport = entry.boundingClientRect.bottom <= 0;
+        setStickyVisibility(!entry.isIntersecting && buttonAboveViewport);
+      }, {
+        threshold: 0
+      });
+
+      observer.observe(submitButton);
+    }
+
+    function selectColor(colorValue) {
+      const block = getColorBlock(colorValue);
+      selectedColor = colorValue;
+
+      if (selectedColorText) {
+        selectedColorText.textContent = String((block && block.display_name) || colorValue || '').toUpperCase();
+      }
+
+      renderSlider(selectedColor);
+      renderSizes();
+      updateSelectedClasses();
+      updateVariantState();
+      announceSelectedColor();
+    }
+
+    function selectSize(sizeValue) {
+      selectedSize = sizeValue;
+      updateSelectedClasses();
+      updateVariantState();
+    }
+
+    function initializeDefaultSelection() {
+      const variantColors = getAvailableColorsFromVariants();
+      const hasDefaultVariantColor = variantColors.some(color => lower(color) === lower(defaultColor));
+      const hasDefaultBlock = colorBlocks.some(block => lower(block.option_value) === lower(defaultColor));
+
+      if (defaultColor && (hasDefaultVariantColor || hasDefaultBlock)) {
+        selectedColor = defaultColor;
+      } else if (variantColors.length) {
+        selectedColor = variantColors[0];
+      } else if (colorBlocks.length) {
+        selectedColor = colorBlocks[0].option_value;
+      }
+
+      const sizes = getAvailableSizesForColor(selectedColor);
+      const firstAvailableSize = sizes.find(size => isSizeAvailable(size));
+
+      selectedSize = firstAvailableSize || sizes[0] || '';
+    }
+
+    renderColors();
+    initializeDefaultSelection();
+    selectColor(selectedColor);
+    initializeStickyVisibility();
+
+    colorSwatchesContainer.addEventListener('click', event => {
+      const button = event.target.closest('[data-color-value]');
+      if (!button) return;
+
+      selectColor(button.dataset.colorValue);
+    });
+
+    sizeOptionsContainer.addEventListener('click', event => {
+      const button = event.target.closest('[data-size-value]');
+      if (!button || button.classList.contains('is-disabled')) return;
+
+      selectSize(button.dataset.sizeValue);
+    });
+
+    slider.addEventListener('scroll', () => {
+      window.requestAnimationFrame(updateDots);
+    });
+
+    if (prevButton) {
+      prevButton.addEventListener('click', () => {
+        scrollToSlide(getCurrentSlideIndex() - 1);
+      });
+    }
+
+    if (nextButton) {
+      nextButton.addEventListener('click', () => {
+        scrollToSlide(getCurrentSlideIndex() + 1);
+      });
+    }
+
+    dots.addEventListener('click', event => {
+      const dot = event.target.closest('[data-dot-index]');
+      if (!dot) return;
+
+      const index = Number(dot.dataset.dotIndex);
+      scrollToSlide(index);
+    });
+
+    if (sizeChartToggle && sizeChartPanel) {
+      sizeChartToggle.addEventListener('click', () => {
+        const isExpanded = sizeChartToggle.getAttribute('aria-expanded') === 'true';
+
+        sizeChartToggle.setAttribute('aria-expanded', String(!isExpanded));
+        sizeChartPanel.hidden = isExpanded;
+
+        if (!isExpanded && sizeChartImage && !sizeChartImage.getAttribute('src')) {
+          sizeChartImage.setAttribute('src', sizeChartImage.dataset.sizeChartSrc);
+        }
+
+        if (sizeChartToggleText) {
+          sizeChartToggleText.textContent = isExpanded ? sizeChartTriggerText : sizeChartHideText;
+        }
+      });
+    }
+
+    if (reviewsLink) {
+      reviewsLink.addEventListener('click', event => {
+        const reviewsSection = document.querySelector(reviewsLink.getAttribute('href'));
+        if (!reviewsSection || !('scrollBehavior' in document.documentElement.style)) return;
+
+        event.preventDefault();
+        reviewsSection.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      });
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Kasya LP Jane Set Hero",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Main product selector for this Hero section. If blank, the section can fall back to the current product page object."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_header",
+      "label": "Show mini header",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo text",
+      "default": "KASYA"
+    },
+    {
+      "type": "text",
+      "id": "product_label",
+      "label": "Product label",
+      "default": "KASYA BASICS"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Headline",
+      "default": "WIDELEG PANTS"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle / fabric",
+      "default": "Soft Linen"
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating text",
+      "default": "(4.8)"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Short benefit description",
+      "default": "Effortless everyday style designed for comfort, movement, and repeat wear"
+    },
+    {
+      "type": "text",
+      "id": "default_color",
+      "label": "Default color option value",
+      "default": "Black",
+      "info": "Must match the Shopify variant color value exactly. Example: Black"
+    },
+    {
+      "type": "text",
+      "id": "color_option_name",
+      "label": "Shopify color option name",
+      "default": "Color",
+      "info": "Usually Color. Must match the product option name."
+    },
+    {
+      "type": "text",
+      "id": "size_option_name",
+      "label": "Shopify size option name",
+      "default": "Size",
+      "info": "Usually Size. Must match the product option name."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_size_chart",
+      "label": "Show size chart",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "size_helper_text",
+      "label": "Size helper text",
+      "default": "Choose your usual size for a relaxed fit. Size up if you prefer extra room around the waist or tummy."
+    },
+    {
+      "type": "text",
+      "id": "size_chart_trigger_text",
+      "label": "Size chart trigger text",
+      "default": "Not sure about your size? View size chart"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_chart_image",
+      "label": "Size chart image",
+      "info": "Fallback image. Recommended workflow: upload the product's size chart image to product media and set alt text to LP | Size Chart. This lets each product use its own size chart automatically."
+    },
+    {
+      "type": "textarea",
+      "id": "size_chart_note",
+      "label": "Size chart note",
+      "default": "Measurements may vary slightly due to fabric behavior and manual production."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA text",
+      "default": "ADD TO CART"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_atc",
+      "label": "Enable sticky Add to Cart",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "color",
+      "name": "Color",
+      "settings": [
+        {
+          "type": "text",
+          "id": "display_name",
+          "label": "Display color name",
+          "default": "Black"
+        },
+        {
+          "type": "text",
+          "id": "option_value",
+          "label": "Shopify color option value",
+          "default": "Black",
+          "info": "Must match the product variant color value exactly."
+        },
+        {
+          "type": "color",
+          "id": "swatch_color",
+          "label": "Swatch color",
+          "info": "Optional. If left as default black for non-black colors, the section will auto-pick a color based on the color name."
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Front image",
+          "info": "Future recommended workflow: upload product media and set alt text as LP | Color | Front, LP | Color | Side, LP | Color | Back, LP | Color | Sitting, LP | Color | Fabric Close-up. Until product media is ready, manual Color block images can be used as fallback."
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Side image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Back image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_4",
+          "label": "Sitting image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_5",
+          "label": "Fabric close-up image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Kasya LP Jane Set Hero",
+      "blocks": [
+        {
+          "type": "color",
+          "settings": {
+            "display_name": "Black",
+            "option_value": "Black",
+            "swatch_color": "#000000"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
