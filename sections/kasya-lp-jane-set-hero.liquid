@@ -630,6 +630,7 @@
     const shotOrder = ['front', 'side', 'back', 'sitting', 'fabric close up'];
     const normalize = value => String(value || '').trim().toLowerCase();
     const defaultPreviewColor = {{ section.settings.default_media_preview_color | default: 'Black' | json }};
+    // Media can preview a color without preselecting a purchasable set color.
     let selectedColor = '';
     let previewColor = defaultPreviewColor;
     let selectedTopSize = '';
