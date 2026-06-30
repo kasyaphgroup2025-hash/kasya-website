@@ -1,148 +1,81 @@
 {% comment %}
-  KasyaPH Jane Set Landing Hero
-  Uses one visible parent product and four hidden component products.
+  Jane Set acquisition hero.
+  The visible parent product supplies page media while four hidden component
+  products supply the two size-specific variants added to cart.
 {% endcomment %}
 
 {% liquid
-  assign lp_product = section.settings.product
+  assign parent_product = section.settings.product
+  if parent_product == blank and product
+    assign parent_product = product
+  endif
+
   assign black_top_product = section.settings.black_top_product
   assign black_pants_product = section.settings.black_pants_product
   assign taupe_top_product = section.settings.taupe_top_product
   assign taupe_pants_product = section.settings.taupe_pants_product
-
-  if lp_product == blank and product
-    assign lp_product = product
-  endif
-
-  if lp_product != blank
-    assign size_chart_image = section.settings.size_chart_image
-    assign size_chart_alt = section.settings.size_chart_trigger_text
-
-    for media in lp_product.media
-      if media.media_type == 'image' and media.preview_image != blank and media.alt == 'LP | Size Chart'
-        assign size_chart_image = media.preview_image
-        assign size_chart_alt = media.alt
-        break
-      endif
-    endfor
-  endif
 %}
 
-<section class="kasya-product-hero{% if section.settings.enable_sticky_atc %} kasya-product-hero--sticky-enabled{% endif %}" data-kasya-hero data-section-id="{{ section.id }}">
-  {% if lp_product == blank %}
-    <div class="kasya-product-hero__empty">
-      <p>Select a product in this section's settings.</p>
+<section class="jane-set-hero" data-jane-set-hero="{{ section.id }}">
+  {% if parent_product == blank %}
+    <div class="jane-set-hero__empty">
+      Select the visible Jane Set parent product in this section's settings.
     </div>
   {% else %}
-    {% if section.settings.show_header %}
-      <header class="kasya-product-hero__header">
-        <button class="kasya-product-hero__menu" type="button" aria-label="Open menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-
-        <a class="kasya-product-hero__logo" href="/">
-          {{ section.settings.logo_text }}
-        </a>
-
-        <a class="kasya-product-hero__cart" href="/cart" aria-label="Cart">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M6.2 6.2h15l-1.7 8.4H7.7L6.2 6.2Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
-            <path d="M6.2 6.2 5.7 3.5H2.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
-            <circle cx="9" cy="20" r="1.35" fill="currentColor"/>
-            <circle cx="18" cy="20" r="1.35" fill="currentColor"/>
-          </svg>
-        </a>
-      </header>
-    {% endif %}
-
-    <div class="kasya-product-hero__gallery" data-gallery>
-      <div class="kasya-product-hero__slider" data-slider>
-        {% if lp_product.featured_image != blank %}
-          <div class="kasya-product-hero__slide">
-            <img
-              src="{{ lp_product.featured_image | image_url: width: 1400 }}"
-              alt="{{ lp_product.title | escape }}"
-              width="1400"
-              height="1750"
-              loading="eager"
-            >
-          </div>
-        {% endif %}
+    <div class="jane-set-hero__gallery" data-jane-gallery>
+      <div class="jane-set-hero__slides" data-jane-slides>
+        {% for media in parent_product.media %}
+          {% if media.media_type == 'image' and media.preview_image != blank %}
+            <figure class="jane-set-hero__slide">
+              <img
+                src="{{ media.preview_image | image_url: width: 1400 }}"
+                alt="{{ media.alt | default: parent_product.title | escape }}"
+                width="{{ media.preview_image.width }}"
+                height="{{ media.preview_image.height }}"
+                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+              >
+            </figure>
+          {% endif %}
+        {% endfor %}
       </div>
 
-      <button
-        type="button"
-        class="kasya-product-hero__arrow kasya-product-hero__arrow--prev"
-        aria-label="Previous image"
-        data-gallery-prev
-        hidden
-      >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="m15 18-6-6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+      <button type="button" class="jane-set-hero__gallery-button jane-set-hero__gallery-button--prev" data-jane-prev aria-label="Previous image">
+        &#8249;
       </button>
-
-      <button
-        type="button"
-        class="kasya-product-hero__arrow kasya-product-hero__arrow--next"
-        aria-label="Next image"
-        data-gallery-next
-        hidden
-      >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+      <button type="button" class="jane-set-hero__gallery-button jane-set-hero__gallery-button--next" data-jane-next aria-label="Next image">
+        &#8250;
       </button>
-
-      <div class="kasya-product-hero__dots" data-dots></div>
+      <div class="jane-set-hero__dots" data-jane-dots></div>
     </div>
 
-    <div class="kasya-product-hero__info">
-      <div class="kasya-product-hero__meta-row">
-        {% if section.settings.product_label != blank %}
-          <p class="kasya-product-hero__label">
-            {{ section.settings.product_label }}
-          </p>
-        {% endif %}
+    <div class="jane-set-hero__content">
+      {% if section.settings.product_label != blank %}
+        <p class="jane-set-hero__eyebrow">{{ section.settings.product_label }}</p>
+      {% endif %}
 
-        {% if section.settings.rating_text != blank %}
-          <a class="kasya-product-hero__rating" href="#kasya-lp-reviews" aria-label="Read customer reviews" data-reviews-link>
-            <span>★★★★★</span>
-            <small>{{ section.settings.rating_text }}</small>
-          </a>
-        {% endif %}
-      </div>
-
-      <div class="kasya-product-hero__title-row">
+      <div class="jane-set-hero__heading-row">
         <div>
-          <h1 class="kasya-product-hero__title">
-            {{ section.settings.heading | default: lp_product.title }}
+          <h1 class="jane-set-hero__heading">
+            {{ section.settings.heading | default: parent_product.title }}
           </h1>
-
           {% if section.settings.subtitle != blank %}
-            <p class="kasya-product-hero__subtitle">
-              {{ section.settings.subtitle }}
-            </p>
+            <p class="jane-set-hero__subtitle">{{ section.settings.subtitle }}</p>
           {% endif %}
         </div>
 
-        <div class="kasya-product-hero__set-pricing">
-          <span class="kasya-product-hero__compare-price">{{ section.settings.compare_at_price_text }}</span>
-          <span class="kasya-product-hero__price">{{ section.settings.set_price_text }}</span>
-          <span class="kasya-product-hero__discount">{{ section.settings.discount_badge_text }}</span>
+        <div class="jane-set-hero__pricing">
+          <span class="jane-set-hero__compare-price">{{ section.settings.compare_at_price_text }}</span>
+          <strong class="jane-set-hero__set-price">{{ section.settings.set_price_text }}</strong>
+          <span class="jane-set-hero__discount">{{ section.settings.discount_badge_text }}</span>
         </div>
       </div>
 
       {% if section.settings.description != blank %}
-        <p class="kasya-product-hero__description">
-          {{ section.settings.description }}
-        </p>
+        <p class="jane-set-hero__description">{{ section.settings.description }}</p>
       {% endif %}
 
-      <form class="kasya-product-hero__form" data-jane-set-form novalidate>
-        <script type="application/json" data-component-products>
+      <form class="jane-set-hero__form" data-jane-set-form novalidate>
+        <script type="application/json" data-jane-components>
           {
             "Black": {
               "top": [
@@ -187,285 +120,88 @@
           }
         </script>
 
-        <script type="application/json" data-product-media>
-          [
-            {% assign lp_media_count = 0 %}
-            {% for media in lp_product.media %}
-              {% if media.media_type == 'image' and media.preview_image != blank %}
-                {% if lp_media_count > 0 %},{% endif %}
-                {% assign lp_media_count = lp_media_count | plus: 1 %}
-                {
-                  "alt": {{ media.alt | json }},
-                  "src": {{ media.preview_image | image_url: width: 1400 | json }}
-                }
-              {% endif %}
-            {% endfor %}
-          ]
-        </script>
-
-        <script type="application/json" data-color-blocks>
-          [
-            {% for block in section.blocks %}
-              {
-                "display_name": {{ block.settings.display_name | json }},
-                "option_value": {{ block.settings.option_value | json }},
-                "swatch": {% if block.settings.swatch_color != blank %}{{ block.settings.swatch_color | json }}{% else %}null{% endif %},
-                "image_1": {% if block.settings.image_1 != blank %}{{ block.settings.image_1 | image_url: width: 1400 | json }}{% else %}null{% endif %},
-                "image_2": {% if block.settings.image_2 != blank %}{{ block.settings.image_2 | image_url: width: 1400 | json }}{% else %}null{% endif %},
-                "image_3": {% if block.settings.image_3 != blank %}{{ block.settings.image_3 | image_url: width: 1400 | json }}{% else %}null{% endif %},
-                "image_4": {% if block.settings.image_4 != blank %}{{ block.settings.image_4 | image_url: width: 1400 | json }}{% else %}null{% endif %},
-                "image_5": {% if block.settings.image_5 != blank %}{{ block.settings.image_5 | image_url: width: 1400 | json }}{% else %}null{% endif %},
-                "images": [
-                  {% assign image_count = 0 %}
-
-                  {% if block.settings.image_1 != blank %}
-                    {% assign image_count = image_count | plus: 1 %}
-                    {{ block.settings.image_1 | image_url: width: 1400 | json }}
-                  {% endif %}
-
-                  {% if block.settings.image_2 != blank %}
-                    {% if image_count > 0 %},{% endif %}
-                    {% assign image_count = image_count | plus: 1 %}
-                    {{ block.settings.image_2 | image_url: width: 1400 | json }}
-                  {% endif %}
-
-                  {% if block.settings.image_3 != blank %}
-                    {% if image_count > 0 %},{% endif %}
-                    {% assign image_count = image_count | plus: 1 %}
-                    {{ block.settings.image_3 | image_url: width: 1400 | json }}
-                  {% endif %}
-
-                  {% if block.settings.image_4 != blank %}
-                    {% if image_count > 0 %},{% endif %}
-                    {% assign image_count = image_count | plus: 1 %}
-                    {{ block.settings.image_4 | image_url: width: 1400 | json }}
-                  {% endif %}
-
-                  {% if block.settings.image_5 != blank %}
-                    {% if image_count > 0 %},{% endif %}
-                    {% assign image_count = image_count | plus: 1 %}
-                    {{ block.settings.image_5 | image_url: width: 1400 | json }}
-                  {% endif %}
-                ]
-              }{% unless forloop.last %},{% endunless %}
-            {% endfor %}
-          ]
-        </script>
-
-        <div class="kasya-product-hero__swatches-wrap">
-          <p class="kasya-product-hero__option-label">COLOR</p>
-          <div class="kasya-product-hero__swatches" data-color-options>
-            <button
-              type="button"
-              class="kasya-product-hero__color-option"
-              data-color-value="Black"
-              aria-pressed="false"
-            >
-              <span class="kasya-product-hero__color-dot kasya-product-hero__color-dot--black"></span>
+        <fieldset class="jane-set-hero__group">
+          <legend>Color</legend>
+          <div class="jane-set-hero__colors" data-jane-colors>
+            <button type="button" class="jane-set-hero__color" data-color="Black" aria-pressed="false">
+              <span class="jane-set-hero__swatch jane-set-hero__swatch--black"></span>
               Black
             </button>
-            <button
-              type="button"
-              class="kasya-product-hero__color-option"
-              data-color-value="Taupe"
-              aria-pressed="false"
-            >
-              <span class="kasya-product-hero__color-dot kasya-product-hero__color-dot--taupe"></span>
+            <button type="button" class="jane-set-hero__color" data-color="Taupe" aria-pressed="false">
+              <span class="jane-set-hero__swatch jane-set-hero__swatch--taupe"></span>
               Taupe
             </button>
           </div>
+        </fieldset>
 
-          <p class="kasya-product-hero__selected-color">
-            COLOR: <span data-selected-color>PLEASE SELECT</span>
-          </p>
-        </div>
+        <fieldset class="jane-set-hero__group">
+          <legend>Top Size</legend>
+          <div class="jane-set-hero__sizes" data-size-options="top"></div>
+        </fieldset>
 
-        <div class="kasya-product-hero__sizes-wrap">
-          <p class="kasya-product-hero__option-label">TOP SIZE</p>
-          <div class="kasya-product-hero__sizes" data-top-size-options></div>
-        </div>
+        <fieldset class="jane-set-hero__group">
+          <legend>Pants Size</legend>
+          <div class="jane-set-hero__sizes" data-size-options="pants"></div>
+        </fieldset>
 
-        <div class="kasya-product-hero__sizes-wrap">
-          <p class="kasya-product-hero__option-label">PANTS SIZE</p>
-          <div class="kasya-product-hero__sizes" data-pants-size-options></div>
-        </div>
-
-        {% if section.settings.size_helper_text != blank %}
-          <p class="kasya-product-hero__size-helper">
-            {{ section.settings.size_helper_text }}
-          </p>
-        {% endif %}
-
-        {% if section.settings.show_size_chart and size_chart_image != blank %}
-          <div class="kasya-product-hero__size-chart" data-size-chart>
-            <button
-              type="button"
-              class="kasya-product-hero__size-chart-toggle"
-              aria-expanded="false"
-              data-size-chart-toggle
-            >
-              <span data-size-chart-toggle-text>{{ section.settings.size_chart_trigger_text }}</span>
-              <span class="kasya-product-hero__size-chart-icon" aria-hidden="true">⌄</span>
-            </button>
-
-            <div class="kasya-product-hero__size-chart-panel" data-size-chart-panel hidden>
-              <img
-                data-size-chart-image
-                data-size-chart-src="{{ size_chart_image | image_url: width: 1200 }}"
-                alt="{{ size_chart_alt | escape }}"
-                width="1200"
-                height="900"
-                loading="lazy"
-              >
-
-              {% if section.settings.size_chart_note != blank %}
-                <p class="kasya-product-hero__size-chart-note">
-                  {{ section.settings.size_chart_note }}
-                </p>
-              {% endif %}
-            </div>
-          </div>
-        {% endif %}
-
-        <button
-          type="submit"
-          class="kasya-product-hero__add"
-          data-submit
-          disabled
-        >
-          <span class="kasya-product-hero__add-icon">
-            <svg width="25" height="25" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M6.2 6.2h15l-1.7 8.4H7.7L6.2 6.2Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
-              <path d="M6.2 6.2 5.7 3.5H2.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
-              <circle cx="9" cy="20" r="1.35" fill="currentColor"/>
-              <circle cx="18" cy="20" r="1.35" fill="currentColor"/>
-            </svg>
-          </span>
-          <span data-submit-text>{{ section.settings.cta_text }}</span>
+        <button type="submit" class="jane-set-hero__submit" data-jane-submit disabled>
+          <span data-jane-submit-text>ADD SET TO CART</span>
         </button>
-        <p class="kasya-product-hero__error" data-set-error role="alert" aria-live="polite" hidden></p>
+        <p class="jane-set-hero__error" data-jane-error role="alert" aria-live="polite" hidden></p>
       </form>
     </div>
-
-    {% if section.settings.enable_sticky_atc %}
-      <div class="kasya-product-hero__sticky-atc" data-sticky-atc>
-        <div class="kasya-product-hero__sticky-context" data-sticky-context>
-          SELECT COLOR AND SIZES — {{ section.settings.set_price_text }}
-        </div>
-
-        <button
-          type="button"
-          class="kasya-product-hero__sticky-button"
-          data-sticky-submit
-          disabled
-        >
-          <span data-sticky-submit-text>{{ section.settings.cta_text }}</span>
-        </button>
-      </div>
-    {% endif %}
   {% endif %}
 </section>
 
 <style>
-  .kasya-product-hero {
-    --kasya-black: #000000;
-    --kasya-text: #111111;
-    --kasya-muted: #555555;
-    --kasya-line: #eeeeee;
-    --kasya-accent: #e83b3b;
-    --kasya-bg: #ffffff;
-
-    background: var(--kasya-bg);
-    color: var(--kasya-text);
-    font-family: inherit;
+  .jane-set-hero {
+    --jane-accent: #e83b3b;
+    --jane-text: #111111;
+    --jane-muted: #656565;
+    --jane-line: #e5e5e5;
     max-width: 760px;
     margin: 0 auto;
+    background: #ffffff;
+    color: var(--jane-text);
+    font-family: inherit;
   }
 
-  .kasya-product-hero * {
+  .jane-set-hero *,
+  .jane-set-hero *::before,
+  .jane-set-hero *::after {
     box-sizing: border-box;
   }
 
-  .kasya-product-hero__empty {
-    padding: 32px 18px;
+  .jane-set-hero__empty {
+    padding: 40px 24px;
     text-align: center;
   }
 
-  .kasya-product-hero__header {
-    height: 72px;
-    padding: 0 22px;
-    display: grid;
-    grid-template-columns: 44px 1fr 44px;
-    align-items: center;
-    background: #fff;
-  }
-
-  .kasya-product-hero__menu {
-    width: 36px;
-    height: 36px;
-    border: 0;
-    background: transparent;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 6px;
-    cursor: pointer;
-  }
-
-  .kasya-product-hero__menu span {
-    display: block;
-    width: 31px;
-    height: 3px;
-    background: #000;
-  }
-
-  .kasya-product-hero__logo {
-    justify-self: center;
-    text-decoration: none;
-    color: #111;
-    font-family: serif;
-    font-size: 28px;
-    letter-spacing: 0.32em;
-    line-height: 1;
-  }
-
-  .kasya-product-hero__cart {
-    justify-self: end;
-    color: #111;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .kasya-product-hero__gallery {
-    width: 100%;
-    background: #f2f2f2;
+  .jane-set-hero__gallery {
     position: relative;
+    overflow: hidden;
+    background: #f2f2f2;
   }
 
-  .kasya-product-hero__slider {
-    width: 100%;
+  .jane-set-hero__slides {
     display: flex;
     overflow-x: auto;
-    scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
     scrollbar-width: none;
   }
 
-  .kasya-product-hero__slider::-webkit-scrollbar {
+  .jane-set-hero__slides::-webkit-scrollbar {
     display: none;
   }
 
-  .kasya-product-hero__slide {
+  .jane-set-hero__slide {
     flex: 0 0 100%;
-    width: 100%;
+    margin: 0;
     scroll-snap-align: start;
-    background: #f2f2f2;
   }
 
-  .kasya-product-hero__slide img {
+  .jane-set-hero__slide img {
     display: block;
     width: 100%;
     height: auto;
@@ -473,633 +209,307 @@
     object-fit: cover;
   }
 
-  .kasya-product-hero__arrow {
+  .jane-set-hero__gallery-button {
     position: absolute;
-    top: 48%;
-    z-index: 3;
-    width: 34px;
-    height: 34px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.72);
-    color: #000000;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
+    top: 50%;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.88);
+    color: #111111;
     cursor: pointer;
+    font-size: 28px;
+    line-height: 1;
     transform: translateY(-50%);
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
   }
 
-  .kasya-product-hero__arrow[hidden] {
-    display: none;
-  }
-
-  .kasya-product-hero__arrow--prev {
+  .jane-set-hero__gallery-button--prev {
     left: 10px;
   }
 
-  .kasya-product-hero__arrow--next {
+  .jane-set-hero__gallery-button--next {
     right: 10px;
   }
 
-  .kasya-product-hero__arrow:focus-visible {
-    outline: 2px solid #000000;
-    outline-offset: 2px;
+  .jane-set-hero__gallery-button[hidden] {
+    display: none;
   }
 
-  .kasya-product-hero__dots {
+  .jane-set-hero__dots {
+    position: absolute;
+    right: 0;
+    bottom: 12px;
+    left: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
-    gap: 5px;
-    min-height: 18px;
-    margin-top: -24px;
-    position: relative;
-    z-index: 2;
+    gap: 6px;
     pointer-events: none;
   }
 
-  .kasya-product-hero__dot {
+  .jane-set-hero__dot {
     width: 8px;
     height: 8px;
-    border-radius: 999px;
     border: 0;
+    border-radius: 50%;
     padding: 0;
-    background: rgba(255, 255, 255, 0.55);
-    pointer-events: auto;
+    background: rgba(255, 255, 255, 0.58);
   }
 
-  .kasya-product-hero__dot.is-active {
+  .jane-set-hero__dot.is-active {
     background: #ffffff;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.16);
   }
 
-  .kasya-product-hero__info {
-    padding: 22px 26px 22px;
-    background: #fff;
+  .jane-set-hero__content {
+    padding: 24px 26px 30px;
   }
 
-  .kasya-product-hero__meta-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-  }
-
-  .kasya-product-hero__label {
+  .jane-set-hero__eyebrow {
     margin: 0;
-    font-size: 16px;
-    letter-spacing: 0.08em;
+    color: #333333;
+    font-size: 14px;
+    font-weight: 700;
     text-transform: uppercase;
-    color: #333;
   }
 
-  .kasya-product-hero__rating {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    white-space: nowrap;
-    color: #000;
-    cursor: pointer;
-    text-decoration: none;
-  }
-
-  .kasya-product-hero__rating span {
-    font-size: 14px;
-    letter-spacing: 0.12em;
-  }
-
-  .kasya-product-hero__rating small {
-    font-size: 14px;
-    color: #333;
-  }
-
-  .kasya-product-hero__title-row {
+  .jane-set-hero__heading-row {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
-    gap: 14px;
-    margin-top: 22px;
+    gap: 18px;
+    margin-top: 18px;
   }
 
-  .kasya-product-hero__title {
+  .jane-set-hero__heading {
     margin: 0;
-    font-size: clamp(34px, 5vw, 44px);
-    line-height: 1;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-size: 38px;
     font-weight: 800;
+    line-height: 1.05;
+    text-transform: uppercase;
     overflow-wrap: anywhere;
   }
 
-  .kasya-product-hero__subtitle {
+  .jane-set-hero__subtitle {
     margin: 8px 0 0;
+    color: #333333;
     font-size: 18px;
-    line-height: 1.25;
-    color: #333;
   }
 
-  .kasya-product-hero__price {
-    font-size: clamp(28px, 4.8vw, 38px);
-    line-height: 1;
-    font-weight: 900;
-    color: var(--kasya-accent);
-    white-space: nowrap;
-  }
-
-  .kasya-product-hero__set-pricing {
+  .jane-set-hero__pricing {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 6px;
+    white-space: nowrap;
   }
 
-  .kasya-product-hero__compare-price {
-    color: var(--kasya-muted);
+  .jane-set-hero__compare-price {
+    color: var(--jane-muted);
     font-size: 16px;
-    line-height: 1;
     text-decoration: line-through;
   }
 
-  .kasya-product-hero__discount {
-    display: inline-flex;
-    align-items: center;
-    min-height: 26px;
-    padding: 4px 9px;
-    border-radius: 4px;
-    background: var(--kasya-accent);
-    color: #ffffff;
-    font-size: 12px;
-    font-weight: 800;
+  .jane-set-hero__set-price {
+    color: var(--jane-accent);
+    font-size: 34px;
     line-height: 1;
   }
 
-  .kasya-product-hero__description {
+  .jane-set-hero__discount {
+    padding: 5px 9px;
+    border-radius: 4px;
+    background: var(--jane-accent);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .jane-set-hero__description {
     margin: 20px 0 0;
-    max-width: 620px;
-    font-size: 18px;
-    line-height: 1.45;
-    letter-spacing: 0.03em;
+    color: #292929;
+    font-size: 17px;
     font-style: italic;
-    color: #222;
+    line-height: 1.5;
   }
 
-  .kasya-product-hero__form {
+  .jane-set-hero__form {
     margin-top: 26px;
+    border-top: 1px solid var(--jane-line);
+    padding-top: 20px;
   }
 
-  .kasya-product-hero__swatches-wrap {
-    border-top: 1px solid var(--kasya-line);
-    padding-top: 18px;
+  .jane-set-hero__group {
+    min-width: 0;
+    margin: 0 0 24px;
+    border: 0;
+    padding: 0;
   }
 
-  .kasya-product-hero__swatches {
+  .jane-set-hero__group legend {
+    margin-bottom: 11px;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .jane-set-hero__colors,
+  .jane-set-hero__sizes {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    max-width: 360px;
+    gap: 9px;
   }
 
-  .kasya-product-hero__color-option {
+  .jane-set-hero__color,
+  .jane-set-hero__size {
     min-height: 44px;
-    padding: 8px 14px;
-    border: 1px solid #d6d6d6;
+    border: 1px solid #d4d4d4;
     border-radius: 4px;
     background: #ffffff;
     color: #111111;
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
   }
 
-  .kasya-product-hero__color-option.is-selected {
+  .jane-set-hero__color {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+  }
+
+  .jane-set-hero__size {
+    min-width: 62px;
+    padding: 9px 13px;
+  }
+
+  .jane-set-hero__color.is-selected,
+  .jane-set-hero__size.is-selected {
     border-color: #000000;
     box-shadow: inset 0 0 0 1px #000000;
   }
 
-  .kasya-product-hero__color-dot {
+  .jane-set-hero__size.is-unavailable {
+    opacity: 0.38;
+    text-decoration: line-through;
+  }
+
+  .jane-set-hero__swatch {
     width: 22px;
     height: 22px;
-    border: 1px solid rgba(0, 0, 0, 0.18);
-    border-radius: 999px;
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 50%;
     background: #000000;
   }
 
-  .kasya-product-hero__color-dot--taupe {
+  .jane-set-hero__swatch--taupe {
     background: #b8a38e;
   }
 
-  .kasya-product-hero__swatch {
-    width: 40px;
-    height: 40px;
-    border-radius: 999px;
-    border: 1px solid transparent;
-    background: var(--swatch);
-    padding: 0;
-    cursor: pointer;
-    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
-  }
-
-  .kasya-product-hero__swatch.is-selected {
-    border-color: #000;
-    box-shadow: inset 0 0 0 1px #fff;
-  }
-
-  .kasya-product-hero__selected-color {
-    margin: 10px 0 0;
-    font-size: 17px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    font-weight: 700;
-  }
-
-  .kasya-product-hero__selected-color span {
-    font-weight: 400;
-  }
-
-  .kasya-product-hero__sizes-wrap {
-    margin-top: 24px;
-  }
-
-  .kasya-product-hero__option-label {
-    margin: 0 0 12px;
-    font-size: 15px;
-    letter-spacing: 0.12em;
-    font-weight: 800;
-    text-transform: uppercase;
-  }
-
-  .kasya-product-hero__sizes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .kasya-product-hero__size {
-    min-height: 46px;
-    min-width: 58px;
-    padding: 10px 14px;
-    border: 1px solid #d6d6d6;
-    border-radius: 999px;
-    background: #fff;
-    color: #111;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-
-  .kasya-product-hero__size.is-selected {
-    background: #000;
-    border-color: #000;
-    color: #fff;
-  }
-
-  .kasya-product-hero__size.is-disabled {
-    opacity: 0.35;
-    text-decoration: line-through;
-    cursor: not-allowed;
-  }
-
-  .kasya-product-hero__size-helper {
-    margin: 12px 0 0;
-    color: #555;
-    font-size: 14px;
-    line-height: 1.4;
-  }
-
-  .kasya-product-hero__size-chart {
-    margin-top: 12px;
-    border-top: 1px solid var(--kasya-line);
-    border-bottom: 1px solid var(--kasya-line);
-  }
-
-  .kasya-product-hero__size-chart-toggle {
+  .jane-set-hero__submit {
     width: 100%;
-    min-height: 44px;
+    min-height: 64px;
     border: 0;
-    background: transparent;
-    color: #111;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 0;
+    border-radius: 6px;
+    background: #000000;
+    color: #ffffff;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 850;
-    letter-spacing: 0.08em;
-    text-align: left;
-    text-transform: uppercase;
-  }
-
-  .kasya-product-hero__size-chart-icon {
-    font-size: 18px;
-    line-height: 1;
-    transition: transform 180ms ease;
-  }
-
-  .kasya-product-hero__size-chart-toggle[aria-expanded="true"] .kasya-product-hero__size-chart-icon {
-    transform: rotate(180deg);
-  }
-
-  .kasya-product-hero__size-chart-panel {
-    padding-bottom: 14px;
-  }
-
-  .kasya-product-hero__size-chart-panel img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    background: #f5f5f5;
-  }
-
-  .kasya-product-hero__size-chart-note {
-    margin: 10px 0 0;
-    color: #666;
-    font-size: 12px;
-    line-height: 1.4;
-  }
-
-  .kasya-product-hero__add {
-    width: calc(100% - 48px);
-    min-height: 76px;
-    margin: 24px auto 0;
-    border: 0;
-    border-radius: 24px 24px 0 0;
-    background: #000;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    font-size: 25px;
+    font-size: 19px;
     font-weight: 900;
-    letter-spacing: 0.16em;
     text-transform: uppercase;
-    cursor: pointer;
   }
 
-  .kasya-product-hero__add:disabled {
-    opacity: 0.45;
+  .jane-set-hero__submit:disabled {
     cursor: not-allowed;
+    opacity: 0.42;
   }
 
-  .kasya-product-hero__add-icon {
-    display: inline-flex;
-  }
-
-  .kasya-product-hero__error {
-    margin: 10px 24px 0;
+  .jane-set-hero__error {
+    margin: 10px 0 0;
     color: #b42318;
     font-size: 13px;
     line-height: 1.4;
     text-align: center;
   }
 
-  .kasya-product-hero__sticky-atc {
-    display: none;
-  }
-
-  @media screen and (max-width: 430px) {
-    body.kasya-sticky-atc-enabled {
-      padding-bottom: calc(96px + env(safe-area-inset-bottom));
+  @media screen and (max-width: 520px) {
+    .jane-set-hero__content {
+      padding: 20px 18px 26px;
     }
 
-    .kasya-product-hero--sticky-enabled {
-      padding-bottom: 0;
-    }
-
-    .kasya-product-hero__header {
-      height: 64px;
-      padding: 0 18px;
-    }
-
-    .kasya-product-hero__logo {
-      font-size: 24px;
-    }
-
-    .kasya-product-hero__info {
-      padding: 16px 18px 18px;
-    }
-
-    .kasya-product-hero__label,
-    .kasya-product-hero__rating small {
-      font-size: 13px;
-    }
-
-    .kasya-product-hero__title-row {
+    .jane-set-hero__heading-row {
       grid-template-columns: 1fr;
-      gap: 10px;
+      gap: 14px;
     }
 
-    .kasya-product-hero__title {
+    .jane-set-hero__heading {
       font-size: 32px;
-      letter-spacing: 0.06em;
     }
 
-    .kasya-product-hero__subtitle {
-      font-size: 16px;
+    .jane-set-hero__pricing {
+      align-items: flex-start;
     }
 
-    .kasya-product-hero__price {
+    .jane-set-hero__set-price {
       font-size: 30px;
-    }
-
-    .kasya-product-hero__arrow {
-      width: 32px;
-      height: 32px;
-    }
-
-    .kasya-product-hero__arrow--prev {
-      left: 8px;
-    }
-
-    .kasya-product-hero__arrow--next {
-      right: 8px;
-    }
-
-    .kasya-product-hero__description {
-      margin-top: 18px;
-      font-size: 16px;
-      letter-spacing: 0.02em;
-    }
-
-    .kasya-product-hero__swatch {
-      width: 36px;
-      height: 36px;
-    }
-
-    .kasya-product-hero__swatches-wrap {
-      padding-top: 16px;
-    }
-
-    .kasya-product-hero__selected-color {
-      margin-top: 8px;
-      font-size: 14px;
-    }
-
-    .kasya-product-hero__size-helper {
-      font-size: 13px;
-    }
-
-    .kasya-product-hero__size-chart-toggle {
-      min-height: 42px;
-      font-size: 13px;
-    }
-
-    .kasya-product-hero__add {
-      width: calc(100% - 44px);
-      font-size: 22px;
-      min-height: 68px;
-    }
-
-    .kasya-product-hero__sticky-atc {
-      position: fixed;
-      left: 50%;
-      right: auto;
-      bottom: 0;
-      z-index: 30;
-      width: 100%;
-      max-width: 760px;
-      padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
-      transform: translateX(-50%);
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 12px;
-      background: rgba(255, 255, 255, 0.96);
-      border-top: 1px solid rgba(0, 0, 0, 0.08);
-      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.08);
-      backdrop-filter: blur(12px);
-      opacity: 0;
-      pointer-events: none;
-      visibility: hidden;
-      transition: opacity 180ms ease, visibility 180ms ease;
-    }
-
-    .kasya-product-hero__sticky-atc.is-visible {
-      opacity: 1;
-      pointer-events: auto;
-      visibility: visible;
-    }
-
-    .kasya-product-hero__sticky-context {
-      min-width: 0;
-      color: #111;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      line-height: 1.25;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .kasya-product-hero__sticky-button {
-      min-height: 46px;
-      min-width: 138px;
-      border: 0;
-      border-radius: 999px;
-      background: #000;
-      color: #fff;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 900;
-      letter-spacing: 0.12em;
-      padding: 0 18px;
-      text-transform: uppercase;
-    }
-
-    .kasya-product-hero__sticky-button:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
     }
   }
 </style>
 
 <script>
   (() => {
-    const section = document.querySelector('[data-section-id="{{ section.id }}"]');
+    const section = document.querySelector('[data-jane-set-hero="{{ section.id }}"]');
     if (!section) return;
 
     const form = section.querySelector('[data-jane-set-form]');
-    const componentProductsElement = section.querySelector('[data-component-products]');
-    const colorOptions = section.querySelector('[data-color-options]');
-    const selectedColorText = section.querySelector('[data-selected-color]');
-    const topSizeOptions = section.querySelector('[data-top-size-options]');
-    const pantsSizeOptions = section.querySelector('[data-pants-size-options]');
-    const submitButton = section.querySelector('[data-submit]');
-    const submitText = section.querySelector('[data-submit-text]');
-    const errorMessage = section.querySelector('[data-set-error]');
-    const stickyAtc = section.querySelector('[data-sticky-atc]');
-    const stickyContext = section.querySelector('[data-sticky-context]');
-    const stickySubmitButton = section.querySelector('[data-sticky-submit]');
-    const stickySubmitText = section.querySelector('[data-sticky-submit-text]');
-    const slider = section.querySelector('[data-slider]');
-    const dots = section.querySelector('[data-dots]');
-    const prevButton = section.querySelector('[data-gallery-prev]');
-    const nextButton = section.querySelector('[data-gallery-next]');
-    const productMediaElement = section.querySelector('[data-product-media]');
-    const reviewsLink = section.querySelector('[data-reviews-link]');
-    const sizeChartToggle = section.querySelector('[data-size-chart-toggle]');
-    const sizeChartToggleText = section.querySelector('[data-size-chart-toggle-text]');
-    const sizeChartPanel = section.querySelector('[data-size-chart-panel]');
-    const sizeChartImage = section.querySelector('[data-size-chart-image]');
+    const componentData = section.querySelector('[data-jane-components]');
+    const colorContainer = section.querySelector('[data-jane-colors]');
+    const topSizes = section.querySelector('[data-size-options="top"]');
+    const pantsSizes = section.querySelector('[data-size-options="pants"]');
+    const submitButton = section.querySelector('[data-jane-submit]');
+    const submitText = section.querySelector('[data-jane-submit-text]');
+    const errorMessage = section.querySelector('[data-jane-error]');
 
-    if (
-      !form ||
-      !componentProductsElement ||
-      !colorOptions ||
-      !topSizeOptions ||
-      !pantsSizeOptions ||
-      !submitButton
-    ) {
-      return;
-    }
+    if (!form || !componentData || !colorContainer || !topSizes || !pantsSizes || !submitButton) return;
 
-    const componentProducts = JSON.parse(componentProductsElement.textContent || '{}');
-    const productMedia = productMediaElement ? JSON.parse(productMediaElement.textContent || '[]') : [];
+    const products = JSON.parse(componentData.textContent || '{}');
     const sizes = ['Medium', 'Large', 'XL', '2XL', '3XL'];
-    const setPrice = {{ section.settings.set_price_text | json }};
-    const ctaText = {{ section.settings.cta_text | json }};
-    const sizeChartTriggerText = {{ section.settings.size_chart_trigger_text | json }};
-    const productImageAlt = {{ lp_product.title | json }};
+    const normalize = value => String(value || '').trim().toLowerCase();
     let selectedColor = '';
     let selectedTopSize = '';
     let selectedPantsSize = '';
-    let isAdding = false;
+    let adding = false;
 
-    const normalize = value => String(value || '').trim().toLowerCase();
-
-    function getComponentVariants(role) {
-      return componentProducts[selectedColor]?.[role] || [];
+    function variantsFor(role) {
+      return products[selectedColor]?.[role] || [];
     }
 
     function findVariant(role, size) {
-      return getComponentVariants(role).find(variant => normalize(variant.size) === normalize(size)) || null;
+      return variantsFor(role).find(variant => normalize(variant.size) === normalize(size)) || null;
     }
 
-    function renderSizeOptions(container, role, selectedSize) {
+    function selectionState() {
+      const topVariant = findVariant('top', selectedTopSize);
+      const pantsVariant = findVariant('pants', selectedPantsSize);
+      const complete = Boolean(selectedColor && selectedTopSize && selectedPantsSize);
+      const available = Boolean(complete && topVariant?.available && pantsVariant?.available);
+      return { topVariant, pantsVariant, complete, available };
+    }
+
+    function renderSizes(container, role, selectedSize) {
       container.innerHTML = sizes.map(size => {
         const variant = findVariant(role, size);
-        const available = Boolean(variant?.available);
         const selected = normalize(size) === normalize(selectedSize);
+        const available = Boolean(variant?.available);
 
         return `
           <button
             type="button"
-            class="kasya-product-hero__size ${selected ? 'is-selected' : ''} ${available ? '' : 'is-disabled'}"
-            data-set-size="${size}"
-            data-set-role="${role}"
+            class="jane-set-hero__size ${selected ? 'is-selected' : ''} ${available ? '' : 'is-unavailable'}"
+            data-jane-size="${size}"
+            data-jane-role="${role}"
             aria-pressed="${selected}"
             aria-disabled="${!available}"
           >
@@ -1109,184 +519,80 @@
       }).join('');
     }
 
-    function renderSelectors() {
-      renderSizeOptions(topSizeOptions, 'top', selectedTopSize);
-      renderSizeOptions(pantsSizeOptions, 'pants', selectedPantsSize);
-    }
+    function updateControls() {
+      renderSizes(topSizes, 'top', selectedTopSize);
+      renderSizes(pantsSizes, 'pants', selectedPantsSize);
 
-    function getSelectionState() {
-      const topVariant = findVariant('top', selectedTopSize);
-      const pantsVariant = findVariant('pants', selectedPantsSize);
-      const complete = Boolean(selectedColor && selectedTopSize && selectedPantsSize);
-      const available = Boolean(complete && topVariant?.available && pantsVariant?.available);
-
-      return { topVariant, pantsVariant, complete, available };
-    }
-
-    function setButtonState() {
-      const { complete, available } = getSelectionState();
-      const label = complete && !available ? 'SOLD OUT' : ctaText;
-      const disabled = isAdding || !available;
-
-      submitButton.disabled = disabled;
-      if (submitText && !isAdding) submitText.textContent = label;
-
-      if (stickySubmitButton) {
-        stickySubmitButton.disabled = disabled;
-      }
-      if (stickySubmitText && !isAdding) {
-        stickySubmitText.textContent = label;
-      }
-      if (stickyContext) {
-        const selection = [
-          selectedColor,
-          selectedTopSize ? `TOP ${selectedTopSize}` : '',
-          selectedPantsSize ? `PANTS ${selectedPantsSize}` : ''
-        ].filter(Boolean).join(' / ');
-        stickyContext.textContent = `${selection || 'SELECT COLOR AND SIZES'} — ${setPrice}`;
+      const { complete, available } = selectionState();
+      submitButton.disabled = adding || !available;
+      if (!adding) {
+        submitText.textContent = complete && !available ? 'SOLD OUT / UNAVAILABLE' : 'ADD SET TO CART';
       }
     }
 
     function clearError() {
-      if (!errorMessage) return;
       errorMessage.hidden = true;
       errorMessage.textContent = '';
     }
 
     function showError(message) {
-      if (!errorMessage) return;
       errorMessage.textContent = message;
       errorMessage.hidden = false;
     }
 
-    function selectColor(color) {
-      selectedColor = color;
+    colorContainer.addEventListener('click', event => {
+      const button = event.target.closest('[data-color]');
+      if (!button) return;
+
+      selectedColor = button.dataset.color;
       selectedTopSize = '';
       selectedPantsSize = '';
       clearError();
 
-      colorOptions.querySelectorAll('[data-color-value]').forEach(button => {
-        const selected = normalize(button.dataset.colorValue) === normalize(selectedColor);
-        button.classList.toggle('is-selected', selected);
-        button.setAttribute('aria-pressed', String(selected));
+      colorContainer.querySelectorAll('[data-color]').forEach(option => {
+        const selected = option === button;
+        option.classList.toggle('is-selected', selected);
+        option.setAttribute('aria-pressed', String(selected));
       });
 
-      if (selectedColorText) selectedColorText.textContent = selectedColor.toUpperCase();
-      renderSelectors();
-      setButtonState();
+      updateControls();
+    });
 
-      document.dispatchEvent(new CustomEvent('kasya:hero-color-change', {
-        detail: {
-          color: selectedColor,
-          displayColor: selectedColor,
-          images: {},
-          fabricCloseup: '',
-          featuredImage: productMedia[0]?.src || ''
-        }
-      }));
-    }
+    section.addEventListener('click', event => {
+      const button = event.target.closest('[data-jane-size]');
+      if (!button || !selectedColor) return;
 
-    function selectSize(role, size) {
-      if (role === 'top') {
-        selectedTopSize = size;
+      if (button.dataset.janeRole === 'top') {
+        selectedTopSize = button.dataset.janeSize;
       } else {
-        selectedPantsSize = size;
+        selectedPantsSize = button.dataset.janeSize;
       }
 
       clearError();
-      renderSelectors();
-      setButtonState();
-    }
+      updateControls();
+    });
 
-    function renderGallery() {
-      if (!slider || !dots || !productMedia.length) return;
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (adding) return;
 
-      slider.innerHTML = productMedia.map((media, index) => `
-        <div class="kasya-product-hero__slide">
-          <img
-            src="${media.src}"
-            alt="${productImageAlt} ${index + 1}"
-            width="1400"
-            height="1750"
-            loading="${index === 0 ? 'eager' : 'lazy'}"
-          >
-        </div>
-      `).join('');
-
-      dots.innerHTML = productMedia.map((_, index) => `
-        <button
-          type="button"
-          class="kasya-product-hero__dot ${index === 0 ? 'is-active' : ''}"
-          aria-label="Go to image ${index + 1}"
-          data-dot-index="${index}"
-        ></button>
-      `).join('');
-
-      const hasMultipleImages = productMedia.length > 1;
-      if (prevButton) prevButton.hidden = !hasMultipleImages;
-      if (nextButton) nextButton.hidden = !hasMultipleImages;
-    }
-
-    function getCurrentSlideIndex() {
-      if (!slider?.clientWidth) return 0;
-      const slideCount = slider.querySelectorAll('.kasya-product-hero__slide').length;
-      return Math.min(slideCount - 1, Math.max(0, Math.round(slider.scrollLeft / slider.clientWidth)));
-    }
-
-    function scrollToSlide(index) {
-      const slides = slider?.querySelectorAll('.kasya-product-hero__slide');
-      if (!slides?.length) return;
-      const targetIndex = (index + slides.length) % slides.length;
-      slider.scrollTo({ left: slider.clientWidth * targetIndex, behavior: 'smooth' });
-    }
-
-    function updateDots() {
-      const activeIndex = getCurrentSlideIndex();
-      dots?.querySelectorAll('[data-dot-index]').forEach((dot, index) => {
-        dot.classList.toggle('is-active', index === activeIndex);
-      });
-    }
-
-    function initializeStickyVisibility() {
-      if (!stickyAtc || !submitButton) return;
-      document.body.classList.add('kasya-sticky-atc-enabled');
-
-      const setVisible = visible => stickyAtc.classList.toggle('is-visible', visible);
-      if (!('IntersectionObserver' in window)) return;
-
-      const observer = new IntersectionObserver(entries => {
-        const entry = entries[0];
-        setVisible(!entry.isIntersecting && entry.boundingClientRect.bottom <= 0);
-      }, { threshold: 0 });
-
-      observer.observe(submitButton);
-    }
-
-    async function addSetToCart() {
-      if (isAdding) return;
-
-      const { topVariant, pantsVariant, complete, available } = getSelectionState();
-
+      const { topVariant, pantsVariant, complete, available } = selectionState();
       if (!complete) {
         showError('Please select a color, top size, and pants size.');
-        setButtonState();
         return;
       }
-
       if (!available) {
         showError('This size combination is currently unavailable.');
-        setButtonState();
+        updateControls();
         return;
       }
 
-      isAdding = true;
+      adding = true;
       clearError();
       submitButton.disabled = true;
-      if (submitText) submitText.textContent = 'ADDING...';
-      if (stickySubmitButton) stickySubmitButton.disabled = true;
-      if (stickySubmitText) stickySubmitText.textContent = 'ADDING...';
+      submitText.textContent = 'ADDING...';
 
-      const properties = {
+      const sharedProperties = {
         _set_name: 'Jane Coordinates Set',
         _set_color: selectedColor,
         _top_size: selectedTopSize,
@@ -1305,12 +611,12 @@
               {
                 id: topVariant.id,
                 quantity: 1,
-                properties: { ...properties, _set_role: 'Top' }
+                properties: { ...sharedProperties, _set_role: 'Top' }
               },
               {
                 id: pantsVariant.id,
                 quantity: 1,
-                properties: { ...properties, _set_role: 'Pants' }
+                properties: { ...sharedProperties, _set_role: 'Pants' }
               }
             ]
           })
@@ -1318,66 +624,49 @@
 
         if (!response.ok) {
           const error = await response.json().catch(() => ({}));
-          throw new Error(error.description || error.message || 'Unable to add this set to your cart.');
+          throw new Error(error.description || error.message || 'Unable to add this set to cart.');
         }
 
         window.location.assign('/cart');
       } catch (error) {
-        isAdding = false;
-        showError(error.message || 'Unable to add this set to your cart. Please try again.');
-        setButtonState();
+        adding = false;
+        showError(error.message || 'Unable to add this set to cart. Please try again.');
+        updateControls();
       }
+    });
+
+    const slides = section.querySelector('[data-jane-slides]');
+    const dots = section.querySelector('[data-jane-dots]');
+    const previous = section.querySelector('[data-jane-prev]');
+    const next = section.querySelector('[data-jane-next]');
+    const slideCount = slides?.children.length || 0;
+
+    if (slides && dots) {
+      dots.innerHTML = Array.from({ length: slideCount }, (_, index) => {
+        return `<span class="jane-set-hero__dot ${index === 0 ? 'is-active' : ''}"></span>`;
+      }).join('');
+
+      const updateDots = () => {
+        const index = slides.clientWidth ? Math.round(slides.scrollLeft / slides.clientWidth) : 0;
+        dots.querySelectorAll('.jane-set-hero__dot').forEach((dot, dotIndex) => {
+          dot.classList.toggle('is-active', dotIndex === index);
+        });
+      };
+
+      const move = direction => {
+        const current = slides.clientWidth ? Math.round(slides.scrollLeft / slides.clientWidth) : 0;
+        const target = (current + direction + slideCount) % slideCount;
+        slides.scrollTo({ left: target * slides.clientWidth, behavior: 'smooth' });
+      };
+
+      previous.hidden = slideCount < 2;
+      next.hidden = slideCount < 2;
+      previous.addEventListener('click', () => move(-1));
+      next.addEventListener('click', () => move(1));
+      slides.addEventListener('scroll', () => window.requestAnimationFrame(updateDots));
     }
 
-    colorOptions.addEventListener('click', event => {
-      const button = event.target.closest('[data-color-value]');
-      if (button) selectColor(button.dataset.colorValue);
-    });
-
-    section.addEventListener('click', event => {
-      const sizeButton = event.target.closest('[data-set-size]');
-      if (sizeButton) {
-        selectSize(sizeButton.dataset.setRole, sizeButton.dataset.setSize);
-      }
-    });
-
-    form.addEventListener('submit', event => {
-      event.preventDefault();
-      addSetToCart();
-    });
-
-    stickySubmitButton?.addEventListener('click', addSetToCart);
-    slider?.addEventListener('scroll', () => window.requestAnimationFrame(updateDots));
-    prevButton?.addEventListener('click', () => scrollToSlide(getCurrentSlideIndex() - 1));
-    nextButton?.addEventListener('click', () => scrollToSlide(getCurrentSlideIndex() + 1));
-    dots?.addEventListener('click', event => {
-      const dot = event.target.closest('[data-dot-index]');
-      if (dot) scrollToSlide(Number(dot.dataset.dotIndex));
-    });
-
-    sizeChartToggle?.addEventListener('click', () => {
-      const expanded = sizeChartToggle.getAttribute('aria-expanded') === 'true';
-      sizeChartToggle.setAttribute('aria-expanded', String(!expanded));
-      if (sizeChartPanel) sizeChartPanel.hidden = expanded;
-      if (!expanded && sizeChartImage && !sizeChartImage.getAttribute('src')) {
-        sizeChartImage.setAttribute('src', sizeChartImage.dataset.sizeChartSrc);
-      }
-      if (sizeChartToggleText) {
-        sizeChartToggleText.textContent = expanded ? sizeChartTriggerText : 'Hide size chart';
-      }
-    });
-
-    reviewsLink?.addEventListener('click', event => {
-      const target = document.querySelector(reviewsLink.getAttribute('href'));
-      if (!target) return;
-      event.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-
-    renderGallery();
-    renderSelectors();
-    setButtonState();
-    initializeStickyVisibility();
+    updateControls();
   })();
 </script>
 
@@ -1388,8 +677,7 @@
     {
       "type": "product",
       "id": "product",
-      "label": "Visible Jane Set parent product",
-      "info": "Used for the page title and gallery. If blank, the current product page object is used."
+      "label": "Visible Jane Set parent product"
     },
     {
       "type": "product",
@@ -1414,193 +702,49 @@
     {
       "type": "text",
       "id": "set_price_text",
-      "label": "Set price text",
+      "label": "Set price",
       "default": "₱1,699"
     },
     {
       "type": "text",
       "id": "compare_at_price_text",
-      "label": "Compare-at price text",
+      "label": "Compare-at price",
       "default": "₱1,889"
     },
     {
       "type": "text",
       "id": "discount_badge_text",
-      "label": "Discount badge text",
+      "label": "Discount badge",
       "default": "10% OFF"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_header",
-      "label": "Show mini header",
-      "default": false
-    },
-    {
-      "type": "text",
-      "id": "logo_text",
-      "label": "Logo text",
-      "default": "KASYA"
     },
     {
       "type": "text",
       "id": "product_label",
       "label": "Product label",
-      "default": "KASYA BASICS"
+      "default": "KASYA SETS"
     },
     {
       "type": "text",
       "id": "heading",
-      "label": "Headline",
+      "label": "Heading",
       "default": "JANE COORDINATES SET"
     },
     {
       "type": "text",
       "id": "subtitle",
-      "label": "Subtitle / fabric",
+      "label": "Subtitle",
       "default": "Premium ITY"
-    },
-    {
-      "type": "text",
-      "id": "rating_text",
-      "label": "Rating text",
-      "default": "(4.8)"
     },
     {
       "type": "textarea",
       "id": "description",
-      "label": "Short benefit description",
-      "default": "Effortless everyday style designed for comfort, movement, and repeat wear"
-    },
-    {
-      "type": "text",
-      "id": "default_color",
-      "label": "Default color option value",
-      "default": "Black",
-      "info": "Must match the Shopify variant color value exactly. Example: Black"
-    },
-    {
-      "type": "text",
-      "id": "color_option_name",
-      "label": "Shopify color option name",
-      "default": "Color",
-      "info": "Usually Color. Must match the product option name."
-    },
-    {
-      "type": "text",
-      "id": "size_option_name",
-      "label": "Shopify size option name",
-      "default": "Size",
-      "info": "Usually Size. Must match the product option name."
-    },
-    {
-      "type": "checkbox",
-      "id": "show_size_chart",
-      "label": "Show size chart",
-      "default": true
-    },
-    {
-      "type": "textarea",
-      "id": "size_helper_text",
-      "label": "Size helper text",
-      "default": "Choose your usual size for a relaxed fit. Size up if you prefer extra room around the waist or tummy."
-    },
-    {
-      "type": "text",
-      "id": "size_chart_trigger_text",
-      "label": "Size chart trigger text",
-      "default": "Not sure about your size? View size chart"
-    },
-    {
-      "type": "image_picker",
-      "id": "size_chart_image",
-      "label": "Size chart image",
-      "info": "Fallback image. Recommended workflow: upload the product's size chart image to product media and set alt text to LP | Size Chart. This lets each product use its own size chart automatically."
-    },
-    {
-      "type": "textarea",
-      "id": "size_chart_note",
-      "label": "Size chart note",
-      "default": "Measurements may vary slightly due to fabric behavior and manual production."
-    },
-    {
-      "type": "text",
-      "id": "cta_text",
-      "label": "CTA text",
-      "default": "ADD SET TO CART"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_sticky_atc",
-      "label": "Enable sticky Add to Cart",
-      "default": true
-    }
-  ],
-  "blocks": [
-    {
-      "type": "color",
-      "name": "Color",
-      "settings": [
-        {
-          "type": "text",
-          "id": "display_name",
-          "label": "Display color name",
-          "default": "Black"
-        },
-        {
-          "type": "text",
-          "id": "option_value",
-          "label": "Shopify color option value",
-          "default": "Black",
-          "info": "Must match the product variant color value exactly."
-        },
-        {
-          "type": "color",
-          "id": "swatch_color",
-          "label": "Swatch color",
-          "info": "Optional. If left as default black for non-black colors, the section will auto-pick a color based on the color name."
-        },
-        {
-          "type": "image_picker",
-          "id": "image_1",
-          "label": "Front image",
-          "info": "Future recommended workflow: upload product media and set alt text as LP | Color | Front, LP | Color | Side, LP | Color | Back, LP | Color | Sitting, LP | Color | Fabric Close-up. Until product media is ready, manual Color block images can be used as fallback."
-        },
-        {
-          "type": "image_picker",
-          "id": "image_2",
-          "label": "Side image"
-        },
-        {
-          "type": "image_picker",
-          "id": "image_3",
-          "label": "Back image"
-        },
-        {
-          "type": "image_picker",
-          "id": "image_4",
-          "label": "Sitting image"
-        },
-        {
-          "type": "image_picker",
-          "id": "image_5",
-          "label": "Fabric close-up image"
-        }
-      ]
+      "label": "Description",
+      "default": "A polished blouse and pants set designed for effortless comfort and versatile everyday wear."
     }
   ],
   "presets": [
     {
-      "name": "Kasya LP Jane Set Hero",
-      "blocks": [
-        {
-          "type": "color",
-          "settings": {
-            "display_name": "Black",
-            "option_value": "Black",
-            "swatch_color": "#000000"
-          }
-        }
-      ]
+      "name": "Kasya LP Jane Set Hero"
     }
   ]
 }
