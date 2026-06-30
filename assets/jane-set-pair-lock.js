@@ -98,7 +98,12 @@
     let element = control;
     while (element && element !== document.body) {
       const matches = matchingLines(element.textContent, janeLines);
-      if (matches.length === 1) return matches[0];
+      if (matches.length === 1) {
+        return {
+          card: element,
+          line: matches[0]
+        };
+      }
       if (matches.length > 1) return null;
       if (element.matches?.(
         'cart-drawer, cart-items, [class*="aov" i], [id*="aov" i]'
@@ -109,17 +114,80 @@
     return null;
   }
 
+  function actionControls(card) {
+    if (!card) return [];
+    return [...card.querySelectorAll('button, a, [role="button"]')]
+      .filter(control => actionFor(control));
+  }
+
+  function findCardForLine(line, surface) {
+    if (!line || !surface) return null;
+
+    const janeLines = cachedCart.items.filter(isJaneSetItem);
+    return [...surface.querySelectorAll('*')]
+      .filter(element => {
+        if (!actionControls(element).length) return false;
+        const matches = matchingLines(element.textContent, janeLines);
+        return matches.length === 1 && matches[0].key === line.key;
+      })
+      .sort((first, second) => first.textContent.length - second.textContent.length)[0] || null;
+  }
+
+  function quantityInput(card) {
+    return card?.querySelector(
+      'input[type="number"], input[name*="quantity" i], [role="spinbutton"], [aria-valuenow]'
+    ) || null;
+  }
+
+  function setCardBusy(card, busy) {
+    if (!card) return;
+
+    card.toggleAttribute('data-jane-set-syncing', busy);
+    card.setAttribute('aria-busy', String(busy));
+    if (busy) {
+      card.setAttribute('data-jane-pointer-events', card.style.pointerEvents || '');
+      card.style.pointerEvents = 'none';
+    } else {
+      card.style.pointerEvents = card.getAttribute('data-jane-pointer-events') || '';
+      card.removeAttribute('data-jane-pointer-events');
+    }
+    actionControls(card).forEach(control => {
+      if (busy) {
+        control.setAttribute('data-jane-was-disabled', String(control.disabled));
+        control.disabled = true;
+        control.setAttribute('aria-disabled', 'true');
+      } else {
+        const wasDisabled = control.getAttribute('data-jane-was-disabled') === 'true';
+        control.disabled = wasDisabled;
+        control.removeAttribute('data-jane-was-disabled');
+        control.toggleAttribute('aria-disabled', wasDisabled);
+      }
+    });
+  }
+
+  function setOptimisticQuantity(card, quantity) {
+    const input = quantityInput(card);
+    if (!input) return;
+
+    if ('value' in input) input.value = quantity;
+    input.setAttribute('value', String(quantity));
+    input.setAttribute('aria-valuenow', String(quantity));
+  }
+
   function dispatchCartRefresh(cart) {
     document.dispatchEvent(new CustomEvent('afterCartChanged', {
+      bubbles: true,
       detail: {
         source: 'jane-set-pair-lock',
         cartData: cart
       }
     }));
     document.dispatchEvent(new CustomEvent('cart:refresh', {
+      bubbles: true,
       detail: { cart }
     }));
     document.dispatchEvent(new CustomEvent('cart:updated', {
+      bubbles: true,
       detail: { cart }
     }));
   }
@@ -152,31 +220,47 @@
     }
   }
 
-  async function interceptPairAction(control, clickedLine, action) {
+  async function interceptPairAction(clickedMatch, action) {
+    const clickedLine = clickedMatch.line;
+    const surface = clickedMatch.card.closest(
+      'cart-drawer, cart-items, [class*="aov" i], [id*="aov" i], [class*="cart" i], [id*="cart" i]'
+    );
+    const { top, pants } = pairFor(cachedCart.items, clickedLine.properties._set_id);
+    if (!top || !pants) return;
+
+    const topCard = top.key === clickedLine.key
+      ? clickedMatch.card
+      : findCardForLine(top, surface);
+    const pantsCard = pants.key === clickedLine.key
+      ? clickedMatch.card
+      : findCardForLine(pants, surface);
+    let quantity = clickedLine.quantity;
+    if (action === 'increase') quantity += 1;
+    if (action === 'decrease') quantity = Math.max(0, quantity - 1);
+    if (action === 'remove') quantity = 0;
+
     isSyncingJaneSet = true;
-    control.disabled = true;
-    control.setAttribute('aria-busy', 'true');
+    setCardBusy(topCard, true);
+    setCardBusy(pantsCard, true);
+    setOptimisticQuantity(topCard, quantity);
+    setOptimisticQuantity(pantsCard, quantity);
 
     try {
-      const { top, pants } = pairFor(cachedCart.items, clickedLine.properties._set_id);
-      if (!top || !pants) return;
-
-      let quantity = clickedLine.quantity;
-      if (action === 'increase') quantity += 1;
-      if (action === 'decrease') quantity = Math.max(0, quantity - 1);
-      if (action === 'remove') quantity = 0;
-
-      await updateJaneSets({
+      const updatedCart = await updateJaneSets({
         [top.key]: quantity,
         [pants.key]: quantity
       }, true);
+      if (!updatedCart) {
+        setOptimisticQuantity(topCard, top.quantity);
+        setOptimisticQuantity(pantsCard, pants.quantity);
+      }
     } finally {
       if (isSyncingJaneSet) {
         isSyncingJaneSet = false;
         scheduleCheck(250);
       }
-      control.disabled = false;
-      control.removeAttribute('aria-busy');
+      setCardBusy(topCard, false);
+      setCardBusy(pantsCard, false);
     }
   }
 
@@ -258,15 +342,15 @@
     const action = actionFor(control);
     if (!action) return;
 
-    const clickedLine = matchClickedLine(control);
-    if (!clickedLine) return;
+    const clickedMatch = matchClickedLine(control);
+    if (!clickedMatch) return;
 
-    const { top, pants } = pairFor(cachedCart.items, clickedLine.properties._set_id);
+    const { top, pants } = pairFor(cachedCart.items, clickedMatch.line.properties._set_id);
     if (!top || !pants) return;
 
     event.preventDefault();
     event.stopImmediatePropagation();
-    interceptPairAction(control, clickedLine, action);
+    interceptPairAction(clickedMatch, action);
   }, true);
 
   document.addEventListener('change', event => {
