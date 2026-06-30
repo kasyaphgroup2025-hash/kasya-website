@@ -64,9 +64,7 @@
         </div>
 
         <div class="jane-set-hero__pricing">
-          <span class="jane-set-hero__compare-price">{{ section.settings.compare_at_price_text }}</span>
           <strong class="jane-set-hero__set-price">{{ section.settings.set_price_text }}</strong>
-          <span class="jane-set-hero__discount">{{ section.settings.discount_badge_text }}</span>
         </div>
       </div>
 
@@ -304,25 +302,10 @@
     white-space: nowrap;
   }
 
-  .jane-set-hero__compare-price {
-    color: var(--jane-muted);
-    font-size: 16px;
-    text-decoration: line-through;
-  }
-
   .jane-set-hero__set-price {
     color: var(--jane-accent);
     font-size: 34px;
     line-height: 1;
-  }
-
-  .jane-set-hero__discount {
-    padding: 5px 9px;
-    border-radius: 4px;
-    background: var(--jane-accent);
-    color: #ffffff;
-    font-size: 12px;
-    font-weight: 800;
   }
 
   .jane-set-hero__description {
@@ -704,18 +687,6 @@
       "id": "set_price_text",
       "label": "Set price",
       "default": "₱1,699"
-    },
-    {
-      "type": "text",
-      "id": "compare_at_price_text",
-      "label": "Compare-at price",
-      "default": "₱1,889"
-    },
-    {
-      "type": "text",
-      "id": "discount_badge_text",
-      "label": "Discount badge",
-      "default": "10% OFF"
     },
     {
       "type": "text",

@@ -13,25 +13,15 @@
       "type": "kasya-lp-jane-set-hero",
       "settings": {
         "product": "",
-        "show_header": false,
-        "logo_text": "KASYA",
+        "black_top_product": "",
+        "black_pants_product": "",
+        "taupe_top_product": "",
+        "taupe_pants_product": "",
+        "set_price_text": "₱1,699",
         "product_label": "KASYA SETS",
         "heading": "JANE COORDINATES SET",
         "subtitle": "Premium ITY",
-        "rating_text": "",
-        "description": "A polished blouse and pants set designed for effortless comfort and versatile everyday wear.",
-        "set_price_text": "₱1,699",
-        "compare_at_price_text": "₱1,889",
-        "discount_badge_text": "10% OFF",
-        "default_color": "Black",
-        "color_option_name": "Color",
-        "size_option_name": "Size",
-        "show_size_chart": true,
-        "size_helper_text": "Choose your usual size for a relaxed fit. Size up if you prefer extra room around the waist or tummy.",
-        "size_chart_trigger_text": "Not sure about your size? View size chart",
-        "size_chart_note": "Measurements may vary slightly due to fabric behavior and manual production.",
-        "cta_text": "ADD SET TO CART",
-        "enable_sticky_atc": true
+        "description": "A polished blouse and pants set designed for effortless comfort and versatile everyday wear."
       }
     },
     "kasya_lp_fit_confidence": {
