@@ -270,7 +270,9 @@
       if (!state || !state.color) return;
 
       const displayColor = String(state.displayColor || state.color || '').trim();
-      const nextSrc = state.fabricCloseup || image.dataset.defaultSrc || state.featuredImage || '';
+      const nextSrc = state.fabricCloseup ||
+        (state.strictColorMedia ? '' : image.dataset.defaultSrc || state.featuredImage) ||
+        '';
 
       if (colorLabel && colorName && displayColor) {
         colorName.textContent = displayColor.toUpperCase();

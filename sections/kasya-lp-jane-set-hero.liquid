@@ -22,19 +22,7 @@
   {% else %}
     <div class="jane-set-hero__gallery" data-jane-gallery>
       <div class="jane-set-hero__slides" data-jane-slides>
-        {% for media in parent_product.media %}
-          {% if media.media_type == 'image' and media.preview_image != blank %}
-            <figure class="jane-set-hero__slide">
-              <img
-                src="{{ media.preview_image | image_url: width: 1400 }}"
-                alt="{{ media.alt | default: parent_product.title | escape }}"
-                width="{{ media.preview_image.width }}"
-                height="{{ media.preview_image.height }}"
-                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
-              >
-            </figure>
-          {% endif %}
-        {% endfor %}
+        <div class="jane-set-hero__gallery-placeholder">Select a color to view</div>
       </div>
 
       <button type="button" class="jane-set-hero__gallery-button jane-set-hero__gallery-button--prev" data-jane-prev aria-label="Previous image">
@@ -45,6 +33,22 @@
       </button>
       <div class="jane-set-hero__dots" data-jane-dots></div>
     </div>
+
+    <script type="application/json" data-jane-product-media>
+      [
+        {% assign jane_media_count = 0 %}
+        {% for media in parent_product.media %}
+          {% if media.media_type == 'image' and media.preview_image != blank %}
+            {% if jane_media_count > 0 %},{% endif %}
+            {% assign jane_media_count = jane_media_count | plus: 1 %}
+            {
+              "alt": {{ media.alt | json }},
+              "src": {{ media.preview_image | image_url: width: 1400 | json }}
+            }
+          {% endif %}
+        {% endfor %}
+      ]
+    </script>
 
     <div class="jane-set-hero__content">
       {% if section.settings.product_label != blank %}
@@ -218,6 +222,21 @@
     height: auto;
     aspect-ratio: 4 / 5;
     object-fit: cover;
+  }
+
+  .jane-set-hero__gallery-placeholder {
+    flex: 0 0 100%;
+    min-height: 420px;
+    aspect-ratio: 4 / 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    color: #777777;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
   }
 
   .jane-set-hero__gallery-button {
@@ -577,6 +596,7 @@
 
     const form = section.querySelector('[data-jane-set-form]');
     const componentData = section.querySelector('[data-jane-components]');
+    const productMediaData = section.querySelector('[data-jane-product-media]');
     const colorContainer = section.querySelector('[data-jane-colors]');
     const topSizes = section.querySelector('[data-size-options="top"]');
     const pantsSizes = section.querySelector('[data-size-options="pants"]');
@@ -605,12 +625,54 @@
     ) return;
 
     const products = JSON.parse(componentData.textContent || '{}');
+    const productMedia = productMediaData ? JSON.parse(productMediaData.textContent || '[]') : [];
     const sizes = ['Medium', 'Large', 'XL', '2XL', '3XL'];
+    const shotOrder = ['front', 'side', 'back', 'sitting', 'fabric close up'];
     const normalize = value => String(value || '').trim().toLowerCase();
     let selectedColor = '';
     let selectedTopSize = '';
     let selectedPantsSize = '';
     let adding = false;
+
+    function normalizeShotName(value) {
+      return normalize(value)
+        .replace(/[-_]+/g, ' ')
+        .replace(/\bcloseup\b/g, 'close up')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function parseProductMediaAlt(altText) {
+      const parts = String(altText || '').split('|').map(part => part.trim());
+      if (parts.length !== 3 || normalize(parts[0]) !== 'lp') return null;
+
+      return {
+        color: normalize(parts[1]),
+        shot: normalizeShotName(parts[2])
+      };
+    }
+
+    function getProductMediaShotMapForColor(color) {
+      const imageMap = {};
+      const normalizedColor = normalize(color);
+
+      productMedia.forEach(item => {
+        const parsed = parseProductMediaAlt(item.alt);
+        if (!parsed || !item.src || parsed.color !== normalizedColor) return;
+        if (!shotOrder.includes(parsed.shot) || imageMap[parsed.shot]) return;
+        imageMap[parsed.shot] = item.src;
+      });
+
+      return imageMap;
+    }
+
+    function getProductMediaImagesForColor(color) {
+      const imageMap = getProductMediaShotMapForColor(color);
+      return shotOrder.map(shot => ({
+        shot,
+        src: imageMap[shot]
+      })).filter(image => image.src);
+    }
 
     function optionIndex(optionNames, name) {
       return (optionNames || []).findIndex(optionName => {
@@ -731,6 +793,8 @@
         option.setAttribute('aria-pressed', String(selected));
       });
 
+      renderGalleryForColor(selectedColor);
+      announceSelectedColor();
       updateControls();
     });
 
@@ -874,13 +938,66 @@
     const dots = section.querySelector('[data-jane-dots]');
     const previous = section.querySelector('[data-jane-prev]');
     const next = section.querySelector('[data-jane-next]');
-    const slideCount = slides?.children.length || 0;
 
-    if (slides && dots) {
+    function rebuildDots(slideCount) {
       dots.innerHTML = Array.from({ length: slideCount }, (_, index) => {
         return `<span class="jane-set-hero__dot ${index === 0 ? 'is-active' : ''}"></span>`;
       }).join('');
+    }
 
+    function renderGalleryForColor(color) {
+      if (!slides || !dots || !previous || !next) return;
+
+      const images = getProductMediaImagesForColor(color);
+      slides.replaceChildren();
+
+      images.forEach((image, index) => {
+        const figure = document.createElement('figure');
+        const mediaImage = document.createElement('img');
+        figure.className = 'jane-set-hero__slide';
+        mediaImage.src = image.src;
+        mediaImage.alt = `${color} ${image.shot}`;
+        mediaImage.width = 1400;
+        mediaImage.height = 1750;
+        mediaImage.loading = index === 0 ? 'eager' : 'lazy';
+        figure.appendChild(mediaImage);
+        slides.appendChild(figure);
+      });
+
+      if (!images.length) {
+        const placeholder = document.createElement('div');
+        placeholder.className = 'jane-set-hero__gallery-placeholder';
+        placeholder.textContent = color ? `${color} images coming soon` : 'Select a color to view';
+        slides.appendChild(placeholder);
+      }
+
+      slides.scrollLeft = 0;
+      rebuildDots(images.length);
+      previous.hidden = images.length < 2;
+      next.hidden = images.length < 2;
+    }
+
+    function announceSelectedColor() {
+      const imageMap = getProductMediaShotMapForColor(selectedColor);
+      const colorState = {
+        color: selectedColor,
+        displayColor: selectedColor,
+        images: {
+          front: imageMap.front || '',
+          side: imageMap.side || '',
+          back: imageMap.back || ''
+        },
+        fabricCloseup: imageMap['fabric close up'] || '',
+        strictColorMedia: true
+      };
+
+      window.KasyaLPSelectedColor = colorState;
+      document.dispatchEvent(new CustomEvent('kasya:hero-color-change', {
+        detail: colorState
+      }));
+    }
+
+    if (slides && dots && previous && next) {
       const updateDots = () => {
         const index = slides.clientWidth ? Math.round(slides.scrollLeft / slides.clientWidth) : 0;
         dots.querySelectorAll('.jane-set-hero__dot').forEach((dot, dotIndex) => {
@@ -889,16 +1006,17 @@
       };
 
       const move = direction => {
+        const slideCount = slides.querySelectorAll('.jane-set-hero__slide').length;
+        if (slideCount < 2) return;
         const current = slides.clientWidth ? Math.round(slides.scrollLeft / slides.clientWidth) : 0;
         const target = (current + direction + slideCount) % slideCount;
         slides.scrollTo({ left: target * slides.clientWidth, behavior: 'smooth' });
       };
 
-      previous.hidden = slideCount < 2;
-      next.hidden = slideCount < 2;
       previous.addEventListener('click', () => move(-1));
       next.addEventListener('click', () => move(1));
       slides.addEventListener('scroll', () => window.requestAnimationFrame(updateDots));
+      renderGalleryForColor('');
     }
 
     updateControls();

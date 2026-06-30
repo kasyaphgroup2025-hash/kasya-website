@@ -158,32 +158,10 @@
     control.setAttribute('aria-busy', 'true');
 
     try {
-      const response = await fetch('/cart.js', {
-        headers: { 'Accept': 'application/json' }
-      });
-      if (!response.ok) return;
+      const { top, pants } = pairFor(cachedCart.items, clickedLine.properties._set_id);
+      if (!top || !pants) return;
 
-      const cart = await response.json();
-      snapshotCart(cart);
-      const currentLine = cart.items.find(item =>
-        item.key === clickedLine.key ||
-        (
-          item.properties?._set_id === clickedLine.properties._set_id &&
-          item.properties?._set_role === clickedLine.properties._set_role
-        )
-      );
-      if (!currentLine) return;
-
-      const { top, pants } = pairFor(cart.items, currentLine.properties._set_id);
-      if (!top || !pants) {
-        const orphanUpdates = {};
-        if (top) orphanUpdates[top.key] = 0;
-        if (pants) orphanUpdates[pants.key] = 0;
-        await updateJaneSets(orphanUpdates, true);
-        return;
-      }
-
-      let quantity = currentLine.quantity;
+      let quantity = clickedLine.quantity;
       if (action === 'increase') quantity += 1;
       if (action === 'decrease') quantity = Math.max(0, quantity - 1);
       if (action === 'remove') quantity = 0;
