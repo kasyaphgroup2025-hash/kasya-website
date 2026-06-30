@@ -152,6 +152,35 @@
         <p class="jane-set-hero__error" data-jane-error role="alert" aria-live="polite" hidden></p>
       </form>
     </div>
+
+    <div class="jane-set-review" data-jane-review hidden>
+      <button type="button" class="jane-set-review__overlay" data-jane-review-close aria-label="Close set review"></button>
+      <div class="jane-set-review__panel" role="dialog" aria-modal="true" aria-labelledby="JaneSetReviewTitle-{{ section.id }}">
+        <div class="jane-set-review__header">
+          <h2 id="JaneSetReviewTitle-{{ section.id }}" data-jane-review-title>Jane Set</h2>
+          <button type="button" class="jane-set-review__close" data-jane-review-close aria-label="Close set review">&times;</button>
+        </div>
+
+        <div class="jane-set-review__components">
+          <div>
+            <strong data-jane-review-top>Blouse</strong>
+            <span data-jane-review-top-sku></span>
+          </div>
+          <div>
+            <strong data-jane-review-pants>Pants</strong>
+            <span data-jane-review-pants-sku></span>
+          </div>
+        </div>
+
+        <strong class="jane-set-review__price">{{ section.settings.set_price_text }}</strong>
+        <p class="jane-set-review__error" data-jane-review-error role="alert" aria-live="polite" hidden></p>
+
+        <button type="button" class="jane-set-review__add" data-jane-review-add>
+          <span data-jane-review-add-text>ADD TO CART</span>
+        </button>
+        <button type="button" class="jane-set-review__edit" data-jane-review-close>EDIT SET / CLOSE</button>
+      </div>
+    </div>
   {% endif %}
 </section>
 
@@ -421,6 +450,122 @@
     text-align: center;
   }
 
+  .jane-set-review[hidden] {
+    display: none;
+  }
+
+  .jane-set-review {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .jane-set-review__overlay {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: rgba(0, 0, 0, 0.46);
+    cursor: pointer;
+  }
+
+  .jane-set-review__panel {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 760px);
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: 24px 24px calc(24px + env(safe-area-inset-bottom));
+    background: #ffffff;
+    box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.18);
+  }
+
+  .jane-set-review__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .jane-set-review__header h2 {
+    margin: 0;
+    font-size: 26px;
+    text-transform: uppercase;
+  }
+
+  .jane-set-review__close {
+    width: 40px;
+    height: 40px;
+    border: 0;
+    background: transparent;
+    color: #111111;
+    cursor: pointer;
+    font-size: 30px;
+    line-height: 1;
+  }
+
+  .jane-set-review__components {
+    display: grid;
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .jane-set-review__components > div {
+    display: grid;
+    gap: 4px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--jane-line);
+  }
+
+  .jane-set-review__components span {
+    color: var(--jane-muted);
+    font-size: 13px;
+  }
+
+  .jane-set-review__price {
+    display: block;
+    margin-top: 22px;
+    color: var(--jane-accent);
+    font-size: 32px;
+  }
+
+  .jane-set-review__add,
+  .jane-set-review__edit {
+    width: 100%;
+    min-height: 54px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 800;
+  }
+
+  .jane-set-review__add {
+    margin-top: 22px;
+    border: 0;
+    background: #000000;
+    color: #ffffff;
+  }
+
+  .jane-set-review__add:disabled {
+    cursor: wait;
+    opacity: 0.5;
+  }
+
+  .jane-set-review__edit {
+    margin-top: 10px;
+    border: 1px solid #111111;
+    background: #ffffff;
+    color: #111111;
+  }
+
+  .jane-set-review__error {
+    margin: 10px 0 0;
+    color: #b42318;
+    font-size: 13px;
+  }
+
   @media screen and (max-width: 520px) {
     .jane-set-hero__content {
       padding: 20px 18px 26px;
@@ -458,8 +603,26 @@
     const submitButton = section.querySelector('[data-jane-submit]');
     const submitText = section.querySelector('[data-jane-submit-text]');
     const errorMessage = section.querySelector('[data-jane-error]');
+    const review = section.querySelector('[data-jane-review]');
+    const reviewTitle = section.querySelector('[data-jane-review-title]');
+    const reviewTop = section.querySelector('[data-jane-review-top]');
+    const reviewTopSku = section.querySelector('[data-jane-review-top-sku]');
+    const reviewPants = section.querySelector('[data-jane-review-pants]');
+    const reviewPantsSku = section.querySelector('[data-jane-review-pants-sku]');
+    const reviewAddButton = section.querySelector('[data-jane-review-add]');
+    const reviewAddText = section.querySelector('[data-jane-review-add-text]');
+    const reviewError = section.querySelector('[data-jane-review-error]');
 
-    if (!form || !componentData || !colorContainer || !topSizes || !pantsSizes || !submitButton) return;
+    if (
+      !form ||
+      !componentData ||
+      !colorContainer ||
+      !topSizes ||
+      !pantsSizes ||
+      !submitButton ||
+      !review ||
+      !reviewAddButton
+    ) return;
 
     const products = JSON.parse(componentData.textContent || '{}');
     const sizes = ['Medium', 'Large', 'XL', '2XL', '3XL'];
@@ -520,11 +683,33 @@
     function clearError() {
       errorMessage.hidden = true;
       errorMessage.textContent = '';
+      reviewError.hidden = true;
+      reviewError.textContent = '';
     }
 
     function showError(message) {
       errorMessage.textContent = message;
       errorMessage.hidden = false;
+      reviewError.textContent = message;
+      reviewError.hidden = false;
+    }
+
+    function openReview(topVariant, pantsVariant) {
+      reviewTitle.textContent = `${selectedColor} Jane Set`;
+      reviewTop.textContent = `${selectedColor} Blouse: ${selectedTopSize}`;
+      reviewTopSku.textContent = `SKU: ${topVariant.sku || 'Not available'}`;
+      reviewPants.textContent = `${selectedColor} Pants: ${selectedPantsSize}`;
+      reviewPantsSku.textContent = `SKU: ${pantsVariant.sku || 'Not available'}`;
+      review.hidden = false;
+      document.body.style.overflow = 'hidden';
+      reviewAddButton.focus();
+    }
+
+    function closeReview() {
+      if (adding) return;
+      review.hidden = true;
+      document.body.style.removeProperty('overflow');
+      submitButton.focus();
     }
 
     colorContainer.addEventListener('click', event => {
@@ -559,7 +744,7 @@
       updateControls();
     });
 
-    form.addEventListener('submit', async event => {
+    form.addEventListener('submit', event => {
       event.preventDefault();
       if (adding) return;
 
@@ -574,13 +759,28 @@
         return;
       }
 
+      clearError();
+      openReview(topVariant, pantsVariant);
+    });
+
+    async function addReviewedSet() {
+      if (adding) return;
+
+      const { topVariant, pantsVariant, complete, available } = selectionState();
+      if (!complete || !available) {
+        showError('This set is no longer available. Close this review and update your selection.');
+        return;
+      }
+
       adding = true;
       clearError();
       submitButton.disabled = true;
-      submitText.textContent = 'ADDING...';
+      reviewAddButton.disabled = true;
+      reviewAddText.textContent = 'ADDING...';
 
+      const setId = `jane-set-${Date.now()}-${Math.random().toString(36).slice(2)}`;
       const sharedProperties = {
-        _set_id: `jane-set-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        _set_id: setId,
         _set_name: 'Jane Set',
         _set_color: selectedColor,
         _set_display_price: '₱1,699',
@@ -604,12 +804,24 @@
               {
                 id: topVariant.id,
                 quantity: 1,
-                properties: { ...sharedProperties, _set_role: 'Top' }
+                properties: {
+                  ...sharedProperties,
+                  _set_role: 'Top',
+                  _set_component_label: `${selectedColor} Blouse`,
+                  _set_component_size: selectedTopSize,
+                  _set_component_sku: topVariant.sku
+                }
               },
               {
                 id: pantsVariant.id,
                 quantity: 1,
-                properties: { ...sharedProperties, _set_role: 'Pants' }
+                properties: {
+                  ...sharedProperties,
+                  _set_role: 'Pants',
+                  _set_component_label: `${selectedColor} Pants`,
+                  _set_component_size: selectedPantsSize,
+                  _set_component_sku: pantsVariant.sku
+                }
               }
             ]
           })
@@ -622,20 +834,36 @@
 
         const cartResponse = await response.json();
         if (cart && typeof cart.renderContents === 'function' && cartResponse.sections) {
+          review.hidden = true;
+          document.body.style.removeProperty('overflow');
           cart.setActiveElement?.(document.activeElement);
           cart.classList.remove('is-empty');
           cart.renderContents(cartResponse);
           document.dispatchEvent(new CustomEvent('afterCartChanged', {
             detail: { source: 'jane-set-hero', cartData: cartResponse }
           }));
+          adding = false;
+          reviewAddButton.disabled = false;
+          reviewAddText.textContent = 'ADD TO CART';
+          updateControls();
         } else {
           window.location.assign('/cart');
         }
       } catch (error) {
         adding = false;
         showError(error.message || 'Unable to add this set to cart. Please try again.');
+        reviewAddButton.disabled = false;
+        reviewAddText.textContent = 'ADD TO CART';
         updateControls();
       }
+    }
+
+    reviewAddButton.addEventListener('click', addReviewedSet);
+    section.querySelectorAll('[data-jane-review-close]').forEach(button => {
+      button.addEventListener('click', closeReview);
+    });
+    review.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeReview();
     });
 
     const slides = section.querySelector('[data-jane-slides]');

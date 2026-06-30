@@ -43,20 +43,32 @@
     </p>
 
     {%- if top_item -%}
+      {%- assign top_label = top_item.properties._set_component_label -%}
+      {%- if top_label == blank -%}
+        {%- assign top_label = set_color | append: ' Blouse' -%}
+      {%- endif -%}
+      {%- assign top_size = top_item.properties._set_component_size | default: top_item.properties._top_size -%}
+      {%- assign top_sku = top_item.properties._set_component_sku | default: top_item.sku -%}
       <p class="product-option margin0">
-        {{ set_color }} Blouse: {{ top_item.properties._top_size }}
+        {{ top_label }}: {{ top_size }}
       </p>
-      {%- if top_item.sku != blank -%}
-        <p class="product-option light margin0">SKU: {{ top_item.sku }}</p>
+      {%- if top_sku != blank -%}
+        <p class="product-option light margin0">SKU: {{ top_sku }}</p>
       {%- endif -%}
     {%- endif -%}
 
     {%- if pants_item -%}
+      {%- assign pants_label = pants_item.properties._set_component_label -%}
+      {%- if pants_label == blank -%}
+        {%- assign pants_label = set_color | append: ' Pants' -%}
+      {%- endif -%}
+      {%- assign pants_size = pants_item.properties._set_component_size | default: pants_item.properties._pants_size -%}
+      {%- assign pants_sku = pants_item.properties._set_component_sku | default: pants_item.sku -%}
       <p class="product-option margin0">
-        {{ set_color }} Pants: {{ pants_item.properties._pants_size }}
+        {{ pants_label }}: {{ pants_size }}
       </p>
-      {%- if pants_item.sku != blank -%}
-        <p class="product-option light margin0">SKU: {{ pants_item.sku }}</p>
+      {%- if pants_sku != blank -%}
+        <p class="product-option light margin0">SKU: {{ pants_sku }}</p>
       {%- endif -%}
     {%- endif -%}
 
