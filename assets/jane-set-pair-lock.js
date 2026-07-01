@@ -36,10 +36,6 @@
     return normalize(item.properties?._set_component_sku || item.sku);
   }
 
-  function roleTitle(item) {
-    return item.properties._set_role === 'Top' ? 'jane blouse' : 'jane pants';
-  }
-
   function controlAction(control) {
     const actionText = [
       control.getAttribute('name'),
@@ -80,20 +76,8 @@
     return elements;
   }
 
-  function cardContainsOtherItem(card, item, cartItems) {
-    const cardText = normalize(card.textContent);
-    return cartItems.some(otherItem => {
-      if (otherItem.key === item.key) return false;
-      const otherSku = itemSku(otherItem);
-      return otherSku && cardText.includes(otherSku);
-    });
-  }
-
-  function findCardFromMatch(matchElement, item, cartItems) {
-    const titleTokens = [
-      normalize(item.product_title || item.product?.title),
-      roleTitle(item)
-    ].filter(Boolean);
+  function findVisibleCardFromTitle(matchElement, title) {
+    const otherTitle = title === 'jane blouse' ? 'jane pants' : 'jane blouse';
     let element = matchElement;
 
     while (element && element !== document.body && element !== document.documentElement) {
@@ -102,103 +86,47 @@
       const hasQuantityControl = controls.some(control =>
         ['increase', 'decrease'].includes(controlAction(control))
       );
-      const hasProductTitle = titleTokens.some(title => cardText.includes(title));
-
-      if (
-        hasQuantityControl &&
-        hasProductTitle &&
-        !cardContainsOtherItem(element, item, cartItems)
-      ) {
-        return element;
-      }
+      if (hasQuantityControl && cardText.includes(title) && !cardText.includes(otherTitle)) return element;
       element = element.parentElement;
     }
     return null;
   }
 
-  function findCardForItem(item, cartItems) {
-    const sku = itemSku(item);
-    const duplicateSkuCount = sku
-      ? cartItems.filter(cartItem => itemSku(cartItem) === sku).length
-      : 0;
-    const matchTokens = [];
-
-    if (sku && duplicateSkuCount === 1) matchTokens.push(sku);
-    matchTokens.push(
-      normalize(item.product_title || item.product?.title),
-      roleTitle(item)
-    );
-
-    for (const token of matchTokens.filter(Boolean)) {
-      const cards = textElementsContaining(token)
-        .map(element => findCardFromMatch(element, item, cartItems))
-        .filter(Boolean);
-      const uniqueCards = [...new Set(cards)];
-      if (uniqueCards.length === 1) return uniqueCards[0];
-    }
-    return null;
-  }
-
-  function findHidingCardFromMatch(matchElement, item, cartItems, allowedSku) {
-    const titleTokens = [
-      normalize(item.product_title || item.product?.title),
-      roleTitle(item)
-    ].filter(Boolean);
-    let element = matchElement;
-
-    while (element && element !== document.body && element !== document.documentElement) {
-      const cardText = normalize(element.textContent);
-      const controls = controlsIn(element);
-      const hasQuantityControl = controls.some(control =>
-        ['increase', 'decrease'].includes(controlAction(control))
-      );
-      const hasProductTitle = titleTokens.some(title => cardText.includes(title));
-      const containsUnrelatedSku = cartItems.some(cartItem => {
-        const sku = itemSku(cartItem);
-        return sku && sku !== allowedSku && cardText.includes(sku);
-      });
-
-      if (hasQuantityControl && hasProductTitle && !containsUnrelatedSku) return element;
-      element = element.parentElement;
-    }
-    return null;
-  }
-
-  function findCardsForHiding(cart) {
+  function findVisibleJaneCards() {
     const cards = new Set();
-    const skuGroups = new Map();
-
-    cart.items.forEach(item => {
-      const sku = itemSku(item);
-      if (!sku) return;
-      skuGroups.set(sku, [...(skuGroups.get(sku) || []), item]);
-    });
-
-    skuGroups.forEach((items, sku) => {
-      if (!items.every(isJaneSetItem)) return;
-
-      items.forEach(item => {
-        textElementsContaining(sku).forEach(element => {
-          const card = findHidingCardFromMatch(element, item, cart.items, sku);
-          if (card) cards.add(card);
-        });
-      });
-    });
-
-    cart.items.filter(isJaneSetItem).forEach(item => {
-      const productTitle = normalize(item.product_title || item.product?.title);
-      const sameTitleItems = cart.items.filter(cartItem =>
-        normalize(cartItem.product_title || cartItem.product?.title) === productTitle
-      );
-      if (!productTitle || !sameTitleItems.length || !sameTitleItems.every(isJaneSetItem)) return;
-
-      textElementsContaining(productTitle).forEach(element => {
-        const card = findHidingCardFromMatch(element, item, cart.items, itemSku(item));
+    ['jane blouse', 'jane pants'].forEach(title => {
+      textElementsContaining(title).forEach(element => {
+        const card = findVisibleCardFromTitle(element, title);
         if (card) cards.add(card);
       });
     });
-
     return cards;
+  }
+
+  function assignDeleteIdentity(card, cart) {
+    if (!cart) return;
+
+    const cardText = normalize(card.textContent);
+    const role = cardText.includes('jane blouse')
+      ? 'Top'
+      : cardText.includes('jane pants')
+        ? 'Pants'
+        : null;
+    if (!role) return;
+
+    let candidates = cart.items.filter(item =>
+      isJaneSetItem(item) && item.properties._set_role === role
+    );
+    const visibleSkuCandidates = candidates.filter(item => {
+      const sku = itemSku(item);
+      return sku && cardText.includes(sku);
+    });
+    if (visibleSkuCandidates.length) candidates = visibleSkuCandidates;
+
+    const setIds = new Set(candidates.map(item => item.properties._set_id));
+    if (setIds.size !== 1) return;
+    card.dataset.janeSetId = [...setIds][0];
+    card.dataset.janeSetRole = role;
   }
 
   function installControlStyle() {
@@ -217,32 +145,19 @@
   }
 
   function markJaneSetCards(cart) {
-    const matchedCards = findCardsForHiding(cart);
+    const matchedCards = findVisibleJaneCards();
     const hiddenControls = new Set();
 
     matchedCards.forEach(card => {
       card.dataset.janeSetCard = 'true';
       card.removeAttribute('data-jane-set-id');
       card.removeAttribute('data-jane-set-role');
+      assignDeleteIdentity(card, cart);
       controlsIn(card).forEach(control => {
         if (!['increase', 'decrease'].includes(controlAction(control))) return;
         hiddenControls.add(control);
         control.classList.add(HIDDEN_CONTROL_CLASS);
       });
-    });
-
-    cart.items.filter(isJaneSetItem).forEach(item => {
-      const setIdsForSku = new Set(
-        cart.items
-          .filter(cartItem => itemSku(cartItem) === itemSku(item) && isJaneSetItem(cartItem))
-          .map(cartItem => cartItem.properties._set_id)
-      );
-      if (setIdsForSku.size > 1) return;
-
-      const strictCard = findCardForItem(item, cart.items);
-      if (!strictCard || !matchedCards.has(strictCard)) return;
-      strictCard.dataset.janeSetId = item.properties._set_id;
-      strictCard.dataset.janeSetRole = item.properties._set_role;
     });
 
     document.querySelectorAll('[data-jane-set-card="true"]').forEach(card => {
@@ -257,7 +172,7 @@
   }
 
   function markFromLatestCart() {
-    if (latestCart) markJaneSetCards(latestCart);
+    markJaneSetCards(latestCart);
   }
 
   function runImmediateMarkingBurst() {
@@ -267,7 +182,8 @@
     retryTimers = [
       window.setTimeout(markFromLatestCart, 50),
       window.setTimeout(markFromLatestCart, 150),
-      window.setTimeout(markFromLatestCart, 300)
+      window.setTimeout(markFromLatestCart, 300),
+      window.setTimeout(markFromLatestCart, 600)
     ];
   }
 
@@ -426,7 +342,6 @@
       return;
     }
     if (action !== 'remove') return;
-    if (!card.dataset.janeSetId) return;
 
     event.preventDefault();
     event.stopPropagation();
@@ -436,6 +351,12 @@
 
     try {
       const cart = await fetchCart();
+      card.removeAttribute('data-jane-set-id');
+      card.removeAttribute('data-jane-set-role');
+      assignDeleteIdentity(card, cart);
+      if (!card.dataset.janeSetId) {
+        throw new Error('Unable to safely match this Jane Set card to one set.');
+      }
       const updatedCart = await removeSet(card.dataset.janeSetId, cart);
       latestCart = updatedCart;
       dispatchCartRefresh(updatedCart);
