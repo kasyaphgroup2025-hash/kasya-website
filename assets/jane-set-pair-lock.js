@@ -25,6 +25,15 @@
     '[id*="aov" i]',
     '[class*="aov" i]'
   ].join(',');
+  const CART_SURFACE_FALLBACK_SELECTOR = [
+    '[role="dialog"]',
+    '[aria-modal="true"]',
+    'aside',
+    '[id*="drawer" i]',
+    '[class*="drawer" i]',
+    '[id*="cart" i]',
+    '[class*="cart" i]'
+  ].join(',');
   let latestCart = null;
   let isUpdatingJaneSet = false;
   let cartCheckTimer = null;
@@ -36,11 +45,39 @@
   }
 
   function cartSurfaces() {
-    return [...document.querySelectorAll(CART_SURFACE_SELECTOR)];
+    const surfaces = [...document.querySelectorAll(CART_SURFACE_SELECTOR)];
+    document.querySelectorAll(CART_SURFACE_FALLBACK_SELECTOR).forEach(element => {
+      if (element.closest('[data-jane-set-hero]')) return;
+      const text = normalize(element.textContent);
+      const hasJaneLine =
+        text.includes('jane set') ||
+        text.includes('jane blouse') ||
+        text.includes('jane pants') ||
+        text.includes('janeblouse') ||
+        text.includes('janepants');
+      const hasCartLanguage =
+        text.includes('checkout') ||
+        text.includes('subtotal') ||
+        text.includes('almost yours') ||
+        text.includes('free shipping') ||
+        text.includes('reserved');
+      if (hasJaneLine && hasCartLanguage && !surfaces.includes(element)) {
+        surfaces.push(element);
+      }
+    });
+    return surfaces;
   }
 
   function cartSurfaceFor(element) {
-    return element?.closest?.(CART_SURFACE_SELECTOR) || null;
+    const directSurface = element?.closest?.(CART_SURFACE_SELECTOR);
+    if (directSurface) return directSurface;
+
+    return cartSurfaces()
+      .filter(surface => surface.contains(element))
+      .reduce((smallest, surface) => {
+        if (!smallest || smallest.contains(surface)) return surface;
+        return smallest;
+      }, null);
   }
 
   function isJaneSetItem(item) {
@@ -128,6 +165,7 @@
   }
 
   function lockQuantityControls(card) {
+    card.dataset.janeSetQtyLocked = 'true';
     card.querySelectorAll('button, a, [role="button"]').forEach(control => {
       const action = controlAction(control);
       control.classList.toggle(
@@ -375,7 +413,10 @@
         disableJaneImageLinks(card);
 
         if (role === 'Top' || role === 'Pants') {
-          priceElementsIn(card).forEach(price => price.classList.add(HIDDEN_PRICE_CLASS));
+          priceElementsIn(card).forEach(price => {
+            price.classList.add(HIDDEN_PRICE_CLASS);
+            price.dataset.janeSetAovPriceHidden = 'true';
+          });
         }
       });
     });
