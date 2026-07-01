@@ -97,7 +97,10 @@
                     "id": {{ variant.id | json }},
                     "options": {{ variant.options | json }},
                     "available": {{ variant.available | json }},
-                    "sku": {{ variant.sku | json }}
+                    "sku": {{ variant.sku | json }},
+                    "inventoryQuantity": {{ variant.inventory_quantity | default: 0 | json }},
+                    "inventoryManagement": {{ variant.inventory_management | json }},
+                    "inventoryPolicy": {{ variant.inventory_policy | json }}
                   }{% unless forloop.last %},{% endunless %}
                 {% endfor %}
               ]
@@ -110,7 +113,10 @@
                     "id": {{ variant.id | json }},
                     "options": {{ variant.options | json }},
                     "available": {{ variant.available | json }},
-                    "sku": {{ variant.sku | json }}
+                    "sku": {{ variant.sku | json }},
+                    "inventoryQuantity": {{ variant.inventory_quantity | default: 0 | json }},
+                    "inventoryManagement": {{ variant.inventory_management | json }},
+                    "inventoryPolicy": {{ variant.inventory_policy | json }}
                   }{% unless forloop.last %},{% endunless %}
                 {% endfor %}
               ]
@@ -177,7 +183,23 @@
           </div>
         </div>
 
-        <strong class="jane-set-review__price">{{ section.settings.set_price_text }}</strong>
+        <div class="jane-set-review__quantity">
+          <span id="JaneSetQuantityLabel-{{ section.id }}">Number of sets</span>
+          <div class="jane-set-review__quantity-control">
+            <button type="button" data-jane-review-quantity-minus aria-label="Decrease number of sets">&minus;</button>
+            <input
+              type="number"
+              value="1"
+              min="1"
+              inputmode="numeric"
+              aria-labelledby="JaneSetQuantityLabel-{{ section.id }}"
+              data-jane-review-quantity
+            >
+            <button type="button" data-jane-review-quantity-plus aria-label="Increase number of sets">+</button>
+          </div>
+        </div>
+
+        <strong class="jane-set-review__price" data-jane-review-price>{{ section.settings.set_price_text }}</strong>
         <p class="jane-set-review__error" data-jane-review-error role="alert" aria-live="polite" hidden></p>
 
         <button type="button" class="jane-set-review__add" data-jane-review-add>
@@ -566,6 +588,57 @@
     font-size: 32px;
   }
 
+  .jane-set-review__quantity {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 22px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .jane-set-review__quantity-control {
+    display: grid;
+    grid-template-columns: 36px 48px 36px;
+    height: 36px;
+    border: 1px solid var(--jane-line);
+  }
+
+  .jane-set-review__quantity-control button,
+  .jane-set-review__quantity-control input {
+    min-width: 0;
+    border: 0;
+    border-radius: 0;
+    background: #ffffff;
+    color: var(--jane-text);
+    font: inherit;
+    text-align: center;
+  }
+
+  .jane-set-review__quantity-control button {
+    cursor: pointer;
+    font-size: 18px;
+  }
+
+  .jane-set-review__quantity-control button:disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+  }
+
+  .jane-set-review__quantity-control input {
+    width: 48px;
+    border-right: 1px solid var(--jane-line);
+    border-left: 1px solid var(--jane-line);
+    appearance: textfield;
+  }
+
+  .jane-set-review__quantity-control input::-webkit-inner-spin-button,
+  .jane-set-review__quantity-control input::-webkit-outer-spin-button {
+    margin: 0;
+    appearance: none;
+  }
+
   .jane-set-review__add,
   .jane-set-review__edit {
     width: 100%;
@@ -651,6 +724,10 @@
     const reviewAddButton = section.querySelector('[data-jane-review-add]');
     const reviewAddText = section.querySelector('[data-jane-review-add-text]');
     const reviewError = section.querySelector('[data-jane-review-error]');
+    const reviewQuantity = section.querySelector('[data-jane-review-quantity]');
+    const reviewQuantityMinus = section.querySelector('[data-jane-review-quantity-minus]');
+    const reviewQuantityPlus = section.querySelector('[data-jane-review-quantity-plus]');
+    const reviewPrice = section.querySelector('[data-jane-review-price]');
 
     if (
       !form ||
@@ -660,14 +737,19 @@
       !pantsSizes ||
       !submitButton ||
       !review ||
-      !reviewAddButton
+      !reviewAddButton ||
+      !reviewQuantity ||
+      !reviewQuantityMinus ||
+      !reviewQuantityPlus ||
+      !reviewPrice
     ) return;
 
     const products = JSON.parse(componentData.textContent || '{}');
     const productMedia = productMediaData ? JSON.parse(productMediaData.textContent || '[]') : [];
     const parentVariant = {
       id: {{ parent_variant.id | json }},
-      available: {{ parent_variant.available | json }}
+      available: {{ parent_variant.available | json }},
+      price: {{ parent_variant.price | json }}
     };
     const sizes = ['Medium', 'Large', 'XL', '2XL', '3XL'];
     const shotOrder = ['front', 'side', 'back', 'sitting', 'fabric close up'];
@@ -678,6 +760,8 @@
     let previewColor = defaultPreviewColor;
     let selectedTopSize = '';
     let selectedPantsSize = '';
+    let selectedSetQuantity = 1;
+    let selectedSetMaximum = 1;
     let adding = false;
 
     function normalizeShotName(value) {
@@ -817,7 +901,50 @@
       reviewError.hidden = false;
     }
 
+    function variantInventoryLimit(variant) {
+      if (!variant?.available) return 0;
+      if (variant.inventoryManagement && variant.inventoryPolicy !== 'continue') {
+        return Math.max(0, Number(variant.inventoryQuantity) || 0);
+      }
+      return 99;
+    }
+
+    function selectedInventoryLimit(topVariant, pantsVariant) {
+      return Math.min(
+        variantInventoryLimit(topVariant),
+        variantInventoryLimit(pantsVariant)
+      );
+    }
+
+    function formatSetPrice(quantity) {
+      const total = ((Number(parentVariant.price) || 169900) * quantity) / 100;
+      return new Intl.NumberFormat('en-PH', {
+        style: 'currency',
+        currency: 'PHP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(total);
+    }
+
+    function updateReviewQuantity(quantity) {
+      selectedSetQuantity = Math.min(
+        selectedSetMaximum,
+        Math.max(1, Number.parseInt(quantity, 10) || 1)
+      );
+      reviewQuantity.value = selectedSetQuantity;
+      reviewQuantity.max = selectedSetMaximum;
+      reviewQuantityMinus.disabled = adding || selectedSetQuantity <= 1;
+      reviewQuantityPlus.disabled = adding || selectedSetQuantity >= selectedSetMaximum;
+      reviewPrice.textContent = formatSetPrice(selectedSetQuantity);
+    }
+
     function openReview(topVariant, pantsVariant) {
+      selectedSetMaximum = selectedInventoryLimit(topVariant, pantsVariant);
+      if (selectedSetMaximum < 1) {
+        showError('This size combination is currently unavailable.');
+        return;
+      }
+      updateReviewQuantity(1);
       reviewTitle.textContent = `${selectedColor} Jane Set`;
       reviewTop.textContent = `${selectedColor} Blouse: ${selectedTopSize}`;
       reviewTopSku.textContent = `SKU: ${topVariant.sku || 'Not available'}`;
@@ -906,6 +1033,17 @@
         showError('This set is no longer available. Close this review and update your selection.');
         return;
       }
+      const currentMaximum = selectedInventoryLimit(topVariant, pantsVariant);
+      if (currentMaximum < 1) {
+        showError('This size combination is currently unavailable.');
+        return;
+      }
+      if (currentMaximum < selectedSetQuantity) {
+        selectedSetMaximum = currentMaximum;
+        updateReviewQuantity(currentMaximum);
+        showError('The available quantity changed. Please review the number of sets.');
+        return;
+      }
 
       adding = true;
       clearError();
@@ -970,7 +1108,7 @@
             items: [
               {
                 id: parentVariant.id,
-                quantity: 1,
+                quantity: selectedSetQuantity,
                 properties: {
                   ...sharedProperties,
                   _set_role: 'Parent',
@@ -979,7 +1117,7 @@
               },
               {
                 id: topVariant.id,
-                quantity: 1,
+                quantity: selectedSetQuantity,
                 properties: {
                   ...sharedProperties,
                   _set_role: 'Top',
@@ -990,7 +1128,7 @@
               },
               {
                 id: pantsVariant.id,
-                quantity: 1,
+                quantity: selectedSetQuantity,
                 properties: {
                   ...sharedProperties,
                   _set_role: 'Pants',
@@ -1014,7 +1152,8 @@
         const roles = setItems.map(item => item.properties?._set_role);
         const completeSet =
           setItems.length === 3 &&
-          ['Parent', 'Top', 'Pants'].every(role => roles.filter(value => value === role).length === 1);
+          ['Parent', 'Top', 'Pants'].every(role => roles.filter(value => value === role).length === 1) &&
+          setItems.every(item => item.quantity === selectedSetQuantity);
 
         if (!completeSet) {
           await rollbackSet();
@@ -1049,6 +1188,15 @@
     }
 
     reviewAddButton.addEventListener('click', addReviewedSet);
+    reviewQuantityMinus.addEventListener('click', () => {
+      updateReviewQuantity(selectedSetQuantity - 1);
+    });
+    reviewQuantityPlus.addEventListener('click', () => {
+      updateReviewQuantity(selectedSetQuantity + 1);
+    });
+    reviewQuantity.addEventListener('change', () => {
+      updateReviewQuantity(reviewQuantity.value);
+    });
     section.querySelectorAll('[data-jane-review-close]').forEach(button => {
       button.addEventListener('click', closeReview);
     });
