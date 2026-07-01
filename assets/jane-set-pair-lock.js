@@ -11,7 +11,7 @@
   const CONTROL_STYLE_ID = 'jane-set-pair-lock-style';
   const HIDDEN_CONTROL_CLASS = 'jane-set-qty-control-hidden';
   const LOCKED_INPUT_CLASS = 'jane-set-qty-input-locked';
-  const IMAGE_LINK_CLASS = 'jane-set-image-link-disabled';
+  const IMAGE_LINK_CLASS = 'jane-set-aov-link-disabled';
   const HIDDEN_PRICE_CLASS = 'jane-set-aov-hidden-price';
   const JANE_SET_ROLES = ['Parent', 'Top', 'Pants'];
   const RENDER_DELAYS = [50, 150, 300, 600];
@@ -103,6 +103,8 @@
   }
 
   function findJaneSetCard(control) {
+    if (control.closest?.('[data-jane-set-hero]')) return null;
+
     let element = control;
 
     while (element && element !== document.body && element !== document.documentElement) {
@@ -213,12 +215,15 @@
 
   function updateParentImage(group, setId) {
     const parentItem = group.find(item => item.properties._set_role === 'Parent');
-    if (!parentItem || parentHasSelectedColorVariant(parentItem)) return;
+    if (!parentItem) return;
 
     const componentItem =
       group.find(item => item.properties._set_role === 'Top' && imageUrl(item)) ||
       group.find(item => item.properties._set_role === 'Pants' && imageUrl(item));
-    const replacementUrl = imageUrl(componentItem);
+    const selectedColorImage = parentItem.properties?._set_parent_image || '';
+    const replacementUrl =
+      selectedColorImage ||
+      (parentHasSelectedColorVariant(parentItem) ? '' : imageUrl(componentItem));
     if (!replacementUrl) return;
 
     const parentCard = [...document.querySelectorAll('[data-jane-set-card="true"]')]
@@ -231,6 +236,21 @@
 
     parentImage.src = replacementUrl;
     parentImage.removeAttribute('srcset');
+  }
+
+  function isJaneProductLink(link) {
+    if (controlAction(link) === 'remove') return false;
+    if (link.querySelector('img')) return true;
+
+    const href = normalize(link.getAttribute('href'));
+    const description = normalize([
+      link.textContent,
+      link.className,
+      link.getAttribute('aria-label')
+    ].filter(Boolean).join(' '));
+
+    return href.includes('/products/') ||
+      /(product.*(title|name)|cart.*(title|name)|jane set|jane blouse|jane pants)/.test(description);
   }
 
   function markJaneSetCards() {
@@ -260,8 +280,12 @@
           input.setAttribute('aria-readonly', 'true');
         });
         card.querySelectorAll('a').forEach(link => {
-          if (!link.querySelector('img')) return;
+          if (!isJaneProductLink(link)) return;
           link.classList.add(IMAGE_LINK_CLASS);
+          if (link.hasAttribute('href')) {
+            link.dataset.janeSetOriginalHref = link.getAttribute('href');
+            link.removeAttribute('href');
+          }
           link.tabIndex = -1;
           link.setAttribute('aria-disabled', 'true');
         });
@@ -435,9 +459,8 @@
   }
 
   function handleCartControl(event) {
-    const imageLink = event.target.closest?.('a');
-    const imageCard = imageLink?.closest?.('[data-jane-set-card="true"]');
-    if (imageLink?.querySelector('img') && imageCard) {
+    const disabledLink = event.target.closest?.(`a.${IMAGE_LINK_CLASS}`);
+    if (disabledLink?.closest?.('[data-jane-set-card="true"]')) {
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation?.();

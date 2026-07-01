@@ -185,17 +185,17 @@
 
         <div class="jane-set-review__quantity">
           <span id="JaneSetQuantityLabel-{{ section.id }}">Number of sets</span>
-          <div class="jane-set-review__quantity-control">
-            <button type="button" data-jane-review-quantity-minus aria-label="Decrease number of sets">&minus;</button>
+          <div class="jane-set-review__quantity-control" data-jane-set-qty-control>
+            <button type="button" data-jane-set-qty-minus aria-label="Decrease number of sets">&minus;</button>
             <input
               type="number"
               value="1"
               min="1"
               readonly
               aria-labelledby="JaneSetQuantityLabel-{{ section.id }}"
-              data-jane-review-quantity
+              data-jane-set-qty-input
             >
-            <button type="button" data-jane-review-quantity-plus aria-label="Increase number of sets">+</button>
+            <button type="button" data-jane-set-qty-plus aria-label="Increase number of sets">+</button>
           </div>
         </div>
 
@@ -733,9 +733,6 @@
     const reviewAddButton = section.querySelector('[data-jane-review-add]');
     const reviewAddText = section.querySelector('[data-jane-review-add-text]');
     const reviewError = section.querySelector('[data-jane-review-error]');
-    const reviewQuantity = section.querySelector('[data-jane-review-quantity]');
-    const reviewQuantityMinus = section.querySelector('[data-jane-review-quantity-minus]');
-    const reviewQuantityPlus = section.querySelector('[data-jane-review-quantity-plus]');
     const reviewPrice = section.querySelector('[data-jane-review-price]');
 
     if (
@@ -747,9 +744,6 @@
       !submitButton ||
       !review ||
       !reviewAddButton ||
-      !reviewQuantity ||
-      !reviewQuantityMinus ||
-      !reviewQuantityPlus ||
       !reviewPrice
     ) return;
 
@@ -962,7 +956,49 @@
       }).format(total);
     }
 
+    function renderJaneSetQuantityStepper(reset = false) {
+      const quantityRow = review.querySelector('.jane-set-review__quantity');
+      if (!quantityRow) return false;
+
+      let control = quantityRow.querySelector('[data-jane-set-qty-control]');
+      if (!control) {
+        quantityRow.querySelector('input')?.remove();
+        control = document.createElement('div');
+        control.className = 'jane-set-review__quantity-control';
+        control.dataset.janeSetQtyControl = '';
+        quantityRow.appendChild(control);
+      }
+
+      if (
+        !control.querySelector('[data-jane-set-qty-minus]') ||
+        !control.querySelector('[data-jane-set-qty-input]') ||
+        !control.querySelector('[data-jane-set-qty-plus]')
+      ) {
+        control.innerHTML = `
+          <button type="button" data-jane-set-qty-minus aria-label="Decrease number of sets">&minus;</button>
+          <input
+            type="number"
+            value="1"
+            min="1"
+            readonly
+            aria-labelledby="JaneSetQuantityLabel-{{ section.id }}"
+            data-jane-set-qty-input
+          >
+          <button type="button" data-jane-set-qty-plus aria-label="Increase number of sets">+</button>
+        `;
+      }
+
+      if (reset) selectedSetQuantity = 1;
+      updateReviewQuantity(selectedSetQuantity);
+      return true;
+    }
+
     function updateReviewQuantity(quantity) {
+      const reviewQuantity = review.querySelector('[data-jane-set-qty-input]');
+      const reviewQuantityMinus = review.querySelector('[data-jane-set-qty-minus]');
+      const reviewQuantityPlus = review.querySelector('[data-jane-set-qty-plus]');
+      if (!reviewQuantity || !reviewQuantityMinus || !reviewQuantityPlus) return;
+
       selectedSetQuantity = Math.min(
         selectedSetMaximum,
         Math.max(1, Number.parseInt(quantity, 10) || 1)
@@ -980,7 +1016,7 @@
         showError('This size combination is currently unavailable.');
         return;
       }
-      updateReviewQuantity(1);
+      renderJaneSetQuantityStepper(true);
       reviewTitle.textContent = `${selectedColor} Jane Set`;
       reviewTop.textContent = `${selectedColor} Blouse: ${selectedTopSize}`;
       reviewTopSku.textContent = `SKU: ${topVariant.sku || 'Not available'}`;
@@ -1089,11 +1125,17 @@
       updateReviewQuantity(selectedSetQuantity);
 
       const setId = `jane-set-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const selectedMedia = getProductMediaShotMapForColor(selectedColor);
+      const parentImage =
+        selectedMedia.front ||
+        getProductMediaImagesForColor(selectedColor)[0]?.src ||
+        '';
       const sharedProperties = {
         _set_id: setId,
         _set_name: 'Jane Set',
         _set_color: selectedColor,
         _set_display_price: '₱1,699',
+        _set_parent_image: parentImage,
         _top_size: selectedTopSize,
         _pants_size: selectedPantsSize
       };
@@ -1226,15 +1268,35 @@
     }
 
     reviewAddButton.addEventListener('click', addReviewedSet);
-    reviewQuantityMinus.addEventListener('click', () => {
-      updateReviewQuantity(selectedSetQuantity - 1);
+
+    const quantityHandlerKey = `janeSetQuantityHandler${section.dataset.janeSetHero}`;
+    if (window[quantityHandlerKey]) {
+      document.removeEventListener('click', window[quantityHandlerKey]);
+    }
+    window[quantityHandlerKey] = event => {
+      const minus = event.target.closest?.('[data-jane-set-qty-minus]');
+      const plus = event.target.closest?.('[data-jane-set-qty-plus]');
+      const button = minus || plus;
+      if (!button || !review.contains(button) || button.disabled) return;
+
+      event.preventDefault();
+      updateReviewQuantity(selectedSetQuantity + (plus ? 1 : -1));
+    };
+    document.addEventListener('click', window[quantityHandlerKey]);
+
+    const restoreQuantityStepper = () => {
+      renderJaneSetQuantityStepper(false);
+    };
+    window.addEventListener('pageshow', restoreQuantityStepper);
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) restoreQuantityStepper();
     });
-    reviewQuantityPlus.addEventListener('click', () => {
-      updateReviewQuantity(selectedSetQuantity + 1);
-    });
-    reviewQuantity.addEventListener('change', () => {
-      updateReviewQuantity(reviewQuantity.value);
-    });
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', restoreQuantityStepper, { once: true });
+    } else {
+      restoreQuantityStepper();
+    }
+
     section.querySelectorAll('[data-jane-review-close]').forEach(button => {
       button.addEventListener('click', closeReview);
     });
