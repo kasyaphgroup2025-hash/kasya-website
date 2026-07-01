@@ -1,4 +1,6 @@
 (() => {
+  console.info('[Jane Set Pair Lock] loaded - disable quantity controls version');
+
   let cachedCart = null;
   let isRemovingJaneSet = false;
   let quantityControlTimer = null;
