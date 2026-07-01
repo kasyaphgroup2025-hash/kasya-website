@@ -1,8 +1,7 @@
 (() => {
-  const POLL_INTERVAL = 3000;
   let cachedCart = null;
   let isRemovingJaneSet = false;
-  let pollTimer = null;
+  let quantityControlTimer = null;
 
   function normalize(value) {
     return String(value || '').trim().toLowerCase();
@@ -47,7 +46,7 @@
     return janeLines.filter(item => normalizedText.includes(identifyingTokens(item).title));
   }
 
-  function matchRemovedLine(control) {
+  function matchJaneSetLine(control) {
     let element = control;
     while (element && element !== document.body) {
       const matches = matchingLines(element.textContent);
@@ -61,7 +60,7 @@
     return null;
   }
 
-  function isRemoveControl(control) {
+  function controlAction(control) {
     const actionText = [
       control.getAttribute('name'),
       control.getAttribute('aria-label'),
@@ -69,7 +68,11 @@
       control.className,
       control.textContent
     ].filter(Boolean).join(' ').toLowerCase();
-    return /(remove|delete|trash)/.test(actionText);
+
+    if (/(remove|delete|trash)/.test(actionText)) return 'remove';
+    if (/(minus|decrease|decrement)/.test(actionText)) return 'decrease';
+    if (/(plus|increase|increment)/.test(actionText)) return 'increase';
+    return null;
   }
 
   function isCartSurface(element) {
@@ -84,6 +87,27 @@
     });
     if (!response.ok) throw new Error('Unable to read cart.');
     return response.json();
+  }
+
+  function disableJaneSetQuantityControls() {
+    if (!cachedCart) return;
+
+    document.querySelectorAll('button, a, [role="button"]').forEach(control => {
+      if (!isCartSurface(control)) return;
+      const action = controlAction(control);
+      if (!['increase', 'decrease'].includes(action)) return;
+      if (!matchJaneSetLine(control)) return;
+
+      control.disabled = true;
+      control.setAttribute('aria-disabled', 'true');
+      control.setAttribute('data-jane-set-quantity-disabled', 'true');
+      control.style.visibility = 'hidden';
+    });
+  }
+
+  function scheduleQuantityControlUpdate() {
+    window.clearTimeout(quantityControlTimer);
+    quantityControlTimer = window.setTimeout(disableJaneSetQuantityControls, 0);
   }
 
   async function removePairByIndexes(setId) {
@@ -163,63 +187,75 @@
   }
 
   async function handleRemove(event) {
-    if (isRemovingJaneSet) return;
-
     const control = event.target.closest?.('button, a, [role="button"]');
-    if (!control || !isCartSurface(control) || !isRemoveControl(control)) return;
+    if (!control || !isCartSurface(control) || controlAction(control) !== 'remove') return;
 
-    const line = matchRemovedLine(control);
+    const line = matchJaneSetLine(control);
     if (!line) return;
 
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation?.();
+    if (isRemovingJaneSet) return;
     isRemovingJaneSet = true;
 
     try {
       const cart = await removePair(line.properties._set_id);
       cachedCart = cart;
       dispatchCartRefresh(cart);
+      scheduleQuantityControlUpdate();
     } catch (error) {
       console.warn('Unable to remove the complete Jane Set.', error);
     } finally {
       isRemovingJaneSet = false;
-      schedulePoll();
     }
   }
 
-  function schedulePoll() {
-    window.clearTimeout(pollTimer);
-    pollTimer = window.setTimeout(refreshCache, POLL_INTERVAL);
+  function blockJaneSetQuantityClick(event) {
+    const control = event.target.closest?.('button, a, [role="button"]');
+    if (!control || !isCartSurface(control)) return;
+    if (!['increase', 'decrease'].includes(controlAction(control))) return;
+    if (!matchJaneSetLine(control)) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation?.();
   }
 
   async function refreshCache() {
-    if (document.hidden || isRemovingJaneSet) {
-      schedulePoll();
-      return;
-    }
+    if (document.hidden || isRemovingJaneSet) return;
 
     try {
       cachedCart = await fetchCart();
+      scheduleQuantityControlUpdate();
     } catch (error) {
-      // Cart events or the next poll will retry without touching AOV markup.
-    } finally {
-      schedulePoll();
+      // Cart events or visibility changes will retry without touching AOV layout.
     }
   }
 
+  window.addEventListener('click', blockJaneSetQuantityClick, true);
   window.addEventListener('click', handleRemove, true);
 
   document.addEventListener('afterCartChanged', event => {
     if (event.detail?.cartData?.items) cachedCart = event.detail.cartData;
-    schedulePoll();
+    scheduleQuantityControlUpdate();
   });
   document.addEventListener('cart:updated', event => {
     if (event.detail?.cart?.items) cachedCart = event.detail.cart;
-    schedulePoll();
+    scheduleQuantityControlUpdate();
   });
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) refreshCache();
+  });
+
+  const cartObserver = new MutationObserver(mutations => {
+    if (mutations.some(mutation => isCartSurface(mutation.target))) {
+      scheduleQuantityControlUpdate();
+    }
+  });
+  cartObserver.observe(document.body, {
+    childList: true,
+    subtree: true
   });
 
   refreshCache();
