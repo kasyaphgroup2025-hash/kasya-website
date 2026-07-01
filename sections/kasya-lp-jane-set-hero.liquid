@@ -898,6 +898,10 @@
       if (adding) return;
 
       const { topVariant, pantsVariant, complete, available } = selectionState();
+      if (!parentVariant.id) {
+        showError('Jane Set parent product is not configured.');
+        return;
+      }
       if (!complete || !available) {
         showError('This set is no longer available. Close this review and update your selection.');
         return;
@@ -918,6 +922,38 @@
         _top_size: selectedTopSize,
         _pants_size: selectedPantsSize
       };
+
+      async function fetchCart() {
+        const response = await fetch('/cart.js', {
+          headers: { 'Accept': 'application/json' }
+        });
+        if (!response.ok) throw new Error('Unable to verify the Jane Set cart.');
+        return response.json();
+      }
+
+      function getSetItems(cartState) {
+        return (cartState.items || []).filter(item =>
+          item.properties?._set_id === setId &&
+          item.properties?._set_name === 'Jane Set'
+        );
+      }
+
+      async function rollbackSet() {
+        const cartState = await fetchCart();
+        const setItems = getSetItems(cartState);
+        if (!setItems.length) return;
+
+        const updates = Object.fromEntries(setItems.map(item => [item.key, 0]));
+        const response = await fetch('/cart/update.js', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ updates })
+        });
+        if (!response.ok) throw new Error('Unable to remove an incomplete Jane Set.');
+      }
 
       try {
         const cart = document.querySelector('cart-drawer');
@@ -973,15 +1009,24 @@
         }
 
         const cartResponse = await response.json();
+        const verifiedCart = await fetchCart();
+        const setItems = getSetItems(verifiedCart);
+        const roles = setItems.map(item => item.properties?._set_role);
+        const completeSet =
+          setItems.length === 3 &&
+          ['Parent', 'Top', 'Pants'].every(role => roles.filter(value => value === role).length === 1);
+
+        if (!completeSet) {
+          await rollbackSet();
+          throw new Error('Jane Set could not be added completely. Please try again.');
+        }
+
         if (cart && typeof cart.renderContents === 'function' && cartResponse.sections) {
           review.hidden = true;
           document.body.style.removeProperty('overflow');
           cart.setActiveElement?.(document.activeElement);
           cart.classList.remove('is-empty');
           cart.renderContents(cartResponse);
-          document.dispatchEvent(new CustomEvent('afterCartChanged', {
-            detail: { source: 'jane-set-hero', cartData: cartResponse }
-          }));
           adding = false;
           reviewAddButton.disabled = false;
           reviewAddText.textContent = 'ADD TO CART';
@@ -990,6 +1035,11 @@
           window.location.assign('/cart');
         }
       } catch (error) {
+        try {
+          await rollbackSet();
+        } catch (rollbackError) {
+          console.warn('Unable to roll back an incomplete Jane Set.', rollbackError);
+        }
         adding = false;
         showError(error.message || 'Unable to add this set to cart. Please try again.');
         reviewAddButton.disabled = false;

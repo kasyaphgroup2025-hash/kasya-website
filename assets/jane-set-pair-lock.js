@@ -17,6 +17,7 @@
   let isUpdatingJaneSet = false;
   let cartCheckTimer = null;
   let renderTimers = [];
+  const handledInvalidSetIds = new Set();
 
   function normalize(value) {
     return String(value || '').trim().toLowerCase();
@@ -264,34 +265,25 @@
       .map(([setId]) => setId);
   }
 
-  function dispatchCartRefresh(cart) {
-    document.dispatchEvent(new CustomEvent('afterCartChanged', {
-      bubbles: true,
-      detail: {
-        source: 'jane-set-pair-lock',
-        cartData: cart
-      }
-    }));
-    document.dispatchEvent(new CustomEvent('cart:refresh', {
-      bubbles: true,
-      detail: { cart }
-    }));
-    document.dispatchEvent(new CustomEvent('cart:updated', {
-      bubbles: true,
-      detail: { cart }
-    }));
-  }
-
   async function cleanOrphans() {
     if (isUpdatingJaneSet || document.hidden) return;
     isUpdatingJaneSet = true;
 
     try {
       let cart = await fetchCart();
-      const orphanSetIds = incompleteSetIds(cart);
+      const orphanSetIds = incompleteSetIds(cart)
+        .filter(setId => !handledInvalidSetIds.has(setId));
       if (orphanSetIds.length) {
+        orphanSetIds.forEach(setId => handledInvalidSetIds.add(setId));
         cart = await removeSets(cart, orphanSetIds);
-        dispatchCartRefresh(cart);
+        cart = await fetchCart();
+        const remainingSetIds = new Set(
+          cart.items.filter(isJaneSetItem).map(item => item.properties._set_id)
+        );
+        const failedSetIds = orphanSetIds.filter(setId => remainingSetIds.has(setId));
+        if (failedSetIds.length) {
+          console.warn('Incomplete Jane Set lines could not be fully removed.');
+        }
       }
       latestCart = cart;
       runRenderBurst();
@@ -333,7 +325,6 @@
 
       const updatedCart = await removeSets(cart, [setId]);
       latestCart = updatedCart;
-      dispatchCartRefresh(updatedCart);
       runRenderBurst();
     } catch (error) {
       console.warn('Unable to remove the complete Jane Set.', error);
