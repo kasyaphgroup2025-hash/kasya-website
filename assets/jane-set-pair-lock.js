@@ -109,11 +109,13 @@
 
     while (element && element !== document.body && element !== document.documentElement) {
       const role = itemRoleFromText(element.textContent);
-      if (role) {
-        const controls = [...element.querySelectorAll('button, a, [role="button"]')];
-        if (controls.some(candidate => controlAction(candidate))) {
-          return { element, role };
-        }
+      if (
+        role &&
+        !cardContainsOtherJaneRole(element, role) &&
+        element.querySelector('img') &&
+        element.querySelector('a, button, input, [role="button"]')
+      ) {
+        return { element, role };
       }
       element = element.parentElement;
     }
@@ -134,16 +136,10 @@
   }
 
   function findCardsForRole(role) {
-    const roleText = {
-      Parent: 'jane set',
-      Top: 'jane blouse',
-      Pants: 'jane pants'
-    }[role];
     const matches = [];
 
-    document.querySelectorAll('button, a, [role="button"]').forEach(control => {
-      if (!controlAction(control)) return;
-      const card = findJaneSetCard(control);
+    document.querySelectorAll('a, img, button, input, [role="button"]').forEach(element => {
+      const card = findJaneSetCard(element);
       if (!card || card.role !== role || cardContainsOtherJaneRole(card.element, role)) return;
       if (!matches.includes(card.element)) matches.push(card.element);
     });
@@ -205,14 +201,6 @@
     return item?.featured_image?.url || item?.image || '';
   }
 
-  function parentHasSelectedColorVariant(parentItem) {
-    const selectedColor = normalize(parentItem?.properties?._set_color);
-    return (parentItem?.options_with_values || []).some(option =>
-      ['color', 'colour'].includes(normalize(option.name)) &&
-      normalize(option.value) === selectedColor
-    );
-  }
-
   function updateParentImage(group, setId) {
     const parentItem = group.find(item => item.properties._set_role === 'Parent');
     if (!parentItem) return;
@@ -221,9 +209,7 @@
       group.find(item => item.properties._set_role === 'Top' && imageUrl(item)) ||
       group.find(item => item.properties._set_role === 'Pants' && imageUrl(item));
     const selectedColorImage = parentItem.properties?._set_parent_image || '';
-    const replacementUrl =
-      selectedColorImage ||
-      (parentHasSelectedColorVariant(parentItem) ? '' : imageUrl(componentItem));
+    const replacementUrl = selectedColorImage || imageUrl(componentItem);
     if (!replacementUrl) return;
 
     const parentCard = [...document.querySelectorAll('[data-jane-set-card="true"]')]
@@ -236,6 +222,13 @@
 
     parentImage.src = replacementUrl;
     parentImage.removeAttribute('srcset');
+    parentImage.removeAttribute('data-srcset');
+    parentImage.dataset.src = replacementUrl;
+    parentImage.alt = `${parentItem.properties?._set_color || ''} Jane Set`.trim();
+    parentImage.closest('picture')?.querySelectorAll('source').forEach(source => {
+      source.removeAttribute('srcset');
+      source.removeAttribute('data-srcset');
+    });
   }
 
   function isJaneProductLink(link) {
@@ -459,8 +452,15 @@
   }
 
   function handleCartControl(event) {
-    const disabledLink = event.target.closest?.(`a.${IMAGE_LINK_CLASS}`);
-    if (disabledLink?.closest?.('[data-jane-set-card="true"]')) {
+    const clickedLink = event.target.closest?.('a');
+    const clickedLinkCard = clickedLink
+      ? clickedLink.closest('[data-jane-set-card="true"]') || findJaneSetCard(clickedLink)?.element
+      : null;
+    if (
+      clickedLink &&
+      clickedLinkCard &&
+      isJaneProductLink(clickedLink)
+    ) {
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation?.();
