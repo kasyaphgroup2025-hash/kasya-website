@@ -11,6 +11,7 @@
   let latestQuantityIntent = null;
   const setSyncStates = new Map();
   const handledClickEvents = new WeakSet();
+  const STALE_REQUEST = Symbol('stale-request');
 
   function normalize(value) {
     return String(value || '').trim().toLowerCase();
@@ -245,9 +246,120 @@
     }));
   }
 
-  async function updateJaneSets(updates, lockAcquired = false, request = null) {
-    if ((!lockAcquired && isSyncingJaneSet) || !Object.keys(updates).length) return null;
-    if (!lockAcquired) isSyncingJaneSet = true;
+  function isLatestRequest(setId, requestId) {
+    return setSyncStates.get(setId)?.requestId === requestId;
+  }
+
+  async function responseJson(response, fallbackMessage) {
+    const text = await response.text();
+    let data = {};
+
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch (error) {
+      data = {};
+    }
+
+    if (!response.ok || data.errors) {
+      const message = data.description || data.message || data.errors || text || fallbackMessage;
+      throw new Error(typeof message === 'string' ? message : fallbackMessage);
+    }
+
+    return data;
+  }
+
+  async function fetchLatestCart() {
+    const response = await fetch('/cart.js', {
+      headers: { 'Accept': 'application/json' }
+    });
+    return responseJson(response, 'Unable to read the latest cart.');
+  }
+
+  async function changePairByLatestIndexes(setId, targetQuantity, initialCart, requestId) {
+    const initialPair = pairFor(initialCart.items, setId);
+    if (!initialPair.top || !initialPair.pants) {
+      throw new Error('Jane Set pair is incomplete.');
+    }
+
+    const roles = ['Top', 'Pants'];
+    if (targetQuantity === 0) {
+      roles.sort((firstRole, secondRole) => {
+        const firstLine = firstRole === 'Top' ? initialPair.top : initialPair.pants;
+        const secondLine = secondRole === 'Top' ? initialPair.top : initialPair.pants;
+        return initialCart.items.indexOf(secondLine) - initialCart.items.indexOf(firstLine);
+      });
+    }
+
+    let cart = initialCart;
+    for (const role of roles) {
+      if (!isLatestRequest(setId, requestId)) return STALE_REQUEST;
+      cart = await fetchLatestCart();
+      const lineIndex = cart.items.findIndex(item =>
+        item.properties?._set_id === setId &&
+        item.properties?._set_name === 'Jane Set' &&
+        item.properties?._set_role === role
+      );
+      if (lineIndex === -1) {
+        if (targetQuantity === 0) continue;
+        throw new Error(`Jane Set ${role.toLowerCase()} line is missing.`);
+      }
+
+      const response = await fetch('/cart/change.js', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          line: lineIndex + 1,
+          quantity: targetQuantity
+        })
+      });
+      cart = await responseJson(response, `Unable to update Jane Set ${role.toLowerCase()}.`);
+    }
+
+    return cart;
+  }
+
+  async function updatePairFromLatestCart(setId, targetQuantity, requestId) {
+    const latestCart = await fetchLatestCart();
+    if (!isLatestRequest(setId, requestId)) return STALE_REQUEST;
+
+    const { top, pants } = pairFor(latestCart.items, setId);
+    if (!top || !pants) throw new Error('Jane Set pair is incomplete.');
+
+    try {
+      const response = await fetch('/cart/update.js', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          updates: {
+            [top.key]: targetQuantity,
+            [pants.key]: targetQuantity
+          }
+        })
+      });
+      return await responseJson(response, 'Unable to update Jane Set quantities.');
+    } catch (error) {
+      if (!isLatestRequest(setId, requestId)) return STALE_REQUEST;
+      console.warn('Jane Set paired cart update failed; trying line-index fallback.', error);
+      const fallbackCart = await changePairByLatestIndexes(
+        setId,
+        targetQuantity,
+        latestCart,
+        requestId
+      );
+      if (fallbackCart === STALE_REQUEST) return STALE_REQUEST;
+      return isLatestRequest(setId, requestId) ? fallbackCart : STALE_REQUEST;
+    }
+  }
+
+  async function updateJaneSets(updates) {
+    if (isSyncingJaneSet || !Object.keys(updates).length) return null;
+    isSyncingJaneSet = true;
 
     try {
       const response = await fetch('/cart/update.js', {
@@ -261,17 +373,6 @@
       if (!response.ok) throw new Error('Unable to update Jane Set quantities.');
 
       const cart = await response.json();
-      if (request) {
-        const currentState = setSyncStates.get(request.setId);
-        if (!currentState || currentState.requestId !== request.requestId) return null;
-        setSyncStates.set(request.setId, {
-          requestId: request.requestId,
-          pendingTargetQty: request.quantity,
-          pending: false,
-          timestamp: Date.now(),
-          protectUntil: Date.now() + 1500
-        });
-      }
       snapshotCart(cart, true);
       latestQuantityIntent = null;
       dispatchCartRefresh(cart);
@@ -321,15 +422,31 @@
     setOptimisticQuantity(pantsCard, quantity);
 
     try {
-      const updatedCart = await updateJaneSets({
-        [top.key]: quantity,
-        [pants.key]: quantity
-      }, true, {
-        setId: clickedLine.properties._set_id,
-        requestId,
-        quantity
-      });
-      if (!updatedCart) {
+      let updatedCart = null;
+      try {
+        updatedCart = await updatePairFromLatestCart(
+          clickedLine.properties._set_id,
+          quantity,
+          requestId
+        );
+      } catch (error) {
+        console.warn('Jane Set pair update failed.', error);
+      }
+
+      if (updatedCart === STALE_REQUEST) return;
+      if (updatedCart) {
+        if (!isLatestRequest(clickedLine.properties._set_id, requestId)) return;
+        setSyncStates.set(clickedLine.properties._set_id, {
+          requestId,
+          pendingTargetQty: quantity,
+          pending: false,
+          timestamp: Date.now(),
+          protectUntil: Date.now() + 1500
+        });
+        snapshotCart(updatedCart, true);
+        latestQuantityIntent = null;
+        dispatchCartRefresh(updatedCart);
+      } else {
         const currentState = setSyncStates.get(clickedLine.properties._set_id);
         if (currentState?.requestId === requestId) {
           setSyncStates.delete(clickedLine.properties._set_id);
