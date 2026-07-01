@@ -2,10 +2,12 @@
   console.info('[Jane Set Pair Lock] loaded and active');
 
   const REFRESH_DELAY = 150;
-  const HIDDEN_CONTROL_CLASS = 'jane-set-qty-control-hidden';
+  const STYLE_ID = 'jane-set-pair-lock-style';
   let refreshTimer = null;
+  let retryTimers = [];
   let isUpdatingCart = false;
   let isRefreshingState = false;
+  let latestCart = null;
 
   function normalize(value) {
     return String(value || '').trim().toLowerCase();
@@ -137,44 +139,100 @@
   }
 
   function installControlStyle() {
-    if (document.querySelector('[data-jane-set-control-style]')) return;
+    if (document.getElementById(STYLE_ID)) return;
 
     const style = document.createElement('style');
-    style.dataset.janeSetControlStyle = 'true';
-    style.textContent = `.${HIDDEN_CONTROL_CLASS} { display: none !important; }`;
+    style.id = STYLE_ID;
+    style.textContent = `
+      [data-jane-set-qty-wrapper="true"] button,
+      [data-jane-set-qty-wrapper="true"] a,
+      [data-jane-set-qty-wrapper="true"] [role="button"] {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+      }
+    `;
     document.head.appendChild(style);
   }
 
-  function clearCardMarkers() {
-    document.querySelectorAll('[data-jane-set-card="true"]').forEach(card => {
-      card.removeAttribute('data-jane-set-card');
-      card.removeAttribute('data-jane-set-id');
-      card.removeAttribute('data-jane-set-role');
-    });
-    document.querySelectorAll(`.${HIDDEN_CONTROL_CLASS}`).forEach(control => {
-      control.classList.remove(HIDDEN_CONTROL_CLASS);
-      control.removeAttribute('data-jane-set-quantity-control');
-    });
+  function commonQuantityWrapper(card, quantityControls) {
+    if (!card || !quantityControls.length) return null;
+
+    const preferredWrapper = quantityControls[0].closest(
+      'quantity-input, [class*="quantity" i], [class*="qty" i], [data-quantity], [data-qty]'
+    );
+    if (
+      preferredWrapper &&
+      preferredWrapper !== card &&
+      quantityControls.every(control => preferredWrapper.contains(control)) &&
+      !controlsIn(preferredWrapper).some(control => controlAction(control) === 'remove')
+    ) {
+      return preferredWrapper;
+    }
+
+    let wrapper = quantityControls[0].parentElement;
+    while (
+      wrapper &&
+      wrapper !== card &&
+      !quantityControls.every(control => wrapper.contains(control))
+    ) {
+      wrapper = wrapper.parentElement;
+    }
+    if (
+      !wrapper ||
+      wrapper === card ||
+      controlsIn(wrapper).some(control => controlAction(control) === 'remove')
+    ) {
+      return null;
+    }
+    return wrapper;
   }
 
   function markJaneSetCards(cart) {
-    clearCardMarkers();
+    const matchedCards = new Set();
+    const matchedWrappers = new Set();
 
     cart.items.filter(isJaneSetItem).forEach(item => {
       const card = findCardForItem(item, cart.items);
       if (!card) return;
 
+      const quantityControls = controlsIn(card).filter(control =>
+        ['increase', 'decrease'].includes(controlAction(control))
+      );
+      const quantityWrapper = commonQuantityWrapper(card, quantityControls);
+      if (!quantityWrapper) return;
+
+      matchedCards.add(card);
+      matchedWrappers.add(quantityWrapper);
       card.dataset.janeSetCard = 'true';
       card.dataset.janeSetId = item.properties._set_id;
       card.dataset.janeSetRole = item.properties._set_role;
-
-      controlsIn(card).forEach(control => {
-        const action = controlAction(control);
-        if (!['increase', 'decrease'].includes(action)) return;
-        control.classList.add(HIDDEN_CONTROL_CLASS);
-        control.dataset.janeSetQuantityControl = action;
-      });
+      quantityWrapper.dataset.janeSetQtyWrapper = 'true';
     });
+
+    document.querySelectorAll('[data-jane-set-card="true"]').forEach(card => {
+      if (matchedCards.has(card)) return;
+      card.removeAttribute('data-jane-set-card');
+      card.removeAttribute('data-jane-set-id');
+      card.removeAttribute('data-jane-set-role');
+    });
+    document.querySelectorAll('[data-jane-set-qty-wrapper="true"]').forEach(wrapper => {
+      if (!matchedWrappers.has(wrapper)) wrapper.removeAttribute('data-jane-set-qty-wrapper');
+    });
+  }
+
+  function markFromLatestCart() {
+    if (latestCart) markJaneSetCards(latestCart);
+  }
+
+  function runImmediateMarkingBurst() {
+    markFromLatestCart();
+    window.requestAnimationFrame(markFromLatestCart);
+    retryTimers.forEach(timer => window.clearTimeout(timer));
+    retryTimers = [
+      window.setTimeout(markFromLatestCart, 50),
+      window.setTimeout(markFromLatestCart, 150)
+    ];
   }
 
   async function fetchCart() {
@@ -303,6 +361,7 @@
         cart = cleanedCart;
         dispatchCartRefresh(cart);
       }
+      latestCart = cart;
       markJaneSetCards(cart);
     } catch (error) {
       console.warn('Unable to refresh Jane Set cart controls.', error);
@@ -341,6 +400,7 @@
     try {
       const cart = await fetchCart();
       const updatedCart = await removeSet(card.dataset.janeSetId, cart);
+      latestCart = updatedCart;
       dispatchCartRefresh(updatedCart);
       markJaneSetCards(updatedCart);
     } catch (error) {
@@ -354,13 +414,24 @@
   installControlStyle();
   window.addEventListener('click', handleCartControl, true);
 
-  document.addEventListener('afterCartChanged', scheduleRefresh);
-  document.addEventListener('cart:updated', scheduleRefresh);
+  document.addEventListener('afterCartChanged', event => {
+    if (event.detail?.cartData?.items) latestCart = event.detail.cartData;
+    runImmediateMarkingBurst();
+    scheduleRefresh();
+  });
+  document.addEventListener('cart:updated', event => {
+    if (event.detail?.cart?.items) latestCart = event.detail.cart;
+    runImmediateMarkingBurst();
+    scheduleRefresh();
+  });
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) scheduleRefresh();
   });
 
-  const observer = new MutationObserver(scheduleRefresh);
+  const observer = new MutationObserver(() => {
+    runImmediateMarkingBurst();
+    scheduleRefresh();
+  });
   observer.observe(document.body, {
     childList: true,
     subtree: true
