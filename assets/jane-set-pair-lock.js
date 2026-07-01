@@ -12,6 +12,7 @@
   const HIDDEN_CONTROL_CLASS = 'jane-set-qty-control-hidden';
   const LOCKED_INPUT_CLASS = 'jane-set-qty-input-locked';
   const IMAGE_LINK_CLASS = 'jane-set-aov-link-disabled';
+  const IMAGE_CLASS = 'jane-set-aov-image-disabled';
   const HIDDEN_PRICE_CLASS = 'jane-set-aov-hidden-price';
   const JANE_SET_ROLES = ['Parent', 'Top', 'Pants'];
   const RENDER_DELAYS = [100, 250, 500];
@@ -152,7 +153,8 @@
       }
 
       .${IMAGE_LINK_CLASS},
-      .${IMAGE_LINK_CLASS} img {
+      .${IMAGE_LINK_CLASS} img,
+      .${IMAGE_CLASS} {
         cursor: default !important;
       }
     `;
@@ -303,6 +305,32 @@
       /(product.*(title|name)|cart.*(title|name)|jane set|jane blouse|jane pants)/.test(description);
   }
 
+  function disableJaneImageLinks(card) {
+    card.querySelectorAll('img').forEach(image => {
+      image.classList.add(IMAGE_CLASS);
+      image.draggable = false;
+
+      const link = image.closest('a');
+      if (link && card.contains(link)) {
+        const replacement = document.createElement('span');
+        replacement.className = link.className;
+        replacement.classList.add(IMAGE_LINK_CLASS);
+        replacement.style.cssText = link.style.cssText;
+        replacement.setAttribute('aria-disabled', 'true');
+        replacement.innerHTML = link.innerHTML;
+        link.replaceWith(replacement);
+        return;
+      }
+
+      const clickableWrapper = image.closest('[onclick], [role="link"]');
+      if (!clickableWrapper || !card.contains(clickableWrapper)) return;
+      clickableWrapper.removeAttribute('onclick');
+      clickableWrapper.removeAttribute('role');
+      clickableWrapper.removeAttribute('tabindex');
+      clickableWrapper.classList.add(IMAGE_LINK_CLASS);
+    });
+  }
+
   function markJaneSetCards() {
     if (!latestCart || !Object.keys(groupJaneSetItems(latestCart.items)).length) return;
 
@@ -327,6 +355,7 @@
           link.tabIndex = -1;
           link.setAttribute('aria-disabled', 'true');
         });
+        disableJaneImageLinks(card);
 
         if (role === 'Top' || role === 'Pants') {
           priceElementsIn(card).forEach(price => price.classList.add(HIDDEN_PRICE_CLASS));
@@ -497,6 +526,17 @@
   }
 
   function handleCartControl(event) {
+    const clickedImage = event.target.closest?.('img');
+    const clickedImageCard = clickedImage
+      ? clickedImage.closest('[data-jane-set-card="true"]') || findJaneSetCard(clickedImage)?.element
+      : null;
+    if (clickedImage && clickedImageCard) {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation?.();
+      return;
+    }
+
     const clickedLink = event.target.closest?.('a');
     const clickedLinkCard = clickedLink
       ? clickedLink.closest('[data-jane-set-card="true"]') || findJaneSetCard(clickedLink)?.element
