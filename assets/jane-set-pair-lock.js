@@ -1,13 +1,16 @@
 (() => {
   console.info('[Jane Set Pair Lock] post-AOV quantity sync loaded');
 
-  const ACTION_DELAYS = [250, 500, 900];
+  const ACTION_DELAYS = [150, 300, 600, 1000];
   const PASSIVE_CHECK_DELAY = 150;
+  const PRICE_STYLE_ID = 'jane-set-aov-price-style';
+  const HIDDEN_PRICE_CLASS = 'jane-set-aov-hidden-price';
   let latestCart = null;
   let latestSyncRunId = 0;
   let isSyncingJaneSet = false;
   let passiveCheckTimer = null;
   let pendingPassiveCheck = false;
+  let priceRenderTimers = [];
 
   function normalize(value) {
     return String(value || '').trim().toLowerCase();
@@ -90,6 +93,149 @@
 
     const setIds = new Set(candidates.map(item => item.properties._set_id));
     return setIds.size === 1 ? [...setIds][0] : null;
+  }
+
+  function textElementsContaining(token) {
+    if (!token) return [];
+
+    const elements = [];
+    const seen = new Set();
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    let node = walker.nextNode();
+
+    while (node) {
+      if (normalize(node.nodeValue).includes(token)) {
+        const element = node.parentElement;
+        if (element && !seen.has(element)) {
+          seen.add(element);
+          elements.push(element);
+        }
+      }
+      node = walker.nextNode();
+    }
+    return elements;
+  }
+
+  function findCardBySku(item, cartItems) {
+    const sku = itemSku(item);
+    if (!sku) return null;
+
+    const cards = textElementsContaining(sku).map(match => {
+      let element = match;
+      while (element && element !== document.body && element !== document.documentElement) {
+        const cardText = normalize(element.textContent);
+        const title = normalize(item.product_title || item.product?.title);
+        const hasTitle = title ? cardText.includes(title) : cardText.includes('jane ');
+        const hasCartControl = [...element.querySelectorAll('button, a, [role="button"]')]
+          .some(control => controlAction(control));
+        const containsOtherSku = cartItems.some(otherItem => {
+          const otherSku = itemSku(otherItem);
+          return otherSku && otherSku !== sku && cardText.includes(otherSku);
+        });
+        if (hasTitle && hasCartControl && !containsOtherSku) return element;
+        element = element.parentElement;
+      }
+      return null;
+    }).filter(Boolean);
+
+    const uniqueCards = [...new Set(cards)];
+    return uniqueCards.length === 1 ? uniqueCards[0] : null;
+  }
+
+  function installPriceStyle() {
+    if (document.getElementById(PRICE_STYLE_ID)) return;
+
+    const style = document.createElement('style');
+    style.id = PRICE_STYLE_ID;
+    style.textContent = `
+      .${HIDDEN_PRICE_CLASS} {
+        display: none !important;
+      }
+
+      .jane-set-aov-set-total {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 0;
+        font-weight: 800;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function priceElementsIn(card) {
+    const pricePattern = /₱\s*[\d,.]+/;
+    return [...card.querySelectorAll('span, p, strong, small, div')]
+      .filter(element => {
+        const text = String(element.textContent || '').trim();
+        if (!pricePattern.test(text)) return false;
+        return ![...element.children].some(child =>
+          pricePattern.test(String(child.textContent || '').trim())
+        );
+      });
+  }
+
+  function renderSetPrices(cart) {
+    if (!cart) return;
+
+    const hiddenPrices = new Set();
+    const activeSetIds = new Set();
+
+    Object.entries(groupJaneSetItems(cart.items)).forEach(([setId, items]) => {
+      const top = items.find(item => item.properties._set_role === 'Top');
+      const pants = items.find(item => item.properties._set_role === 'Pants');
+      if (!top || !pants) return;
+
+      const topCard = findCardBySku(top, cart.items);
+      const pantsCard = findCardBySku(pants, cart.items);
+      if (!topCard || !pantsCard || topCard === pantsCard) return;
+
+      priceElementsIn(topCard).forEach(element => hiddenPrices.add(element));
+      priceElementsIn(pantsCard).forEach(element => hiddenPrices.add(element));
+      hiddenPrices.forEach(element => element.classList.add(HIDDEN_PRICE_CLASS));
+
+      activeSetIds.add(setId);
+      let totalRow = [...document.querySelectorAll('[data-jane-set-total]')]
+        .find(element => element.dataset.janeSetTotal === setId);
+      if (!totalRow) {
+        totalRow = document.createElement('div');
+        totalRow.className = 'jane-set-aov-set-total';
+        totalRow.dataset.janeSetTotal = setId;
+        totalRow.innerHTML = '<span>Jane Set total</span><strong></strong>';
+      }
+
+      const displayPrice =
+        top.properties._set_display_price ||
+        pants.properties._set_display_price ||
+        '₱1,699';
+      const quantity = top.quantity === pants.quantity ? top.quantity : null;
+      const totalText = quantity && quantity > 1 ? `${displayPrice} × ${quantity}` : displayPrice;
+      const totalValue = totalRow.querySelector('strong');
+      if (totalValue.textContent !== totalText) totalValue.textContent = totalText;
+
+      const pantsAfterTop = Boolean(
+        topCard.compareDocumentPosition(pantsCard) & Node.DOCUMENT_POSITION_FOLLOWING
+      );
+      const anchorCard = pantsAfterTop ? pantsCard : topCard;
+      if (totalRow.previousElementSibling !== anchorCard) anchorCard.after(totalRow);
+    });
+
+    document.querySelectorAll(`.${HIDDEN_PRICE_CLASS}`).forEach(element => {
+      if (!hiddenPrices.has(element)) element.classList.remove(HIDDEN_PRICE_CLASS);
+    });
+    document.querySelectorAll('[data-jane-set-total]').forEach(totalRow => {
+      if (!activeSetIds.has(totalRow.dataset.janeSetTotal)) totalRow.remove();
+    });
+  }
+
+  function runPriceRenderBurst() {
+    renderSetPrices(latestCart);
+    window.requestAnimationFrame(() => renderSetPrices(latestCart));
+    priceRenderTimers.forEach(timer => window.clearTimeout(timer));
+    priceRenderTimers = [
+      window.setTimeout(() => renderSetPrices(latestCart), 150),
+      window.setTimeout(() => renderSetPrices(latestCart), 300)
+    ];
   }
 
   async function fetchCart() {
@@ -220,6 +366,7 @@
       if (cleanedCart !== cart) {
         latestCart = cleanedCart;
         dispatchCartRefresh(cleanedCart);
+        runPriceRenderBurst();
         return;
       }
       cart = cleanedCart;
@@ -243,6 +390,7 @@
 
       latestCart = updatedCart;
       dispatchCartRefresh(updatedCart);
+      runPriceRenderBurst();
     } catch (error) {
       console.warn('Unable to synchronize Jane Set after AOV update.', error);
     } finally {
@@ -272,6 +420,7 @@
       const cleanedCart = await removeOrphans(cart);
       latestCart = cleanedCart;
       if (cleanedCart !== cart) dispatchCartRefresh(cleanedCart);
+      runPriceRenderBurst();
     } catch (error) {
       console.warn('Unable to verify Jane Set cart state.', error);
     }
@@ -304,21 +453,27 @@
     });
   }
 
+  installPriceStyle();
   window.addEventListener('click', handleCartClick, true);
 
   document.addEventListener('afterCartChanged', event => {
     if (event.detail?.cartData?.items) latestCart = event.detail.cartData;
+    runPriceRenderBurst();
     schedulePassiveCheck();
   });
   document.addEventListener('cart:updated', event => {
     if (event.detail?.cart?.items) latestCart = event.detail.cart;
+    runPriceRenderBurst();
     schedulePassiveCheck();
   });
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) schedulePassiveCheck();
   });
 
-  const observer = new MutationObserver(schedulePassiveCheck);
+  const observer = new MutationObserver(() => {
+    runPriceRenderBurst();
+    schedulePassiveCheck();
+  });
   observer.observe(document.body, {
     childList: true,
     subtree: true
