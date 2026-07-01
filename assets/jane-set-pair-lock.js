@@ -7,7 +7,7 @@
       window.Shopify?.designMode
     ) return;
 
-    console.info('[Jane Set Pair Lock] paid parent + components loaded');
+    console.info('[Jane Set AOV Guard] loaded');
 
   const CONTROL_STYLE_ID = 'jane-set-pair-lock-style';
   const HIDDEN_CONTROL_CLASS = 'jane-set-qty-control-hidden';
@@ -38,6 +38,7 @@
   let isUpdatingJaneSet = false;
   let cartCheckTimer = null;
   let renderTimers = [];
+  let lastDebugSignature = '';
   const handledInvalidSetIds = new Set();
 
   function normalize(value) {
@@ -65,6 +66,31 @@
         surfaces.push(element);
       }
     });
+
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    let node = walker.nextNode();
+    while (node) {
+      const text = normalize(node.nodeValue);
+      if (text.includes('almost yours') || text.includes('proceed to checkout')) {
+        let element = node.parentElement;
+        while (element && element !== document.body) {
+          const surfaceText = normalize(element.textContent);
+          const hasCartSummary =
+            surfaceText.includes('subtotal') &&
+            (surfaceText.includes('checkout') || surfaceText.includes('almost yours'));
+          const hasJaneLine =
+            surfaceText.includes('jane set') ||
+            surfaceText.includes('jane blouse') ||
+            surfaceText.includes('jane pants');
+          if (hasCartSummary && hasJaneLine) {
+            if (!surfaces.includes(element)) surfaces.push(element);
+            break;
+          }
+          element = element.parentElement;
+        }
+      }
+      node = walker.nextNode();
+    }
     return surfaces;
   }
 
@@ -385,21 +411,31 @@
   }
 
   function markJaneSetCards() {
-    if (!latestCart || !Object.keys(groupJaneSetItems(latestCart.items)).length) return;
+    const surfaces = cartSurfaces();
+    if (!surfaces.length) return;
 
-    cartSurfaces().forEach(surface => {
+    surfaces.forEach(surface => {
       surface.querySelectorAll('[data-jane-set-total]').forEach(element => element.remove());
     });
+
+    let pricesHidden = 0;
+    let qtyLocked = 0;
+    let imagesDisabled = 0;
+    let parentImagesUpdated = 0;
+    let cardsFound = 0;
 
     JANE_SET_ROLES.forEach(role => {
       const cards = findCardsForRole(role);
       cards.forEach((card, index) => {
-        const item = resolveJaneItem(card, role, latestCart, index);
+        const item = latestCart ? resolveJaneItem(card, role, latestCart, index) : null;
+        cardsFound += 1;
         card.dataset.janeSetCard = 'true';
+        card.dataset.janeSetAovGuarded = 'true';
         card.dataset.janeSetRole = role;
         if (item) card.dataset.janeSetId = item.properties._set_id;
 
         lockQuantityControls(card);
+        qtyLocked += 1;
         card.querySelectorAll('a').forEach(link => {
           if (!isJaneProductLink(link)) return;
           link.classList.add(IMAGE_LINK_CLASS);
@@ -411,19 +447,55 @@
           link.setAttribute('aria-disabled', 'true');
         });
         disableJaneImageLinks(card);
+        imagesDisabled += card.querySelectorAll(`.${IMAGE_CLASS}`).length;
 
         if (role === 'Top' || role === 'Pants') {
           priceElementsIn(card).forEach(price => {
             price.classList.add(HIDDEN_PRICE_CLASS);
             price.dataset.janeSetAovPriceHidden = 'true';
+            pricesHidden += 1;
           });
         }
       });
     });
 
-    Object.entries(groupJaneSetItems(latestCart.items)).forEach(([setId, group]) => {
-      updateParentImage(group, setId);
+    if (latestCart) {
+      Object.entries(groupJaneSetItems(latestCart.items)).forEach(([setId, group]) => {
+        updateParentImage(group, setId);
+        parentImagesUpdated += 1;
+      });
+    } else {
+      const componentImage =
+        findCardsForRole('Top')[0]?.querySelector('img') ||
+        findCardsForRole('Pants')[0]?.querySelector('img');
+      const parentImage = findCardsForRole('Parent')[0]?.querySelector('img');
+      if (componentImage?.currentSrc || componentImage?.src) {
+        const replacementUrl = componentImage.currentSrc || componentImage.src;
+        if (parentImage) {
+          parentImage.src = replacementUrl;
+          parentImage.removeAttribute('srcset');
+          parentImagesUpdated = 1;
+        }
+      }
+    }
+
+    const debugSignature = JSON.stringify({
+      cardsFound,
+      pricesHidden,
+      qtyLocked,
+      imagesDisabled,
+      parentImagesUpdated
     });
+    if (cardsFound && debugSignature !== lastDebugSignature) {
+      lastDebugSignature = debugSignature;
+      console.info('[Jane Set AOV Guard] cards found:', cardsFound);
+      console.info('[Jane Set AOV Guard] applied:', {
+        pricesHidden,
+        qtyLocked,
+        imagesDisabled,
+        parentImagesUpdated
+      });
+    }
   }
 
   function runRenderBurst() {
@@ -432,7 +504,7 @@
       window.requestAnimationFrame(markJaneSetCards);
     }
     renderTimers.forEach(timer => window.clearTimeout(timer));
-    renderTimers = RENDER_DELAYS.map(delay =>
+    renderTimers = [...RENDER_DELAYS, 1000].map(delay =>
       window.setTimeout(markJaneSetCards, delay)
     );
   }
