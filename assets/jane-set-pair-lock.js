@@ -14,7 +14,7 @@
   const IMAGE_LINK_CLASS = 'jane-set-aov-link-disabled';
   const HIDDEN_PRICE_CLASS = 'jane-set-aov-hidden-price';
   const JANE_SET_ROLES = ['Parent', 'Top', 'Pants'];
-  const RENDER_DELAYS = [50, 150, 300, 600];
+  const RENDER_DELAYS = [100, 250, 500];
   let latestCart = null;
   let isUpdatingJaneSet = false;
   let cartCheckTimer = null;
@@ -45,8 +45,14 @@
 
   function itemRoleFromText(text) {
     const normalizedText = normalize(text);
-    if (normalizedText.includes('jane blouse')) return 'Top';
-    if (normalizedText.includes('jane pants')) return 'Pants';
+    if (
+      normalizedText.includes('jane blouse') ||
+      normalizedText.includes('janeblouse')
+    ) return 'Top';
+    if (
+      normalizedText.includes('jane pants') ||
+      normalizedText.includes('janepants')
+    ) return 'Pants';
     if (normalizedText.includes('jane set')) return 'Parent';
     return null;
   }
@@ -75,6 +81,57 @@
       /(minus|decrease|decrement|quantity-minus)/.test(description)
     ) return 'decrease';
     return null;
+  }
+
+  function quantityInputsIn(card) {
+    return [...card.querySelectorAll(
+      'input[type="number"], input[name*="quantity" i], input[class*="quantity" i]'
+    )];
+  }
+
+  function findQuantityWrapper(input, card) {
+    let element = input.parentElement;
+
+    while (element && element !== card) {
+      const controls = [...element.querySelectorAll('button, a, [role="button"]')];
+      const hasKnownQuantityControl = controls.some(control =>
+        ['increase', 'decrease'].includes(controlAction(control))
+      );
+      const isCompactControl =
+        controls.length >= 2 &&
+        quantityInputsIn(element).length === 1 &&
+        !element.querySelector('img');
+
+      if (hasKnownQuantityControl || isCompactControl) return element;
+      element = element.parentElement;
+    }
+
+    return null;
+  }
+
+  function lockQuantityControls(card) {
+    card.querySelectorAll('button, a, [role="button"]').forEach(control => {
+      const action = controlAction(control);
+      control.classList.toggle(
+        HIDDEN_CONTROL_CLASS,
+        action === 'increase' || action === 'decrease'
+      );
+    });
+
+    quantityInputsIn(card).forEach(input => {
+      input.classList.add(LOCKED_INPUT_CLASS);
+      input.readOnly = true;
+      input.tabIndex = -1;
+      input.setAttribute('aria-readonly', 'true');
+
+      const wrapper = findQuantityWrapper(input, card);
+      if (!wrapper) return;
+      wrapper.dataset.janeSetQtyWrapper = 'true';
+      wrapper.querySelectorAll('button, a, [role="button"]').forEach(control => {
+        if (controlAction(control) === 'remove') return;
+        control.classList.add(HIDDEN_CONTROL_CLASS);
+      });
+    });
   }
 
   function installStyles() {
@@ -259,19 +316,7 @@
         card.dataset.janeSetRole = role;
         if (item) card.dataset.janeSetId = item.properties._set_id;
 
-        card.querySelectorAll('button, a, [role="button"]').forEach(control => {
-          const action = controlAction(control);
-          control.classList.toggle(
-            HIDDEN_CONTROL_CLASS,
-            action === 'increase' || action === 'decrease'
-          );
-        });
-        card.querySelectorAll('input[type="number"], input[name*="quantity" i]').forEach(input => {
-          input.classList.add(LOCKED_INPUT_CLASS);
-          input.readOnly = true;
-          input.tabIndex = -1;
-          input.setAttribute('aria-readonly', 'true');
-        });
+        lockQuantityControls(card);
         card.querySelectorAll('a').forEach(link => {
           if (!isJaneProductLink(link)) return;
           link.classList.add(IMAGE_LINK_CLASS);
@@ -480,6 +525,15 @@
     if (!control) return;
 
     const action = controlAction(control);
+    if (
+      control.closest('[data-jane-set-qty-wrapper="true"]') &&
+      action !== 'remove'
+    ) {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation?.();
+      return;
+    }
     if (!action) return;
     const markedCard = control.closest('[data-jane-set-card="true"]');
     const card = markedCard
