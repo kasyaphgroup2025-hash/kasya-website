@@ -10,6 +10,7 @@
   let hasJaneSetItems = false;
   let latestQuantityIntent = null;
   const setSyncStates = new Map();
+  const handledClickEvents = new WeakSet();
 
   function normalize(value) {
     return String(value || '').trim().toLowerCase();
@@ -49,7 +50,7 @@
     return Object.entries(groups).some(([setId, items]) => {
       const state = setSyncStates.get(setId);
       if (!state || now > state.protectUntil) return false;
-      return items.some(item => item.quantity !== state.quantity);
+      return items.some(item => item.quantity !== state.pendingTargetQty);
     });
   }
 
@@ -148,16 +149,30 @@
       .sort((first, second) => first.textContent.length - second.textContent.length)[0] || null;
   }
 
-  function quantityInput(card) {
-    return card?.querySelector(
+  function quantityInput(card, control = null) {
+    const quantityWrapper = control?.closest?.(
+      '[class*="quantity" i], [class*="qty" i], [data-quantity], [data-qty]'
+    );
+    return quantityWrapper?.querySelector(
+      'input[type="number"], input[name*="quantity" i], [role="spinbutton"], [aria-valuenow]'
+    ) || card?.querySelector(
       'input[type="number"], input[name*="quantity" i], [role="spinbutton"], [aria-valuenow]'
     ) || null;
   }
 
-  function displayedQuantity(card, fallbackQuantity) {
-    const input = quantityInput(card);
+  function displayedQuantity(card, control, fallbackQuantity) {
+    const input = quantityInput(card, control);
     const quantity = Number.parseInt(input?.value || input?.getAttribute('aria-valuenow'), 10);
-    return Number.isInteger(quantity) && quantity >= 0 ? quantity : fallbackQuantity;
+    if (Number.isInteger(quantity) && quantity >= 0) return quantity;
+
+    const quantityWrapper = control?.closest?.(
+      '[class*="quantity" i], [class*="qty" i], [data-quantity], [data-qty]'
+    ) || card;
+    const visibleQuantity = [...(quantityWrapper?.querySelectorAll('span, output, div') || [])]
+      .map(element => String(element.textContent || '').trim())
+      .find(value => /^\d+$/.test(value));
+    const parsedVisibleQuantity = Number.parseInt(visibleQuantity, 10);
+    return Number.isInteger(parsedVisibleQuantity) ? parsedVisibleQuantity : fallbackQuantity;
   }
 
   function setCardBusy(card, busy) {
@@ -207,8 +222,8 @@
 
       const { top, pants } = pairFor(cachedCart.items, setId);
       if (!top || !pants) return;
-      setOptimisticQuantity(findCardForLine(top, document.body), state.quantity);
-      setOptimisticQuantity(findCardForLine(pants, document.body), state.quantity);
+      setOptimisticQuantity(findCardForLine(top, document.body), state.pendingTargetQty);
+      setOptimisticQuantity(findCardForLine(pants, document.body), state.pendingTargetQty);
     });
   }
 
@@ -251,8 +266,9 @@
         if (!currentState || currentState.requestId !== request.requestId) return null;
         setSyncStates.set(request.setId, {
           requestId: request.requestId,
-          quantity: request.quantity,
+          pendingTargetQty: request.quantity,
           pending: false,
+          timestamp: Date.now(),
           protectUntil: Date.now() + 1500
         });
       }
@@ -268,7 +284,7 @@
     }
   }
 
-  async function interceptPairAction(clickedMatch, action) {
+  async function interceptPairAction(clickedMatch, action, control) {
     const clickedLine = clickedMatch.line;
     const surface = clickedMatch.card.closest(
       'cart-drawer, cart-items, [class*="aov" i], [id*="aov" i], [class*="cart" i], [id*="cart" i]'
@@ -282,7 +298,7 @@
     const pantsCard = pants.key === clickedLine.key
       ? clickedMatch.card
       : findCardForLine(pants, surface);
-    const currentQuantity = displayedQuantity(clickedMatch.card, clickedLine.quantity);
+    const currentQuantity = displayedQuantity(clickedMatch.card, control, clickedLine.quantity);
     let quantity = currentQuantity;
     if (action === 'increase') quantity += 1;
     if (action === 'decrease') quantity = Math.max(0, quantity - 1);
@@ -292,8 +308,9 @@
     const requestId = (previousState?.requestId || 0) + 1;
     setSyncStates.set(clickedLine.properties._set_id, {
       requestId,
-      quantity,
+      pendingTargetQty: quantity,
       pending: true,
+      timestamp: Date.now(),
       protectUntil: Date.now() + 1500
     });
 
@@ -352,7 +369,7 @@
       const pants = items.find(item => item.properties._set_role === 'Pants');
       const syncState = setSyncStates.get(setId);
       const protectedQuantity = syncState && Date.now() <= syncState.protectUntil
-        ? syncState.quantity
+        ? syncState.pendingTargetQty
         : null;
 
       if (!top || !pants) {
@@ -406,8 +423,8 @@
     );
   }
 
-  document.addEventListener('click', event => {
-    if (isSyncingJaneSet) return;
+  function handleJaneSetClick(event) {
+    if (handledClickEvents.has(event)) return;
 
     const control = event.target.closest('button, a, [role="button"]');
     if (!control || !isCartSurface(control)) return;
@@ -422,9 +439,15 @@
     if (!top || !pants) return;
 
     event.preventDefault();
+    handledClickEvents.add(event);
+    event.stopPropagation();
     event.stopImmediatePropagation();
-    interceptPairAction(clickedMatch, action);
-  }, true);
+    if (isSyncingJaneSet) return;
+    interceptPairAction(clickedMatch, action, control);
+  }
+
+  window.addEventListener('click', handleJaneSetClick, true);
+  document.addEventListener('click', handleJaneSetClick, true);
 
   document.addEventListener('change', event => {
     if (!isCartSurface(event.target)) return;
