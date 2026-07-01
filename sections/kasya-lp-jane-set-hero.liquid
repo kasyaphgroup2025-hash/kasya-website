@@ -107,7 +107,10 @@
         </script>
 
         <fieldset class="jane-set-hero__group">
-          <legend>Color</legend>
+          <legend>
+            Color:
+            <span class="jane-set-hero__selection-prompt" data-selection-prompt="color">Please select</span>
+          </legend>
           <div class="jane-set-hero__colors" data-jane-colors>
             <button type="button" class="jane-set-hero__color" data-color="Black" aria-pressed="false">
               <span class="jane-set-hero__swatch jane-set-hero__swatch--black"></span>
@@ -121,12 +124,18 @@
         </fieldset>
 
         <fieldset class="jane-set-hero__group">
-          <legend>Top Size</legend>
+          <legend>
+            Top Size:
+            <span class="jane-set-hero__selection-prompt" data-selection-prompt="top">Please select</span>
+          </legend>
           <div class="jane-set-hero__sizes" data-size-options="top"></div>
         </fieldset>
 
         <fieldset class="jane-set-hero__group">
-          <legend>Pants Size</legend>
+          <legend>
+            Pants Size:
+            <span class="jane-set-hero__selection-prompt" data-selection-prompt="pants">Please select</span>
+          </legend>
           <div class="jane-set-hero__sizes" data-size-options="pants"></div>
         </fieldset>
 
@@ -369,6 +378,16 @@
     text-transform: uppercase;
   }
 
+  .jane-set-hero__selection-prompt {
+    color: #b42318;
+    font-weight: 700;
+    text-transform: none;
+  }
+
+  .jane-set-hero__selection-prompt[hidden] {
+    display: none;
+  }
+
   .jane-set-hero__colors,
   .jane-set-hero__sizes {
     display: flex;
@@ -409,6 +428,11 @@
   .jane-set-hero__size.is-unavailable {
     opacity: 0.38;
     text-decoration: line-through;
+  }
+
+  .jane-set-hero__size.is-pending {
+    opacity: 1;
+    text-decoration: none;
   }
 
   .jane-set-hero__swatch {
@@ -600,6 +624,9 @@
     const colorContainer = section.querySelector('[data-jane-colors]');
     const topSizes = section.querySelector('[data-size-options="top"]');
     const pantsSizes = section.querySelector('[data-size-options="pants"]');
+    const colorPrompt = section.querySelector('[data-selection-prompt="color"]');
+    const topPrompt = section.querySelector('[data-selection-prompt="top"]');
+    const pantsPrompt = section.querySelector('[data-selection-prompt="pants"]');
     const submitButton = section.querySelector('[data-jane-submit]');
     const submitText = section.querySelector('[data-jane-submit-text]');
     const errorMessage = section.querySelector('[data-jane-error]');
@@ -721,16 +748,18 @@
       container.innerHTML = sizes.map(size => {
         const variant = findVariant(role, size);
         const selected = normalize(size) === normalize(selectedSize);
-        const available = Boolean(variant?.available);
+        const pending = !selectedColor;
+        const unavailable = !pending && (!variant || !variant.available);
 
         return `
           <button
             type="button"
-            class="jane-set-hero__size ${selected ? 'is-selected' : ''} ${available ? '' : 'is-unavailable'}"
+            class="jane-set-hero__size ${pending ? 'is-pending' : ''} ${selected ? 'is-selected' : ''} ${unavailable ? 'is-unavailable' : ''}"
             data-jane-size="${size}"
             data-jane-role="${role}"
             aria-pressed="${selected}"
-            aria-disabled="${!available}"
+            aria-disabled="${unavailable}"
+            ${unavailable ? 'disabled' : ''}
           >
             ${size}
           </button>
@@ -744,6 +773,9 @@
 
       const { complete, available } = selectionState();
       submitButton.disabled = adding || !available;
+      colorPrompt.hidden = Boolean(selectedColor);
+      topPrompt.hidden = Boolean(selectedTopSize);
+      pantsPrompt.hidden = Boolean(selectedPantsSize);
       if (!adding) {
         submitText.textContent = complete && !available ? 'SOLD OUT / UNAVAILABLE' : 'ADD SET TO CART';
       }
@@ -787,8 +819,8 @@
 
       selectedColor = button.dataset.color;
       previewColor = selectedColor;
-      selectedTopSize = '';
-      selectedPantsSize = '';
+      if (!findVariant('top', selectedTopSize)?.available) selectedTopSize = '';
+      if (!findVariant('pants', selectedPantsSize)?.available) selectedPantsSize = '';
       clearError();
 
       colorContainer.querySelectorAll('[data-color]').forEach(option => {
@@ -805,6 +837,7 @@
     section.addEventListener('click', event => {
       const button = event.target.closest('[data-jane-size]');
       if (!button || !selectedColor) return;
+      if (button.getAttribute('aria-disabled') === 'true') return;
 
       if (button.dataset.janeRole === 'top') {
         selectedTopSize = button.dataset.janeSize;

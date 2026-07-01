@@ -9,6 +9,7 @@
   let previousQuantities = new Map();
   let hasJaneSetItems = false;
   let latestQuantityIntent = null;
+  const setSyncStates = new Map();
 
   function normalize(value) {
     return String(value || '').trim().toLowerCase();
@@ -41,10 +42,24 @@
     };
   }
 
-  function snapshotCart(cart) {
+  function isProtectedFromStaleCart(cart) {
+    const groups = groupJaneSetItems(cart.items);
+    const now = Date.now();
+
+    return Object.entries(groups).some(([setId, items]) => {
+      const state = setSyncStates.get(setId);
+      if (!state || now > state.protectUntil) return false;
+      return items.some(item => item.quantity !== state.quantity);
+    });
+  }
+
+  function snapshotCart(cart, trusted = false) {
+    if (!trusted && isProtectedFromStaleCart(cart)) return false;
+
     cachedCart = cart;
     hasJaneSetItems = cart.items.some(isJaneSetItem);
     previousQuantities = new Map(cart.items.map(item => [item.key, item.quantity]));
+    return true;
   }
 
   function actionFor(control) {
@@ -139,6 +154,12 @@
     ) || null;
   }
 
+  function displayedQuantity(card, fallbackQuantity) {
+    const input = quantityInput(card);
+    const quantity = Number.parseInt(input?.value || input?.getAttribute('aria-valuenow'), 10);
+    return Number.isInteger(quantity) && quantity >= 0 ? quantity : fallbackQuantity;
+  }
+
   function setCardBusy(card, busy) {
     if (!card) return;
 
@@ -169,9 +190,26 @@
     const input = quantityInput(card);
     if (!input) return;
 
-    if ('value' in input) input.value = quantity;
-    input.setAttribute('value', String(quantity));
-    input.setAttribute('aria-valuenow', String(quantity));
+    const quantityValue = String(quantity);
+    if ('value' in input && String(input.value) !== quantityValue) input.value = quantityValue;
+    if (input.getAttribute('value') !== quantityValue) input.setAttribute('value', quantityValue);
+    if (input.getAttribute('aria-valuenow') !== quantityValue) {
+      input.setAttribute('aria-valuenow', quantityValue);
+    }
+  }
+
+  function reapplyProtectedQuantities() {
+    if (!cachedCart) return;
+
+    const now = Date.now();
+    setSyncStates.forEach((state, setId) => {
+      if (now > state.protectUntil) return;
+
+      const { top, pants } = pairFor(cachedCart.items, setId);
+      if (!top || !pants) return;
+      setOptimisticQuantity(findCardForLine(top, document.body), state.quantity);
+      setOptimisticQuantity(findCardForLine(pants, document.body), state.quantity);
+    });
   }
 
   function dispatchCartRefresh(cart) {
@@ -192,7 +230,7 @@
     }));
   }
 
-  async function updateJaneSets(updates, lockAcquired = false) {
+  async function updateJaneSets(updates, lockAcquired = false, request = null) {
     if ((!lockAcquired && isSyncingJaneSet) || !Object.keys(updates).length) return null;
     if (!lockAcquired) isSyncingJaneSet = true;
 
@@ -208,7 +246,17 @@
       if (!response.ok) throw new Error('Unable to update Jane Set quantities.');
 
       const cart = await response.json();
-      snapshotCart(cart);
+      if (request) {
+        const currentState = setSyncStates.get(request.setId);
+        if (!currentState || currentState.requestId !== request.requestId) return null;
+        setSyncStates.set(request.setId, {
+          requestId: request.requestId,
+          quantity: request.quantity,
+          pending: false,
+          protectUntil: Date.now() + 1500
+        });
+      }
+      snapshotCart(cart, true);
       latestQuantityIntent = null;
       dispatchCartRefresh(cart);
       return cart;
@@ -234,10 +282,20 @@
     const pantsCard = pants.key === clickedLine.key
       ? clickedMatch.card
       : findCardForLine(pants, surface);
-    let quantity = clickedLine.quantity;
+    const currentQuantity = displayedQuantity(clickedMatch.card, clickedLine.quantity);
+    let quantity = currentQuantity;
     if (action === 'increase') quantity += 1;
     if (action === 'decrease') quantity = Math.max(0, quantity - 1);
     if (action === 'remove') quantity = 0;
+
+    const previousState = setSyncStates.get(clickedLine.properties._set_id);
+    const requestId = (previousState?.requestId || 0) + 1;
+    setSyncStates.set(clickedLine.properties._set_id, {
+      requestId,
+      quantity,
+      pending: true,
+      protectUntil: Date.now() + 1500
+    });
 
     isSyncingJaneSet = true;
     setCardBusy(topCard, true);
@@ -249,10 +307,18 @@
       const updatedCart = await updateJaneSets({
         [top.key]: quantity,
         [pants.key]: quantity
-      }, true);
+      }, true, {
+        setId: clickedLine.properties._set_id,
+        requestId,
+        quantity
+      });
       if (!updatedCart) {
-        setOptimisticQuantity(topCard, top.quantity);
-        setOptimisticQuantity(pantsCard, pants.quantity);
+        const currentState = setSyncStates.get(clickedLine.properties._set_id);
+        if (currentState?.requestId === requestId) {
+          setSyncStates.delete(clickedLine.properties._set_id);
+          setOptimisticQuantity(topCard, top.quantity);
+          setOptimisticQuantity(pantsCard, pants.quantity);
+        }
       }
     } finally {
       if (isSyncingJaneSet) {
@@ -281,16 +347,23 @@
     const updates = {};
     const groups = groupJaneSetItems(cart.items);
 
-    Object.values(groups).forEach(items => {
+    Object.entries(groups).forEach(([setId, items]) => {
       const top = items.find(item => item.properties._set_role === 'Top');
       const pants = items.find(item => item.properties._set_role === 'Pants');
+      const syncState = setSyncStates.get(setId);
+      const protectedQuantity = syncState && Date.now() <= syncState.protectUntil
+        ? syncState.quantity
+        : null;
 
       if (!top || !pants) {
         items.forEach(item => {
           updates[item.key] = 0;
         });
-      } else if (top.quantity !== pants.quantity) {
-        const quantity = matchedQuantity(top, pants);
+      } else if (
+        top.quantity !== pants.quantity ||
+        (protectedQuantity !== null && top.quantity !== protectedQuantity)
+      ) {
+        const quantity = protectedQuantity ?? matchedQuantity(top, pants);
         updates[top.key] = quantity;
         updates[pants.key] = quantity;
       }
@@ -310,7 +383,7 @@
 
       const cart = await response.json();
       const updates = requiredFallbackUpdates(cart);
-      snapshotCart(cart);
+      snapshotCart(cart, true);
 
       if (Object.keys(updates).length) await updateJaneSets(updates);
     } catch (error) {
@@ -378,6 +451,7 @@
   const cartObserver = new MutationObserver(mutations => {
     if (isSyncingJaneSet) return;
     if (mutations.some(mutation => isCartSurface(mutation.target))) {
+      reapplyProtectedQuantities();
       scheduleCheck(250);
     }
   });
