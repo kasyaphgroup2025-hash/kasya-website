@@ -653,6 +653,10 @@
 
     const products = JSON.parse(componentData.textContent || '{}');
     const productMedia = productMediaData ? JSON.parse(productMediaData.textContent || '[]') : [];
+    const parentVariant = {
+      id: {{ parent_product.selected_or_first_available_variant.id | json }},
+      available: {{ parent_product.selected_or_first_available_variant.available | json }}
+    };
     const sizes = ['Medium', 'Large', 'XL', '2XL', '3XL'];
     const shotOrder = ['front', 'side', 'back', 'sitting', 'fabric close up'];
     const normalize = value => String(value || '').trim().toLowerCase();
@@ -740,7 +744,13 @@
       const topVariant = findVariant('top', selectedTopSize);
       const pantsVariant = findVariant('pants', selectedPantsSize);
       const complete = Boolean(selectedColor && selectedTopSize && selectedPantsSize);
-      const available = Boolean(complete && topVariant?.available && pantsVariant?.available);
+      const available = Boolean(
+        complete &&
+        parentVariant.id &&
+        parentVariant.available &&
+        topVariant?.available &&
+        pantsVariant?.available
+      );
       return { topVariant, pantsVariant, complete, available };
     }
 
@@ -910,6 +920,15 @@
             sections,
             sections_url: window.location.pathname,
             items: [
+              {
+                id: parentVariant.id,
+                quantity: 1,
+                properties: {
+                  ...sharedProperties,
+                  _set_role: 'Parent',
+                  _inventory_components: 'Blouse + Pants'
+                }
+              },
               {
                 id: topVariant.id,
                 quantity: 1,

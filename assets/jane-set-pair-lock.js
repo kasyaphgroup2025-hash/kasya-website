@@ -1,17 +1,15 @@
 (() => {
-  console.info('[Jane Set Pair Lock] post-AOV quantity sync loaded');
+  console.info('[Jane Set Pair Lock] paid parent + components loaded');
 
-  const ACTION_DELAYS = [150, 300, 600, 1000, 1500];
-  const PASSIVE_CHECK_DELAY = 150;
-  const PRICE_STYLE_ID = 'jane-set-aov-price-style';
+  const CONTROL_STYLE_ID = 'jane-set-pair-lock-style';
+  const HIDDEN_CONTROL_CLASS = 'jane-set-qty-control-hidden';
   const HIDDEN_PRICE_CLASS = 'jane-set-aov-hidden-price';
+  const JANE_SET_ROLES = ['Parent', 'Top', 'Pants'];
+  const RENDER_DELAYS = [50, 150, 300, 600];
   let latestCart = null;
-  let latestSyncRunId = 0;
-  let isSyncingJaneSet = false;
-  let passiveCheckTimer = null;
-  let pendingPassiveCheck = false;
-  let priceRenderTimers = [];
-  let lastJaneSetAction = null;
+  let isUpdatingJaneSet = false;
+  let cartCheckTimer = null;
+  let renderTimers = [];
 
   function normalize(value) {
     return String(value || '').trim().toLowerCase();
@@ -21,12 +19,12 @@
     return Boolean(
       item?.properties?._set_id &&
       item.properties._set_name === 'Jane Set' &&
-      ['Top', 'Pants'].includes(item.properties._set_role)
+      JANE_SET_ROLES.includes(item.properties._set_role)
     );
   }
 
   function groupJaneSetItems(items) {
-    return items.reduce((groups, item) => {
+    return (items || []).reduce((groups, item) => {
       if (!isJaneSetItem(item)) return groups;
       const setId = item.properties._set_id;
       groups[setId] = groups[setId] || [];
@@ -35,218 +33,145 @@
     }, {});
   }
 
-  function pairFor(items, setId) {
-    const setItems = groupJaneSetItems(items)[setId] || [];
-    return {
-      top: setItems.find(item => item.properties._set_role === 'Top'),
-      pants: setItems.find(item => item.properties._set_role === 'Pants')
-    };
+  function itemRoleFromText(text) {
+    const normalizedText = normalize(text);
+    if (normalizedText.includes('jane blouse')) return 'Top';
+    if (normalizedText.includes('jane pants')) return 'Pants';
+    if (normalizedText.includes('jane set')) return 'Parent';
+    return null;
   }
 
   function itemSku(item) {
-    return normalize(item.properties?._set_component_sku || item.sku);
+    return normalize(item?.properties?._set_component_sku || item?.sku);
   }
 
   function controlAction(control) {
-    const actionText = [
-      control.getAttribute('name'),
-      control.getAttribute('aria-label'),
-      control.getAttribute('title'),
-      control.className,
-      control.textContent
-    ].filter(Boolean).join(' ').toLowerCase();
+    const description = normalize([
+      control?.textContent,
+      control?.getAttribute?.('name'),
+      control?.getAttribute?.('aria-label'),
+      control?.getAttribute?.('title'),
+      control?.className
+    ].filter(Boolean).join(' '));
 
-    if (/(remove|delete|trash)/.test(actionText)) return 'remove';
-    if (/(minus|decrease|decrement)/.test(actionText) || actionText.trim() === '-') return 'decrease';
-    if (/(plus|increase|increment)/.test(actionText) || actionText.trim() === '+') return 'increase';
+    if (/(remove|delete|trash)/.test(description)) return 'remove';
+    if (
+      description === '+' ||
+      /(plus|increase|increment|quantity-add)/.test(description)
+    ) return 'increase';
+    if (
+      description === '-' ||
+      description === '−' ||
+      /(minus|decrease|decrement|quantity-minus)/.test(description)
+    ) return 'decrease';
     return null;
   }
 
-  function findJaneCard(control) {
-    let element = control;
-    while (element && element !== document.body && element !== document.documentElement) {
-      const text = normalize(element.textContent);
-      const hasBlouse = text.includes('jane blouse');
-      const hasPants = text.includes('jane pants');
-      if (hasBlouse !== hasPants) {
-        return {
-          element,
-          role: hasBlouse ? 'Top' : 'Pants'
-        };
-      }
-      element = element.parentElement;
-    }
-    return null;
-  }
-
-  function resolveSetId(card, role, cart) {
-    if (!cart) return null;
-
-    const cardText = normalize(card.textContent);
-    let candidates = cart.items.filter(item =>
-      isJaneSetItem(item) && item.properties._set_role === role
-    );
-    const skuCandidates = candidates.filter(item => {
-      const sku = itemSku(item);
-      return sku && cardText.includes(sku);
-    });
-    if (skuCandidates.length) candidates = skuCandidates;
-
-    const setIds = new Set(candidates.map(item => item.properties._set_id));
-    return setIds.size === 1 ? [...setIds][0] : null;
-  }
-
-  function textElementsContaining(token) {
-    if (!token) return [];
-
-    const elements = [];
-    const seen = new Set();
-    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-    let node = walker.nextNode();
-
-    while (node) {
-      if (normalize(node.nodeValue).includes(token)) {
-        const element = node.parentElement;
-        if (element && !seen.has(element)) {
-          seen.add(element);
-          elements.push(element);
-        }
-      }
-      node = walker.nextNode();
-    }
-    return elements;
-  }
-
-  function findCardBySku(item, cartItems) {
-    const sku = itemSku(item);
-    if (!sku) return null;
-
-    const cards = textElementsContaining(sku).map(match => {
-      let element = match;
-      while (element && element !== document.body && element !== document.documentElement) {
-        const cardText = normalize(element.textContent);
-        const title = normalize(item.product_title || item.product?.title);
-        const hasTitle = title ? cardText.includes(title) : cardText.includes('jane ');
-        const hasCartControl = [...element.querySelectorAll('button, a, [role="button"]')]
-          .some(control => controlAction(control));
-        const containsOtherSku = cartItems.some(otherItem => {
-          const otherSku = itemSku(otherItem);
-          return otherSku && otherSku !== sku && cardText.includes(otherSku);
-        });
-        if (hasTitle && hasCartControl && !containsOtherSku) return element;
-        element = element.parentElement;
-      }
-      return null;
-    }).filter(Boolean);
-
-    const uniqueCards = [...new Set(cards)];
-    return uniqueCards.length === 1 ? uniqueCards[0] : null;
-  }
-
-  function installPriceStyle() {
-    if (document.getElementById(PRICE_STYLE_ID)) return;
+  function installStyles() {
+    if (document.getElementById(CONTROL_STYLE_ID)) return;
 
     const style = document.createElement('style');
-    style.id = PRICE_STYLE_ID;
+    style.id = CONTROL_STYLE_ID;
     style.textContent = `
+      .${HIDDEN_CONTROL_CLASS},
       .${HIDDEN_PRICE_CLASS} {
         display: none !important;
-      }
-
-      .jane-set-aov-set-total {
-        display: flex;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 12px 0;
-        font-weight: 800;
+        visibility: hidden !important;
+        pointer-events: none !important;
       }
     `;
     document.head.appendChild(style);
   }
 
+  function findJaneSetCard(control) {
+    let element = control;
+
+    while (element && element !== document.body && element !== document.documentElement) {
+      const role = itemRoleFromText(element.textContent);
+      if (role) {
+        const controls = [...element.querySelectorAll('button, a, [role="button"]')];
+        if (controls.some(candidate => controlAction(candidate))) {
+          return { element, role };
+        }
+      }
+      element = element.parentElement;
+    }
+
+    return null;
+  }
+
+  function cardContainsOtherJaneRole(card, role) {
+    return JANE_SET_ROLES.some(otherRole => {
+      if (otherRole === role) return false;
+      const roleText = {
+        Parent: 'jane set',
+        Top: 'jane blouse',
+        Pants: 'jane pants'
+      }[otherRole];
+      return normalize(card.textContent).includes(roleText);
+    });
+  }
+
+  function findCardsForRole(role) {
+    const roleText = {
+      Parent: 'jane set',
+      Top: 'jane blouse',
+      Pants: 'jane pants'
+    }[role];
+    const matches = [];
+
+    document.querySelectorAll('button, a, [role="button"]').forEach(control => {
+      if (!controlAction(control)) return;
+      const card = findJaneSetCard(control);
+      if (!card || card.role !== role || cardContainsOtherJaneRole(card.element, role)) return;
+      if (!matches.includes(card.element)) matches.push(card.element);
+    });
+
+    return matches;
+  }
+
   function priceElementsIn(card) {
-    const pricePattern = /₱\s*[\d,.]+/;
+    const zeroPricePattern = /^₱\s*0(?:[.,]00)?$/;
     return [...card.querySelectorAll('span, p, strong, small, div')]
       .filter(element => {
         const text = String(element.textContent || '').trim();
-        if (!pricePattern.test(text)) return false;
+        if (!zeroPricePattern.test(text)) return false;
         return ![...element.children].some(child =>
-          pricePattern.test(String(child.textContent || '').trim())
+          zeroPricePattern.test(String(child.textContent || '').trim())
         );
       });
   }
 
-  function renderSetPrices(cart) {
-    if (!cart) return;
+  function markJaneSetCards() {
+    document.querySelectorAll('[data-jane-set-total]').forEach(element => element.remove());
 
-    const hiddenPrices = new Set();
-    const activeSetIds = new Set();
+    JANE_SET_ROLES.forEach(role => {
+      findCardsForRole(role).forEach(card => {
+        card.dataset.janeSetCard = 'true';
+        card.dataset.janeSetRole = role;
 
-    Object.entries(groupJaneSetItems(cart.items)).forEach(([setId, items]) => {
-      const top = items.find(item => item.properties._set_role === 'Top');
-      const pants = items.find(item => item.properties._set_role === 'Pants');
-      if (!top || !pants) return;
+        card.querySelectorAll('button, a, [role="button"]').forEach(control => {
+          const action = controlAction(control);
+          control.classList.toggle(
+            HIDDEN_CONTROL_CLASS,
+            action === 'increase' || action === 'decrease'
+          );
+        });
 
-      const topCard = findCardBySku(top, cart.items);
-      const pantsCard = findCardBySku(pants, cart.items);
-      if (!topCard || !pantsCard || topCard === pantsCard) return;
-
-      priceElementsIn(topCard).forEach(element => hiddenPrices.add(element));
-      priceElementsIn(pantsCard).forEach(element => hiddenPrices.add(element));
-      hiddenPrices.forEach(element => element.classList.add(HIDDEN_PRICE_CLASS));
-
-      activeSetIds.add(setId);
-      let totalRow = [...document.querySelectorAll('[data-jane-set-total]')]
-        .find(element => element.dataset.janeSetTotal === setId);
-      if (!totalRow) {
-        totalRow = document.createElement('div');
-        totalRow.className = 'jane-set-aov-set-total';
-        totalRow.dataset.janeSetTotal = setId;
-        totalRow.innerHTML = '<span>Jane Set total</span><strong></strong>';
-      }
-
-      const displayPrice =
-        top.properties._set_display_price ||
-        pants.properties._set_display_price ||
-        '₱1,699';
-      const quantitiesMatch = top.quantity === pants.quantity;
-      const intendedQuantity =
-        lastJaneSetAction?.setId === setId &&
-        Date.now() - lastJaneSetAction.timestamp < 5000
-          ? lastJaneSetAction.targetQty
-          : null;
-      const quantity = quantitiesMatch ? top.quantity : intendedQuantity;
-      const totalText = quantity
-        ? quantity > 1
-          ? `${displayPrice} × ${quantity}`
-          : displayPrice
-        : 'Updating…';
-      const totalValue = totalRow.querySelector('strong');
-      if (totalValue.textContent !== totalText) totalValue.textContent = totalText;
-
-      const pantsAfterTop = Boolean(
-        topCard.compareDocumentPosition(pantsCard) & Node.DOCUMENT_POSITION_FOLLOWING
-      );
-      const anchorCard = pantsAfterTop ? pantsCard : topCard;
-      if (totalRow.previousElementSibling !== anchorCard) anchorCard.after(totalRow);
-    });
-
-    document.querySelectorAll(`.${HIDDEN_PRICE_CLASS}`).forEach(element => {
-      if (!hiddenPrices.has(element)) element.classList.remove(HIDDEN_PRICE_CLASS);
-    });
-    document.querySelectorAll('[data-jane-set-total]').forEach(totalRow => {
-      if (!activeSetIds.has(totalRow.dataset.janeSetTotal)) totalRow.remove();
+        if (role === 'Top' || role === 'Pants') {
+          priceElementsIn(card).forEach(price => price.classList.add(HIDDEN_PRICE_CLASS));
+        }
+      });
     });
   }
 
-  function runPriceRenderBurst() {
-    renderSetPrices(latestCart);
-    window.requestAnimationFrame(() => renderSetPrices(latestCart));
-    priceRenderTimers.forEach(timer => window.clearTimeout(timer));
-    priceRenderTimers = [
-      window.setTimeout(() => renderSetPrices(latestCart), 150),
-      window.setTimeout(() => renderSetPrices(latestCart), 300)
-    ];
+  function runRenderBurst() {
+    markJaneSetCards();
+    window.requestAnimationFrame(markJaneSetCards);
+    renderTimers.forEach(timer => window.clearTimeout(timer));
+    renderTimers = RENDER_DELAYS.map(delay =>
+      window.setTimeout(markJaneSetCards, delay)
+    );
   }
 
   async function fetchCart() {
@@ -270,61 +195,62 @@
     return response.json();
   }
 
-  async function removeOrphansByIndexes(setIds) {
+  async function removeSetByIndexes(setId) {
     let cart = await fetchCart();
+    let indexes = cart.items
+      .map((item, index) => ({ item, index }))
+      .filter(entry =>
+        isJaneSetItem(entry.item) &&
+        entry.item.properties._set_id === setId
+      )
+      .map(entry => entry.index + 1)
+      .sort((first, second) => second - first);
 
-    for (const setId of setIds) {
-      let setItems = cart.items
-        .map((item, index) => ({ item, index }))
-        .filter(entry =>
-          isJaneSetItem(entry.item) &&
-          entry.item.properties._set_id === setId
-        )
-        .sort((first, second) => second.index - first.index);
-
-      for (const entry of setItems) {
-        cart = await fetchCart();
-        const lineIndex = cart.items.findIndex(item =>
-          isJaneSetItem(item) &&
-          item.properties._set_id === setId &&
-          item.properties._set_role === entry.item.properties._set_role
-        );
-        if (lineIndex === -1) continue;
-
-        const response = await fetch('/cart/change.js', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ line: lineIndex + 1, quantity: 0 })
-        });
-        if (!response.ok) throw new Error('Unable to remove orphaned Jane Set component.');
-        cart = await response.json();
-      }
+    while (indexes.length) {
+      const line = indexes.shift();
+      const response = await fetch('/cart/change.js', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ line, quantity: 0 })
+      });
+      if (!response.ok) throw new Error('Unable to remove Jane Set lines.');
+      cart = await response.json();
     }
+
     return cart;
   }
 
-  async function removeOrphans(cart) {
-    const orphanKeys = [];
-    const orphanSetIds = [];
+  async function removeSets(cart, setIds) {
+    const keys = cart.items
+      .filter(item =>
+        isJaneSetItem(item) &&
+        setIds.includes(item.properties._set_id)
+      )
+      .map(item => item.key);
 
-    Object.entries(groupJaneSetItems(cart.items)).forEach(([setId, items]) => {
-      const hasTop = items.some(item => item.properties._set_role === 'Top');
-      const hasPants = items.some(item => item.properties._set_role === 'Pants');
-      if (hasTop && hasPants) return;
-      orphanSetIds.push(setId);
-      items.forEach(item => orphanKeys.push(item.key));
-    });
-    if (!orphanKeys.length) return cart;
+    if (!keys.length) return cart;
 
-    const updates = Object.fromEntries(orphanKeys.map(key => [key, 0]));
     try {
-      return await updateCart(updates);
+      return await updateCart(Object.fromEntries(keys.map(key => [key, 0])));
     } catch (error) {
-      return removeOrphansByIndexes(orphanSetIds);
+      let fallbackCart = cart;
+      for (const setId of setIds) {
+        fallbackCart = await removeSetByIndexes(setId);
+      }
+      return fallbackCart;
     }
+  }
+
+  function incompleteSetIds(cart) {
+    return Object.entries(groupJaneSetItems(cart.items))
+      .filter(([, items]) => {
+        const roles = new Set(items.map(item => item.properties._set_role));
+        return !JANE_SET_ROLES.every(role => roles.has(role));
+      })
+      .map(([setId]) => setId);
   }
 
   function dispatchCartRefresh(cart) {
@@ -345,212 +271,115 @@
     }));
   }
 
-  function setCheckoutBlocked(blocked) {
-    document.querySelectorAll('button, a, [role="button"]').forEach(control => {
-      const controlText = normalize([
-        control.textContent,
-        control.getAttribute('aria-label'),
-        control.getAttribute('name'),
-        control.getAttribute('href')
-      ].filter(Boolean).join(' '));
-      if (!/(proceed.*checkout|checkout|\/checkout)/.test(controlText)) return;
-
-      if (blocked) {
-        if (!control.hasAttribute('data-jane-set-checkout-blocked')) {
-          control.dataset.janeSetWasDisabled = String(Boolean(control.disabled));
-          control.dataset.janeSetPointerEvents = control.style.pointerEvents || '';
-        }
-        control.dataset.janeSetCheckoutBlocked = 'true';
-        control.disabled = true;
-        control.setAttribute('aria-disabled', 'true');
-        control.style.pointerEvents = 'none';
-      } else if (control.dataset.janeSetCheckoutBlocked === 'true') {
-        const wasDisabled = control.dataset.janeSetWasDisabled === 'true';
-        control.disabled = wasDisabled;
-        control.setAttribute('aria-disabled', String(wasDisabled));
-        control.style.pointerEvents = control.dataset.janeSetPointerEvents || '';
-        delete control.dataset.janeSetCheckoutBlocked;
-        delete control.dataset.janeSetWasDisabled;
-        delete control.dataset.janeSetPointerEvents;
-      }
-    });
-  }
-
-  function reconciliationState(cart) {
-    const updates = {};
-    let unstable = false;
-    let waitingForAov = false;
-
-    Object.entries(groupJaneSetItems(cart.items)).forEach(([setId, items]) => {
-      const top = items.find(item => item.properties._set_role === 'Top');
-      const pants = items.find(item => item.properties._set_role === 'Pants');
-      if (!top || !pants) {
-        unstable = true;
-        return;
-      }
-
-      const recentAction =
-        lastJaneSetAction?.setId === setId &&
-        Date.now() - lastJaneSetAction.timestamp < 5000
-          ? lastJaneSetAction
-          : null;
-      if (top.quantity === pants.quantity) {
-        if (
-          recentAction &&
-          Date.now() - recentAction.timestamp < 1800 &&
-          top.quantity !== recentAction.targetQty
-        ) {
-          unstable = true;
-          waitingForAov = true;
-        }
-        return;
-      }
-
-      unstable = true;
-      const targetQty = recentAction?.targetQty ?? Math.min(top.quantity, pants.quantity);
-      if (top.quantity !== targetQty) updates[top.key] = targetQty;
-      if (pants.quantity !== targetQty) updates[pants.key] = targetQty;
-    });
-
-    return { updates, unstable, waitingForAov };
-  }
-
-  async function reconcileJaneSets(runId = latestSyncRunId) {
-    if (runId !== latestSyncRunId || isSyncingJaneSet) {
-      pendingPassiveCheck = true;
-      return;
-    }
-    isSyncingJaneSet = true;
+  async function cleanOrphans() {
+    if (isUpdatingJaneSet || document.hidden) return;
+    isUpdatingJaneSet = true;
 
     try {
       let cart = await fetchCart();
-      if (runId !== latestSyncRunId) return;
-
-      let state = reconciliationState(cart);
-      setCheckoutBlocked(state.unstable);
-      const cleanedCart = await removeOrphans(cart);
-      let cartChanged = cleanedCart !== cart;
-      if (cleanedCart !== cart) {
-        cart = cleanedCart;
+      const orphanSetIds = incompleteSetIds(cart);
+      if (orphanSetIds.length) {
+        cart = await removeSets(cart, orphanSetIds);
         dispatchCartRefresh(cart);
       }
-
-      state = reconciliationState(cart);
-      if (Object.keys(state.updates).length) {
-        cart = await updateCart(state.updates);
-        cartChanged = true;
-        dispatchCartRefresh(cart);
-      }
-
-      if (!cartChanged) {
-        latestCart = cart;
-        setCheckoutBlocked(state.unstable);
-        runPriceRenderBurst();
-        if (state.waitingForAov) schedulePassiveCheck();
-        return;
-      }
-
-      let confirmedCart = await fetchCart();
-      let confirmedState = reconciliationState(confirmedCart);
-      if (Object.keys(confirmedState.updates).length) {
-        confirmedCart = await updateCart(confirmedState.updates);
-        confirmedCart = await fetchCart();
-        confirmedState = reconciliationState(confirmedCart);
-        dispatchCartRefresh(confirmedCart);
-      }
-
-      latestCart = confirmedCart;
-      setCheckoutBlocked(confirmedState.unstable);
-      runPriceRenderBurst();
-      if (confirmedState.waitingForAov) schedulePassiveCheck();
+      latestCart = cart;
+      runRenderBurst();
     } catch (error) {
-      setCheckoutBlocked(true);
-      console.warn('Unable to reconcile Jane Set cart quantities.', error);
+      console.warn('Unable to clean up an incomplete Jane Set.', error);
     } finally {
-      isSyncingJaneSet = false;
-      if (pendingPassiveCheck) {
-        pendingPassiveCheck = false;
-        schedulePassiveCheck();
-      }
+      isUpdatingJaneSet = false;
     }
   }
 
-  function scheduleActionChecks() {
-    const runId = ++latestSyncRunId;
-    ACTION_DELAYS.forEach(delay => {
-      window.setTimeout(() => reconcileJaneSets(runId), delay);
+  function scheduleCartCheck() {
+    window.clearTimeout(cartCheckTimer);
+    cartCheckTimer = window.setTimeout(cleanOrphans, 150);
+  }
+
+  function resolveSetId(card, role, cart) {
+    const cardText = normalize(card.textContent);
+    let candidates = cart.items.filter(item =>
+      isJaneSetItem(item) && item.properties._set_role === role
+    );
+    const skuMatches = candidates.filter(item => {
+      const sku = itemSku(item);
+      return sku && cardText.includes(sku);
     });
+    if (skuMatches.length) candidates = skuMatches;
+
+    const setIds = new Set(candidates.map(item => item.properties._set_id));
+    return setIds.size === 1 ? [...setIds][0] : null;
   }
 
-  async function passiveCheck() {
-    if (document.hidden) return;
-    reconcileJaneSets();
+  async function removeClickedSet(card, role) {
+    if (isUpdatingJaneSet) return;
+    isUpdatingJaneSet = true;
+
+    try {
+      const cart = await fetchCart();
+      const setId = resolveSetId(card, role, cart);
+      if (!setId) throw new Error('Unable to match this Jane Set line.');
+
+      const updatedCart = await removeSets(cart, [setId]);
+      latestCart = updatedCart;
+      dispatchCartRefresh(updatedCart);
+      runRenderBurst();
+    } catch (error) {
+      console.warn('Unable to remove the complete Jane Set.', error);
+    } finally {
+      isUpdatingJaneSet = false;
+    }
   }
 
-  function schedulePassiveCheck() {
-    window.clearTimeout(passiveCheckTimer);
-    passiveCheckTimer = window.setTimeout(passiveCheck, PASSIVE_CHECK_DELAY);
-  }
-
-  function handleCartClick(event) {
+  function handleCartControl(event) {
     const control = event.target.closest?.('button, a, [role="button"]');
     if (!control) return;
 
     const action = controlAction(control);
-    if (!['increase', 'decrease', 'remove'].includes(action)) return;
-    const card = findJaneCard(control);
-    if (!card) return;
+    if (!action) return;
+    const card = findJaneSetCard(control);
+    if (!card || cardContainsOtherJaneRole(card.element, card.role)) return;
 
-    const beforeCart = latestCart;
-    if (!beforeCart) {
-      schedulePassiveCheck();
+    if (action === 'increase' || action === 'decrease') {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation?.();
       return;
     }
-    const setId = resolveSetId(card.element, card.role, beforeCart);
-    const pair = setId ? pairFor(beforeCart.items, setId) : {};
-    const sourceLine = card.role === 'Top' ? pair.top : pair.pants;
-    if (setId && sourceLine) {
-      const targetQty = action === 'remove'
-        ? 0
-        : Math.max(0, sourceLine.quantity + (action === 'increase' ? 1 : -1));
-      lastJaneSetAction = {
-        setId,
-        role: card.role,
-        sku: itemSku(sourceLine),
-        action,
-        targetQty,
-        timestamp: Date.now()
-      };
-      setCheckoutBlocked(true);
+
+    if (action === 'remove') {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation?.();
+      removeClickedSet(card.element, card.role);
     }
-    scheduleActionChecks();
   }
 
-  installPriceStyle();
-  window.addEventListener('click', handleCartClick, true);
+  installStyles();
+  window.addEventListener('click', handleCartControl, true);
 
   document.addEventListener('afterCartChanged', event => {
     if (event.detail?.cartData?.items) latestCart = event.detail.cartData;
-    runPriceRenderBurst();
-    schedulePassiveCheck();
+    runRenderBurst();
+    scheduleCartCheck();
   });
   document.addEventListener('cart:updated', event => {
     if (event.detail?.cart?.items) latestCart = event.detail.cart;
-    runPriceRenderBurst();
-    schedulePassiveCheck();
+    runRenderBurst();
+    scheduleCartCheck();
   });
   document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) schedulePassiveCheck();
+    if (!document.hidden) scheduleCartCheck();
   });
 
   const observer = new MutationObserver(() => {
-    runPriceRenderBurst();
-    schedulePassiveCheck();
+    runRenderBurst();
+    scheduleCartCheck();
   });
   observer.observe(document.body, {
     childList: true,
     subtree: true
   });
 
-  passiveCheck();
+  cleanOrphans();
 })();
