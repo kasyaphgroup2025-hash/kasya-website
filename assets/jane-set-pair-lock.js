@@ -3,7 +3,8 @@
     if (
       typeof window === 'undefined' ||
       typeof document === 'undefined' ||
-      typeof window.fetch !== 'function'
+      typeof window.fetch !== 'function' ||
+      window.Shopify?.designMode
     ) return;
 
     console.info('[Jane Set Pair Lock] paid parent + components loaded');
@@ -16,6 +17,14 @@
   const HIDDEN_PRICE_CLASS = 'jane-set-aov-hidden-price';
   const JANE_SET_ROLES = ['Parent', 'Top', 'Pants'];
   const RENDER_DELAYS = [100, 250, 500];
+  const CART_SURFACE_SELECTOR = [
+    'cart-drawer',
+    '[data-cart-drawer]',
+    '[id*="cart-drawer" i]',
+    '[class*="cart-drawer" i]',
+    '[id*="aov" i]',
+    '[class*="aov" i]'
+  ].join(',');
   let latestCart = null;
   let isUpdatingJaneSet = false;
   let cartCheckTimer = null;
@@ -24,6 +33,14 @@
 
   function normalize(value) {
     return String(value || '').trim().toLowerCase();
+  }
+
+  function cartSurfaces() {
+    return [...document.querySelectorAll(CART_SURFACE_SELECTOR)];
+  }
+
+  function cartSurfaceFor(element) {
+    return element?.closest?.(CART_SURFACE_SELECTOR) || null;
   }
 
   function isJaneSetItem(item) {
@@ -162,11 +179,12 @@
   }
 
   function findJaneSetCard(control) {
-    if (control.closest?.('[data-jane-set-hero]')) return null;
+    const cartSurface = cartSurfaceFor(control);
+    if (!cartSurface || control.closest?.('[data-jane-set-hero]')) return null;
 
     let element = control;
 
-    while (element && element !== document.body && element !== document.documentElement) {
+    while (element && cartSurface.contains(element)) {
       const role = itemRoleFromText(element.textContent);
       if (
         role &&
@@ -197,10 +215,12 @@
   function findCardsForRole(role) {
     const matches = [];
 
-    document.querySelectorAll('a, img, button, input, [role="button"]').forEach(element => {
-      const card = findJaneSetCard(element);
-      if (!card || card.role !== role || cardContainsOtherJaneRole(card.element, role)) return;
-      if (!matches.includes(card.element)) matches.push(card.element);
+    cartSurfaces().forEach(surface => {
+      surface.querySelectorAll('a, img, button, input, [role="button"]').forEach(element => {
+        const card = findJaneSetCard(element);
+        if (!card || card.role !== role || cardContainsOtherJaneRole(card.element, role)) return;
+        if (!matches.includes(card.element)) matches.push(card.element);
+      });
     });
 
     return matches;
@@ -308,33 +328,30 @@
   function disableJaneImageLinks(card) {
     card.querySelectorAll('img').forEach(image => {
       image.classList.add(IMAGE_CLASS);
+      image.dataset.janeSetImageClickDisabled = 'true';
       image.draggable = false;
 
       const link = image.closest('a');
       if (link && card.contains(link)) {
-        const replacement = document.createElement('span');
-        replacement.className = link.className;
-        replacement.classList.add(IMAGE_LINK_CLASS);
-        replacement.style.cssText = link.style.cssText;
-        replacement.setAttribute('aria-disabled', 'true');
-        replacement.innerHTML = link.innerHTML;
-        link.replaceWith(replacement);
+        link.classList.add(IMAGE_LINK_CLASS);
+        link.setAttribute('aria-disabled', 'true');
+        link.tabIndex = -1;
         return;
       }
 
       const clickableWrapper = image.closest('[onclick], [role="link"]');
       if (!clickableWrapper || !card.contains(clickableWrapper)) return;
-      clickableWrapper.removeAttribute('onclick');
-      clickableWrapper.removeAttribute('role');
-      clickableWrapper.removeAttribute('tabindex');
       clickableWrapper.classList.add(IMAGE_LINK_CLASS);
+      clickableWrapper.dataset.janeSetImageClickDisabled = 'true';
     });
   }
 
   function markJaneSetCards() {
     if (!latestCart || !Object.keys(groupJaneSetItems(latestCart.items)).length) return;
 
-    document.querySelectorAll('[data-jane-set-total]').forEach(element => element.remove());
+    cartSurfaces().forEach(surface => {
+      surface.querySelectorAll('[data-jane-set-total]').forEach(element => element.remove());
+    });
 
     JANE_SET_ROLES.forEach(role => {
       const cards = findCardsForRole(role);
@@ -459,7 +476,7 @@
   }
 
   async function cleanOrphans() {
-    if (isUpdatingJaneSet || document.hidden) return;
+    if (isUpdatingJaneSet || document.hidden || !cartSurfaces().length) return;
     isUpdatingJaneSet = true;
 
     try {
