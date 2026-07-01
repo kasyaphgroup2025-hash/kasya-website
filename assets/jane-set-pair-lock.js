@@ -3,6 +3,7 @@
 
   const REFRESH_DELAY = 150;
   const STYLE_ID = 'jane-set-pair-lock-style';
+  const HIDDEN_CONTROL_CLASS = 'jane-set-qty-control-hidden';
   let refreshTimer = null;
   let retryTimers = [];
   let isUpdatingCart = false;
@@ -138,15 +139,75 @@
     return null;
   }
 
+  function findHidingCardFromMatch(matchElement, item, cartItems, allowedSku) {
+    const titleTokens = [
+      normalize(item.product_title || item.product?.title),
+      roleTitle(item)
+    ].filter(Boolean);
+    let element = matchElement;
+
+    while (element && element !== document.body && element !== document.documentElement) {
+      const cardText = normalize(element.textContent);
+      const controls = controlsIn(element);
+      const hasQuantityControl = controls.some(control =>
+        ['increase', 'decrease'].includes(controlAction(control))
+      );
+      const hasProductTitle = titleTokens.some(title => cardText.includes(title));
+      const containsUnrelatedSku = cartItems.some(cartItem => {
+        const sku = itemSku(cartItem);
+        return sku && sku !== allowedSku && cardText.includes(sku);
+      });
+
+      if (hasQuantityControl && hasProductTitle && !containsUnrelatedSku) return element;
+      element = element.parentElement;
+    }
+    return null;
+  }
+
+  function findCardsForHiding(cart) {
+    const cards = new Set();
+    const skuGroups = new Map();
+
+    cart.items.forEach(item => {
+      const sku = itemSku(item);
+      if (!sku) return;
+      skuGroups.set(sku, [...(skuGroups.get(sku) || []), item]);
+    });
+
+    skuGroups.forEach((items, sku) => {
+      if (!items.every(isJaneSetItem)) return;
+
+      items.forEach(item => {
+        textElementsContaining(sku).forEach(element => {
+          const card = findHidingCardFromMatch(element, item, cart.items, sku);
+          if (card) cards.add(card);
+        });
+      });
+    });
+
+    cart.items.filter(isJaneSetItem).forEach(item => {
+      const productTitle = normalize(item.product_title || item.product?.title);
+      const sameTitleItems = cart.items.filter(cartItem =>
+        normalize(cartItem.product_title || cartItem.product?.title) === productTitle
+      );
+      if (!productTitle || !sameTitleItems.length || !sameTitleItems.every(isJaneSetItem)) return;
+
+      textElementsContaining(productTitle).forEach(element => {
+        const card = findHidingCardFromMatch(element, item, cart.items, itemSku(item));
+        if (card) cards.add(card);
+      });
+    });
+
+    return cards;
+  }
+
   function installControlStyle() {
     if (document.getElementById(STYLE_ID)) return;
 
     const style = document.createElement('style');
     style.id = STYLE_ID;
     style.textContent = `
-      [data-jane-set-qty-wrapper="true"] button,
-      [data-jane-set-qty-wrapper="true"] a,
-      [data-jane-set-qty-wrapper="true"] [role="button"] {
+      .${HIDDEN_CONTROL_CLASS} {
         display: none !important;
         visibility: hidden !important;
         pointer-events: none !important;
@@ -155,59 +216,33 @@
     document.head.appendChild(style);
   }
 
-  function commonQuantityWrapper(card, quantityControls) {
-    if (!card || !quantityControls.length) return null;
-
-    const preferredWrapper = quantityControls[0].closest(
-      'quantity-input, [class*="quantity" i], [class*="qty" i], [data-quantity], [data-qty]'
-    );
-    if (
-      preferredWrapper &&
-      preferredWrapper !== card &&
-      quantityControls.every(control => preferredWrapper.contains(control)) &&
-      !controlsIn(preferredWrapper).some(control => controlAction(control) === 'remove')
-    ) {
-      return preferredWrapper;
-    }
-
-    let wrapper = quantityControls[0].parentElement;
-    while (
-      wrapper &&
-      wrapper !== card &&
-      !quantityControls.every(control => wrapper.contains(control))
-    ) {
-      wrapper = wrapper.parentElement;
-    }
-    if (
-      !wrapper ||
-      wrapper === card ||
-      controlsIn(wrapper).some(control => controlAction(control) === 'remove')
-    ) {
-      return null;
-    }
-    return wrapper;
-  }
-
   function markJaneSetCards(cart) {
-    const matchedCards = new Set();
-    const matchedWrappers = new Set();
+    const matchedCards = findCardsForHiding(cart);
+    const hiddenControls = new Set();
+
+    matchedCards.forEach(card => {
+      card.dataset.janeSetCard = 'true';
+      card.removeAttribute('data-jane-set-id');
+      card.removeAttribute('data-jane-set-role');
+      controlsIn(card).forEach(control => {
+        if (!['increase', 'decrease'].includes(controlAction(control))) return;
+        hiddenControls.add(control);
+        control.classList.add(HIDDEN_CONTROL_CLASS);
+      });
+    });
 
     cart.items.filter(isJaneSetItem).forEach(item => {
-      const card = findCardForItem(item, cart.items);
-      if (!card) return;
-
-      const quantityControls = controlsIn(card).filter(control =>
-        ['increase', 'decrease'].includes(controlAction(control))
+      const setIdsForSku = new Set(
+        cart.items
+          .filter(cartItem => itemSku(cartItem) === itemSku(item) && isJaneSetItem(cartItem))
+          .map(cartItem => cartItem.properties._set_id)
       );
-      const quantityWrapper = commonQuantityWrapper(card, quantityControls);
-      if (!quantityWrapper) return;
+      if (setIdsForSku.size > 1) return;
 
-      matchedCards.add(card);
-      matchedWrappers.add(quantityWrapper);
-      card.dataset.janeSetCard = 'true';
-      card.dataset.janeSetId = item.properties._set_id;
-      card.dataset.janeSetRole = item.properties._set_role;
-      quantityWrapper.dataset.janeSetQtyWrapper = 'true';
+      const strictCard = findCardForItem(item, cart.items);
+      if (!strictCard || !matchedCards.has(strictCard)) return;
+      strictCard.dataset.janeSetId = item.properties._set_id;
+      strictCard.dataset.janeSetRole = item.properties._set_role;
     });
 
     document.querySelectorAll('[data-jane-set-card="true"]').forEach(card => {
@@ -216,8 +251,8 @@
       card.removeAttribute('data-jane-set-id');
       card.removeAttribute('data-jane-set-role');
     });
-    document.querySelectorAll('[data-jane-set-qty-wrapper="true"]').forEach(wrapper => {
-      if (!matchedWrappers.has(wrapper)) wrapper.removeAttribute('data-jane-set-qty-wrapper');
+    document.querySelectorAll(`.${HIDDEN_CONTROL_CLASS}`).forEach(control => {
+      if (!hiddenControls.has(control)) control.classList.remove(HIDDEN_CONTROL_CLASS);
     });
   }
 
@@ -231,7 +266,8 @@
     retryTimers.forEach(timer => window.clearTimeout(timer));
     retryTimers = [
       window.setTimeout(markFromLatestCart, 50),
-      window.setTimeout(markFromLatestCart, 150)
+      window.setTimeout(markFromLatestCart, 150),
+      window.setTimeout(markFromLatestCart, 300)
     ];
   }
 
@@ -390,6 +426,7 @@
       return;
     }
     if (action !== 'remove') return;
+    if (!card.dataset.janeSetId) return;
 
     event.preventDefault();
     event.stopPropagation();
