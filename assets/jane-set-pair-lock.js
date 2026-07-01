@@ -1,5 +1,5 @@
 (() => {
-  console.info('[Jane Set Pair Lock] loaded - disable quantity controls version');
+  console.info('[Jane Set Pair Lock] delete sync + hide qty controls loaded');
 
   let cachedCart = null;
   let isRemovingJaneSet = false;
@@ -38,14 +38,21 @@
     if (!cachedCart) return [];
 
     const normalizedText = normalize(text);
-    const janeLines = cachedCart.items.filter(isJaneSetItem);
-    const skuMatches = janeLines.filter(item => {
-      const sku = identifyingTokens(item).sku;
+    const skuMatches = cachedCart.items.filter(item => {
+      const sku = normalize(item.properties?._set_component_sku || item.sku);
       return sku && normalizedText.includes(sku);
     });
-    if (skuMatches.length) return skuMatches;
+    if (skuMatches.length) {
+      return skuMatches.length === 1 && isJaneSetItem(skuMatches[0]) ? skuMatches : [];
+    }
 
-    return janeLines.filter(item => normalizedText.includes(identifyingTokens(item).title));
+    const titleMatches = cachedCart.items.filter(item => {
+      const productTitle = normalize(item.product_title || item.product?.title);
+      const roleTitle = isJaneSetItem(item) ? identifyingTokens(item).title : '';
+      return (productTitle && normalizedText.includes(productTitle)) ||
+        (roleTitle && normalizedText.includes(roleTitle));
+    });
+    return titleMatches.length === 1 && isJaneSetItem(titleMatches[0]) ? titleMatches : [];
   }
 
   function matchJaneSetLine(control) {
