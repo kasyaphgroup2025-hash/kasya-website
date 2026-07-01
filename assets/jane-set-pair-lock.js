@@ -2,16 +2,15 @@
   const CHECK_DELAY = 200;
   const ACTIVE_POLL_INTERVAL = 1000;
   const IDLE_POLL_INTERVAL = 5000;
+  const CONTROL_EVENTS = ['pointerdown', 'mousedown', 'touchstart', 'click'];
   let isSyncingJaneSet = false;
   let janeSetSyncTimer = null;
   let pollTimer = null;
   let cachedCart = null;
   let previousQuantities = new Map();
-  let hasJaneSetItems = false;
-  let latestQuantityIntent = null;
-  const setSyncStates = new Map();
-  const handledClickEvents = new WeakSet();
-  const STALE_REQUEST = Symbol('stale-request');
+  let requestSequence = 0;
+  const activeJaneSetRequests = new Map();
+  const handledControls = new WeakMap();
 
   function normalize(value) {
     return String(value || '').trim().toLowerCase();
@@ -28,7 +27,6 @@
   function groupJaneSetItems(items) {
     return items.reduce((groups, item) => {
       if (!isJaneSetItem(item)) return groups;
-
       const setId = item.properties._set_id;
       groups[setId] = groups[setId] || [];
       groups[setId].push(item);
@@ -44,24 +42,10 @@
     };
   }
 
-  function isProtectedFromStaleCart(cart) {
-    const groups = groupJaneSetItems(cart.items);
-    const now = Date.now();
-
-    return Object.entries(groups).some(([setId, items]) => {
-      const state = setSyncStates.get(setId);
-      if (!state || now > state.protectUntil) return false;
-      return items.some(item => item.quantity !== state.pendingTargetQty);
-    });
-  }
-
-  function snapshotCart(cart, trusted = false) {
-    if (!trusted && isProtectedFromStaleCart(cart)) return false;
-
+  function snapshotCart(cart) {
     cachedCart = cart;
-    hasJaneSetItems = cart.items.some(isJaneSetItem);
     previousQuantities = new Map(cart.items.map(item => [item.key, item.quantity]));
-    return true;
+    window.requestAnimationFrame(setupJaneSetControls);
   }
 
   function actionFor(control) {
@@ -86,49 +70,21 @@
   }
 
   function identifyingTokens(item) {
-    const sku = item.properties._set_component_sku || item.sku;
-    const roleTitle = item.properties._set_role === 'Top' ? 'jane blouse' : 'jane pants';
     return {
-      sku: normalize(sku),
-      roleTitle
+      sku: normalize(item.properties._set_component_sku || item.sku),
+      roleTitle: item.properties._set_role === 'Top' ? 'jane blouse' : 'jane pants'
     };
   }
 
   function matchingLines(text, items) {
     const normalizedText = normalize(text);
     const skuMatches = items.filter(item => {
-      const { sku } = identifyingTokens(item);
+      const sku = identifyingTokens(item).sku;
       return sku && normalizedText.includes(sku);
     });
     if (skuMatches.length) return skuMatches;
 
-    return items.filter(item => {
-      const { roleTitle } = identifyingTokens(item);
-      return normalizedText.includes(roleTitle);
-    });
-  }
-
-  function matchClickedLine(control) {
-    if (!cachedCart) return null;
-
-    const janeLines = cachedCart.items.filter(isJaneSetItem);
-    let element = control;
-    while (element && element !== document.body) {
-      const matches = matchingLines(element.textContent, janeLines);
-      if (matches.length === 1) {
-        return {
-          card: element,
-          line: matches[0]
-        };
-      }
-      if (matches.length > 1) return null;
-      if (element.matches?.(
-        'cart-drawer, cart-items, [class*="aov" i], [id*="aov" i]'
-      )) break;
-      element = element.parentElement;
-    }
-
-    return null;
+    return items.filter(item => normalizedText.includes(identifyingTokens(item).roleTitle));
   }
 
   function actionControls(card) {
@@ -137,8 +93,25 @@
       .filter(control => actionFor(control));
   }
 
-  function findCardForLine(line, surface) {
-    if (!line || !surface) return null;
+  function matchControl(control) {
+    if (!cachedCart) return null;
+
+    const janeLines = cachedCart.items.filter(isJaneSetItem);
+    let element = control;
+    while (element && element !== document.body) {
+      const matches = matchingLines(element.textContent, janeLines);
+      if (matches.length === 1) return { card: element, line: matches[0] };
+      if (matches.length > 1) return null;
+      if (element.matches?.(
+        'cart-drawer, cart-items, [class*="aov" i], [id*="aov" i]'
+      )) break;
+      element = element.parentElement;
+    }
+    return null;
+  }
+
+  function findCardForLine(line, surface = document.body) {
+    if (!line || !cachedCart) return null;
 
     const janeLines = cachedCart.items.filter(isJaneSetItem);
     return [...surface.querySelectorAll('*')]
@@ -151,106 +124,112 @@
   }
 
   function quantityInput(card, control = null) {
-    const quantityWrapper = control?.closest?.(
+    const wrapper = control?.closest?.(
       '[class*="quantity" i], [class*="qty" i], [data-quantity], [data-qty]'
     );
-    return quantityWrapper?.querySelector(
-      'input[type="number"], input[name*="quantity" i], [role="spinbutton"], [aria-valuenow]'
-    ) || card?.querySelector(
-      'input[type="number"], input[name*="quantity" i], [role="spinbutton"], [aria-valuenow]'
-    ) || null;
+    const selector =
+      'input[type="number"], input[name*="quantity" i], [role="spinbutton"], [aria-valuenow]';
+    return wrapper?.querySelector(selector) || card?.querySelector(selector) || null;
   }
 
   function displayedQuantity(card, control, fallbackQuantity) {
     const input = quantityInput(card, control);
-    const quantity = Number.parseInt(input?.value || input?.getAttribute('aria-valuenow'), 10);
-    if (Number.isInteger(quantity) && quantity >= 0) return quantity;
+    const inputQuantity = Number.parseInt(
+      input?.value || input?.getAttribute('aria-valuenow'),
+      10
+    );
+    if (Number.isInteger(inputQuantity) && inputQuantity >= 0) return inputQuantity;
 
-    const quantityWrapper = control?.closest?.(
+    const wrapper = control?.closest?.(
       '[class*="quantity" i], [class*="qty" i], [data-quantity], [data-qty]'
     ) || card;
-    const visibleQuantity = [...(quantityWrapper?.querySelectorAll('span, output, div') || [])]
+    const visibleValue = [...(wrapper?.querySelectorAll('span, output, div') || [])]
       .map(element => String(element.textContent || '').trim())
       .find(value => /^\d+$/.test(value));
-    const parsedVisibleQuantity = Number.parseInt(visibleQuantity, 10);
-    return Number.isInteger(parsedVisibleQuantity) ? parsedVisibleQuantity : fallbackQuantity;
-  }
-
-  function setCardBusy(card, busy) {
-    if (!card) return;
-
-    card.toggleAttribute('data-jane-set-syncing', busy);
-    card.setAttribute('aria-busy', String(busy));
-    if (busy) {
-      card.setAttribute('data-jane-pointer-events', card.style.pointerEvents || '');
-      card.style.pointerEvents = 'none';
-    } else {
-      card.style.pointerEvents = card.getAttribute('data-jane-pointer-events') || '';
-      card.removeAttribute('data-jane-pointer-events');
-    }
-    actionControls(card).forEach(control => {
-      if (busy) {
-        control.setAttribute('data-jane-was-disabled', String(control.disabled));
-        control.disabled = true;
-        control.setAttribute('aria-disabled', 'true');
-      } else {
-        const wasDisabled = control.getAttribute('data-jane-was-disabled') === 'true';
-        control.disabled = wasDisabled;
-        control.removeAttribute('data-jane-was-disabled');
-        control.toggleAttribute('aria-disabled', wasDisabled);
-      }
-    });
+    const visibleQuantity = Number.parseInt(visibleValue, 10);
+    return Number.isInteger(visibleQuantity) ? visibleQuantity : fallbackQuantity;
   }
 
   function setOptimisticQuantity(card, quantity) {
     const input = quantityInput(card);
     if (!input) return;
 
-    const quantityValue = String(quantity);
-    if ('value' in input && String(input.value) !== quantityValue) input.value = quantityValue;
-    if (input.getAttribute('value') !== quantityValue) input.setAttribute('value', quantityValue);
-    if (input.getAttribute('aria-valuenow') !== quantityValue) {
-      input.setAttribute('aria-valuenow', quantityValue);
-    }
+    const value = String(quantity);
+    if ('value' in input && String(input.value) !== value) input.value = value;
+    if (input.getAttribute('value') !== value) input.setAttribute('value', value);
+    if (input.getAttribute('aria-valuenow') !== value) input.setAttribute('aria-valuenow', value);
   }
 
-  function reapplyProtectedQuantities() {
-    if (!cachedCart) return;
+  function setCardBusy(card, busy, removing = false) {
+    if (!card) return;
 
-    const now = Date.now();
-    setSyncStates.forEach((state, setId) => {
-      if (now > state.protectUntil) return;
-
-      const { top, pants } = pairFor(cachedCart.items, setId);
-      if (!top || !pants) return;
-      setOptimisticQuantity(findCardForLine(top, document.body), state.pendingTargetQty);
-      setOptimisticQuantity(findCardForLine(pants, document.body), state.pendingTargetQty);
+    card.toggleAttribute('data-jane-set-syncing', busy);
+    card.setAttribute('aria-busy', String(busy));
+    card.style.opacity = busy && removing ? '0.55' : '';
+    actionControls(card).forEach(control => {
+      control.toggleAttribute('disabled', busy);
+      control.setAttribute('aria-disabled', String(busy));
     });
   }
 
-  function dispatchCartRefresh(cart) {
-    document.dispatchEvent(new CustomEvent('afterCartChanged', {
-      bubbles: true,
-      detail: {
-        source: 'jane-set-pair-lock',
-        cartData: cart
-      }
-    }));
-    document.dispatchEvent(new CustomEvent('cart:refresh', {
-      bubbles: true,
-      detail: { cart }
-    }));
-    document.dispatchEvent(new CustomEvent('cart:updated', {
-      bubbles: true,
-      detail: { cart }
-    }));
-  }
-
   function isLatestRequest(setId, requestId) {
-    return setSyncStates.get(setId)?.requestId === requestId;
+    return activeJaneSetRequests.get(setId)?.requestId === requestId;
   }
 
-  async function responseJson(response, fallbackMessage) {
+  function applyActiveRequestToUi(setId) {
+    if (!cachedCart) return;
+    const request = activeJaneSetRequests.get(setId);
+    if (!request) return;
+
+    const { top, pants } = pairFor(cachedCart.items, setId);
+    if (!top || !pants) return;
+    const topCard = findCardForLine(top);
+    const pantsCard = findCardForLine(pants);
+    setOptimisticQuantity(topCard, request.targetQty);
+    setOptimisticQuantity(pantsCard, request.targetQty);
+    setCardBusy(topCard, request.pending, request.targetQty === 0);
+    setCardBusy(pantsCard, request.pending, request.targetQty === 0);
+  }
+
+  function setupJaneSetControls() {
+    if (!cachedCart) return;
+
+    cachedCart.items.filter(isJaneSetItem).forEach(item => {
+      const card = findCardForLine(item);
+      if (!card) return;
+      card.dataset.janeSetControlled = 'true';
+
+      actionControls(card).forEach(control => {
+        if (control.dataset.janeSetControlled === 'true') return;
+        const clone = control.cloneNode(true);
+        clone.dataset.janeSetControlled = 'true';
+        control.replaceWith(clone);
+      });
+    });
+
+    activeJaneSetRequests.forEach((request, setId) => {
+      if (request.pending || Date.now() <= request.protectUntil) applyActiveRequestToUi(setId);
+    });
+  }
+
+  function warnRequestFailure(endpoint, response, body, setId, targetQty) {
+    console.warn('Jane Set cart request failed.', {
+      endpoint,
+      status: response?.status,
+      body,
+      setId,
+      targetQty
+    });
+  }
+
+  async function requestJson(endpoint, options, setId, targetQty) {
+    let response;
+    try {
+      response = await fetch(endpoint, options);
+    } catch (error) {
+      warnRequestFailure(endpoint, null, error.message, setId, targetQty);
+      throw error;
+    }
     const text = await response.text();
     let data = {};
 
@@ -261,267 +240,287 @@
     }
 
     if (!response.ok || data.errors) {
-      const message = data.description || data.message || data.errors || text || fallbackMessage;
-      throw new Error(typeof message === 'string' ? message : fallbackMessage);
+      warnRequestFailure(endpoint, response, text || data, setId, targetQty);
+      const message = data.description || data.message || data.errors || 'Cart update failed.';
+      throw new Error(typeof message === 'string' ? message : 'Cart update failed.');
     }
-
     return data;
   }
 
-  async function fetchLatestCart() {
-    const response = await fetch('/cart.js', {
-      headers: { 'Accept': 'application/json' }
-    });
-    return responseJson(response, 'Unable to read the latest cart.');
+  function jsonRequest(body) {
+    return {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    };
   }
 
-  async function changePairByLatestIndexes(setId, targetQuantity, initialCart, requestId) {
-    const initialPair = pairFor(initialCart.items, setId);
-    if (!initialPair.top || !initialPair.pants) {
-      throw new Error('Jane Set pair is incomplete.');
-    }
+  async function fetchLatestCart(setId, targetQty) {
+    return requestJson(
+      '/cart.js',
+      { headers: { 'Accept': 'application/json' } },
+      setId,
+      targetQty
+    );
+  }
 
-    const roles = ['Top', 'Pants'];
-    if (targetQuantity === 0) {
-      roles.sort((firstRole, secondRole) => {
-        const firstLine = firstRole === 'Top' ? initialPair.top : initialPair.pants;
-        const secondLine = secondRole === 'Top' ? initialPair.top : initialPair.pants;
-        return initialCart.items.indexOf(secondLine) - initialCart.items.indexOf(firstLine);
-      });
-    }
+  async function removePairByIndexes(setId, targetQty, initialCart) {
+    const initialPair = pairFor(initialCart.items, setId);
+    if (!initialPair.top || !initialPair.pants) throw new Error('Jane Set pair is incomplete.');
+
+    const roles = ['Top', 'Pants'].sort((firstRole, secondRole) => {
+      const first = firstRole === 'Top' ? initialPair.top : initialPair.pants;
+      const second = secondRole === 'Top' ? initialPair.top : initialPair.pants;
+      return initialCart.items.indexOf(second) - initialCart.items.indexOf(first);
+    });
 
     let cart = initialCart;
     for (const role of roles) {
-      if (!isLatestRequest(setId, requestId)) return STALE_REQUEST;
-      cart = await fetchLatestCart();
-      const lineIndex = cart.items.findIndex(item =>
+      cart = await fetchLatestCart(setId, targetQty);
+      const index = cart.items.findIndex(item =>
         item.properties?._set_id === setId &&
         item.properties?._set_name === 'Jane Set' &&
         item.properties?._set_role === role
       );
-      if (lineIndex === -1) {
-        if (targetQuantity === 0) continue;
-        throw new Error(`Jane Set ${role.toLowerCase()} line is missing.`);
-      }
-
-      const response = await fetch('/cart/change.js', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          line: lineIndex + 1,
-          quantity: targetQuantity
-        })
-      });
-      cart = await responseJson(response, `Unable to update Jane Set ${role.toLowerCase()}.`);
+      if (index === -1) continue;
+      cart = await requestJson(
+        '/cart/change.js',
+        jsonRequest({ line: index + 1, quantity: 0 }),
+        setId,
+        targetQty
+      );
     }
-
     return cart;
   }
 
-  async function updatePairFromLatestCart(setId, targetQuantity, requestId) {
-    const latestCart = await fetchLatestCart();
-    if (!isLatestRequest(setId, requestId)) return STALE_REQUEST;
-
-    const { top, pants } = pairFor(latestCart.items, setId);
+  async function removePair(setId, targetQty, cart) {
+    const { top, pants } = pairFor(cart.items, setId);
     if (!top || !pants) throw new Error('Jane Set pair is incomplete.');
 
     try {
-      const response = await fetch('/cart/update.js', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
+      return await requestJson(
+        '/cart/update.js',
+        jsonRequest({
           updates: {
-            [top.key]: targetQuantity,
-            [pants.key]: targetQuantity
+            [top.key]: 0,
+            [pants.key]: 0
           }
-        })
-      });
-      return await responseJson(response, 'Unable to update Jane Set quantities.');
-    } catch (error) {
-      if (!isLatestRequest(setId, requestId)) return STALE_REQUEST;
-      console.warn('Jane Set paired cart update failed; trying line-index fallback.', error);
-      const fallbackCart = await changePairByLatestIndexes(
+        }),
         setId,
-        targetQuantity,
-        latestCart,
-        requestId
+        targetQty
       );
-      if (fallbackCart === STALE_REQUEST) return STALE_REQUEST;
-      return isLatestRequest(setId, requestId) ? fallbackCart : STALE_REQUEST;
-    }
-  }
-
-  async function updateJaneSets(updates) {
-    if (isSyncingJaneSet || !Object.keys(updates).length) return null;
-    isSyncingJaneSet = true;
-
-    try {
-      const response = await fetch('/cart/update.js', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ updates })
-      });
-      if (!response.ok) throw new Error('Unable to update Jane Set quantities.');
-
-      const cart = await response.json();
-      snapshotCart(cart, true);
-      latestQuantityIntent = null;
-      dispatchCartRefresh(cart);
-      return cart;
     } catch (error) {
-      return null;
-    } finally {
-      isSyncingJaneSet = false;
-      scheduleCheck(250);
+      return removePairByIndexes(setId, targetQty, cart);
     }
   }
 
-  async function interceptPairAction(clickedMatch, action, control) {
-    const clickedLine = clickedMatch.line;
-    const surface = clickedMatch.card.closest(
+  async function replacePairQuantity(setId, targetQty, requestId) {
+    const cart = await fetchLatestCart(setId, targetQty);
+    if (!isLatestRequest(setId, requestId)) return null;
+
+    const { top, pants } = pairFor(cart.items, setId);
+    if (!top || !pants) throw new Error('Jane Set pair is incomplete.');
+    const components = [top, pants].map(item => ({
+      id: item.variant_id,
+      quantity: targetQty,
+      properties: { ...item.properties }
+    }));
+
+    const removedCart = await removePair(setId, targetQty, cart);
+    if (!isLatestRequest(setId, requestId)) return null;
+    if (targetQty === 0) return removedCart;
+
+    await requestJson(
+      '/cart/add.js',
+      jsonRequest({ items: components }),
+      setId,
+      targetQty
+    );
+    if (!isLatestRequest(setId, requestId)) return null;
+    return fetchLatestCart(setId, targetQty);
+  }
+
+  function dispatchCartRefresh(cart) {
+    ['afterCartChanged', 'cart:refresh', 'cart:updated'].forEach(eventName => {
+      document.dispatchEvent(new CustomEvent(eventName, {
+        bubbles: true,
+        detail: {
+          source: 'jane-set-pair-lock',
+          cartData: cart,
+          cart
+        }
+      }));
+    });
+  }
+
+  async function runPairAction(match, control, action) {
+    const setId = match.line.properties._set_id;
+    if (activeJaneSetRequests.get(setId)?.pending) return;
+
+    const pair = pairFor(cachedCart.items, setId);
+    if (!pair.top || !pair.pants) return;
+    const surface = match.card.closest(
       'cart-drawer, cart-items, [class*="aov" i], [id*="aov" i], [class*="cart" i], [id*="cart" i]'
     );
-    const { top, pants } = pairFor(cachedCart.items, clickedLine.properties._set_id);
-    if (!top || !pants) return;
+    const topCard = pair.top.key === match.line.key ? match.card : findCardForLine(pair.top, surface);
+    const pantsCard = pair.pants.key === match.line.key ? match.card : findCardForLine(pair.pants, surface);
+    const visibleQty = displayedQuantity(match.card, control, match.line.quantity);
+    const targetQty = action === 'remove'
+      ? 0
+      : Math.max(0, visibleQty + (action === 'increase' ? 1 : -1));
+    const requestId = ++requestSequence;
+    const previousQty = {
+      top: displayedQuantity(topCard, null, pair.top.quantity),
+      pants: displayedQuantity(pantsCard, null, pair.pants.quantity)
+    };
 
-    const topCard = top.key === clickedLine.key
-      ? clickedMatch.card
-      : findCardForLine(top, surface);
-    const pantsCard = pants.key === clickedLine.key
-      ? clickedMatch.card
-      : findCardForLine(pants, surface);
-    const currentQuantity = displayedQuantity(clickedMatch.card, control, clickedLine.quantity);
-    let quantity = currentQuantity;
-    if (action === 'increase') quantity += 1;
-    if (action === 'decrease') quantity = Math.max(0, quantity - 1);
-    if (action === 'remove') quantity = 0;
-
-    const previousState = setSyncStates.get(clickedLine.properties._set_id);
-    const requestId = (previousState?.requestId || 0) + 1;
-    setSyncStates.set(clickedLine.properties._set_id, {
+    activeJaneSetRequests.set(setId, {
       requestId,
-      pendingTargetQty: quantity,
-      pending: true,
+      targetQty,
       timestamp: Date.now(),
-      protectUntil: Date.now() + 1500
+      pending: true,
+      protectUntil: Number.POSITIVE_INFINITY
     });
-
     isSyncingJaneSet = true;
-    setCardBusy(topCard, true);
-    setCardBusy(pantsCard, true);
-    setOptimisticQuantity(topCard, quantity);
-    setOptimisticQuantity(pantsCard, quantity);
+    setOptimisticQuantity(topCard, targetQty);
+    setOptimisticQuantity(pantsCard, targetQty);
+    setCardBusy(topCard, true, targetQty === 0);
+    setCardBusy(pantsCard, true, targetQty === 0);
 
     try {
-      let updatedCart = null;
-      try {
-        updatedCart = await updatePairFromLatestCart(
-          clickedLine.properties._set_id,
-          quantity,
-          requestId
-        );
-      } catch (error) {
-        console.warn('Jane Set pair update failed.', error);
-      }
+      const updatedCart = await replacePairQuantity(setId, targetQty, requestId);
+      if (!updatedCart || !isLatestRequest(setId, requestId)) return;
 
-      if (updatedCart === STALE_REQUEST) return;
-      if (updatedCart) {
-        if (!isLatestRequest(clickedLine.properties._set_id, requestId)) return;
-        setSyncStates.set(clickedLine.properties._set_id, {
-          requestId,
-          pendingTargetQty: quantity,
-          pending: false,
-          timestamp: Date.now(),
-          protectUntil: Date.now() + 1500
-        });
-        snapshotCart(updatedCart, true);
-        latestQuantityIntent = null;
-        dispatchCartRefresh(updatedCart);
-      } else {
-        const currentState = setSyncStates.get(clickedLine.properties._set_id);
-        if (currentState?.requestId === requestId) {
-          setSyncStates.delete(clickedLine.properties._set_id);
-          setOptimisticQuantity(topCard, top.quantity);
-          setOptimisticQuantity(pantsCard, pants.quantity);
-        }
-      }
+      activeJaneSetRequests.set(setId, {
+        requestId,
+        targetQty,
+        timestamp: Date.now(),
+        pending: false,
+        protectUntil: Date.now() + 2000
+      });
+      snapshotCart(updatedCart);
+      dispatchCartRefresh(updatedCart);
+    } catch (error) {
+      if (!isLatestRequest(setId, requestId)) return;
+      activeJaneSetRequests.delete(setId);
+      setOptimisticQuantity(topCard, previousQty.top);
+      setOptimisticQuantity(pantsCard, previousQty.pants);
+      console.warn('Jane Set quantity operation failed after all fallbacks.', {
+        setId,
+        targetQty,
+        error
+      });
     } finally {
-      if (isSyncingJaneSet) {
-        isSyncingJaneSet = false;
-        scheduleCheck(250);
+      if (isLatestRequest(setId, requestId)) {
+        const state = activeJaneSetRequests.get(setId);
+        if (state) state.pending = false;
       }
+      isSyncingJaneSet = [...activeJaneSetRequests.values()].some(request => request.pending);
       setCardBusy(topCard, false);
       setCardBusy(pantsCard, false);
+      scheduleCheck();
     }
   }
 
-  function matchedQuantity(top, pants) {
-    const previousTop = previousQuantities.get(top.key);
-    const previousPants = previousQuantities.get(pants.key);
-    const topChanged = previousTop !== undefined && top.quantity !== previousTop;
-    const pantsChanged = previousPants !== undefined && pants.quantity !== previousPants;
+  function suppressJaneSetControlEvent(event) {
+    const control = event.target.closest?.('button, a, [role="button"]');
+    if (!control || !isCartSurface(control)) return;
 
-    if (topChanged && !pantsChanged) return top.quantity;
-    if (pantsChanged && !topChanged) return pants.quantity;
-    if (Number.isInteger(latestQuantityIntent?.quantity)) return latestQuantityIntent.quantity;
-    if (latestQuantityIntent?.direction === 'decrease') return Math.min(top.quantity, pants.quantity);
-    return Math.max(top.quantity, pants.quantity);
+    const action = actionFor(control);
+    const match = action ? matchControl(control) : null;
+    if (!match) return;
+    const pair = pairFor(cachedCart.items, match.line.properties._set_id);
+    if (!pair.top || !pair.pants) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation?.();
+
+    const previousEvent = handledControls.get(control);
+    const now = Date.now();
+    if (previousEvent && now - previousEvent < 800) return;
+
+    const shouldRun =
+      event.type === 'pointerdown' ||
+      (event.type === 'touchstart' && !('PointerEvent' in window)) ||
+      (event.type === 'mousedown' && !('PointerEvent' in window)) ||
+      event.type === 'click';
+    if (!shouldRun) return;
+
+    handledControls.set(control, now);
+    runPairAction(match, control, action);
   }
 
-  function requiredFallbackUpdates(cart) {
-    const updates = {};
-    const groups = groupJaneSetItems(cart.items);
-
-    Object.entries(groups).forEach(([setId, items]) => {
-      const top = items.find(item => item.properties._set_role === 'Top');
-      const pants = items.find(item => item.properties._set_role === 'Pants');
-      const syncState = setSyncStates.get(setId);
-      const protectedQuantity = syncState && Date.now() <= syncState.protectUntil
-        ? syncState.pendingTargetQty
-        : null;
-
-      if (!top || !pants) {
-        items.forEach(item => {
-          updates[item.key] = 0;
-        });
-      } else if (
-        top.quantity !== pants.quantity ||
-        (protectedQuantity !== null && top.quantity !== protectedQuantity)
-      ) {
-        const quantity = protectedQuantity ?? matchedQuantity(top, pants);
-        updates[top.key] = quantity;
-        updates[pants.key] = quantity;
-      }
+  CONTROL_EVENTS.forEach(eventName => {
+    window.addEventListener(eventName, suppressJaneSetControlEvent, {
+      capture: true,
+      passive: false
     });
+    document.addEventListener(eventName, suppressJaneSetControlEvent, {
+      capture: true,
+      passive: false
+    });
+  });
 
-    return updates;
-  }
-
-  async function checkJaneSets() {
+  async function safetyCheck() {
     if (isSyncingJaneSet || document.hidden) return;
 
     try {
-      const response = await fetch('/cart.js', {
-        headers: { 'Accept': 'application/json' }
+      const cart = await fetchLatestCart('safety-check', null);
+      const groups = groupJaneSetItems(cart.items);
+      const updates = {};
+
+      Object.entries(groups).forEach(([setId, items]) => {
+        if (activeJaneSetRequests.get(setId)?.pending) return;
+        const top = items.find(item => item.properties._set_role === 'Top');
+        const pants = items.find(item => item.properties._set_role === 'Pants');
+        const request = activeJaneSetRequests.get(setId);
+        const protectedTarget = request && Date.now() <= request.protectUntil
+          ? request.targetQty
+          : null;
+
+        if (!top || !pants) {
+          items.forEach(item => {
+            updates[item.key] = 0;
+          });
+          return;
+        }
+        if (
+          top.quantity === pants.quantity &&
+          (protectedTarget === null || top.quantity === protectedTarget)
+        ) return;
+
+        const previousTop = previousQuantities.get(top.key);
+        const previousPants = previousQuantities.get(pants.key);
+        const topChanged = previousTop !== undefined && top.quantity !== previousTop;
+        const pantsChanged = previousPants !== undefined && pants.quantity !== previousPants;
+        const targetQty = protectedTarget ?? (
+          topChanged && !pantsChanged
+            ? top.quantity
+            : pantsChanged && !topChanged
+              ? pants.quantity
+              : Math.min(top.quantity, pants.quantity)
+        );
+        updates[top.key] = targetQty;
+        updates[pants.key] = targetQty;
       });
-      if (!response.ok) return;
 
-      const cart = await response.json();
-      const updates = requiredFallbackUpdates(cart);
-      snapshotCart(cart, true);
-
-      if (Object.keys(updates).length) await updateJaneSets(updates);
+      snapshotCart(cart);
+      if (Object.keys(updates).length) {
+        const updatedCart = await requestJson(
+          '/cart/update.js',
+          jsonRequest({ updates }),
+          'safety-check',
+          null
+        );
+        snapshotCart(updatedCart);
+        dispatchCartRefresh(updatedCart);
+      }
     } catch (error) {
-      // A later cart event or safety poll retries without disrupting the drawer.
+      // Failed requests are already logged with endpoint details.
     } finally {
       schedulePoll();
     }
@@ -529,59 +528,24 @@
 
   function scheduleCheck(delay = CHECK_DELAY) {
     window.clearTimeout(janeSetSyncTimer);
-    janeSetSyncTimer = window.setTimeout(checkJaneSets, delay);
+    janeSetSyncTimer = window.setTimeout(safetyCheck, delay);
   }
 
   function schedulePoll() {
     window.clearTimeout(pollTimer);
+    const hasJaneSet = cachedCart?.items?.some(isJaneSetItem);
     pollTimer = window.setTimeout(
-      checkJaneSets,
-      hasJaneSetItems ? ACTIVE_POLL_INTERVAL : IDLE_POLL_INTERVAL
+      safetyCheck,
+      hasJaneSet ? ACTIVE_POLL_INTERVAL : IDLE_POLL_INTERVAL
     );
   }
 
-  function handleJaneSetClick(event) {
-    if (handledClickEvents.has(event)) return;
-
-    const control = event.target.closest('button, a, [role="button"]');
-    if (!control || !isCartSurface(control)) return;
-
-    const action = actionFor(control);
-    if (!action) return;
-
-    const clickedMatch = matchClickedLine(control);
-    if (!clickedMatch) return;
-
-    const { top, pants } = pairFor(cachedCart.items, clickedMatch.line.properties._set_id);
-    if (!top || !pants) return;
-
-    event.preventDefault();
-    handledClickEvents.add(event);
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-    if (isSyncingJaneSet) return;
-    interceptPairAction(clickedMatch, action, control);
-  }
-
-  window.addEventListener('click', handleJaneSetClick, true);
-  document.addEventListener('click', handleJaneSetClick, true);
-
-  document.addEventListener('change', event => {
-    if (!isCartSurface(event.target)) return;
-    const quantity = Number.parseInt(event.target.value, 10);
-    latestQuantityIntent = {
-      quantity: Number.isInteger(quantity) && quantity >= 0 ? quantity : null,
-      direction: null
-    };
-    scheduleCheck();
-  }, true);
-
   document.addEventListener('afterCartChanged', event => {
-    if (event.detail?.cartData?.items) snapshotCart(event.detail.cartData);
+    if (event.detail?.cartData?.items && !isSyncingJaneSet) snapshotCart(event.detail.cartData);
     if (!isSyncingJaneSet) scheduleCheck();
   });
   document.addEventListener('cart:updated', event => {
-    if (event.detail?.cart?.items) snapshotCart(event.detail.cart);
+    if (event.detail?.cart?.items && !isSyncingJaneSet) snapshotCart(event.detail.cart);
     if (!isSyncingJaneSet) scheduleCheck();
   });
   document.addEventListener('visibilitychange', () => {
@@ -589,17 +553,16 @@
   });
 
   const cartObserver = new MutationObserver(mutations => {
-    if (isSyncingJaneSet) return;
-    if (mutations.some(mutation => isCartSurface(mutation.target))) {
-      reapplyProtectedQuantities();
-      scheduleCheck(250);
-    }
+    if (!mutations.some(mutation => isCartSurface(mutation.target))) return;
+    setupJaneSetControls();
+    activeJaneSetRequests.forEach((request, setId) => {
+      if (request.pending || Date.now() <= request.protectUntil) applyActiveRequestToUi(setId);
+    });
+    if (!isSyncingJaneSet) scheduleCheck();
   });
   cartObserver.observe(document.body, {
     childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ['value', 'aria-valuenow']
+    subtree: true
   });
 
   scheduleCheck(0);
