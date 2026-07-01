@@ -124,7 +124,7 @@
         "lifestyle_1": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/Daliah_Black_Office.png",
+            "image": "shopify://shop_images/office_jane.png",
             "title": "Office Day",
             "description": "Polished enough for work, relaxed enough for long hours."
           }
@@ -132,7 +132,7 @@
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/Ella_Black_Office.png",
+            "image": "shopify://shop_images/errands_jane.png",
             "title": "Errands",
             "description": "Easy to move in while still looking put-together."
           }
@@ -140,7 +140,7 @@
         "lifestyle_3": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/Daliah_Black_Family-Lunch.png",
+            "image": "shopify://shop_images/family_lunch.png",
             "title": "Family Lunch",
             "description": "Comfortable, modest, and effortless to style."
           }
@@ -148,7 +148,7 @@
         "lifestyle_4": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/Daliah_Black_Travel.png",
+            "image": "shopify://shop_images/travel_jane.png",
             "title": "Travel",
             "description": "Relaxed fit that moves with you through a long day."
           }
