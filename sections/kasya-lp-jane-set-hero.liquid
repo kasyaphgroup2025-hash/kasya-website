@@ -746,10 +746,19 @@
 
     const products = JSON.parse(componentData.textContent || '{}');
     const productMedia = productMediaData ? JSON.parse(productMediaData.textContent || '[]') : [];
-    const parentVariant = {
-      id: {{ parent_variant.id | json }},
-      available: {{ parent_variant.available | json }},
-      price: {{ parent_variant.price | json }}
+    const parentProduct = {
+      optionNames: {{ parent_product.options | json }},
+      defaultVariantId: {{ parent_variant.id | json }},
+      variants: [
+        {% for variant in parent_product.variants %}
+          {
+            id: {{ variant.id | json }},
+            options: {{ variant.options | json }},
+            available: {{ variant.available | json }},
+            price: {{ variant.price | json }}
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
     };
     const sizes = ['Medium', 'Large', 'XL', '2XL', '3XL'];
     const shotOrder = ['front', 'side', 'back', 'sitting', 'fabric close up'];
@@ -836,18 +845,35 @@
       ) || null;
     }
 
+    function findParentVariant() {
+      const variants = parentProduct.variants || [];
+      const colorIndex = optionIndex(parentProduct.optionNames, 'Color');
+
+      if (colorIndex >= 0 && selectedColor) {
+        return variants.find(variant =>
+          variant.available &&
+          normalize(variant.options?.[colorIndex]) === normalize(selectedColor)
+        ) || null;
+      }
+
+      return variants.find(variant => variant.id === parentProduct.defaultVariantId) ||
+        variants.find(variant => variant.available) ||
+        null;
+    }
+
     function selectionState() {
+      const parentVariant = findParentVariant();
       const topVariant = findVariant('top', selectedTopSize);
       const pantsVariant = findVariant('pants', selectedPantsSize);
       const complete = Boolean(selectedColor && selectedTopSize && selectedPantsSize);
       const available = Boolean(
         complete &&
-        parentVariant.id &&
-        parentVariant.available &&
+        parentVariant?.id &&
+        parentVariant?.available &&
         topVariant?.available &&
         pantsVariant?.available
       );
-      return { topVariant, pantsVariant, complete, available };
+      return { parentVariant, topVariant, pantsVariant, complete, available };
     }
 
     function renderSizes(container, role, selectedSize) {
@@ -917,7 +943,8 @@
     }
 
     function formatSetPrice(quantity) {
-      const total = ((Number(parentVariant.price) || 169900) * quantity) / 100;
+      const parentVariant = findParentVariant();
+      const total = ((Number(parentVariant?.price) || 169900) * quantity) / 100;
       return new Intl.NumberFormat('en-PH', {
         style: 'currency',
         currency: 'PHP',
@@ -1024,8 +1051,8 @@
     async function addReviewedSet() {
       if (adding) return;
 
-      const { topVariant, pantsVariant, complete, available } = selectionState();
-      if (!parentVariant.id) {
+      const { parentVariant, topVariant, pantsVariant, complete, available } = selectionState();
+      if (!parentVariant?.id) {
         showError('Jane Set parent product is not configured.');
         return;
       }

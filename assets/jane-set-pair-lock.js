@@ -10,6 +10,8 @@
 
   const CONTROL_STYLE_ID = 'jane-set-pair-lock-style';
   const HIDDEN_CONTROL_CLASS = 'jane-set-qty-control-hidden';
+  const LOCKED_INPUT_CLASS = 'jane-set-qty-input-locked';
+  const IMAGE_LINK_CLASS = 'jane-set-image-link-disabled';
   const HIDDEN_PRICE_CLASS = 'jane-set-aov-hidden-price';
   const JANE_SET_ROLES = ['Parent', 'Top', 'Pants'];
   const RENDER_DELAYS = [50, 150, 300, 600];
@@ -87,6 +89,15 @@
         visibility: hidden !important;
         pointer-events: none !important;
       }
+
+      .${LOCKED_INPUT_CLASS} {
+        pointer-events: none !important;
+      }
+
+      .${IMAGE_LINK_CLASS},
+      .${IMAGE_LINK_CLASS} img {
+        cursor: default !important;
+      }
     `;
     document.head.appendChild(style);
   }
@@ -150,15 +161,90 @@
       });
   }
 
+  function cardAttributeText(card) {
+    return [card, ...card.querySelectorAll('*')]
+      .flatMap(element => [...element.attributes].map(attribute => attribute.value))
+      .join(' ')
+      .toLowerCase();
+  }
+
+  function roleItems(cart, role) {
+    return cart.items.filter(item =>
+      isJaneSetItem(item) && item.properties._set_role === role
+    );
+  }
+
+  function resolveJaneItem(card, role, cart, occurrenceIndex = -1) {
+    const cardText = normalize(card.textContent);
+    const attributes = cardAttributeText(card);
+    let candidates = roleItems(cart, role);
+
+    const exactMatches = candidates.filter(item =>
+      attributes.includes(normalize(item.key)) ||
+      attributes.includes(String(item.variant_id || item.id))
+    );
+    if (exactMatches.length === 1) return exactMatches[0];
+
+    const skuMatches = candidates.filter(item => {
+      const sku = itemSku(item);
+      return sku && cardText.includes(sku);
+    });
+    if (skuMatches.length === 1) return skuMatches[0];
+    if (skuMatches.length > 1) candidates = skuMatches;
+
+    if (occurrenceIndex >= 0 && candidates[occurrenceIndex]) {
+      return candidates[occurrenceIndex];
+    }
+
+    return candidates.length === 1 ? candidates[0] : null;
+  }
+
+  function imageUrl(item) {
+    return item?.featured_image?.url || item?.image || '';
+  }
+
+  function parentHasSelectedColorVariant(parentItem) {
+    const selectedColor = normalize(parentItem?.properties?._set_color);
+    return (parentItem?.options_with_values || []).some(option =>
+      ['color', 'colour'].includes(normalize(option.name)) &&
+      normalize(option.value) === selectedColor
+    );
+  }
+
+  function updateParentImage(group, setId) {
+    const parentItem = group.find(item => item.properties._set_role === 'Parent');
+    if (!parentItem || parentHasSelectedColorVariant(parentItem)) return;
+
+    const componentItem =
+      group.find(item => item.properties._set_role === 'Top' && imageUrl(item)) ||
+      group.find(item => item.properties._set_role === 'Pants' && imageUrl(item));
+    const replacementUrl = imageUrl(componentItem);
+    if (!replacementUrl) return;
+
+    const parentCard = [...document.querySelectorAll('[data-jane-set-card="true"]')]
+      .find(card =>
+        card.dataset.janeSetRole === 'Parent' &&
+        card.dataset.janeSetId === setId
+      );
+    const parentImage = parentCard?.querySelector('img');
+    if (!parentImage) return;
+
+    parentImage.src = replacementUrl;
+    parentImage.removeAttribute('srcset');
+  }
+
   function markJaneSetCards() {
     if (!latestCart || !Object.keys(groupJaneSetItems(latestCart.items)).length) return;
 
     document.querySelectorAll('[data-jane-set-total]').forEach(element => element.remove());
 
     JANE_SET_ROLES.forEach(role => {
-      findCardsForRole(role).forEach(card => {
+      const cards = findCardsForRole(role);
+      cards.forEach((card, index) => {
+        const item = resolveJaneItem(card, role, latestCart, index);
         card.dataset.janeSetCard = 'true';
         card.dataset.janeSetRole = role;
+        if (item) card.dataset.janeSetId = item.properties._set_id;
 
         card.querySelectorAll('button, a, [role="button"]').forEach(control => {
           const action = controlAction(control);
@@ -167,11 +253,27 @@
             action === 'increase' || action === 'decrease'
           );
         });
+        card.querySelectorAll('input[type="number"], input[name*="quantity" i]').forEach(input => {
+          input.classList.add(LOCKED_INPUT_CLASS);
+          input.readOnly = true;
+          input.tabIndex = -1;
+          input.setAttribute('aria-readonly', 'true');
+        });
+        card.querySelectorAll('a').forEach(link => {
+          if (!link.querySelector('img')) return;
+          link.classList.add(IMAGE_LINK_CLASS);
+          link.tabIndex = -1;
+          link.setAttribute('aria-disabled', 'true');
+        });
 
         if (role === 'Top' || role === 'Pants') {
           priceElementsIn(card).forEach(price => price.classList.add(HIDDEN_PRICE_CLASS));
         }
       });
+    });
+
+    Object.entries(groupJaneSetItems(latestCart.items)).forEach(([setId, group]) => {
+      updateParentImage(group, setId);
     });
   }
 
@@ -300,18 +402,17 @@
   }
 
   function resolveSetId(card, role, cart) {
-    const cardText = normalize(card.textContent);
-    let candidates = cart.items.filter(item =>
-      isJaneSetItem(item) && item.properties._set_role === role
-    );
-    const skuMatches = candidates.filter(item => {
-      const sku = itemSku(item);
-      return sku && cardText.includes(sku);
-    });
-    if (skuMatches.length) candidates = skuMatches;
+    if (card.dataset.janeSetId) {
+      const setExists = cart.items.some(item =>
+        isJaneSetItem(item) &&
+        item.properties._set_id === card.dataset.janeSetId
+      );
+      if (setExists) return card.dataset.janeSetId;
+    }
 
-    const setIds = new Set(candidates.map(item => item.properties._set_id));
-    return setIds.size === 1 ? [...setIds][0] : null;
+    const cards = findCardsForRole(role);
+    const occurrenceIndex = cards.indexOf(card);
+    return resolveJaneItem(card, role, cart, occurrenceIndex)?.properties?._set_id || null;
   }
 
   async function removeClickedSet(card, role) {
@@ -334,13 +435,34 @@
   }
 
   function handleCartControl(event) {
+    const imageLink = event.target.closest?.('a');
+    const imageCard = imageLink?.closest?.('[data-jane-set-card="true"]');
+    if (imageLink?.querySelector('img') && imageCard) {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation?.();
+      return;
+    }
+
+    const quantityInput = event.target.closest?.('input[type="number"], input[name*="quantity" i]');
+    const quantityCard = quantityInput?.closest?.('[data-jane-set-card="true"]');
+    if (quantityInput && quantityCard) {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation?.();
+      return;
+    }
+
     const control = event.target.closest?.('button, a, [role="button"]');
     if (!control) return;
 
     const action = controlAction(control);
     if (!action) return;
-    const card = findJaneSetCard(control);
-    if (!card || cardContainsOtherJaneRole(card.element, card.role)) return;
+    const markedCard = control.closest('[data-jane-set-card="true"]');
+    const card = markedCard
+      ? { element: markedCard, role: markedCard.dataset.janeSetRole }
+      : findJaneSetCard(control);
+    if (!card || (!markedCard && cardContainsOtherJaneRole(card.element, card.role))) return;
 
     if (action === 'increase' || action === 'decrease') {
       event.preventDefault();
@@ -357,8 +479,19 @@
     }
   }
 
+  function handleLockedQuantityEvent(event) {
+    const input = event.target.closest?.('input[type="number"], input[name*="quantity" i]');
+    if (!input || !input.closest('[data-jane-set-card="true"]')) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation?.();
+  }
+
   installStyles();
   window.addEventListener('click', handleCartControl, true);
+  window.addEventListener('change', handleLockedQuantityEvent, true);
+  window.addEventListener('input', handleLockedQuantityEvent, true);
 
   document.addEventListener('afterCartChanged', event => {
     if (event.detail?.cartData?.items) latestCart = event.detail.cartData;
