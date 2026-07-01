@@ -1,7 +1,7 @@
 (() => {
   console.info('[Jane Set Pair Lock] post-AOV quantity sync loaded');
 
-  const ACTION_DELAYS = [150, 300, 600, 1000];
+  const ACTION_DELAYS = [150, 300, 600, 1000, 1500];
   const PASSIVE_CHECK_DELAY = 150;
   const PRICE_STYLE_ID = 'jane-set-aov-price-style';
   const HIDDEN_PRICE_CLASS = 'jane-set-aov-hidden-price';
@@ -11,6 +11,7 @@
   let passiveCheckTimer = null;
   let pendingPassiveCheck = false;
   let priceRenderTimers = [];
+  let lastJaneSetAction = null;
 
   function normalize(value) {
     return String(value || '').trim().toLowerCase();
@@ -208,8 +209,18 @@
         top.properties._set_display_price ||
         pants.properties._set_display_price ||
         '₱1,699';
-      const quantity = top.quantity === pants.quantity ? top.quantity : null;
-      const totalText = quantity && quantity > 1 ? `${displayPrice} × ${quantity}` : displayPrice;
+      const quantitiesMatch = top.quantity === pants.quantity;
+      const intendedQuantity =
+        lastJaneSetAction?.setId === setId &&
+        Date.now() - lastJaneSetAction.timestamp < 5000
+          ? lastJaneSetAction.targetQty
+          : null;
+      const quantity = quantitiesMatch ? top.quantity : intendedQuantity;
+      const totalText = quantity
+        ? quantity > 1
+          ? `${displayPrice} × ${quantity}`
+          : displayPrice
+        : 'Updating…';
       const totalValue = totalRow.querySelector('strong');
       if (totalValue.textContent !== totalText) totalValue.textContent = totalText;
 
@@ -334,65 +345,127 @@
     }));
   }
 
-  function changedRole(beforePair, afterPair, preferredRole) {
-    if (!beforePair.top || !beforePair.pants || !afterPair.top || !afterPair.pants) return null;
+  function setCheckoutBlocked(blocked) {
+    document.querySelectorAll('button, a, [role="button"]').forEach(control => {
+      const controlText = normalize([
+        control.textContent,
+        control.getAttribute('aria-label'),
+        control.getAttribute('name'),
+        control.getAttribute('href')
+      ].filter(Boolean).join(' '));
+      if (!/(proceed.*checkout|checkout|\/checkout)/.test(controlText)) return;
 
-    const topChanged = beforePair.top.quantity !== afterPair.top.quantity;
-    const pantsChanged = beforePair.pants.quantity !== afterPair.pants.quantity;
-    if (
-      preferredRole === 'Top' &&
-      topChanged &&
-      !pantsChanged
-    ) return 'Top';
-    if (
-      preferredRole === 'Pants' &&
-      pantsChanged &&
-      !topChanged
-    ) return 'Pants';
-    if (topChanged && !pantsChanged) return 'Top';
-    if (pantsChanged && !topChanged) return 'Pants';
-    return null;
+      if (blocked) {
+        if (!control.hasAttribute('data-jane-set-checkout-blocked')) {
+          control.dataset.janeSetWasDisabled = String(Boolean(control.disabled));
+          control.dataset.janeSetPointerEvents = control.style.pointerEvents || '';
+        }
+        control.dataset.janeSetCheckoutBlocked = 'true';
+        control.disabled = true;
+        control.setAttribute('aria-disabled', 'true');
+        control.style.pointerEvents = 'none';
+      } else if (control.dataset.janeSetCheckoutBlocked === 'true') {
+        const wasDisabled = control.dataset.janeSetWasDisabled === 'true';
+        control.disabled = wasDisabled;
+        control.setAttribute('aria-disabled', String(wasDisabled));
+        control.style.pointerEvents = control.dataset.janeSetPointerEvents || '';
+        delete control.dataset.janeSetCheckoutBlocked;
+        delete control.dataset.janeSetWasDisabled;
+        delete control.dataset.janeSetPointerEvents;
+      }
+    });
   }
 
-  async function syncAfterAov(runId, beforeCart, intent) {
-    if (runId !== latestSyncRunId || isSyncingJaneSet) return;
+  function reconciliationState(cart) {
+    const updates = {};
+    let unstable = false;
+    let waitingForAov = false;
+
+    Object.entries(groupJaneSetItems(cart.items)).forEach(([setId, items]) => {
+      const top = items.find(item => item.properties._set_role === 'Top');
+      const pants = items.find(item => item.properties._set_role === 'Pants');
+      if (!top || !pants) {
+        unstable = true;
+        return;
+      }
+
+      const recentAction =
+        lastJaneSetAction?.setId === setId &&
+        Date.now() - lastJaneSetAction.timestamp < 5000
+          ? lastJaneSetAction
+          : null;
+      if (top.quantity === pants.quantity) {
+        if (
+          recentAction &&
+          Date.now() - recentAction.timestamp < 1800 &&
+          top.quantity !== recentAction.targetQty
+        ) {
+          unstable = true;
+          waitingForAov = true;
+        }
+        return;
+      }
+
+      unstable = true;
+      const targetQty = recentAction?.targetQty ?? Math.min(top.quantity, pants.quantity);
+      if (top.quantity !== targetQty) updates[top.key] = targetQty;
+      if (pants.quantity !== targetQty) updates[pants.key] = targetQty;
+    });
+
+    return { updates, unstable, waitingForAov };
+  }
+
+  async function reconcileJaneSets(runId = latestSyncRunId) {
+    if (runId !== latestSyncRunId || isSyncingJaneSet) {
+      pendingPassiveCheck = true;
+      return;
+    }
     isSyncingJaneSet = true;
 
     try {
       let cart = await fetchCart();
       if (runId !== latestSyncRunId) return;
 
+      let state = reconciliationState(cart);
+      setCheckoutBlocked(state.unstable);
       const cleanedCart = await removeOrphans(cart);
+      let cartChanged = cleanedCart !== cart;
       if (cleanedCart !== cart) {
-        latestCart = cleanedCart;
-        dispatchCartRefresh(cleanedCart);
+        cart = cleanedCart;
+        dispatchCartRefresh(cart);
+      }
+
+      state = reconciliationState(cart);
+      if (Object.keys(state.updates).length) {
+        cart = await updateCart(state.updates);
+        cartChanged = true;
+        dispatchCartRefresh(cart);
+      }
+
+      if (!cartChanged) {
+        latestCart = cart;
+        setCheckoutBlocked(state.unstable);
         runPriceRenderBurst();
+        if (state.waitingForAov) schedulePassiveCheck();
         return;
       }
-      cart = cleanedCart;
-      latestCart = cart;
-      if (!intent.setId || intent.action === 'remove') return;
 
-      const beforePair = pairFor(beforeCart.items, intent.setId);
-      const afterPair = pairFor(cart.items, intent.setId);
-      if (!afterPair.top || !afterPair.pants) return;
-      if (afterPair.top.quantity === afterPair.pants.quantity) return;
+      let confirmedCart = await fetchCart();
+      let confirmedState = reconciliationState(confirmedCart);
+      if (Object.keys(confirmedState.updates).length) {
+        confirmedCart = await updateCart(confirmedState.updates);
+        confirmedCart = await fetchCart();
+        confirmedState = reconciliationState(confirmedCart);
+        dispatchCartRefresh(confirmedCart);
+      }
 
-      const sourceRole = changedRole(beforePair, afterPair, intent.role);
-      if (!sourceRole) return;
-
-      const sourceLine = sourceRole === 'Top' ? afterPair.top : afterPair.pants;
-      const partnerLine = sourceRole === 'Top' ? afterPair.pants : afterPair.top;
-      const updatedCart = await updateCart({
-        [partnerLine.key]: sourceLine.quantity
-      });
-      if (runId !== latestSyncRunId) return;
-
-      latestCart = updatedCart;
-      dispatchCartRefresh(updatedCart);
+      latestCart = confirmedCart;
+      setCheckoutBlocked(confirmedState.unstable);
       runPriceRenderBurst();
+      if (confirmedState.waitingForAov) schedulePassiveCheck();
     } catch (error) {
-      console.warn('Unable to synchronize Jane Set after AOV update.', error);
+      setCheckoutBlocked(true);
+      console.warn('Unable to reconcile Jane Set cart quantities.', error);
     } finally {
       isSyncingJaneSet = false;
       if (pendingPassiveCheck) {
@@ -402,28 +475,16 @@
     }
   }
 
-  function scheduleActionChecks(beforeCart, intent) {
+  function scheduleActionChecks() {
     const runId = ++latestSyncRunId;
     ACTION_DELAYS.forEach(delay => {
-      window.setTimeout(() => syncAfterAov(runId, beforeCart, intent), delay);
+      window.setTimeout(() => reconcileJaneSets(runId), delay);
     });
   }
 
   async function passiveCheck() {
-    if (isSyncingJaneSet || document.hidden) {
-      pendingPassiveCheck = true;
-      return;
-    }
-
-    try {
-      const cart = await fetchCart();
-      const cleanedCart = await removeOrphans(cart);
-      latestCart = cleanedCart;
-      if (cleanedCart !== cart) dispatchCartRefresh(cleanedCart);
-      runPriceRenderBurst();
-    } catch (error) {
-      console.warn('Unable to verify Jane Set cart state.', error);
-    }
+    if (document.hidden) return;
+    reconcileJaneSets();
   }
 
   function schedulePassiveCheck() {
@@ -446,11 +507,23 @@
       return;
     }
     const setId = resolveSetId(card.element, card.role, beforeCart);
-    scheduleActionChecks(beforeCart, {
-      action,
-      role: card.role,
-      setId
-    });
+    const pair = setId ? pairFor(beforeCart.items, setId) : {};
+    const sourceLine = card.role === 'Top' ? pair.top : pair.pants;
+    if (setId && sourceLine) {
+      const targetQty = action === 'remove'
+        ? 0
+        : Math.max(0, sourceLine.quantity + (action === 'increase' ? 1 : -1));
+      lastJaneSetAction = {
+        setId,
+        role: card.role,
+        sku: itemSku(sourceLine),
+        action,
+        targetQty,
+        timestamp: Date.now()
+      };
+      setCheckoutBlocked(true);
+    }
+    scheduleActionChecks();
   }
 
   installPriceStyle();
