@@ -1,5 +1,12 @@
 (() => {
-  console.info('[Jane Set Pair Lock] paid parent + components loaded');
+  try {
+    if (
+      typeof window === 'undefined' ||
+      typeof document === 'undefined' ||
+      typeof window.fetch !== 'function'
+    ) return;
+
+    console.info('[Jane Set Pair Lock] paid parent + components loaded');
 
   const CONTROL_STYLE_ID = 'jane-set-pair-lock-style';
   const HIDDEN_CONTROL_CLASS = 'jane-set-qty-control-hidden';
@@ -143,6 +150,8 @@
   }
 
   function markJaneSetCards() {
+    if (!latestCart || !Object.keys(groupJaneSetItems(latestCart.items)).length) return;
+
     document.querySelectorAll('[data-jane-set-total]').forEach(element => element.remove());
 
     JANE_SET_ROLES.forEach(role => {
@@ -167,7 +176,9 @@
 
   function runRenderBurst() {
     markJaneSetCards();
-    window.requestAnimationFrame(markJaneSetCards);
+    if (typeof window.requestAnimationFrame === 'function') {
+      window.requestAnimationFrame(markJaneSetCards);
+    }
     renderTimers.forEach(timer => window.clearTimeout(timer));
     renderTimers = RENDER_DELAYS.map(delay =>
       window.setTimeout(markJaneSetCards, delay)
@@ -372,14 +383,19 @@
     if (!document.hidden) scheduleCartCheck();
   });
 
-  const observer = new MutationObserver(() => {
-    runRenderBurst();
-    scheduleCartCheck();
-  });
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
+  if (typeof MutationObserver === 'function' && document.body) {
+    const observer = new MutationObserver(() => {
+      runRenderBurst();
+      scheduleCartCheck();
+    });
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
 
   cleanOrphans();
+  } catch (error) {
+    console.warn('[Jane Set Pair Lock] initialization skipped.', error);
+  }
 })();

@@ -12,13 +12,25 @@
 
   assign blouse_product = section.settings.blouse_product
   assign pants_product = section.settings.pants_product
+  assign parent_variant = parent_product.selected_or_first_available_variant
+
+  assign setup_error = blank
+  if parent_product == blank or parent_variant == blank
+    assign setup_error = 'Jane Set parent product is not configured.'
+  elsif blouse_product == blank
+    assign setup_error = 'Jane Set blouse product is not configured.'
+  elsif pants_product == blank
+    assign setup_error = 'Jane Set pants product is not configured.'
+  endif
 %}
 
 <section class="jane-set-hero" data-jane-set-hero="{{ section.id }}">
-  {% if parent_product == blank %}
-    <div class="jane-set-hero__empty">
-      Select the visible Jane Set parent product in this section's settings.
-    </div>
+  {% if setup_error != blank %}
+    {% if request.design_mode %}
+      <div class="jane-set-hero__empty">
+        {{ setup_error }}
+      </div>
+    {% endif %}
   {% else %}
     <div class="jane-set-hero__gallery" data-jane-gallery>
       <div class="jane-set-hero__slides" data-jane-slides>
@@ -654,8 +666,8 @@
     const products = JSON.parse(componentData.textContent || '{}');
     const productMedia = productMediaData ? JSON.parse(productMediaData.textContent || '[]') : [];
     const parentVariant = {
-      id: {{ parent_product.selected_or_first_available_variant.id | json }},
-      available: {{ parent_product.selected_or_first_available_variant.available | json }}
+      id: {{ parent_variant.id | json }},
+      available: {{ parent_variant.available | json }}
     };
     const sizes = ['Medium', 'Large', 'XL', '2XL', '3XL'];
     const shotOrder = ['front', 'side', 'back', 'sitting', 'fabric close up'];
