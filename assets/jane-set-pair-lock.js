@@ -9,8 +9,11 @@
   console.info('[Jane Set AOV Safe Core] loaded');
   console.info('[Jane Set Delete Guard] loaded');
   console.info('[Jane Set Quantity Guard] loaded');
+  console.info('[Jane Set Component Price Guard] loaded');
 
   const JANE_ROLES = ['Parent', 'Top', 'Pants'];
+  const PRICE_HIDDEN_CLASS = 'jane-set-component-price-hidden';
+  let priceCheckTimer = null;
 
   function normalize(value) {
     return String(value || '').trim().toLowerCase();
@@ -71,6 +74,74 @@
     }
 
     return null;
+  }
+
+  function installPriceStyle() {
+    if (document.getElementById('jane-set-component-price-style')) return;
+
+    const style = document.createElement('style');
+    style.id = 'jane-set-component-price-style';
+    style.textContent = `
+      .${PRICE_HIDDEN_CLASS} {
+        display: none !important;
+        visibility: hidden !important;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function isCartContext(card) {
+    if (card.closest(
+      'cart-drawer, [data-cart-drawer], [id*="cart" i], [class*="cart" i], [id*="aov" i], [class*="aov" i]'
+    )) return true;
+
+    let element = card.parentElement;
+    while (element && element !== document.body) {
+      const text = normalize(element.textContent);
+      if (
+        text.includes('subtotal') &&
+        (text.includes('checkout') || text.includes('almost yours'))
+      ) return true;
+      element = element.parentElement;
+    }
+    return false;
+  }
+
+  function componentCards() {
+    const cards = [];
+    document.querySelectorAll('button, a, [role="button"]').forEach(control => {
+      const card = findJaneCard(control);
+      if (
+        ['Top', 'Pants'].includes(card?.role) &&
+        isCartContext(card.element) &&
+        !cards.includes(card.element)
+      ) {
+        cards.push(card.element);
+      }
+    });
+    return cards;
+  }
+
+  function hideComponentPrices() {
+    const zeroPrice = /^(?:(?:₱|php)\s*)?0(?:[.,]00)?$|^free$/i;
+
+    componentCards().forEach(card => {
+      card.querySelectorAll('span, p, strong, small, div').forEach(element => {
+        const text = String(element.textContent || '').trim();
+        const childHasPrice = [...element.children].some(child =>
+          zeroPrice.test(String(child.textContent || '').trim())
+        );
+        if (zeroPrice.test(text) && !childHasPrice) {
+          element.classList.add(PRICE_HIDDEN_CLASS);
+          element.dataset.janeSetComponentPriceHidden = 'true';
+        }
+      });
+    });
+  }
+
+  function schedulePriceCheck() {
+    window.clearTimeout(priceCheckTimer);
+    priceCheckTimer = window.setTimeout(hideComponentPrices, 150);
   }
 
   function isJaneItem(item) {
@@ -151,6 +222,14 @@
     const rawControl = event.target.closest?.('button, a, [role="button"]');
     if (!rawControl) return;
 
+    const rawDescription = controlDescription(rawControl);
+    if (
+      findJaneCard(rawControl) ||
+      /(add to cart|cart|bag)/.test(rawDescription)
+    ) {
+      schedulePriceCheck();
+    }
+
     const quantityChange = quantityAction(rawControl);
     if (quantityChange) {
       const quantityCard = findJaneCard(rawControl);
@@ -184,4 +263,13 @@
       console.warn('[Jane Set Delete Guard] remove failed.', error);
     });
   }, true);
+
+  document.addEventListener('afterCartChanged', schedulePriceCheck);
+  document.addEventListener('cart:updated', schedulePriceCheck);
+  installPriceStyle();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', hideComponentPrices, { once: true });
+  } else {
+    hideComponentPrices();
+  }
 })();
