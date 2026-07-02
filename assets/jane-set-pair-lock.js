@@ -11,6 +11,7 @@
   console.info('[Jane Set Quantity Guard] loaded');
   console.info('[Jane Set Component Price Guard] loaded');
   console.info('[Jane Set Image Click Guard] loaded');
+  console.info('[Jane Set Title Click Guard] loaded');
 
   const JANE_ROLES = ['Parent', 'Top', 'Pants'];
   const PRICE_HIDDEN_CLASS = 'jane-set-component-price-hidden';
@@ -54,6 +55,22 @@
       /(minus|decrease|decrement)/.test(description)
     ) return 'decrease';
     return null;
+  }
+
+  function isProductTitleLink(link) {
+    const href = normalize(link.getAttribute('href'));
+    const text = normalize(link.textContent);
+    const description = normalize([
+      link.className,
+      link.getAttribute('aria-label'),
+      link.getAttribute('title')
+    ].filter(Boolean).join(' '));
+
+    return href.includes('/products/') ||
+      text.includes('jane set') ||
+      text.includes('jane blouse') ||
+      text.includes('jane pants') ||
+      /(product|title|name)/.test(description);
   }
 
   function findJaneCard(control) {
@@ -230,6 +247,20 @@
         imageCard &&
         JANE_ROLES.includes(imageCard.role) &&
         isCartContext(imageCard.element)
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation?.();
+        return;
+      }
+    }
+
+    if (clickedLink && isProductTitleLink(clickedLink)) {
+      const titleCard = findJaneCard(clickedLink);
+      if (
+        titleCard &&
+        JANE_ROLES.includes(titleCard.role) &&
+        isCartContext(titleCard.element)
       ) {
         event.preventDefault();
         event.stopPropagation();
