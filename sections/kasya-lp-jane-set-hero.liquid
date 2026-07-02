@@ -852,10 +852,21 @@
       const variants = parentProduct.variants || [];
       const colorIndex = optionIndex(parentProduct.optionNames, 'Color');
 
-      if (colorIndex >= 0 && selectedColor) {
+      if (selectedColor) {
         return variants.find(variant =>
           variant.available &&
-          normalize(variant.options?.[colorIndex]) === normalize(selectedColor)
+          (
+            (
+              colorIndex >= 0 &&
+              normalize(variant.options?.[colorIndex]) === normalize(selectedColor)
+            ) ||
+            (
+              colorIndex < 0 &&
+              (variant.options || []).some(option =>
+                normalize(option) === normalize(selectedColor)
+              )
+            )
+          )
         ) || null;
       }
 
@@ -1074,9 +1085,14 @@
       event.preventDefault();
       if (adding) return;
 
-      const { topVariant, pantsVariant, complete, available } = selectionState();
+      const { parentVariant, topVariant, pantsVariant, complete, available } = selectionState();
       if (!selectedColor) {
         showError('Please select a color.');
+        return;
+      }
+      if (!parentVariant?.id) {
+        showError('Jane Set parent color variant is not configured.');
+        updateControls();
         return;
       }
       if (!complete) {
@@ -1098,7 +1114,7 @@
 
       const { parentVariant, topVariant, pantsVariant, complete, available } = selectionState();
       if (!parentVariant?.id) {
-        showError('Jane Set parent product is not configured.');
+        showError('Jane Set parent color variant is not configured.');
         return;
       }
       if (!complete || !available) {
