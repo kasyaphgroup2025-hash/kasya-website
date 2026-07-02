@@ -3,8 +3,7 @@
     if (
       typeof window === 'undefined' ||
       typeof document === 'undefined' ||
-      typeof window.fetch !== 'function' ||
-      window.Shopify?.designMode
+      typeof window.fetch !== 'function'
     ) return;
 
     console.info('[Jane Set AOV Guard] loaded');
