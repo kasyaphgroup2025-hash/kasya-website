@@ -8,6 +8,7 @@
 
   console.info('[Jane Set AOV Safe Core] loaded');
   console.info('[Jane Set Delete Guard] loaded');
+  console.info('[Jane Set Quantity Guard] loaded');
 
   const JANE_ROLES = ['Parent', 'Top', 'Pants'];
 
@@ -15,11 +16,8 @@
     return String(value || '').trim().toLowerCase();
   }
 
-  function deleteControlFrom(target) {
-    const control = target.closest?.('button, a, [role="button"]');
-    if (!control) return null;
-
-    const description = normalize([
+  function controlDescription(control) {
+    return normalize([
       control.textContent,
       control.className,
       control.getAttribute('aria-label'),
@@ -28,8 +26,30 @@
       control.querySelector('svg')?.getAttribute('aria-label'),
       control.querySelector('svg')?.className?.baseVal
     ].filter(Boolean).join(' '));
+  }
 
-    return /(remove|delete|trash)/.test(description) ? control : null;
+  function deleteControlFrom(target) {
+    const control = target.closest?.('button, a, [role="button"]');
+    if (!control) return null;
+
+    return /(remove|delete|trash)/.test(controlDescription(control)) ? control : null;
+  }
+
+  function quantityAction(control) {
+    const text = normalize(control.textContent);
+    const description = controlDescription(control);
+
+    if (/(remove|delete|trash)/.test(description)) return null;
+    if (
+      text === '+' ||
+      /(plus|increase|increment)/.test(description)
+    ) return 'increase';
+    if (
+      text === '-' ||
+      text === '−' ||
+      /(minus|decrease|decrement)/.test(description)
+    ) return 'decrease';
+    return null;
   }
 
   function findJaneCard(control) {
@@ -130,6 +150,17 @@
   document.addEventListener('click', event => {
     const rawControl = event.target.closest?.('button, a, [role="button"]');
     if (!rawControl) return;
+
+    const quantityChange = quantityAction(rawControl);
+    if (quantityChange) {
+      const quantityCard = findJaneCard(rawControl);
+      if (!quantityCard || !JANE_ROLES.includes(quantityCard.role)) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation?.();
+      return;
+    }
 
     let control = deleteControlFrom(rawControl);
     let card = control ? findJaneCard(control) : null;
