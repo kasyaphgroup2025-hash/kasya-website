@@ -175,6 +175,12 @@
     return false;
   }
 
+  function isJaneReviewContext(element) {
+    return Boolean(element?.closest(
+      '[data-jane-set-hero], [data-jane-review], .jane-set-review, .jane-set-hero'
+    ));
+  }
+
   function janeCartCards() {
     const cards = [];
     document.querySelectorAll('button, [role="button"]').forEach(control => {
@@ -384,8 +390,14 @@
 
     const quantityChange = quantityAction(rawControl);
     if (quantityChange) {
+      if (isJaneReviewContext(rawControl)) return;
+
       const quantityCard = findJaneCard(rawControl);
-      if (!quantityCard || !JANE_ROLES.includes(quantityCard.role)) return;
+      if (
+        !quantityCard ||
+        !JANE_ROLES.includes(quantityCard.role) ||
+        !isCartContext(quantityCard.element)
+      ) return;
 
       event.preventDefault();
       event.stopPropagation();
