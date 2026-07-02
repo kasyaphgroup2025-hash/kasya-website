@@ -854,7 +854,6 @@
 
       if (selectedColor) {
         return variants.find(variant =>
-          variant.available &&
           (
             (
               colorIndex >= 0 &&
@@ -882,8 +881,6 @@
       const complete = Boolean(selectedColor && selectedTopSize && selectedPantsSize);
       const available = Boolean(
         complete &&
-        parentVariant?.id &&
-        parentVariant?.available &&
         topVariant?.available &&
         pantsVariant?.available
       );
@@ -917,13 +914,17 @@
       renderSizes(topSizes, 'top', selectedTopSize);
       renderSizes(pantsSizes, 'pants', selectedPantsSize);
 
-      const { complete, available } = selectionState();
+      const { parentVariant, complete, available } = selectionState();
       submitButton.disabled = adding || !available;
       colorPrompt.hidden = Boolean(selectedColor);
       topPrompt.hidden = Boolean(selectedTopSize);
       pantsPrompt.hidden = Boolean(selectedPantsSize);
       if (!adding) {
-        submitText.textContent = complete && !available ? 'SOLD OUT / UNAVAILABLE' : 'ADD SET TO CART';
+        if (complete && !parentVariant?.id) {
+          submitText.textContent = 'CONFIGURATION NEEDED';
+        } else {
+          submitText.textContent = complete && !available ? 'SOLD OUT / UNAVAILABLE' : 'ADD SET TO CART';
+        }
       }
     }
 
