@@ -12,6 +12,7 @@
   console.info('[Jane Set Component Price Guard] loaded');
   console.info('[Jane Set Image Click Guard] loaded');
   console.info('[Jane Set Title Click Guard] loaded');
+  console.info('[Jane Set Product URL Guard] loaded');
 
   const JANE_ROLES = ['Parent', 'Top', 'Pants'];
   const PRICE_HIDDEN_CLASS = 'jane-set-component-price-hidden';
@@ -73,6 +74,52 @@
     const description = controlDescription(control);
     return /(remove|delete|trash|checkout|close|continue shopping)/.test(description) ||
       Boolean(quantityAction(control));
+  }
+
+  function janeProductNavigationFrom(event) {
+    const path = typeof event.composedPath === 'function'
+      ? event.composedPath()
+      : [event.target];
+
+    return path.find(element => {
+      if (!(element instanceof Element)) return false;
+      if (!element.matches?.('a, [role="link"], [onclick], [data-href], [data-url]')) {
+        return false;
+      }
+
+      const navigationValue = normalize([
+        element.getAttribute('href'),
+        element.getAttribute('data-href'),
+        element.getAttribute('data-url'),
+        element.getAttribute('onclick'),
+        element.textContent
+      ].filter(Boolean).join(' '));
+      const hasJaneTarget =
+        navigationValue.includes('jane-set') ||
+        navigationValue.includes('jane-blouse') ||
+        navigationValue.includes('jane-pants') ||
+        navigationValue.includes('jane-coordinates-set') ||
+        navigationValue.includes('jane set') ||
+        navigationValue.includes('jane blouse') ||
+        navigationValue.includes('jane pants');
+      const isNavigation =
+        navigationValue.includes('/products/') ||
+        element.matches('[role="link"], [onclick], [data-href], [data-url]');
+
+      return hasJaneTarget && isNavigation;
+    }) || null;
+  }
+
+  function blockJaneProductNavigation(event) {
+    const directControl = event.target.closest?.('button, a, [role="button"]');
+    if (isAllowedCartControl(directControl)) return;
+
+    const navigation = janeProductNavigationFrom(event);
+    if (!navigation || !isCartContext(navigation)) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation?.();
   }
 
   function findJaneCard(control) {
@@ -237,6 +284,10 @@
     });
     if (!updateResponse.ok) throw new Error('Unable to remove the Jane Set.');
   }
+
+  ['click', 'auxclick', 'pointerdown', 'touchend'].forEach(eventName => {
+    document.addEventListener(eventName, blockJaneProductNavigation, true);
+  });
 
   document.addEventListener('click', event => {
     const clickedLink = event.target.closest?.('a');
