@@ -77,6 +77,17 @@
     assign only_use_variant_price = price_block.settings.variant_price
   endif
   assign cart_qty = cart | item_count_for_variant: product.selected_or_first_available_variant.id
+
+  assign is_jane_set_direct_product = false
+  assign jane_product_title = product.title | downcase
+  if product.handle == 'jane-pants-premium-ity' or product.handle == 'jane-blouse-premium-ity' or product.handle == 'jane-set-premium-ity' or product.handle == 'jane-coordinates-set-premium-ity'
+    assign is_jane_set_direct_product = true
+  elsif jane_product_title contains 'jane pants' or jane_product_title contains 'jane blouse' or jane_product_title contains 'jane set' or jane_product_title contains 'jane coordinates set'
+    assign is_jane_set_direct_product = true
+  endif
+  if template.suffix == 'kasya-acquisition-janeset'
+    assign is_jane_set_direct_product = false
+  endif
 -%}
 
 <style>
@@ -151,7 +162,9 @@
             {%- for block in section.blocks -%}
               {%- case block.type -%}
               {%- when '@app' -%}
-                {%- render block -%}
+                {%- unless is_jane_set_direct_product -%}
+                  {%- render block -%}
+                {%- endunless -%}
               {%- when 'text' -%}
                 {%- if block.settings.text != blank -%}
                   <p class="product__text
@@ -175,6 +188,7 @@
                   <h1 class="font-heading-extra-bold margin0{% if block.settings.title_size != 'h1' %} {{ block.settings.title_size }}{% endif %}">{{ product.title | escape }}</h1>
                 </div>
               {%- when 'price' -%}
+                {%- unless is_jane_set_direct_product -%}
                 <div class="product__price-block">
                   <div id="price-top-{{ section.id }}" {{ block.shopify_attributes }}>
                     {%- unless product.price_varies and only_use_variant_price == false -%}
@@ -222,6 +236,7 @@
                     </div>
                   {%- endif -%}  
                 </div>
+                {%- endunless -%}
               {%- when 'description' -%}
                 {%- render 'main-product-description', product: product, section: section, block: block -%}
               {%- when 'custom_liquid' -%}
@@ -272,6 +287,9 @@
                 {%- assign share_url = product.selected_variant.url | default: product.url | prepend: request.origin -%}
                 {%- render 'main-product-share', share_url: share_url, title: product.title, block: block, featured_media: featured_media -%}
               {%- when 'sale_box' -%}
+                {%- if is_jane_set_direct_product -%}
+                  {%- render 'jane-set-direct-product-notice' -%}
+                {%- else -%}
                 <div class="product__sale-box product__info-box flex flex-column{% if block.settings.picker_type == 'button' %} overflow-hidden{% endif %}" {{ block.shopify_attributes }}>
                   {% liquid
                     assign has_size_chart = false
@@ -443,6 +461,7 @@
                   {%- endif -%}  
                 </div>
                 <script src="{{ 'pickup-availability.js' | asset_url }}" defer="defer"></script>
+                {%- endif -%}
               {%- when 'rating' -%}
                 {%- render 'main-product-rating', product: product, block: block, allow_anchor: true -%}
               {%- when 'complementary' -%}
@@ -557,7 +576,9 @@
     <script src="{{ 'complementary-products.js' | asset_url }}" defer="defer"></script>
   {%- endif -%}
 </product-info>
-{%- render 'main-product-sticky-cart', section: section, product: product, product_form_id: product_form_id, featured_media: featured_media, cart_qty: cart_qty -%}
+{%- unless is_jane_set_direct_product -%}
+  {%- render 'main-product-sticky-cart', section: section, product: product, product_form_id: product_form_id, featured_media: featured_media, cart_qty: cart_qty -%}
+{%- endunless -%}
 {% schema %}
 {
   "name": "t:sections.main-product.name",
