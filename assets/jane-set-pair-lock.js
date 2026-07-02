@@ -13,6 +13,7 @@
   console.info('[Jane Set Image Click Guard] loaded');
   console.info('[Jane Set Title Click Guard] loaded');
   console.info('[Jane Set Product URL Guard] loaded');
+  console.info('[Jane Set Title Link Removal] loaded');
 
   const JANE_ROLES = ['Parent', 'Top', 'Pants'];
   const PRICE_HIDDEN_CLASS = 'jane-set-component-price-hidden';
@@ -174,12 +175,12 @@
     return false;
   }
 
-  function componentCards() {
+  function janeCartCards() {
     const cards = [];
-    document.querySelectorAll('button, a, [role="button"]').forEach(control => {
+    document.querySelectorAll('button, [role="button"]').forEach(control => {
       const card = findJaneCard(control);
       if (
-        ['Top', 'Pants'].includes(card?.role) &&
+        JANE_ROLES.includes(card?.role) &&
         isCartContext(card.element) &&
         !cards.includes(card.element)
       ) {
@@ -187,6 +188,12 @@
       }
     });
     return cards;
+  }
+
+  function componentCards() {
+    return janeCartCards().filter(card =>
+      ['Top', 'Pants'].includes(findJaneCard(card)?.role)
+    );
   }
 
   function hideComponentPrices() {
@@ -206,9 +213,48 @@
     });
   }
 
+  function removeJaneSetTitleLinks() {
+    janeCartCards().forEach(card => {
+      card.querySelectorAll('a').forEach(link => {
+        if (link.querySelector('img') || deleteControlFrom(link)) return;
+
+        const linkValue = normalize([
+          link.textContent,
+          link.getAttribute('href')
+        ].filter(Boolean).join(' '));
+        const isJaneTitle =
+          linkValue.includes('jane set') ||
+          linkValue.includes('jane blouse') ||
+          linkValue.includes('jane pants') ||
+          linkValue.includes('jane-set') ||
+          linkValue.includes('jane-blouse') ||
+          linkValue.includes('jane-pants') ||
+          linkValue.includes('jane-coordinates-set') ||
+          (
+            linkValue.includes('/products/') &&
+            linkValue.includes('premium-ity')
+          );
+        if (!isJaneTitle) return;
+
+        const replacement = document.createElement('span');
+        replacement.className = link.className;
+        replacement.style.cssText = link.style.cssText;
+        replacement.style.cursor = 'default';
+        replacement.dataset.janeSetTitleLinkRemoved = 'true';
+        while (link.firstChild) replacement.appendChild(link.firstChild);
+        link.replaceWith(replacement);
+      });
+    });
+  }
+
+  function applyLightweightCartGuards() {
+    hideComponentPrices();
+    removeJaneSetTitleLinks();
+  }
+
   function schedulePriceCheck() {
     window.clearTimeout(priceCheckTimer);
-    priceCheckTimer = window.setTimeout(hideComponentPrices, 150);
+    priceCheckTimer = window.setTimeout(applyLightweightCartGuards, 150);
   }
 
   function isJaneItem(item) {
@@ -374,8 +420,8 @@
   document.addEventListener('cart:updated', schedulePriceCheck);
   installPriceStyle();
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', hideComponentPrices, { once: true });
+    document.addEventListener('DOMContentLoaded', applyLightweightCartGuards, { once: true });
   } else {
-    hideComponentPrices();
+    applyLightweightCartGuards();
   }
 })();
