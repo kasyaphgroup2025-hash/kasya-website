@@ -14,6 +14,32 @@
   assign pants_product = section.settings.pants_product
   assign parent_variant = parent_product.selected_or_first_available_variant
 
+  assign blouse_size_chart_image = blank
+  assign pants_size_chart_image = blank
+  assign general_size_chart_image = blank
+  for media in parent_product.media
+    if media.media_type == 'image' and media.preview_image != blank
+      assign media_alt_parts = media.alt | default: '' | split: '|'
+      assign media_alt_prefix = media_alt_parts[0] | strip | downcase
+      assign media_alt_type = media_alt_parts[1] | strip | downcase
+      assign media_alt_role = media_alt_parts[2] | strip | downcase
+
+      if media_alt_prefix == 'lp' and media_alt_type == 'size chart'
+        if media_alt_role == 'blouse' or media_alt_role == 'top'
+          if blouse_size_chart_image == blank
+            assign blouse_size_chart_image = media.preview_image
+          endif
+        elsif media_alt_role == 'pants'
+          if pants_size_chart_image == blank
+            assign pants_size_chart_image = media.preview_image
+          endif
+        elsif media_alt_parts.size == 2 and general_size_chart_image == blank
+          assign general_size_chart_image = media.preview_image
+        endif
+      endif
+    endif
+  endfor
+
   assign setup_error = blank
   if parent_product == blank or parent_variant == blank
     assign setup_error = 'Jane Set parent product is not configured.'
@@ -156,6 +182,45 @@
           </legend>
           <div class="jane-set-hero__sizes" data-size-options="pants"></div>
         </fieldset>
+
+        {% if blouse_size_chart_image != blank or pants_size_chart_image != blank or general_size_chart_image != blank %}
+          <div class="jane-set-hero__size-guide">
+            <h2>Size Guide</h2>
+
+            {% if blouse_size_chart_image != blank or pants_size_chart_image != blank %}
+              {% if blouse_size_chart_image != blank %}
+                <figure class="jane-set-hero__size-chart">
+                  <figcaption>Blouse Size Chart</figcaption>
+                  {{
+                    blouse_size_chart_image
+                    | image_url: width: 1400
+                    | image_tag: loading: 'lazy', widths: '480, 760, 1100, 1400', alt: 'Blouse Size Chart'
+                  }}
+                </figure>
+              {% endif %}
+
+              {% if pants_size_chart_image != blank %}
+                <figure class="jane-set-hero__size-chart">
+                  <figcaption>Pants Size Chart</figcaption>
+                  {{
+                    pants_size_chart_image
+                    | image_url: width: 1400
+                    | image_tag: loading: 'lazy', widths: '480, 760, 1100, 1400', alt: 'Pants Size Chart'
+                  }}
+                </figure>
+              {% endif %}
+            {% elsif general_size_chart_image != blank %}
+              <figure class="jane-set-hero__size-chart">
+                <figcaption>Size Chart</figcaption>
+                {{
+                  general_size_chart_image
+                  | image_url: width: 1400
+                  | image_tag: loading: 'lazy', widths: '480, 760, 1100, 1400', alt: 'Size Chart'
+                }}
+              </figure>
+            {% endif %}
+          </div>
+        {% endif %}
 
         <button type="submit" class="jane-set-hero__submit" data-jane-submit disabled>
           <span data-jane-submit-text>ADD SET TO CART</span>
@@ -467,6 +532,39 @@
   .jane-set-hero__size.is-pending {
     opacity: 1;
     text-decoration: none;
+  }
+
+  .jane-set-hero__size-guide {
+    display: grid;
+    gap: 20px;
+    margin: 0 0 24px;
+    border-top: 1px solid var(--jane-line);
+    padding-top: 20px;
+  }
+
+  .jane-set-hero__size-guide h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .jane-set-hero__size-chart {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+  }
+
+  .jane-set-hero__size-chart figcaption {
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .jane-set-hero__size-chart img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--jane-line);
   }
 
   .jane-set-hero__swatch {
