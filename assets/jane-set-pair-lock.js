@@ -17,6 +17,7 @@
 
   const JANE_ROLES = ['Parent', 'Top', 'Pants'];
   const PRICE_HIDDEN_CLASS = 'jane-set-component-price-hidden';
+  const QUANTITY_BUTTON_HIDDEN_CLASS = 'jane-set-aov-qty-button-hidden';
   let priceCheckTimer = null;
 
   function normalize(value) {
@@ -154,6 +155,12 @@
         display: none !important;
         visibility: hidden !important;
       }
+
+      .${QUANTITY_BUTTON_HIDDEN_CLASS} {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+      }
     `;
     document.head.appendChild(style);
   }
@@ -219,6 +226,18 @@
     });
   }
 
+  function hideJaneQuantityButtons() {
+    janeCartCards().forEach(card => {
+      if (isJaneReviewContext(card) || !isCartContext(card)) return;
+
+      card.querySelectorAll('button, a, [role="button"]').forEach(control => {
+        if (quantityAction(control)) {
+          control.classList.add(QUANTITY_BUTTON_HIDDEN_CLASS);
+        }
+      });
+    });
+  }
+
   function removeJaneSetTitleLinks() {
     janeCartCards().forEach(card => {
       card.querySelectorAll('a').forEach(link => {
@@ -255,6 +274,7 @@
 
   function applyLightweightCartGuards() {
     hideComponentPrices();
+    hideJaneQuantityButtons();
     removeJaneSetTitleLinks();
   }
 
