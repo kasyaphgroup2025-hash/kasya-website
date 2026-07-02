@@ -28,11 +28,13 @@
     return normalize([
       control.textContent,
       control.className,
+      control.getAttribute('class'),
       control.getAttribute('aria-label'),
       control.getAttribute('title'),
       control.getAttribute('name'),
       control.querySelector('svg')?.getAttribute('aria-label'),
-      control.querySelector('svg')?.className?.baseVal
+      control.querySelector('svg')?.className?.baseVal,
+      control.querySelector('use')?.getAttribute('href')
     ].filter(Boolean).join(' '));
   }
 
@@ -159,7 +161,14 @@
       .${QUANTITY_BUTTON_HIDDEN_CLASS} {
         display: none !important;
         visibility: hidden !important;
+        opacity: 0 !important;
         pointer-events: none !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        max-width: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
       }
     `;
     document.head.appendChild(style);
@@ -230,7 +239,9 @@
     janeCartCards().forEach(card => {
       if (isJaneReviewContext(card) || !isCartContext(card)) return;
 
-      card.querySelectorAll('button, a, [role="button"]').forEach(control => {
+      card.querySelectorAll(
+        'button, a, span, div, i, svg, [role="button"], [aria-label], [title]'
+      ).forEach(control => {
         if (quantityAction(control)) {
           control.classList.add(QUANTITY_BUTTON_HIDDEN_CLASS);
         }
