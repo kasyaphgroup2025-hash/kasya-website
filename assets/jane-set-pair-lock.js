@@ -57,20 +57,22 @@
     return null;
   }
 
-  function isProductTitleLink(link) {
-    const href = normalize(link.getAttribute('href'));
-    const text = normalize(link.textContent);
-    const description = normalize([
-      link.className,
-      link.getAttribute('aria-label'),
-      link.getAttribute('title')
-    ].filter(Boolean).join(' '));
+  function navigationControlFrom(event) {
+    const path = typeof event.composedPath === 'function'
+      ? event.composedPath()
+      : [event.target];
 
-    return href.includes('/products/') ||
-      text.includes('jane set') ||
-      text.includes('jane blouse') ||
-      text.includes('jane pants') ||
-      /(product|title|name)/.test(description);
+    return path.find(element =>
+      element instanceof Element &&
+      element.matches?.('a, [role="link"], [onclick]')
+    ) || null;
+  }
+
+  function isAllowedCartControl(control) {
+    if (!control) return false;
+    const description = controlDescription(control);
+    return /(remove|delete|trash|checkout|close|continue shopping)/.test(description) ||
+      Boolean(quantityAction(control));
   }
 
   function findJaneCard(control) {
@@ -238,6 +240,7 @@
 
   document.addEventListener('click', event => {
     const clickedLink = event.target.closest?.('a');
+    const rawControl = event.target.closest?.('button, a, [role="button"]');
     const clickedImage =
       event.target.closest?.('img') ||
       clickedLink?.querySelector('img');
@@ -255,8 +258,11 @@
       }
     }
 
-    if (clickedLink && isProductTitleLink(clickedLink)) {
-      const titleCard = findJaneCard(clickedLink);
+    const navigationControl = navigationControlFrom(event);
+    if (navigationControl && !isAllowedCartControl(rawControl)) {
+      const titleCard =
+        findJaneCard(navigationControl) ||
+        findJaneCard(event.target);
       if (
         titleCard &&
         JANE_ROLES.includes(titleCard.role) &&
@@ -269,7 +275,6 @@
       }
     }
 
-    const rawControl = event.target.closest?.('button, a, [role="button"]');
     if (!rawControl) return;
 
     const rawDescription = controlDescription(rawControl);
