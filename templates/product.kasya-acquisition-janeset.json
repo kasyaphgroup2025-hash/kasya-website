@@ -20,7 +20,7 @@
         "product_label": "KASYA SETS",
         "heading": "JANE SET",
         "subtitle": "Premium ITY",
-        "description": "A polished blouse and pants set designed for effortless comfort and versatile everyday wear."
+        "description": "A soft blouse-and-pants set made for easy, polished everyday wear."
       }
     },
     "kasya_lp_fit_confidence": {
@@ -29,7 +29,7 @@
         "fit_note_1": {
           "type": "fit_note",
           "settings": {
-            "note": "Relaxed coordinated set"
+            "note": "Relaxed coordinated fit"
           }
         },
         "fit_note_2": {
@@ -41,7 +41,7 @@
         "fit_note_3": {
           "type": "fit_note",
           "settings": {
-            "note": "Easy room around the bust and waist"
+            "note": "Separate top and pants sizing"
           }
         },
         "fit_note_4": {
@@ -59,13 +59,13 @@
       ],
       "settings": {
         "heading": "HOW IT FITS",
-        "subheading": "See how the Jane Set falls before choosing your top and pants size.",
+        "subheading": "Choose your top and pants sizes separately for an easier fit.",
         "front_label": "FRONT VIEW",
-        "front_description": "Shows the full coordinated look, relaxed top fit, and wide-leg pants silhouette.",
+        "front_description": "Shows the full set and relaxed silhouette.",
         "side_label": "SIDE VIEW",
-        "side_description": "Shows the soft drape and easy body room.",
+        "side_description": "Shows the soft drape and body room.",
         "back_label": "BACK VIEW",
-        "back_description": "Shows the clean back fit and relaxed fall from behind.",
+        "back_description": "Shows the clean fall from behind.",
         "model_info": "Model is 5'2 and wears size M for the top and size L for the pants."
       }
     },
@@ -76,8 +76,8 @@
           "type": "fabric_note",
           "settings": {
             "icon": "≈",
-            "title": "Soft drape",
-            "description": "Smooth and comfortable on the skin."
+            "title": "Smooth feel",
+            "description": "Soft on the skin for daily comfort."
           }
         },
         "fabric_note_2": {
@@ -85,7 +85,7 @@
           "settings": {
             "icon": "◯",
             "title": "Semi-stretch",
-            "description": "Gives gentle flexibility for movement."
+            "description": "Gives gentle ease as you move."
           }
         },
         "fabric_note_3": {
@@ -100,8 +100,8 @@
           "type": "fabric_note",
           "settings": {
             "icon": "✓",
-            "title": "Everyday polish",
-            "description": "Easy to wear for work, errands, or casual days."
+            "title": "Easy polish",
+            "description": "Put-together without feeling overdressed."
           }
         }
       },
@@ -112,9 +112,9 @@
         "fabric_note_4"
       ],
       "settings": {
-        "heading": "FABRIC & QUALITY",
-        "subheading": "Soft Korean ITY knit with a relaxed drape, made for everyday comfort.",
-        "main_note": "Feels smooth, soft, and easy to move in while keeping the full set polished for daily wear.",
+        "heading": "FABRIC & FEEL",
+        "subheading": "Soft Korean ITY knit with a smooth feel and relaxed drape.",
+        "main_note": "Made to feel easy on the body while keeping the full set polished for everyday wear.",
         "show_feature_notes": true
       }
     },
@@ -126,7 +126,7 @@
           "settings": {
             "image": "shopify://shop_images/office_jane.png",
             "title": "Office Day",
-            "description": "Polished enough for work, relaxed enough for long hours."
+            "description": "Polished enough for work, easy enough for long hours."
           }
         },
         "lifestyle_2": {
@@ -134,7 +134,7 @@
           "settings": {
             "image": "shopify://shop_images/errands_jane.png",
             "title": "Errands",
-            "description": "Easy to move in while still looking put-together."
+            "description": "Soft, simple, and easy to move in."
           }
         },
         "lifestyle_3": {
@@ -142,7 +142,7 @@
           "settings": {
             "image": "shopify://shop_images/family_lunch.png",
             "title": "Family Lunch",
-            "description": "Comfortable, modest, and effortless to style."
+            "description": "Comfortable, modest, and effortlessly put-together."
           }
         },
         "lifestyle_4": {
@@ -150,7 +150,7 @@
           "settings": {
             "image": "shopify://shop_images/TRAVELLL.png",
             "title": "Travel",
-            "description": "Relaxed fit that moves with you through a long day."
+            "description": "A relaxed set for moving through a full day."
           }
         }
       },
@@ -162,7 +162,7 @@
       ],
       "settings": {
         "heading": "WHERE TO WEAR IT",
-        "subheading": "Everyday moments made easier, softer, and more put-together."
+        "subheading": "For the days you want comfort to still look intentional."
       }
     },
     "kasya_lp_reviews": {
@@ -236,7 +236,7 @@
           "type": "reassurance_item",
           "settings": {
             "icon": "payment",
-            "title": "Easy Payment",
+            "title": "Easy payment",
             "description": "COD, GCash, and card payments available."
           }
         },
@@ -244,8 +244,8 @@
           "type": "reassurance_item",
           "settings": {
             "icon": "return",
-            "title": "Returns accepted",
-            "description": "for unworn items with tags attached"
+            "title": "Size exchange",
+            "description": "Accepted for unworn items with tags attached."
           }
         },
         "reassurance_4": {
@@ -253,7 +253,7 @@
           "settings": {
             "icon": "message",
             "title": "Need help?",
-            "description": "Message us for sizing assistance"
+            "description": "Message us for sizing assistance."
           }
         }
       },
@@ -265,7 +265,7 @@
       ],
       "settings": {
         "heading": "Shipping & Return",
-        "subheading": "A quick guide before checkout.",
+        "subheading": "Helpful details before checkout.",
         "background_color": "#ffffff",
         "card_color": "#ffffff"
       }
@@ -276,27 +276,27 @@
         "faq_1": {
           "type": "faq",
           "settings": {
-            "category_label": "Fit & body",
-            "question": "What size should I get?",
-            "answer": "Choose your usual size for a relaxed fit. If you prefer extra room around the bust, arms, or tummy area, we recommend sizing up.",
+            "category_label": "Fit & sizing",
+            "question": "Can I choose different sizes for the top and pants?",
+            "answer": "Yes. You can choose your top size and pants size separately before adding the Jane Set to cart.",
             "open_by_default": true
           }
         },
         "faq_2": {
           "type": "faq",
           "settings": {
-            "category_label": "Fit & body",
-            "question": "Is it good for the bust area?",
-            "answer": "Yes. The fit is designed to feel relaxed around the bust area without clinging too tightly. If you prefer more room, we recommend sizing up.",
+            "category_label": "Fit & sizing",
+            "question": "What size should I get?",
+            "answer": "Choose your usual size for a relaxed fit. If you prefer more room around the bust, arms, waist, or hips, we recommend sizing up.",
             "open_by_default": false
           }
         },
         "faq_3": {
           "type": "faq",
           "settings": {
-            "category_label": "Fabric & feel",
-            "question": "Is the fabric stretchable?",
-            "answer": "The fabric has a soft, relaxed drape but is not highly stretchable. If you want more room around the waist or hips, sizing up may be better.",
+            "category_label": "Fit & sizing",
+            "question": "Is the fit loose or fitted?",
+            "answer": "The Jane Set has a relaxed silhouette. The blouse drapes softly, while the pants have an easy wide-leg shape.",
             "open_by_default": false
           }
         },
@@ -304,8 +304,8 @@
           "type": "faq",
           "settings": {
             "category_label": "Fabric & feel",
-            "question": "Is it see-through?",
-            "answer": "The fabric is designed for everyday wear. For lighter colors, we recommend wearing skin-tone undergarments for extra confidence.",
+            "question": "What is Premium ITY?",
+            "answer": "Premium ITY is a soft knit fabric with a smooth feel, relaxed drape, and gentle semi-stretch for everyday comfort.",
             "open_by_default": false
           }
         },
@@ -313,35 +313,35 @@
           "type": "faq",
           "settings": {
             "category_label": "Fabric & feel",
-            "question": "Will it shrink after washing?",
-            "answer": "Slight shrinkage may happen due to fabric behavior, especially if washed in hot water or dried using high heat. For best care, wash gently and hang to dry.",
+            "question": "Is it stretchable?",
+            "answer": "It has gentle semi-stretch, but it is not highly stretchable. For extra ease, especially around the body, sizing up is recommended.",
             "open_by_default": false
           }
         },
         "faq_6": {
           "type": "faq",
           "settings": {
-            "category_label": "Risk reversal",
-            "question": "Can I exchange if the size does not fit?",
-            "answer": "Yes, size exchange may be requested within 7 days as long as the item is unworn, unwashed, and has the tags attached. Please review our return and exchange policy before purchase.",
+            "category_label": "Product details",
+            "question": "Is this sold as a set?",
+            "answer": "Yes. Jane is sold as a blouse-and-pants set. The blouse and pants are not sold separately on this page.",
             "open_by_default": false
           }
         },
         "faq_7": {
           "type": "faq",
           "settings": {
-            "category_label": "Logistics",
-            "question": "How long is delivery?",
-            "answer": "Orders are prepared and shipped from Cavite. Delivery timeline depends on your location and will be shown at checkout.",
+            "category_label": "Care",
+            "question": "How do I wash it?",
+            "answer": "Wash gently with mild detergent. Avoid bleach, hot water, and high-heat drying. Hang to dry to help maintain the fabric and shape.",
             "open_by_default": false
           }
         },
         "faq_8": {
           "type": "faq",
           "settings": {
-            "category_label": "Logistics",
-            "question": "How do I wash it?",
-            "answer": "Wash gently using mild detergent. Avoid bleach, hot water, and high-heat drying. Hang to dry to help maintain the garment's shape and fabric quality.",
+            "category_label": "Exchange",
+            "question": "Can I exchange if the size does not fit?",
+            "answer": "Yes, size exchange may be requested within 7 days as long as the item is unworn, unwashed, and has the tags attached.",
             "open_by_default": false
           }
         }
