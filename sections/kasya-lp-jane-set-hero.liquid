@@ -1190,8 +1190,26 @@
       }
 
       try {
-        const cart = document.querySelector('cart-drawer');
-        const sections = cart?.getSectionsToRender().map(section => section.id) || [];
+        const nativeCartDrawer = document.querySelector('cart-drawer');
+        let canUseNativeCartDrawer =
+          nativeCartDrawer &&
+          typeof nativeCartDrawer.getSectionsToRender === 'function' &&
+          typeof nativeCartDrawer.renderContents === 'function';
+        let sections = [];
+
+        if (canUseNativeCartDrawer) {
+          try {
+            sections = nativeCartDrawer
+              .getSectionsToRender()
+              .map(section => section.id)
+              .filter(Boolean);
+          } catch (drawerError) {
+            canUseNativeCartDrawer = false;
+            console.warn('[Jane Set Add] Native cart drawer sections are unavailable.', drawerError);
+          }
+        }
+
+        console.info('[Jane Set Add] adding reviewed set');
         const response = await fetch('/cart/add.js', {
           method: 'POST',
           headers: {
@@ -1242,6 +1260,7 @@
           throw new Error(error.description || error.message || 'Unable to add this set to cart.');
         }
 
+        console.info('[Jane Set Add] add response ok');
         const cartResponse = await response.json();
         const verifiedCart = await fetchCart();
         const setItems = getSetItems(verifiedCart);
@@ -1256,17 +1275,42 @@
           throw new Error('Jane Set could not be added completely. Please try again.');
         }
 
-        if (cart && typeof cart.renderContents === 'function' && cartResponse.sections) {
-          review.hidden = true;
-          document.body.style.removeProperty('overflow');
-          cart.setActiveElement?.(document.activeElement);
-          cart.classList.remove('is-empty');
-          cart.renderContents(cartResponse);
-          adding = false;
-          reviewAddButton.disabled = false;
-          reviewAddText.textContent = 'ADD TO CART';
-          updateControls();
-        } else {
+        console.info('[Jane Set Add] verified complete set');
+        review.hidden = true;
+        document.body.style.removeProperty('overflow');
+        adding = false;
+        reviewAddButton.disabled = false;
+        reviewAddText.textContent = 'ADD TO CART';
+        updateControls();
+
+        let cartWasOpened = false;
+        if (canUseNativeCartDrawer && cartResponse.sections) {
+          try {
+            nativeCartDrawer.setActiveElement?.(document.activeElement);
+            nativeCartDrawer.classList.remove('is-empty');
+            nativeCartDrawer.renderContents(cartResponse);
+            cartWasOpened = true;
+          } catch (drawerError) {
+            console.warn('[Jane Set Add] Native cart drawer refresh was unavailable.', drawerError);
+          }
+        }
+
+        document.dispatchEvent(new CustomEvent('afterCartChanged', {
+          detail: {
+            source: 'jane-set-review',
+            cartData: verifiedCart
+          }
+        }));
+
+        if (!cartWasOpened) {
+          const cartTrigger = document.querySelector('#cart-icon-bubble');
+          if (cartTrigger) {
+            cartTrigger.click();
+            cartWasOpened = true;
+          }
+        }
+
+        if (!cartWasOpened) {
           window.location.assign('/cart');
         }
       } catch (error) {
