@@ -10,6 +10,7 @@
   console.info('[Jane Set Delete Guard] loaded');
   console.info('[Jane Set Quantity Guard] loaded');
   console.info('[Jane Set Component Price Guard] loaded');
+  console.info('[Jane Set Image Click Guard] loaded');
 
   const JANE_ROLES = ['Parent', 'Top', 'Pants'];
   const PRICE_HIDDEN_CLASS = 'jane-set-component-price-hidden';
@@ -219,6 +220,24 @@
   }
 
   document.addEventListener('click', event => {
+    const clickedLink = event.target.closest?.('a');
+    const clickedImage =
+      event.target.closest?.('img') ||
+      clickedLink?.querySelector('img');
+    if (clickedImage) {
+      const imageCard = findJaneCard(clickedImage);
+      if (
+        imageCard &&
+        JANE_ROLES.includes(imageCard.role) &&
+        isCartContext(imageCard.element)
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation?.();
+        return;
+      }
+    }
+
     const rawControl = event.target.closest?.('button, a, [role="button"]');
     if (!rawControl) return;
 
