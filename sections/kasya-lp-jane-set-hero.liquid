@@ -185,40 +185,56 @@
 
         {% if blouse_size_chart_image != blank or pants_size_chart_image != blank or general_size_chart_image != blank %}
           <div class="jane-set-hero__size-guide">
-            <h2>Size Guide</h2>
+            <button
+              type="button"
+              class="jane-set-hero__size-guide-toggle"
+              aria-expanded="false"
+              aria-controls="JaneSetSizeGuide-{{ section.id }}"
+              data-jane-size-guide-toggle
+            >
+              <span>Not sure about your size? View size chart</span>
+              <span class="jane-set-hero__size-guide-chevron" aria-hidden="true">&#8964;</span>
+            </button>
 
-            {% if blouse_size_chart_image != blank or pants_size_chart_image != blank %}
-              {% if blouse_size_chart_image != blank %}
+            <div
+              id="JaneSetSizeGuide-{{ section.id }}"
+              class="jane-set-hero__size-guide-content"
+              data-jane-size-guide-content
+              hidden
+            >
+              {% if blouse_size_chart_image != blank or pants_size_chart_image != blank %}
+                {% if blouse_size_chart_image != blank %}
+                  <figure class="jane-set-hero__size-chart">
+                    <figcaption>Blouse Size Chart</figcaption>
+                    {{
+                      blouse_size_chart_image
+                      | image_url: width: 1400
+                      | image_tag: loading: 'lazy', widths: '480, 760, 1100, 1400', alt: 'Blouse Size Chart'
+                    }}
+                  </figure>
+                {% endif %}
+
+                {% if pants_size_chart_image != blank %}
+                  <figure class="jane-set-hero__size-chart">
+                    <figcaption>Pants Size Chart</figcaption>
+                    {{
+                      pants_size_chart_image
+                      | image_url: width: 1400
+                      | image_tag: loading: 'lazy', widths: '480, 760, 1100, 1400', alt: 'Pants Size Chart'
+                    }}
+                  </figure>
+                {% endif %}
+              {% elsif general_size_chart_image != blank %}
                 <figure class="jane-set-hero__size-chart">
-                  <figcaption>Blouse Size Chart</figcaption>
+                  <figcaption>Size Chart</figcaption>
                   {{
-                    blouse_size_chart_image
+                    general_size_chart_image
                     | image_url: width: 1400
-                    | image_tag: loading: 'lazy', widths: '480, 760, 1100, 1400', alt: 'Blouse Size Chart'
+                    | image_tag: loading: 'lazy', widths: '480, 760, 1100, 1400', alt: 'Size Chart'
                   }}
                 </figure>
               {% endif %}
-
-              {% if pants_size_chart_image != blank %}
-                <figure class="jane-set-hero__size-chart">
-                  <figcaption>Pants Size Chart</figcaption>
-                  {{
-                    pants_size_chart_image
-                    | image_url: width: 1400
-                    | image_tag: loading: 'lazy', widths: '480, 760, 1100, 1400', alt: 'Pants Size Chart'
-                  }}
-                </figure>
-              {% endif %}
-            {% elsif general_size_chart_image != blank %}
-              <figure class="jane-set-hero__size-chart">
-                <figcaption>Size Chart</figcaption>
-                {{
-                  general_size_chart_image
-                  | image_url: width: 1400
-                  | image_tag: loading: 'lazy', widths: '480, 760, 1100, 1400', alt: 'Size Chart'
-                }}
-              </figure>
-            {% endif %}
+            </div>
           </div>
         {% endif %}
 
@@ -535,18 +551,49 @@
   }
 
   .jane-set-hero__size-guide {
-    display: grid;
-    gap: 20px;
     margin: 0 0 24px;
     border-top: 1px solid var(--jane-line);
-    padding-top: 20px;
+    border-bottom: 1px solid var(--jane-line);
   }
 
-  .jane-set-hero__size-guide h2 {
-    margin: 0;
-    font-size: 20px;
+  .jane-set-hero__size-guide-toggle {
+    display: flex;
+    width: 100%;
+    min-height: 54px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    border: 0;
+    padding: 14px 0;
+    background: transparent;
+    color: var(--jane-text);
+    cursor: pointer;
+    font: inherit;
+    font-size: 13px;
     font-weight: 800;
+    text-align: left;
     text-transform: uppercase;
+  }
+
+  .jane-set-hero__size-guide-chevron {
+    flex: 0 0 auto;
+    font-size: 22px;
+    line-height: 1;
+    transition: transform 180ms ease;
+  }
+
+  .jane-set-hero__size-guide-toggle[aria-expanded="true"] .jane-set-hero__size-guide-chevron {
+    transform: rotate(180deg);
+  }
+
+  .jane-set-hero__size-guide-content {
+    display: grid;
+    gap: 22px;
+    padding: 4px 0 22px;
+  }
+
+  .jane-set-hero__size-guide-content[hidden] {
+    display: none;
   }
 
   .jane-set-hero__size-chart {
@@ -832,6 +879,8 @@
     const reviewAddText = section.querySelector('[data-jane-review-add-text]');
     const reviewError = section.querySelector('[data-jane-review-error]');
     const reviewPrice = section.querySelector('[data-jane-review-price]');
+    const sizeGuideToggle = section.querySelector('[data-jane-size-guide-toggle]');
+    const sizeGuideContent = section.querySelector('[data-jane-size-guide-content]');
 
     if (
       !form ||
@@ -844,6 +893,14 @@
       !reviewAddButton ||
       !reviewPrice
     ) return;
+
+    if (sizeGuideToggle && sizeGuideContent) {
+      sizeGuideToggle.addEventListener('click', () => {
+        const willExpand = sizeGuideToggle.getAttribute('aria-expanded') !== 'true';
+        sizeGuideToggle.setAttribute('aria-expanded', String(willExpand));
+        sizeGuideContent.hidden = !willExpand;
+      });
+    }
 
     const products = JSON.parse(componentData.textContent || '{}');
     const productMedia = productMediaData ? JSON.parse(productMediaData.textContent || '[]') : [];
