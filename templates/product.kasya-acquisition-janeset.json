@@ -29,19 +29,19 @@
         "fit_note_1": {
           "type": "fit_note",
           "settings": {
-            "note": "Relaxed polo fit"
+            "note": "Relaxed coordinated set"
           }
         },
         "fit_note_2": {
           "type": "fit_note",
           "settings": {
-            "note": "Semi-crop length"
+            "note": "Soft semi-stretch feel"
           }
         },
         "fit_note_3": {
           "type": "fit_note",
           "settings": {
-            "note": "Roomy around the bust and waist"
+            "note": "Easy room around the bust and waist"
           }
         },
         "fit_note_4": {
@@ -59,14 +59,14 @@
       ],
       "settings": {
         "heading": "HOW IT FITS",
-        "subheading": "See how the Jane Set falls from every angle before choosing your top and pants size.",
+        "subheading": "See how the Jane Set falls before choosing your top and pants size.",
         "front_label": "FRONT VIEW",
         "front_description": "Shows the full coordinated look, relaxed top fit, and wide-leg pants silhouette.",
         "side_label": "SIDE VIEW",
-        "side_description": "Shows the soft drape, easy body room, and how the set falls naturally without looking stiff.",
+        "side_description": "Shows the soft drape and easy body room.",
         "back_label": "BACK VIEW",
-        "back_description": "Shows the clean back fit, relaxed top length, and smooth wide-leg flow from behind.",
-        "model_info": "Model is 5'2 and wears size M."
+        "back_description": "Shows the clean back fit and relaxed fall from behind.",
+        "model_info": "Model is 5'2 and wears size M for the top and size L for the pants."
       }
     },
     "kasya_lp_fabric_quality": {
@@ -77,31 +77,31 @@
           "settings": {
             "icon": "≈",
             "title": "Soft drape",
-            "description": "Falls naturally without feeling stiff or bulky."
+            "description": "Smooth and comfortable on the skin."
           }
         },
         "fabric_note_2": {
           "type": "fabric_note",
           "settings": {
             "icon": "◯",
-            "title": "Breathable feel",
-            "description": "Comfortable enough for warm days and long wear."
+            "title": "Semi-stretch",
+            "description": "Gives gentle flexibility for movement."
           }
         },
         "fabric_note_3": {
           "type": "fabric_note",
           "settings": {
             "icon": "✱",
-            "title": "Everyday structure",
-            "description": "Polished enough for errands, work, and casual plans."
+            "title": "Relaxed drape",
+            "description": "Falls naturally without looking stiff."
           }
         },
         "fabric_note_4": {
           "type": "fabric_note",
           "settings": {
             "icon": "✓",
-            "title": "Easy care",
-            "description": "Wash gently and hang to dry to help maintain shape and fabric quality."
+            "title": "Everyday polish",
+            "description": "Easy to wear for work, errands, or casual days."
           }
         }
       },
@@ -113,8 +113,8 @@
       ],
       "settings": {
         "heading": "FABRIC & QUALITY",
-        "subheading": "Acid linen-feel fabric with a relaxed drape, made for everyday comfort.",
-        "main_note": "Designed to feel light, breathable, and comfortable for daily wear while still giving enough structure to look polished.",
+        "subheading": "Soft Korean ITY knit with a relaxed drape, made for everyday comfort.",
+        "main_note": "Feels smooth, soft, and easy to move in while keeping the full set polished for daily wear.",
         "show_feature_notes": true
       }
     },
@@ -148,7 +148,7 @@
         "lifestyle_4": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/travel_jane.png",
+            "image": "shopify://shop_images/TRAVELLL.png",
             "title": "Travel",
             "description": "Relaxed fit that moves with you through a long day."
           }
