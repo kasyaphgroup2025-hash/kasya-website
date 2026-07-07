@@ -1,1 +1,104 @@
-{"sections":{"main":{"type":"main-page","disabled":true,"settings":{"section_width":"grid","content_alignment":"left","color_scheme":"","padding_top":80,"padding_bottom":40}},"1752910218d7d0dcd0":{"type":"apps","settings":{"include_margins":true}},"17621796018fa62765":{"type":"apps","blocks":{"klaviyo_email_marketing_sms_form_embed_block_JiJK9Y":{"type":"shopify:\/\/apps\/klaviyo-email-marketing-sms\/blocks\/form-embed-block\/2632fe16-c075-4321-a88b-50b567f42507","settings":{"formId":""}}},"block_order":["klaviyo_email_marketing_sms_form_embed_block_JiJK9Y"],"settings":{"include_margins":true}}},"order":["main","1752910218d7d0dcd0","17621796018fa62765"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "section_width": "grid",
+        "content_alignment": "left",
+        "color_scheme": "",
+        "padding_top": 80,
+        "padding_bottom": 40
+      }
+    },
+    "1752910218d7d0dcd0": {
+      "type": "apps",
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "17621796018fa62765": {
+      "type": "apps",
+      "blocks": {
+        "klaviyo_email_marketing_sms_form_embed_block_JiJK9Y": {
+          "type": "shopify://apps/klaviyo-email-marketing-sms/blocks/form-embed-block/2632fe16-c075-4321-a88b-50b567f42507",
+          "settings": {
+            "formId": ""
+          }
+        }
+      },
+      "block_order": [
+        "klaviyo_email_marketing_sms_form_embed_block_JiJK9Y"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "gallery_TgbJqB": {
+      "type": "gallery",
+      "blocks": {
+        "text_outside_image_Ye6pUr": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/Jane_Taupe_Front.jpg",
+            "link": "shopify://products/jane-set-premium-ity",
+            "text": "Jane Set - Premium ITY",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000",
+            "caption_color": "#000",
+            "button_foreground": "#fff",
+            "button_background": "#000",
+            "lightbox_button_color": "#000",
+            "lightbox_button_background": "#fff"
+          }
+        }
+      },
+      "block_order": [
+        "text_outside_image_Ye6pUr"
+      ],
+      "name": "t:names.gallery_classic_grid",
+      "settings": {
+        "title": "Kasya Set",
+        "heading_size": "h1",
+        "flexible_columns_layout": "grid",
+        "columns_desktop": 4,
+        "columns_tablet": "3",
+        "full_width": false,
+        "auto_fit": false,
+        "disable_item_space": false,
+        "enable_section_box_layout": false,
+        "enable_images_lightbox": false,
+        "color_scheme": "",
+        "image_ratio": "adapt",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "1752910218d7d0dcd0",
+    "17621796018fa62765",
+    "gallery_TgbJqB"
+  ]
+}
