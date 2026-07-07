@@ -15,6 +15,10 @@
     assign product_form_id = 'kasya-lp-product-form-' | append: section.id
     assign size_chart_image = section.settings.size_chart_image
     assign size_chart_alt = section.settings.size_chart_trigger_text
+    assign require_explicit_variant_selection = false
+    if template.suffix == 'kasya-acquisition-test' and lp_product.handle == 'wideleg-linen-pants'
+      assign require_explicit_variant_selection = true
+    endif
 
     for media in lp_product.media
       if media.media_type == 'image' and media.preview_image != blank and media.alt == 'LP | Size Chart'
@@ -26,7 +30,7 @@
   endif
 %}
 
-<section class="kasya-product-hero{% if section.settings.enable_sticky_atc %} kasya-product-hero--sticky-enabled{% endif %}" data-kasya-hero data-section-id="{{ section.id }}">
+<section class="kasya-product-hero{% if section.settings.enable_sticky_atc %} kasya-product-hero--sticky-enabled{% endif %}" data-kasya-hero data-section-id="{{ section.id }}"{% if require_explicit_variant_selection %} data-require-explicit-variant-selection="true"{% endif %}>
   {% if lp_product == blank %}
     <div class="kasya-product-hero__empty">
       <p>Select a product in this section's settings.</p>
@@ -141,7 +145,7 @@
         <div class="loading-overlay__spinner hidden" aria-hidden="true"></div>
 
         {% form 'product', lp_product, id: product_form_id, class: 'kasya-product-hero__form', novalidate: 'novalidate', data-type: 'add-to-cart-form' %}
-          <input type="hidden" name="id" value="{{ selected_variant.id }}" data-variant-id>
+          <input type="hidden" name="id" value="{% unless require_explicit_variant_selection %}{{ selected_variant.id }}{% endunless %}" data-variant-id{% if require_explicit_variant_selection %} disabled{% endif %}>
           <input type="hidden" name="quantity" value="1">
 
         <script type="application/json" data-product-options>
@@ -232,12 +236,12 @@
           <div class="kasya-product-hero__swatches" data-color-swatches></div>
 
           <p class="kasya-product-hero__selected-color">
-            COLOR: <span data-selected-color>{{ section.settings.default_color }}</span>
+            COLOR: <span data-selected-color{% if require_explicit_variant_selection %} class="is-required"{% endif %}>{% if require_explicit_variant_selection %}Please select{% else %}{{ section.settings.default_color }}{% endif %}</span>
           </p>
         </div>
 
         <div class="kasya-product-hero__sizes-wrap" data-size-wrap>
-          <p class="kasya-product-hero__option-label">SIZE</p>
+          <p class="kasya-product-hero__option-label">SIZE{% if require_explicit_variant_selection %}: <span data-selected-size class="is-required">Please select</span>{% endif %}</p>
           <div class="kasya-product-hero__sizes" data-size-options></div>
         </div>
 
@@ -282,7 +286,7 @@
           type="submit"
           class="kasya-product-hero__add"
           data-submit
-          {% unless selected_variant.available %}disabled{% endunless %}
+          {% if require_explicit_variant_selection or selected_variant.available == false %}disabled aria-disabled="true"{% endif %}
         >
           <span class="kasya-product-hero__add-icon">
             <svg width="25" height="25" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -301,7 +305,7 @@
     {% if section.settings.enable_sticky_atc %}
       <div class="kasya-product-hero__sticky-atc" data-sticky-atc>
         <div class="kasya-product-hero__sticky-context" data-sticky-context>
-          {{ section.settings.default_color | upcase }} — {{ selected_variant.price | money }}
+          {% if require_explicit_variant_selection %}COLOR: Please select / SIZE: Please select{% else %}{{ section.settings.default_color | upcase }} — {{ selected_variant.price | money }}{% endif %}
         </div>
 
         <button
@@ -309,7 +313,7 @@
           form="{{ product_form_id }}"
           class="kasya-product-hero__sticky-button"
           data-sticky-submit
-          {% unless selected_variant.available %}disabled{% endunless %}
+          {% if require_explicit_variant_selection or selected_variant.available == false %}disabled aria-disabled="true"{% endif %}
         >
           <span data-sticky-submit-text>{{ section.settings.cta_text }}</span>
         </button>
@@ -615,6 +619,11 @@
 
   .kasya-product-hero__selected-color span {
     font-weight: 400;
+  }
+
+  .kasya-product-hero__selected-color span.is-required,
+  .kasya-product-hero__option-label span.is-required {
+    color: #d71920;
   }
 
   .kasya-product-hero__sizes-wrap {
@@ -932,6 +941,7 @@
     const colorSwatchesContainer = section.querySelector('[data-color-swatches]');
     const selectedColorText = section.querySelector('[data-selected-color]');
     const sizeOptionsContainer = section.querySelector('[data-size-options]');
+    const selectedSizeText = section.querySelector('[data-selected-size]');
     const sizeChartToggle = section.querySelector('[data-size-chart-toggle]');
     const sizeChartToggleText = section.querySelector('[data-size-chart-toggle-text]');
     const sizeChartPanel = section.querySelector('[data-size-chart-panel]');
@@ -952,6 +962,7 @@
     const productMedia = productMediaEl ? JSON.parse(productMediaEl.textContent || '[]') : [];
     const colorBlocksRaw = JSON.parse(colorBlocksEl.textContent || '[]');
     const colorBlocks = colorBlocksRaw.filter(block => block && block.option_value);
+    const requireExplicitVariantSelection = section.dataset.requireExplicitVariantSelection === 'true';
 
     const defaultColor = {{ section.settings.default_color | json }};
     const colorOptionName = {{ section.settings.color_option_name | json }};
@@ -1058,7 +1069,7 @@
       sizeIndex = optionNames.findIndex((name, index) => index !== colorIndex);
     }
 
-    let selectedColor = defaultColor || '';
+    let selectedColor = requireExplicitVariantSelection ? '' : (defaultColor || '');
     let selectedSize = '';
 
     function getColorBlock(colorValue) {
@@ -1159,7 +1170,7 @@
 
         if (!variantSize) return;
 
-        if (colorIndex === -1 || lower(variantColor) === lower(colorValue)) {
+        if (colorIndex === -1 || !colorValue || lower(variantColor) === lower(colorValue)) {
           if (!sizes.includes(variantSize)) sizes.push(variantSize);
         }
       });
@@ -1168,6 +1179,10 @@
     }
 
     function findVariant() {
+      if (requireExplicitVariantSelection && (!selectedColor || !selectedSize)) {
+        return null;
+      }
+
       let match = variants.find(variant => {
         const colorMatches = colorIndex === -1 || lower(variant.options[colorIndex]) === lower(selectedColor);
         const sizeMatches = sizeIndex === -1 || lower(variant.options[sizeIndex]) === lower(selectedSize);
@@ -1182,7 +1197,7 @@
         return colorMatches && sizeMatches;
       });
 
-      return match || variants[0];
+      return requireExplicitVariantSelection ? (match || null) : (match || variants[0]);
     }
 
     function getImagesForColor(colorValue) {
@@ -1318,7 +1333,7 @@
 
     function isSizeAvailable(sizeValue) {
       return variants.some(variant => {
-        const colorMatches = colorIndex === -1 || lower(variant.options[colorIndex]) === lower(selectedColor);
+        const colorMatches = colorIndex === -1 || !selectedColor || lower(variant.options[colorIndex]) === lower(selectedColor);
         const sizeMatches = sizeIndex === -1 || lower(variant.options[sizeIndex]) === lower(sizeValue);
         return colorMatches && sizeMatches && variant.available;
       });
@@ -1332,9 +1347,11 @@
         return;
       }
 
-      if (!selectedSize || !sizes.includes(selectedSize)) {
+      if (!requireExplicitVariantSelection && (!selectedSize || !sizes.includes(selectedSize))) {
         const firstAvailableSize = sizes.find(size => isSizeAvailable(size));
         selectedSize = firstAvailableSize || sizes[0];
+      } else if (requireExplicitVariantSelection && selectedSize && !sizes.includes(selectedSize)) {
+        selectedSize = '';
       }
 
       sizeOptionsContainer.innerHTML = sizes.map(size => {
@@ -1343,7 +1360,7 @@
         return `
           <button
             type="button"
-            class="kasya-product-hero__size ${lower(size) === lower(selectedSize) ? 'is-selected' : ''} ${available ? '' : 'is-disabled'}"
+            class="kasya-product-hero__size ${selectedSize && lower(size) === lower(selectedSize) ? 'is-selected' : ''} ${available ? '' : 'is-disabled'}"
             data-size-value="${size}"
             ${available ? '' : 'aria-disabled="true"'}
           >
@@ -1355,21 +1372,62 @@
 
     function updateSelectedClasses() {
       section.querySelectorAll('[data-color-value]').forEach(button => {
-        button.classList.toggle('is-selected', lower(button.dataset.colorValue) === lower(selectedColor));
+        button.classList.toggle('is-selected', Boolean(selectedColor) && lower(button.dataset.colorValue) === lower(selectedColor));
       });
 
       section.querySelectorAll('[data-size-value]').forEach(button => {
-        button.classList.toggle('is-selected', lower(button.dataset.sizeValue) === lower(selectedSize));
+        button.classList.toggle('is-selected', Boolean(selectedSize) && lower(button.dataset.sizeValue) === lower(selectedSize));
       });
+    }
+
+    function updateSelectionLabels() {
+      const block = getColorBlock(selectedColor);
+      const displayColor = String((block && block.display_name) || selectedColor || '');
+
+      if (selectedColorText) {
+        selectedColorText.textContent = displayColor ? displayColor.toUpperCase() : 'Please select';
+        selectedColorText.classList.toggle('is-required', !displayColor);
+      }
+
+      if (selectedSizeText) {
+        selectedSizeText.textContent = selectedSize || 'Please select';
+        selectedSizeText.classList.toggle('is-required', !selectedSize);
+      }
     }
 
     function updateVariantState() {
       const variant = findVariant();
 
-      if (!variant) return;
+      if (!variant) {
+        variantInput.value = '';
+        variantInput.disabled = true;
+        updateSelectionLabels();
+
+        if (submitButton && submitText) {
+          submitButton.disabled = true;
+          submitButton.setAttribute('aria-disabled', 'true');
+          submitText.textContent = ctaText;
+        }
+
+        if (stickyAtc && stickyContext) {
+          const colorLabel = selectedColor ? String(selectedColor).toUpperCase() : 'Please select';
+          const sizeLabel = selectedSize ? String(selectedSize).toUpperCase() : 'Please select';
+          stickyContext.textContent = `COLOR: ${colorLabel} / SIZE: ${sizeLabel}`;
+        }
+
+        if (stickySubmitButton && stickySubmitText) {
+          stickySubmitButton.disabled = true;
+          stickySubmitButton.setAttribute('aria-disabled', 'true');
+          stickySubmitText.textContent = ctaText;
+        }
+
+        return;
+      }
 
       variantInput.value = variant.id;
+      variantInput.disabled = false;
       priceEl.textContent = variant.price;
+      updateSelectionLabels();
 
       if (stickyAtc && stickyContext) {
         const block = getColorBlock(selectedColor);
@@ -1380,18 +1438,22 @@
 
       if (variant.available) {
         submitButton.disabled = false;
+        submitButton.removeAttribute('aria-disabled');
         submitText.textContent = ctaText;
 
         if (stickySubmitButton && stickySubmitText) {
           stickySubmitButton.disabled = false;
+          stickySubmitButton.removeAttribute('aria-disabled');
           stickySubmitText.textContent = ctaText;
         }
       } else {
         submitButton.disabled = true;
+        submitButton.setAttribute('aria-disabled', 'true');
         submitText.textContent = 'SOLD OUT';
 
         if (stickySubmitButton && stickySubmitText) {
           stickySubmitButton.disabled = true;
+          stickySubmitButton.setAttribute('aria-disabled', 'true');
           stickySubmitText.textContent = 'SOLD OUT';
         }
       }
@@ -1445,12 +1507,7 @@
     }
 
     function selectColor(colorValue) {
-      const block = getColorBlock(colorValue);
       selectedColor = colorValue;
-
-      if (selectedColorText) {
-        selectedColorText.textContent = String((block && block.display_name) || colorValue || '').toUpperCase();
-      }
 
       renderSlider(selectedColor);
       renderSizes();
@@ -1466,6 +1523,12 @@
     }
 
     function initializeDefaultSelection() {
+      if (requireExplicitVariantSelection) {
+        selectedColor = '';
+        selectedSize = '';
+        return;
+      }
+
       const variantColors = getAvailableColorsFromVariants();
       const hasDefaultVariantColor = variantColors.some(color => lower(color) === lower(defaultColor));
       const hasDefaultBlock = colorBlocks.some(block => lower(block.option_value) === lower(defaultColor));
@@ -1486,7 +1549,14 @@
 
     renderColors();
     initializeDefaultSelection();
-    selectColor(selectedColor);
+    if (selectedColor) {
+      selectColor(selectedColor);
+    } else {
+      renderSlider(defaultColor || getAvailableColorsFromVariants()[0] || colorBlocks[0]?.option_value || '');
+      renderSizes();
+      updateSelectedClasses();
+      updateVariantState();
+    }
     initializeStickyVisibility();
 
     colorSwatchesContainer.addEventListener('click', event => {
