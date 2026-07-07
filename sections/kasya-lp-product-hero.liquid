@@ -1243,6 +1243,71 @@
       return fallbackImage ? [fallbackImage] : [];
     }
 
+    function uniqueImages(images) {
+      return [...new Set(images.filter(Boolean))];
+    }
+
+    function isGalleryMedia(item) {
+      const alt = lower(item && item.alt);
+      return item && item.src && !alt.includes('size chart');
+    }
+
+    function getInitialGalleryImages() {
+      const allProductMediaImages = uniqueImages(
+        productMedia
+          .filter(isGalleryMedia)
+          .map(item => item.src)
+      );
+
+      if (allProductMediaImages.length > 0) return allProductMediaImages;
+
+      const blockImages = uniqueImages(
+        colorBlocks.flatMap(block => {
+          const orderedImageKeys = ['image_1', 'image_2', 'image_3', 'image_4', 'image_5'];
+          const orderedImages = orderedImageKeys.map(key => block[key]);
+          const legacyImages = Array.isArray(block.images) ? block.images : [];
+
+          return orderedImages.concat(legacyImages);
+        })
+      );
+
+      if (blockImages.length > 0) return blockImages;
+
+      const variantImages = uniqueImages(variants.map(variant => variant.featured_image));
+
+      if (variantImages.length > 0) return variantImages;
+
+      return fallbackImage ? [fallbackImage] : [];
+    }
+
+    function renderInitialSlider() {
+      const images = getInitialGalleryImages();
+
+      slider.innerHTML = images.map((src, index) => `
+        <div class="kasya-product-hero__slide">
+          <img
+            src="${src}"
+            alt="{{ lp_product.title | escape }} ${index + 1}"
+            width="1400"
+            height="1750"
+            loading="${index === 0 ? 'eager' : 'lazy'}"
+          >
+        </div>
+      `).join('');
+
+      dots.innerHTML = images.map((_, index) => `
+        <button
+          type="button"
+          class="kasya-product-hero__dot ${index === 0 ? 'is-active' : ''}"
+          aria-label="Go to image ${index + 1}"
+          data-dot-index="${index}"
+        ></button>
+      `).join('');
+
+      slider.scrollTo({ left: 0, behavior: 'auto' });
+      updateCarouselControls();
+    }
+
     function renderSlider(colorValue) {
       const images = getImagesForColor(colorValue);
 
@@ -1561,7 +1626,7 @@
     if (selectedColor) {
       selectColor(selectedColor);
     } else {
-      renderSlider(defaultColor || getAvailableColorsFromVariants()[0] || colorBlocks[0]?.option_value || '');
+      renderInitialSlider();
       renderSizes();
       updateSelectedClasses();
       updateVariantState();
