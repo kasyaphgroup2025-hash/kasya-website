@@ -1247,19 +1247,14 @@
       return [...new Set(images.filter(Boolean))];
     }
 
-    function isGalleryMedia(item) {
-      const alt = lower(item && item.alt);
-      return item && item.src && !alt.includes('size chart');
-    }
-
     function getInitialGalleryImages() {
-      const allProductMediaImages = uniqueImages(
-        productMedia
-          .filter(isGalleryMedia)
-          .map(item => item.src)
-      );
+      const previewColor = getAvailableColorsFromVariants()[0] || colorBlocks[0]?.option_value || defaultColor || '';
 
-      if (allProductMediaImages.length > 0) return allProductMediaImages;
+      if (previewColor) {
+        const previewImages = getImagesForColor(previewColor);
+
+        if (previewImages.length > 0) return previewImages;
+      }
 
       const blockImages = uniqueImages(
         colorBlocks.flatMap(block => {
