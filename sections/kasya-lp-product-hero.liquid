@@ -16,8 +16,17 @@
     assign size_chart_image = section.settings.size_chart_image
     assign size_chart_alt = section.settings.size_chart_trigger_text
     assign require_explicit_variant_selection = false
+    assign explicit_selection_templates = 'kasya-acquisition-dahlia,kasya-acquisition-ellav2,kasya-acquisition-hazel,kasya-acquisition-inah' | split: ','
+    assign lp_product_title_downcase = lp_product.title | downcase
+
     if template.suffix == 'kasya-acquisition-test' and lp_product.handle == 'wideleg-linen-pants'
       assign require_explicit_variant_selection = true
+    elsif explicit_selection_templates contains template.suffix
+      assign require_explicit_variant_selection = true
+    elsif template.suffix == 'kasya-acquisition-demi'
+      if lp_product.handle contains 'demi' or lp_product_title_downcase contains 'demi'
+        assign require_explicit_variant_selection = true
+      endif
     endif
 
     for media in lp_product.media
