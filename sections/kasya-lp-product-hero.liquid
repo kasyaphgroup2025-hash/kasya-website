@@ -1100,8 +1100,18 @@
 
       return {
         color: parts[1],
-        shot: normalizeColorName(parts[2])
+        shot: normalizeMediaShotName(parts[2])
       };
+    }
+
+    function normalizeMediaShotName(value) {
+      const shot = normalizeColorName(value);
+
+      if (showInitialMediaPreview && ['close up', 'closeup', 'close', 'fabric', 'fabric detail', 'fabric details', 'fabric shot', 'detail', 'details'].includes(shot)) {
+        return 'fabric close up';
+      }
+
+      return shot;
     }
 
     function getProductMediaShotMapForColor(colorValue, block, shotOrder = lpShotOrder) {
@@ -1167,7 +1177,7 @@
       const block = getColorBlock(colorValue);
       const fabricImages = getProductMediaImagesForColor(colorValue, block, ['fabric close up']);
 
-      return fabricImages[0] || getFirstAvailableFabricCloseup();
+      return fabricImages[0] || (showInitialMediaPreview && block ? block.image_5 : '') || getFirstAvailableFabricCloseup();
     }
 
     function getFirstAvailableFabricCloseup() {
@@ -1180,6 +1190,7 @@
         const fabricImages = getProductMediaImagesForColor(colorValue, block, ['fabric close up']);
 
         if (fabricImages[0]) return fabricImages[0];
+        if (showInitialMediaPreview && block && block.image_5) return block.image_5;
       }
 
       return fallbackImage || '';
