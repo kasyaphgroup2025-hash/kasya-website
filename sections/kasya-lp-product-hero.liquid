@@ -1173,11 +1173,49 @@
       }, {});
     }
 
+    function compactMediaName(value) {
+      return normalizeColorName(value).replace(/[^a-z0-9]/g, '');
+    }
+
+    function mediaTextHasFabricCue(value) {
+      const compact = compactMediaName(value);
+      return compact.includes('fabric') ||
+        compact.includes('closeup') ||
+        compact.includes('detail') ||
+        compact.includes('texture');
+    }
+
+    function mediaTextMatchesColor(value, colorValue, block) {
+      const text = compactMediaName(value);
+      const colorNames = [colorValue, block && block.option_value, block && block.display_name]
+        .filter(Boolean)
+        .map(compactMediaName);
+
+      return colorNames.some(colorName => colorName && text.includes(colorName));
+    }
+
+    function getFlexibleFabricCloseupForColor(colorValue, block) {
+      if (!showInitialMediaPreview || !colorValue) return '';
+
+      const matchedMedia = productMedia.find(item => {
+        const mediaText = `${item.alt || ''} ${item.src || ''}`;
+        return item.src && mediaTextMatchesColor(mediaText, colorValue, block) && mediaTextHasFabricCue(mediaText);
+      });
+
+      if (matchedMedia) return matchedMedia.src;
+
+      const colorGalleryImages = getImagesForColor(colorValue);
+      return colorGalleryImages[4] || '';
+    }
+
     function getFabricCloseupForColor(colorValue) {
       const block = getColorBlock(colorValue);
       const fabricImages = getProductMediaImagesForColor(colorValue, block, ['fabric close up']);
 
-      return fabricImages[0] || (showInitialMediaPreview && block ? block.image_5 : '') || getFirstAvailableFabricCloseup();
+      return fabricImages[0] ||
+        getFlexibleFabricCloseupForColor(colorValue, block) ||
+        (showInitialMediaPreview && block ? block.image_5 : '') ||
+        getFirstAvailableFabricCloseup();
     }
 
     function getFirstAvailableFabricCloseup() {
