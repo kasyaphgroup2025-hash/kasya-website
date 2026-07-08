@@ -267,9 +267,9 @@
     if (!image) return;
 
     function updateFabricImage(state) {
-      if (!state || !state.color) return;
+      if (!state || (!state.color && !state.previewColor)) return;
 
-      const displayColor = String(state.displayColor || state.color || '').trim();
+      const displayColor = String(state.displayColor || state.color || state.previewColor || '').trim();
       const nextSrc = state.fabricCloseup ||
         (state.strictColorMedia ? '' : image.dataset.defaultSrc || state.featuredImage) ||
         '';
