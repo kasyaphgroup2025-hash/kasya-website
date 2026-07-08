@@ -17,6 +17,7 @@
     assign size_chart_alt = section.settings.size_chart_trigger_text
     assign require_explicit_variant_selection = false
     assign hide_landing_header = false
+    assign show_initial_media_preview = false
     assign explicit_selection_templates = 'kasya-acquisition-dahlia,kasya-acquisition-ellav2,kasya-acquisition-hazel,kasya-acquisition-inah' | split: ','
     assign lp_product_title_downcase = lp_product.title | downcase
 
@@ -25,6 +26,9 @@
       assign hide_landing_header = true
     elsif explicit_selection_templates contains template.suffix
       assign require_explicit_variant_selection = true
+      if template.suffix == 'kasya-acquisition-dahlia'
+        assign show_initial_media_preview = true
+      endif
     elsif template.suffix == 'kasya-acquisition-demi'
       if lp_product.handle contains 'demi' or lp_product_title_downcase contains 'demi'
         assign require_explicit_variant_selection = true
@@ -41,7 +45,7 @@
   endif
 %}
 
-<section class="kasya-product-hero{% if section.settings.enable_sticky_atc %} kasya-product-hero--sticky-enabled{% endif %}" data-kasya-hero data-section-id="{{ section.id }}"{% if require_explicit_variant_selection %} data-require-explicit-variant-selection="true"{% endif %}>
+<section class="kasya-product-hero{% if section.settings.enable_sticky_atc %} kasya-product-hero--sticky-enabled{% endif %}" data-kasya-hero data-section-id="{{ section.id }}"{% if require_explicit_variant_selection %} data-require-explicit-variant-selection="true"{% endif %}{% if show_initial_media_preview %} data-initial-media-preview="true"{% endif %}>
   {% if lp_product == blank %}
     <div class="kasya-product-hero__empty">
       <p>Select a product in this section's settings.</p>
@@ -974,6 +978,7 @@
     const colorBlocksRaw = JSON.parse(colorBlocksEl.textContent || '[]');
     const colorBlocks = colorBlocksRaw.filter(block => block && block.option_value);
     const requireExplicitVariantSelection = section.dataset.requireExplicitVariantSelection === 'true';
+    const showInitialMediaPreview = section.dataset.initialMediaPreview === 'true';
 
     const defaultColor = {{ section.settings.default_color | json }};
     const colorOptionName = {{ section.settings.color_option_name | json }};
@@ -1162,7 +1167,22 @@
       const block = getColorBlock(colorValue);
       const fabricImages = getProductMediaImagesForColor(colorValue, block, ['fabric close up']);
 
-      return fabricImages[0] || '';
+      return fabricImages[0] || getFirstAvailableFabricCloseup();
+    }
+
+    function getFirstAvailableFabricCloseup() {
+      const variantColors = getAvailableColorsFromVariants();
+      const sourceColors = colorBlocks.length ? colorBlocks.map(block => block.option_value) : variantColors;
+      const uniqueColors = [...new Set(sourceColors.filter(Boolean))];
+
+      for (const colorValue of uniqueColors) {
+        const block = getColorBlock(colorValue);
+        const fabricImages = getProductMediaImagesForColor(colorValue, block, ['fabric close up']);
+
+        if (fabricImages[0]) return fabricImages[0];
+      }
+
+      return fallbackImage || '';
     }
 
     function getAvailableColorsFromVariants() {
@@ -1250,7 +1270,7 @@
     }
 
     function getInitialGalleryImages() {
-      const previewColor = getAvailableColorsFromVariants()[0] || colorBlocks[0]?.option_value || defaultColor || '';
+      const previewColor = getInitialPreviewColor();
 
       if (previewColor) {
         const previewImages = getImagesForColor(previewColor);
@@ -1275,6 +1295,10 @@
       if (variantImages.length > 0) return variantImages;
 
       return fallbackImage ? [fallbackImage] : [];
+    }
+
+    function getInitialPreviewColor() {
+      return getAvailableColorsFromVariants()[0] || colorBlocks[0]?.option_value || defaultColor || '';
     }
 
     function renderInitialSlider() {
@@ -1547,6 +1571,29 @@
       }));
     }
 
+    function announceInitialMediaPreview() {
+      if (!showInitialMediaPreview || selectedColor) return;
+
+      const previewColor = getInitialPreviewColor();
+      if (!previewColor) return;
+
+      const block = getColorBlock(previewColor);
+      const displayColor = String((block && block.display_name) || previewColor || '');
+      const colorState = {
+        color: '',
+        previewColor,
+        displayColor,
+        images: getFitImageMapForColor(previewColor),
+        fabricCloseup: getFabricCloseupForColor(previewColor),
+        featuredImage: fallbackImage
+      };
+
+      window.KasyaLPSelectedColor = colorState;
+      document.dispatchEvent(new CustomEvent('kasya:hero-color-change', {
+        detail: colorState
+      }));
+    }
+
     function initializeStickyVisibility() {
       if (!stickyAtc || !submitButton) return;
 
@@ -1627,6 +1674,7 @@
       renderSizes();
       updateSelectedClasses();
       updateVariantState();
+      announceInitialMediaPreview();
     }
     initializeStickyVisibility();
 
