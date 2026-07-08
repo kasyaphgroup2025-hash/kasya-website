@@ -24,14 +24,14 @@
     if template.suffix == 'kasya-acquisition-test' and lp_product.handle == 'wideleg-linen-pants'
       assign require_explicit_variant_selection = true
       assign hide_landing_header = true
+      assign show_initial_media_preview = true
     elsif explicit_selection_templates contains template.suffix
       assign require_explicit_variant_selection = true
-      if template.suffix == 'kasya-acquisition-dahlia'
-        assign show_initial_media_preview = true
-      endif
+      assign show_initial_media_preview = true
     elsif template.suffix == 'kasya-acquisition-demi'
       if lp_product.handle contains 'demi' or lp_product_title_downcase contains 'demi'
         assign require_explicit_variant_selection = true
+        assign show_initial_media_preview = true
       endif
     endif
 
@@ -1106,6 +1106,11 @@
 
     function normalizeMediaShotName(value) {
       const shot = normalizeColorName(value);
+      const compactShot = shot.replace(/[^a-z0-9]/g, '');
+
+      if (showInitialMediaPreview && compactShot.includes('front')) return 'front';
+      if (showInitialMediaPreview && compactShot.includes('side')) return 'side';
+      if (showInitialMediaPreview && compactShot.includes('back')) return 'back';
 
       if (showInitialMediaPreview && ['close up', 'closeup', 'close', 'fabric', 'fabric detail', 'fabric details', 'fabric shot', 'detail', 'details'].includes(shot)) {
         return 'fabric close up';
@@ -1150,12 +1155,48 @@
       };
     }
 
+    function mediaTextHasShotCue(value, shot) {
+      const compact = compactMediaName(value);
+
+      if (shot === 'front') return compact.includes('front');
+      if (shot === 'side') return compact.includes('side');
+      if (shot === 'back') return compact.includes('back');
+
+      return false;
+    }
+
+    function getFlexibleFitImageMapForColor(colorValue, block) {
+      if (!showInitialMediaPreview || !colorValue) return {};
+
+      const fitShotOrder = ['front', 'side', 'back'];
+      const images = {};
+
+      fitShotOrder.forEach(shot => {
+        const matchedMedia = productMedia.find(item => {
+          const mediaText = `${item.alt || ''} ${item.src || ''}`;
+          return item.src && mediaTextMatchesColor(mediaText, colorValue, block) && mediaTextHasShotCue(mediaText, shot);
+        });
+
+        if (matchedMedia) images[shot] = matchedMedia.src;
+      });
+
+      const colorGalleryImages = getImagesForColor(colorValue);
+      fitShotOrder.forEach((shot, index) => {
+        if (!images[shot] && colorGalleryImages[index]) {
+          images[shot] = colorGalleryImages[index];
+        }
+      });
+
+      return images;
+    }
+
     function getFitImageMapForColor(colorValue) {
       const fitShotOrder = ['front', 'side', 'back'];
       const block = getColorBlock(colorValue);
       const defaultBlock = getColorBlock(defaultColor);
       const selectedMediaImages = getProductMediaShotMapForColor(colorValue, block, fitShotOrder);
       const selectedManualImages = getManualFitImageMapForBlock(block);
+      const selectedFlexibleImages = getFlexibleFitImageMapForColor(colorValue, block);
       const defaultMediaImages = lower(colorValue) === lower(defaultColor)
         ? {}
         : getProductMediaShotMapForColor(defaultColor, defaultBlock, fitShotOrder);
@@ -1166,6 +1207,7 @@
       return fitShotOrder.reduce((images, shot) => {
         images[shot] = selectedMediaImages[shot] ||
           selectedManualImages[shot] ||
+          selectedFlexibleImages[shot] ||
           defaultMediaImages[shot] ||
           defaultManualImages[shot] ||
           '';
