@@ -41,7 +41,7 @@ if (!customElements.get('cart-product-recommendations')) {
                 if(resultList) {
                   resultList.querySelectorAll(this.dataset.itemSelector).forEach((item, itemIndex) => {
                     const itemId = item.dataset.productId;
-                    if(!resultIds.includes(itemId)) {
+                    if(!this.isBlockedCartUpsell(item) && !resultIds.includes(itemId)) {
                       results.push(item);
                       resultIds.push(itemId);
                     }
@@ -62,6 +62,22 @@ if (!customElements.get('cart-product-recommendations')) {
           this.classList.remove('loading');
         }
       });
+    }
+
+    isBlockedCartUpsell(item) {
+      if(!item) return false;
+
+      const handle = (item.dataset.productHandle || '').toLowerCase();
+      const productUrl = (item.dataset.productUrl || item.querySelector('a[href*="/products/"]')?.getAttribute('href') || '').toLowerCase();
+      const content = (item.textContent || '').toLowerCase();
+      const blockedHandleTerms = ['jane-set', 'jane-coordinates-set', 'jane-blouse', 'jane-pants'];
+      const blockedTitleTerms = ['jane set', 'jane blouse', 'jane pants'];
+
+      if(blockedHandleTerms.some((term) => handle.includes(term) || productUrl.includes(term))) {
+        return true;
+      }
+
+      return blockedTitleTerms.some((term) => content.includes(term));
     }
 
     renderResults(items) {

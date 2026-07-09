@@ -1,4 +1,34 @@
-<cart-drawer-product-recommendation-item class="item cart-drawer__recommendation-item" data-product-id="{{ card_product.id }}" data-product-url="{{ card_product.url | split: '?' | first }}">
+{%- liquid
+	assign cart_upsell_blocked_product = false
+	assign cart_upsell_product_handle = card_product.handle | downcase
+	assign cart_upsell_product_title = card_product.title | downcase
+	assign cart_upsell_product_tags = card_product.tags | join: ',' | downcase
+
+	if cart_upsell_product_tags contains 'no-cart-upsell'
+		assign cart_upsell_blocked_product = true
+	endif
+
+	if cart_upsell_product_handle contains 'jane-set' or cart_upsell_product_handle contains 'jane-coordinates-set' or cart_upsell_product_handle contains 'jane-blouse' or cart_upsell_product_handle contains 'jane-pants'
+		assign cart_upsell_blocked_product = true
+	endif
+
+	if cart_upsell_product_title contains 'jane set' or cart_upsell_product_title contains 'jane blouse' or cart_upsell_product_title contains 'jane pants'
+		assign cart_upsell_blocked_product = true
+	endif
+
+	for cart_upsell_variant in card_product.variants
+		assign cart_upsell_variant_sku = cart_upsell_variant.sku | upcase
+		assign cart_upsell_blouse_sku_prefix = cart_upsell_variant_sku | slice: 0, 10
+		assign cart_upsell_pants_sku_prefix = cart_upsell_variant_sku | slice: 0, 9
+
+		if cart_upsell_blouse_sku_prefix == 'JANEBLOUSE' or cart_upsell_pants_sku_prefix == 'JANEPANTS'
+			assign cart_upsell_blocked_product = true
+		endif
+	endfor
+-%}
+
+{%- unless cart_upsell_blocked_product -%}
+<cart-drawer-product-recommendation-item class="item cart-drawer__recommendation-item" data-product-id="{{ card_product.id }}" data-product-handle="{{ card_product.handle | escape }}" data-product-url="{{ card_product.url | split: '?' | first }}">
 	<div class="cart-drawer__recommendation-item__info">
 		{%-liquid
      unless card_product.selected_variant
@@ -95,3 +125,4 @@
 		{%- endunless -%}
 	</div>
 </cart-drawer-product-recommendation-item>
+{%- endunless -%}

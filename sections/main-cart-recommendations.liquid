@@ -98,22 +98,53 @@
     {% if recommendations.performed and recommendations.products_count > 0 %}
       <div class="item-list">
         {% for recommendation in recommendations.products %}
-          <div class="item h100" data-product-id="{{ recommendation.id }}">
-            {% render 'card-product',
-              card_product: recommendation,
-              media_aspect_ratio: section.settings.image_ratio,
-              show_secondary_image: section.settings.show_secondary_image,
-              show_vendor: section.settings.show_vendor,
-              show_rating: section.settings.show_rating,
-              show_quick_add: section.settings.enable_quick_add,
-              enable_compare: enable_compare,
-              show_quick_view: section.settings.enable_quick_view,
-              section_id: section.id,
-              show_color_swatches: section.settings.show_color_swatches,
-              color_swatches_style: section.settings.color_swatches_style,
-              full_on_mobile: full_on_mobile
-            %}
-          </div>
+          {%- liquid
+            assign cart_upsell_blocked_product = false
+            assign cart_upsell_product_handle = recommendation.handle | downcase
+            assign cart_upsell_product_title = recommendation.title | downcase
+            assign cart_upsell_product_tags = recommendation.tags | join: ',' | downcase
+
+            if cart_upsell_product_tags contains 'no-cart-upsell'
+              assign cart_upsell_blocked_product = true
+            endif
+
+            if cart_upsell_product_handle contains 'jane-set' or cart_upsell_product_handle contains 'jane-coordinates-set' or cart_upsell_product_handle contains 'jane-blouse' or cart_upsell_product_handle contains 'jane-pants'
+              assign cart_upsell_blocked_product = true
+            endif
+
+            if cart_upsell_product_title contains 'jane set' or cart_upsell_product_title contains 'jane blouse' or cart_upsell_product_title contains 'jane pants'
+              assign cart_upsell_blocked_product = true
+            endif
+
+            for cart_upsell_variant in recommendation.variants
+              assign cart_upsell_variant_sku = cart_upsell_variant.sku | upcase
+              assign cart_upsell_blouse_sku_prefix = cart_upsell_variant_sku | slice: 0, 10
+              assign cart_upsell_pants_sku_prefix = cart_upsell_variant_sku | slice: 0, 9
+
+              if cart_upsell_blouse_sku_prefix == 'JANEBLOUSE' or cart_upsell_pants_sku_prefix == 'JANEPANTS'
+                assign cart_upsell_blocked_product = true
+              endif
+            endfor
+          -%}
+
+          {%- unless cart_upsell_blocked_product -%}
+            <div class="item h100" data-product-id="{{ recommendation.id }}" data-product-handle="{{ recommendation.handle | escape }}">
+              {% render 'card-product',
+                card_product: recommendation,
+                media_aspect_ratio: section.settings.image_ratio,
+                show_secondary_image: section.settings.show_secondary_image,
+                show_vendor: section.settings.show_vendor,
+                show_rating: section.settings.show_rating,
+                show_quick_add: section.settings.enable_quick_add,
+                enable_compare: enable_compare,
+                show_quick_view: section.settings.enable_quick_view,
+                section_id: section.id,
+                show_color_swatches: section.settings.show_color_swatches,
+                color_swatches_style: section.settings.color_swatches_style,
+                full_on_mobile: full_on_mobile
+              %}
+            </div>
+          {%- endunless -%}
         {% endfor %}
       </div>    
     {% endif %}
