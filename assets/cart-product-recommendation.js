@@ -3,7 +3,12 @@ if (!customElements.get('cart-product-recommendations')) {
 		constructor() {
 			super();
       this.handleRequests = [];
+      CartProductRecommendations.installJaneCartUpsellHardBlock();
 		}
+
+    connectedCallback() {
+      this.pruneBlockedCartUpsells();
+    }
 
 		update() {
       let results = [];
@@ -52,6 +57,7 @@ if (!customElements.get('cart-product-recommendations')) {
                 if(totalItem == cartItemsLength) {
                   this.classList.remove('loading');
                   this.renderResults(results);
+                  this.pruneBlockedCartUpsells();
                   if(!this.querySelector('.cart__recommendation-list .grid__item')) {
                     this.classList.add('hidden');
                   }
@@ -65,19 +71,11 @@ if (!customElements.get('cart-product-recommendations')) {
     }
 
     isBlockedCartUpsell(item) {
-      if(!item) return false;
+      return CartProductRecommendations.isBlockedJaneCartUpsell(item);
+    }
 
-      const handle = (item.dataset.productHandle || '').toLowerCase();
-      const productUrl = (item.dataset.productUrl || item.querySelector('a[href*="/products/"]')?.getAttribute('href') || '').toLowerCase();
-      const content = (item.textContent || '').toLowerCase();
-      const blockedHandleTerms = ['jane-set', 'jane-coordinates-set', 'jane-blouse', 'jane-pants'];
-      const blockedTitleTerms = ['jane set', 'jane blouse', 'jane pants'];
-
-      if(blockedHandleTerms.some((term) => handle.includes(term) || productUrl.includes(term))) {
-        return true;
-      }
-
-      return blockedTitleTerms.some((term) => content.includes(term));
+    pruneBlockedCartUpsells() {
+      CartProductRecommendations.pruneBlockedJaneCartUpsells(this);
     }
 
     renderResults(items) {
@@ -90,7 +88,13 @@ if (!customElements.get('cart-product-recommendations')) {
       }
       this.handleRequests = [];
       this.fisherYates(items);
-      const finalItems = items.slice(0, this.limit);
+      const finalItems = items.filter((item) => !this.isBlockedCartUpsell(item)).slice(0, this.limit);
+      if(finalItems.length === 0) {
+        const list = this.querySelector('.cart__recommendation-list');
+        if(list) list.innerHTML = '';
+        this.classList.add('hidden');
+        return;
+      }
       const list = this.querySelector('.cart__recommendation-list');
       const sliderComponent = document.createElement('slider-component');
       sliderComponent.classList.add('slider-mobile-gutter', 'por');
@@ -116,6 +120,106 @@ if (!customElements.get('cart-product-recommendations')) {
       list.innerHTML = '';
       list.appendChild(sliderComponent);
       sliderComponent.init();
+      this.pruneBlockedCartUpsells();
+    }
+
+    static installJaneCartUpsellHardBlock() {
+      if(window.janeCartUpsellHardBlockInstalled) return;
+      window.janeCartUpsellHardBlockInstalled = true;
+
+      document.addEventListener('submit', (event) => {
+        if(CartProductRecommendations.shouldBlockJaneCartUpsellAction(event.target)) {
+          event.preventDefault();
+          event.stopPropagation();
+          if(typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation();
+          CartProductRecommendations.pruneBlockedJaneCartUpsells();
+        }
+      }, true);
+
+      document.addEventListener('click', (event) => {
+        const clickedAddControl = event.target.closest?.('button[name="add"], [type="submit"], .cart-submit-button, [data-add-to-cart], a[href*="/cart/add"]');
+        if(clickedAddControl && CartProductRecommendations.shouldBlockJaneCartUpsellAction(clickedAddControl)) {
+          event.preventDefault();
+          event.stopPropagation();
+          if(typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation();
+          CartProductRecommendations.pruneBlockedJaneCartUpsells();
+        }
+      }, true);
+
+      document.addEventListener('afterCartChanged', () => CartProductRecommendations.scheduleJaneCartUpsellPrune(), { passive: true });
+      document.addEventListener('DOMContentLoaded', () => CartProductRecommendations.scheduleJaneCartUpsellPrune(), { once: true });
+
+      const cartDrawer = document.querySelector('cart-drawer');
+      if(cartDrawer && 'MutationObserver' in window) {
+        const observer = new MutationObserver(() => CartProductRecommendations.scheduleJaneCartUpsellPrune(cartDrawer));
+        observer.observe(cartDrawer, { childList: true, subtree: true });
+      }
+    }
+
+    static scheduleJaneCartUpsellPrune(root = document) {
+      if(window.janeCartUpsellPruneQueued) return;
+      window.janeCartUpsellPruneQueued = true;
+      requestAnimationFrame(() => {
+        window.janeCartUpsellPruneQueued = false;
+        CartProductRecommendations.pruneBlockedJaneCartUpsells(root);
+      });
+    }
+
+    static shouldBlockJaneCartUpsellAction(element) {
+      const surface = CartProductRecommendations.getCartUpsellSurface(element);
+      if(!surface) return false;
+      const card = CartProductRecommendations.getCartUpsellCard(element, surface);
+      return CartProductRecommendations.isBlockedJaneCartUpsell(card || element);
+    }
+
+    static getCartUpsellSurface(element) {
+      return element?.closest?.('cart-product-recommendations, .cart-drawer__recommendation, .cart__recommendation-list, main-cart-recommendations, [class*="upsell"], [class*="recommend"], [id*="upsell"], [id*="recommend"]');
+    }
+
+    static getCartUpsellCard(element, surface) {
+      if(!element) return null;
+      const card = element.closest?.('cart-drawer-product-recommendation-item, .cart-drawer__recommendation-item, .grid__item, .slider__slide, .item, [data-product-id], li');
+      if(card && (!surface || surface.contains(card))) return card;
+      return surface || null;
+    }
+
+    static isBlockedJaneCartUpsell(item) {
+      if(!item) return false;
+
+      const dataset = item.dataset || {};
+      const handle = (dataset.productHandle || dataset.handle || '').toLowerCase();
+      const title = (dataset.productTitle || dataset.title || '').toLowerCase();
+      const tags = (dataset.productTags || dataset.tags || '').toLowerCase();
+      const productUrl = (dataset.productUrl || item.querySelector?.('a[href*="/products/"]')?.getAttribute('href') || '').toLowerCase();
+      const content = (item.textContent || '').toLowerCase();
+      const janeText = `${handle} ${title} ${tags} ${productUrl} ${content}`;
+
+      if(janeText.includes('no-cart-upsell')) return true;
+      if(handle.includes('jane') || productUrl.includes('/products/') && productUrl.includes('jane')) return true;
+      if(janeText.includes('jane set') || janeText.includes('jane blouse') || janeText.includes('jane pants')) return true;
+      if(/\bsku\s*:\s*jane/i.test(content) || /\bjane(blouse|pants)?[a-z0-9-]*/i.test(content)) return true;
+
+      return false;
+    }
+
+    static pruneBlockedJaneCartUpsells(root = document) {
+      const scopedRoot = root || document;
+      const surfaces = scopedRoot.matches?.('cart-product-recommendations, .cart-drawer__recommendation, .cart__recommendation-list, main-cart-recommendations, [class*="upsell"], [class*="recommend"], [id*="upsell"], [id*="recommend"]')
+        ? [scopedRoot]
+        : Array.from(scopedRoot.querySelectorAll?.('cart-product-recommendations, .cart-drawer__recommendation, .cart__recommendation-list, main-cart-recommendations, [class*="upsell"], [class*="recommend"], [id*="upsell"], [id*="recommend"]') || []);
+
+      surfaces.forEach((surface) => {
+        surface.querySelectorAll('cart-drawer-product-recommendation-item, .cart-drawer__recommendation-item, .grid__item, .slider__slide, .item, [data-product-id], li').forEach((candidate) => {
+          if(CartProductRecommendations.isBlockedJaneCartUpsell(candidate)) {
+            candidate.remove();
+          }
+        });
+
+        const remainingItems = surface.querySelectorAll('cart-drawer-product-recommendation-item, .cart-drawer__recommendation-item, .grid__item, .slider__slide, .item, [data-product-id], li');
+        if(remainingItems.length === 0 && surface.matches('cart-product-recommendations, .cart-drawer__recommendation, .cart__recommendation-list, main-cart-recommendations')) {
+          surface.classList.add('hidden');
+        }
+      });
     }
 
     fisherYates( array ){
