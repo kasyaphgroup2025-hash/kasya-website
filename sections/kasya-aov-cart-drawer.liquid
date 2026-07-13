@@ -1,0 +1,125 @@
+{{ 'kasya-aov-cart.css' | asset_url | stylesheet_tag }}
+
+<kasya-aov-cart
+  class="kasya-aov-cart"
+  data-kasya-aov-cart
+  aria-hidden="true"
+>
+  <div class="kasya-aov-cart__overlay" data-kasya-aov-cart-close></div>
+
+  <aside
+    class="kasya-aov-cart__drawer"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Almost Yours"
+    tabindex="-1"
+  >
+    <header class="kasya-aov-cart__header">
+      <h2 class="kasya-aov-cart__title">Almost Yours <span data-kasya-aov-cart-count>({{ cart.item_count }})</span></h2>
+      <button type="button" class="kasya-aov-cart__close" data-kasya-aov-cart-close aria-label="Close cart">
+        <span aria-hidden="true">×</span>
+      </button>
+    </header>
+
+    <div class="kasya-aov-cart__timer" role="status">
+      <span class="kasya-aov-cart__timer-icon" aria-hidden="true">◷</span>
+      <span>Your products are reserved for 01:03 minutes!</span>
+    </div>
+
+    <section class="kasya-aov-cart__shipping" aria-label="Free shipping progress">
+      <p class="kasya-aov-cart__shipping-copy">You are ₱502 away from getting FREE SHIPPING</p>
+      <div class="kasya-aov-cart__shipping-track" aria-hidden="true">
+        <span class="kasya-aov-cart__shipping-progress" style="width: 46%;"></span>
+      </div>
+      <div class="kasya-aov-cart__shipping-labels">
+        <span>FREE SHIPPING</span>
+        <span>₱450 OFF</span>
+      </div>
+      {%- comment -%}
+        Phase 2: calculate threshold copy and progress from /cart.js totals.
+      {%- endcomment -%}
+    </section>
+
+    <div class="kasya-aov-cart__body">
+      <section class="kasya-aov-cart__items" data-kasya-aov-cart-items aria-label="Cart items">
+        {%- if cart.item_count > 0 -%}
+          {%- for item in cart.items -%}
+            {%- render 'kasya-aov-cart-item', item: item -%}
+          {%- endfor -%}
+        {%- else -%}
+          <div class="kasya-aov-cart__empty" data-kasya-aov-cart-empty>
+            <p>Your cart is waiting for something beautiful.</p>
+          </div>
+        {%- endif -%}
+      </section>
+
+      <section class="kasya-aov-cart__recommendations" aria-label="AOV product recommendations">
+        <div class="kasya-aov-cart__recommendations-header">
+          <div>
+            <h3>You’ll Love These Too</h3>
+            <p>Same collection, same fabric, same category.</p>
+          </div>
+          <a href="{{ routes.all_products_collection_url }}" class="kasya-aov-cart__recommendations-link">See All</a>
+        </div>
+
+        <div class="kasya-aov-cart__recommendations-list" data-kasya-aov-cart-recommendations>
+          {%- comment -%}
+            Phase 2: replace these placeholders with products returned by getKasyaAovRecommendations(cart).
+            Future rules:
+            - Pants in cart recommend tops.
+            - Tops in cart recommend bottoms.
+            - Jane Set in cart recommends non-Jane products only.
+            - Exclude individual Jane Blouse and Jane Pants from recommendation output.
+          {%- endcomment -%}
+          {%- for index in (1..4) -%}
+            <article class="kasya-aov-cart__recommendation-card">
+              <div class="kasya-aov-cart__recommendation-image" aria-hidden="true"></div>
+              <h4>Kasya Pick {{ index }}</h4>
+              <p>₱0.00</p>
+            </article>
+          {%- endfor -%}
+        </div>
+      </section>
+    </div>
+
+    <footer class="kasya-aov-cart__footer">
+      <section class="kasya-aov-cart__payment" aria-label="Secure checkout options">
+        <span class="kasya-aov-cart__payment-label">SECURE CHECKOUT WITH</span>
+        <div class="kasya-aov-cart__payment-badges" aria-label="Payment options">
+          <span>GCash</span>
+          <span>RCBC</span>
+          <span>Chinabank</span>
+          <span>BPI</span>
+          <span>UnionBank</span>
+        </div>
+      </section>
+
+      <form action="{{ routes.cart_url }}" method="post" class="kasya-aov-cart__checkout-form">
+        <div class="kasya-aov-cart__subtotal">
+          <span>Subtotal (<span data-kasya-aov-cart-footer-count>{{ cart.item_count }} item{% unless cart.item_count == 1 %}s{% endunless %}</span>)</span>
+          <strong data-kasya-aov-cart-subtotal>{{ cart.total_price | money }}</strong>
+        </div>
+        <p class="kasya-aov-cart__checkout-note">Shipping calculated at checkout.</p>
+        <button type="submit" name="checkout" class="kasya-aov-cart__checkout">
+          <span>PROCEED TO CHECKOUT</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </form>
+    </footer>
+  </aside>
+</kasya-aov-cart>
+
+<script src="{{ 'kasya-aov-cart.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "Kasya AOV Cart Drawer",
+  "class": "kasya-aov-cart-section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Kasya AOV Cart Drawer"
+    }
+  ]
+}
+{% endschema %}
