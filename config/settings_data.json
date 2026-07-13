@@ -704,6 +704,9 @@
       "kasya-aov-cart-drawer": {
         "type": "kasya-aov-cart-drawer",
         "settings": {
+          "aov_new_to_kasya_products": [
+            "wideleg-linen-pants"
+          ],
           "aov_love_collection": "",
           "aov_tops_collection": "",
           "aov_bottoms_collection": "",
