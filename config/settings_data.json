@@ -704,11 +704,7 @@
       "kasya-aov-cart-drawer": {
         "type": "kasya-aov-cart-drawer",
         "settings": {
-          "aov_new_to_kasya_products": [
-            "wideleg-linen-pants",
-            "soft-linen-long-skirts-copy",
-            "ella-polo-blouse-soft-linen-new-colors"
-          ],
+          "aov_new_to_kasya_products": [],
           "aov_allowed_storefront_collections": [],
           "aov_love_collection": "",
           "aov_tops_collection": "",
