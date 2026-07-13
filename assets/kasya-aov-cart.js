@@ -446,6 +446,13 @@
     });
   }
 
+  function getOptionDisplayPriority(option) {
+    const name = normalizeText(option?.name || option || '');
+    if (name.includes('color') || name.includes('colour')) return 1;
+    if (name.includes('size')) return 2;
+    return 3;
+  }
+
   function productIsInAllowedStorefrontCollection(product, productData = {}) {
     const productCollections = getCollectionKeys(product);
     if (!productCollections.size) return true;
@@ -1491,6 +1498,9 @@
       })).filter((option) => {
         const name = String(option.name || '').toLowerCase();
         return option.values.length > 1 && name !== 'title';
+      }).sort((left, right) => {
+        const priorityDiff = getOptionDisplayPriority(left) - getOptionDisplayPriority(right);
+        return priorityDiff || left.position - right.position;
       });
     }
 

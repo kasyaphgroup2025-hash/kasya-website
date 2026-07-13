@@ -768,11 +768,143 @@
     margin-right: 16px;
   }
 
+  .kasya-aov-cart__body {
+    padding-bottom: 10px;
+  }
+
   .kasya-aov-cart__item {
-    grid-template-columns: 78px minmax(0, 1fr);
+    gap: 10px;
+    grid-template-columns: 88px minmax(0, 1fr);
+    padding: 12px 0;
+  }
+
+  .kasya-aov-cart__item-media {
+    aspect-ratio: 1 / 1;
+    border-radius: 7px;
+    height: 88px;
+    width: 88px;
+  }
+
+  .kasya-aov-cart__item-title {
+    font-size: 13px;
+    line-height: 1.25;
+  }
+
+  .kasya-aov-cart__item-variant,
+  .kasya-aov-cart__item-sku {
+    font-size: 11px;
+    line-height: 1.25;
+    margin-top: 3px;
+  }
+
+  .kasya-aov-cart__item-topline,
+  .kasya-aov-cart__item-bottomline {
+    gap: 8px;
+  }
+
+  .kasya-aov-cart__item-bottomline {
+    margin-top: 9px;
+  }
+
+  .kasya-aov-cart__item-remove {
+    flex-basis: 26px;
+    font-size: 16px;
+    height: 26px;
+    width: 26px;
+  }
+
+  .kasya-aov-cart__quantity {
+    min-height: 30px;
+  }
+
+  .kasya-aov-cart__quantity-button {
+    height: 28px;
+    width: 30px;
+  }
+
+  .kasya-aov-cart__item-price {
+    font-size: 12px;
+  }
+
+  .kasya-aov-cart__recommendations {
+    margin-top: 12px;
+    padding: 9px;
+  }
+
+  .kasya-aov-cart__recommendations-header {
+    margin-bottom: 8px;
+  }
+
+  .kasya-aov-cart__recommendation-scroller {
+    grid-auto-columns: minmax(258px, 88%);
+  }
+
+  .kasya-aov-cart__recommendation-card {
+    display: grid;
+    grid-template-columns: 88px minmax(0, 1fr);
+  }
+
+  .kasya-aov-cart__recommendation-image-link {
+    aspect-ratio: 1 / 1;
+    border-bottom: 0;
+    border-right: 1px solid var(--kasya-aov-cart-line);
+    height: 88px;
+    min-height: 88px;
+    width: 88px;
+  }
+
+  .kasya-aov-cart__recommendation-image {
+    aspect-ratio: 1 / 1;
+  }
+
+  .kasya-aov-cart__recommendation-info {
+    align-content: start;
+    display: grid;
+    padding: 8px;
+  }
+
+  .kasya-aov-cart__recommendation-title {
+    font-size: 11px;
+    line-height: 1.25;
+    min-height: 0;
+  }
+
+  .kasya-aov-cart__recommendation-card p {
+    font-size: 10px;
+    margin-top: 3px;
+  }
+
+  .kasya-aov-cart__recommendation-options {
+    gap: 4px;
+    margin-top: 6px;
+  }
+
+  .kasya-aov-cart__recommendation-option select {
+    min-height: 27px;
+  }
+
+  .kasya-aov-cart__recommendation-add {
+    margin-top: 6px;
+    min-height: 29px;
+  }
+
+  .kasya-aov-cart__payment {
+    margin-bottom: 10px;
+    padding: 8px;
+  }
+
+  .kasya-aov-cart__payment-topline {
+    gap: 8px;
+    margin-bottom: 6px;
   }
 
   .kasya-aov-cart__payment-badges {
+    gap: 5px;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .kasya-aov-cart__payment-badge {
+    min-height: 28px;
+    padding: 3px 4px;
   }
 }
