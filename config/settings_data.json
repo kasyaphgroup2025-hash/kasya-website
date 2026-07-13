@@ -704,11 +704,11 @@
       "kasya-aov-cart-drawer": {
         "type": "kasya-aov-cart-drawer",
         "settings": {
-          "aov_love_collection": "summer-collection",
+          "aov_love_collection": "",
           "aov_tops_collection": "",
           "aov_bottoms_collection": "",
           "aov_jane_safe_collection": "",
-          "aov_fallback_collection": "wideleg-linen-pants-collection"
+          "aov_fallback_collection": ""
         }
       }
     },
