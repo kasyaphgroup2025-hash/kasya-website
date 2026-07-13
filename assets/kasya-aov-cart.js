@@ -475,22 +475,23 @@
     return score;
   }
 
-  function filterRecommendationProducts(products, cart, usedKeys = new Set(), productData = {}) {
+  function filterRecommendationProducts(products, cart, usedKeys = new Set(), productData = {}, options = {}) {
     const cartKeys = getCartProductKeys(cart);
 
     return (products || []).filter((product) => {
       const key = getProductKey(product);
       if (!key || usedKeys.has(key) || cartKeys.has(String(product.handle || '').toLowerCase())) return false;
-      if (getProductExclusionReason(product, cart, usedKeys, new Set(), productData)) return false;
+      if (getProductExclusionReason(product, cart, usedKeys, new Set(), productData, options)) return false;
 
       usedKeys.add(key);
       return true;
     }).slice(0, 4);
   }
 
-  function getProductExclusionReason(product, cart, usedKeys = new Set(), seen = new Set(), productData = {}) {
+  function getProductExclusionReason(product, cart, usedKeys = new Set(), seen = new Set(), productData = {}, options = {}) {
     const cartKeys = getCartProductKeys(cart);
     const key = getProductKey(product);
+    const requireAllowedStorefrontCollection = options.requireAllowedStorefrontCollection !== false;
 
     if (!key) return 'missing product key';
     if (seen.has(key)) return 'duplicate candidate';
@@ -499,7 +500,7 @@
     if (!product.available) return 'unavailable or sold out';
     if (isJaneComponentProduct(product)) return 'Jane Blouse/Jane Pants excluded';
     if (productHasHiddenSignal(product)) return 'hidden/unlisted/internal/component signal';
-    if (!productIsInAllowedStorefrontCollection(product, productData)) return 'not in allowed storefront collections';
+    if (requireAllowedStorefrontCollection && !productIsInAllowedStorefrontCollection(product, productData)) return 'not in allowed storefront collections';
     if (!productHasValidPrice(product)) return 'missing valid price';
 
     return '';
@@ -626,8 +627,58 @@
     return merged;
   }
 
+  function getNewToKasyaStarterProducts(cart, productData = {}) {
+    return filterRecommendationProducts(
+      getNewToKasyaProducts(productData),
+      cart,
+      new Set(),
+      productData,
+      { requireAllowedStorefrontCollection: false }
+    );
+  }
+
+  function getNewToKasyaStarterDebug(cart, productData = {}) {
+    const selectedProducts = getNewToKasyaProducts(productData);
+    const finalProducts = getNewToKasyaStarterProducts(cart, productData);
+    const finalKeys = new Set(finalProducts.map(getProductKey));
+    const seen = new Set();
+    const excluded = selectedProducts.map((product, index) => {
+      const key = getProductKey(product);
+      let reason = getProductExclusionReason(
+        product,
+        cart,
+        new Set(),
+        seen,
+        productData,
+        { requireAllowedStorefrontCollection: false }
+      );
+
+      if (!reason && !finalKeys.has(key)) {
+        reason = index >= 4 ? 'beyond max 4 starter products' : 'not rendered';
+      }
+
+      if (key) seen.add(key);
+
+      return reason ? {
+        handle: product.handle,
+        title: product.title,
+        reason
+      } : null;
+    }).filter(Boolean);
+
+    return {
+      selectedCount: selectedProducts.length,
+      renderedCount: finalProducts.length,
+      finalProducts: finalProducts.map((product) => ({
+        handle: product.handle,
+        title: product.title
+      })),
+      excluded
+    };
+  }
+
   async function getKasyaAovRecommendations(cart, productData = {}, customerContext = getCustomerRecommendationContext(productData)) {
-    const starterProducts = filterRecommendationProducts(getNewToKasyaProducts(productData), cart, new Set(), productData);
+    const starterProducts = getNewToKasyaStarterProducts(cart, productData);
 
     if (customerContext.isNewOrLikelyNew && starterProducts.length) {
       return {
@@ -737,6 +788,7 @@
     ];
     const cartProfiles = getCartProfiles(cart, candidates);
     const sourceCollections = productData._sources || {};
+    const starterDebug = getNewToKasyaStarterDebug(cart, productData);
     const candidateCounts = getRecommendationSourceGroups(productData).reduce((counts, [key, products]) => {
       counts[key] = products.length;
       return counts;
@@ -768,8 +820,10 @@
       },
       newToKasya: {
         active: recommendations.mode === newToKasya.modeNew,
-        selectedCount: getNewToKasyaProducts(productData).length,
-        renderedCount: recommendations.mode === newToKasya.modeNew ? recommendations.merged.length : 0
+        selectedCount: starterDebug.selectedCount,
+        renderedCount: recommendations.mode === newToKasya.modeNew ? recommendations.merged.length : starterDebug.renderedCount,
+        finalProducts: starterDebug.finalProducts,
+        excluded: starterDebug.excluded
       },
       finalMode: recommendations.mode,
       sourceCollections,
@@ -1334,6 +1388,8 @@
       console.table(debug.finalProducts.similar);
       console.table(debug.finalProducts.complete);
       console.table(debug.finalProducts.merged);
+      console.table(debug.newToKasya.finalProducts);
+      console.table(debug.newToKasya.excluded);
       console.table(debug.excluded);
       console.info('[Kasya AOV Cart] Recommendation debug', debug);
       return debug;
