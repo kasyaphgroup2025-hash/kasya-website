@@ -103,8 +103,16 @@
   font-size: 16px;
 }
 
-.kasya-aov-cart__timer-time,
-.kasya-aov-cart__timer-emphasis {
+.kasya-aov-cart__timer--ended {
+  gap: 0;
+  text-align: center;
+}
+
+.kasya-aov-cart__timer--ended .kasya-aov-cart__timer-icon {
+  display: none;
+}
+
+.kasya-aov-cart__timer-time {
   font-weight: 700;
 }
 

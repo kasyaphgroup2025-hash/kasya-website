@@ -13,6 +13,7 @@
     recommendationTitle: '[data-kasya-aov-cart-recommendation-title]',
     recommendationSubtitle: '[data-kasya-aov-cart-recommendation-subtitle]',
     emptyState: '[data-kasya-aov-cart-empty-state]',
+    timer: '.kasya-aov-cart__timer',
     timerText: '[data-kasya-aov-cart-timer-text]',
     progressCopy: '[data-kasya-aov-cart-progress-copy]',
     progress: '[data-kasya-aov-cart-progress]',
@@ -23,7 +24,6 @@
     duration: 180,
     storageKey: 'kasyaAovCartReservation',
     endedText: 'Your reservation has ended. Please proceed before items sell out.',
-    endedEmphasis: 'reservation has ended.',
     emptyText: 'Add an item to start your reservation timer.'
   };
 
@@ -1473,6 +1473,9 @@
 
     renderTimerText(text) {
       const timerText = this.querySelector(selectors.timerText);
+      const timer = this.querySelector(selectors.timer);
+
+      timer?.classList.remove('kasya-aov-cart__timer--ended');
 
       if (timerText) {
         timerText.textContent = text;
@@ -1480,8 +1483,11 @@
     }
 
     renderTimerCountdown(time) {
+      const timer = this.querySelector(selectors.timer);
       const timerText = this.querySelector(selectors.timerText);
       if (!timerText) return;
+
+      timer?.classList.remove('kasya-aov-cart__timer--ended');
 
       const timerTime = document.createElement('strong');
       timerTime.className = 'kasya-aov-cart__timer-time';
@@ -1496,18 +1502,12 @@
     }
 
     renderTimerEndedText() {
+      const timer = this.querySelector(selectors.timer);
       const timerText = this.querySelector(selectors.timerText);
       if (!timerText) return;
 
-      const emphasis = document.createElement('strong');
-      emphasis.className = 'kasya-aov-cart__timer-emphasis';
-      emphasis.textContent = reservation.endedEmphasis;
-
-      timerText.replaceChildren(
-        document.createTextNode('Your '),
-        emphasis,
-        document.createTextNode(' Please proceed before items sell out.')
-      );
+      timer?.classList.add('kasya-aov-cart__timer--ended');
+      timerText.textContent = reservation.endedText;
     }
 
     getTimerState() {
