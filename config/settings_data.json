@@ -706,9 +706,10 @@
         "settings": {
           "aov_new_to_kasya_products": [
             "wideleg-linen-pants",
-            "ella-polo-blouse-soft-linen-new-colors",
-            "soft-linen-long-skirts-copy"
+            "soft-linen-long-skirts-copy",
+            "ella-polo-blouse-soft-linen-new-colors"
           ],
+          "aov_allowed_storefront_collections": [],
           "aov_love_collection": "",
           "aov_tops_collection": "",
           "aov_bottoms_collection": "",
