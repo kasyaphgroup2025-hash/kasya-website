@@ -33,10 +33,40 @@
   };
 
   const newToKasya = {
-    guestMarkerKey: 'kasyaAovCartKnownVisitor',
     modeNew: 'new-to-kasya',
     modeAutomatic: 'automatic-youll-love-these-too',
     modeHidden: 'hidden'
+  };
+
+  const storefrontVisibility = {
+    hiddenKeywords: [
+      'jane-blouse',
+      'jane blouse',
+      'jane-pants',
+      'jane pants',
+      'component',
+      'hidden',
+      'unlisted',
+      'internal',
+      'test',
+      'virtual',
+      'setup'
+    ],
+    defaultAllowedCollectionHandles: [
+      'pants',
+      'skirts',
+      'tops',
+      'dresses',
+      'kasya-set',
+      'new-in',
+      'core-essentials',
+      'bundles',
+      'back-to-rhythm',
+      'summer-collection',
+      'everyday-edit',
+      'premiere',
+      'northern-blossom'
+    ]
   };
 
   const formatMoney = (cents) => {
@@ -295,6 +325,31 @@
     return new Set((product?.tags || []).map(normalizeText).filter(Boolean));
   }
 
+  function getAllowedStorefrontCollections(productData = {}) {
+    const configured = (productData._allowedStorefrontCollections || []).flatMap((collection) => {
+      return [collection.handle, collection.title].map(normalizeText).filter(Boolean);
+    });
+
+    return new Set([
+      ...storefrontVisibility.defaultAllowedCollectionHandles.map(normalizeText),
+      ...configured
+    ]);
+  }
+
+  function productHasHiddenSignal(product) {
+    const text = getProductText(product);
+
+    return storefrontVisibility.hiddenKeywords.some((keyword) => text.includes(normalizeText(keyword)));
+  }
+
+  function productIsInAllowedStorefrontCollection(product, productData = {}) {
+    const productCollections = getCollectionKeys(product);
+    if (!productCollections.size) return true;
+
+    const allowedCollections = getAllowedStorefrontCollections(productData);
+    return Array.from(productCollections).some((collection) => allowedCollections.has(collection));
+  }
+
   function isJaneComponentProduct(product) {
     const key = `${product?.handle || ''} ${product?.title || ''}`.toLowerCase();
 
@@ -420,20 +475,20 @@
     return score;
   }
 
-  function filterRecommendationProducts(products, cart, usedKeys = new Set()) {
+  function filterRecommendationProducts(products, cart, usedKeys = new Set(), productData = {}) {
     const cartKeys = getCartProductKeys(cart);
 
     return (products || []).filter((product) => {
       const key = getProductKey(product);
       if (!key || usedKeys.has(key) || cartKeys.has(String(product.handle || '').toLowerCase())) return false;
-      if (!product.available || isJaneComponentProduct(product) || !productHasValidPrice(product)) return false;
+      if (getProductExclusionReason(product, cart, usedKeys, new Set(), productData)) return false;
 
       usedKeys.add(key);
       return true;
     }).slice(0, 4);
   }
 
-  function getProductExclusionReason(product, cart, usedKeys = new Set(), seen = new Set()) {
+  function getProductExclusionReason(product, cart, usedKeys = new Set(), seen = new Set(), productData = {}) {
     const cartKeys = getCartProductKeys(cart);
     const key = getProductKey(product);
 
@@ -443,12 +498,14 @@
     if (cartKeys.has(String(product.handle || '').toLowerCase())) return 'already in cart';
     if (!product.available) return 'unavailable or sold out';
     if (isJaneComponentProduct(product)) return 'Jane Blouse/Jane Pants excluded';
+    if (productHasHiddenSignal(product)) return 'hidden/unlisted/internal/component signal';
+    if (!productIsInAllowedStorefrontCollection(product, productData)) return 'not in allowed storefront collections';
     if (!productHasValidPrice(product)) return 'missing valid price';
 
     return '';
   }
 
-  function getScoredRecommendations(products, cart, cartProfiles, scorer, usedKeys = new Set(), minimumScore = 1) {
+  function getScoredRecommendations(products, cart, cartProfiles, scorer, usedKeys = new Set(), minimumScore = 1, productData = {}) {
     const seen = new Set();
 
     return (products || []).map((product, index) => ({
@@ -456,7 +513,7 @@
       score: scorer(product, cartProfiles),
       index
     })).filter(({ product, score }) => {
-      const reason = getProductExclusionReason(product, cart, usedKeys, seen);
+      const reason = getProductExclusionReason(product, cart, usedKeys, seen, productData);
       if (reason) return false;
       const key = getProductKey(product);
       seen.add(key);
@@ -497,43 +554,17 @@
     return 'fallback';
   }
 
-  function getStoredGuestVisitorMarker() {
-    try {
-      return window.localStorage.getItem(newToKasya.guestMarkerKey) ||
-        window.sessionStorage.getItem(newToKasya.guestMarkerKey);
-    } catch (error) {
-      try {
-        return window.sessionStorage.getItem(newToKasya.guestMarkerKey);
-      } catch (sessionError) {
-        return null;
-      }
-    }
-  }
-
-  function setStoredGuestVisitorMarker() {
-    try {
-      window.localStorage.setItem(newToKasya.guestMarkerKey, String(Date.now()));
-    } catch (error) {
-      try {
-        window.sessionStorage.setItem(newToKasya.guestMarkerKey, String(Date.now()));
-      } catch (sessionError) {
-        console.warn('[Kasya AOV Cart] Unable to store likely-new visitor marker.', sessionError);
-      }
-    }
-  }
-
   function getCustomerRecommendationContext(productData = {}) {
     const customer = productData._customer || {};
     const loggedIn = Boolean(customer.loggedIn);
     const ordersCount = typeof customer.ordersCount === 'number' ? customer.ordersCount : null;
-    const guestMarker = getStoredGuestVisitorMarker();
     const isLoggedInNewCustomer = loggedIn && ordersCount === 0;
     const isReturningCustomer = loggedIn && ordersCount > 0;
     /*
-      Guest detection is intentionally only "likely new visitor" detection.
-      It is not a confirmed first-time buyer check because order history is unavailable for guests.
+      Guest purchase history cannot be confirmed unless the customer logs in.
+      Guests are therefore treated as likely new visitors whenever starter products are configured.
     */
-    const isLikelyNewGuest = !loggedIn && !guestMarker;
+    const isLikelyNewGuest = !loggedIn;
 
     return {
       loggedIn,
@@ -542,7 +573,9 @@
       isReturningCustomer,
       isLikelyNewGuest,
       isNewOrLikelyNew: isLoggedInNewCustomer || isLikelyNewGuest,
-      guestMarkerExists: Boolean(guestMarker)
+      customerMode: loggedIn
+        ? (isReturningCustomer ? 'logged-in-returning' : 'logged-in-new')
+        : 'guest-likely-new'
     };
   }
 
@@ -594,7 +627,7 @@
   }
 
   async function getKasyaAovRecommendations(cart, productData = {}, customerContext = getCustomerRecommendationContext(productData)) {
-    const starterProducts = filterRecommendationProducts(getNewToKasyaProducts(productData), cart, new Set());
+    const starterProducts = filterRecommendationProducts(getNewToKasyaProducts(productData), cart, new Set(), productData);
 
     if (customerContext.isNewOrLikelyNew && starterProducts.length) {
       return {
@@ -624,13 +657,13 @@
     const fallbackCandidates = getAllRecommendationCandidates(productData);
     const cartProfiles = getCartProfiles(cart, [...automaticCandidates, ...fallbackCandidates]);
     const similarUsed = new Set();
-    let similar = getScoredRecommendations(automatic.related, cart, cartProfiles, scoreSimilarity, similarUsed);
+    let similar = getScoredRecommendations(automatic.related, cart, cartProfiles, scoreSimilarity, similarUsed, 1, productData);
     const completeUsed = new Set(similar.map(getProductKey));
-    let complete = getScoredRecommendations(automatic.complementary, cart, cartProfiles, scoreCompleteLook, completeUsed);
+    let complete = getScoredRecommendations(automatic.complementary, cart, cartProfiles, scoreCompleteLook, completeUsed, 1, productData);
     let usedFallback = false;
 
     if (!complete.length) {
-      complete = getScoredRecommendations(automatic.related, cart, cartProfiles, scoreCompleteLook, completeUsed);
+      complete = getScoredRecommendations(automatic.related, cart, cartProfiles, scoreCompleteLook, completeUsed, 1, productData);
     }
 
     if (similar.length < 2 || complete.length < 2) {
@@ -640,13 +673,13 @@
 
       if (similar.length < 2) {
         const existing = new Set(similar.map(getProductKey));
-        const fallbackSimilar = getScoredRecommendations(fallbackSimilarSource, cart, cartProfiles, scoreSimilarity, existing);
+        const fallbackSimilar = getScoredRecommendations(fallbackSimilarSource, cart, cartProfiles, scoreSimilarity, existing, 1, productData);
         similar = [...similar, ...fallbackSimilar].slice(0, 4);
       }
 
       if (complete.length < 2) {
         const existing = new Set([...similar.map(getProductKey), ...complete.map(getProductKey)]);
-        const fallbackComplete = getScoredRecommendations(fallbackCompleteSource, cart, cartProfiles, scoreCompleteLook, existing);
+        const fallbackComplete = getScoredRecommendations(fallbackCompleteSource, cart, cartProfiles, scoreCompleteLook, existing, 1, productData);
         complete = [...complete, ...fallbackComplete].slice(0, 4);
       }
     }
@@ -655,7 +688,7 @@
     const fillUsed = new Set(merged.map(getProductKey));
 
     if (merged.length < 4) {
-      const filler = filterRecommendationProducts([...automaticCandidates, ...fallbackCandidates], cart, fillUsed);
+      const filler = filterRecommendationProducts([...automaticCandidates, ...fallbackCandidates], cart, fillUsed, productData);
       filler.forEach((product) => {
         if (merged.length < 4) merged.push(product);
       });
@@ -714,7 +747,7 @@
       ...recommendations.complete.map(getProductKey)
     ]);
     const excluded = candidates.map((product) => {
-      const reason = getProductExclusionReason(product, cart, new Set(), seen) ||
+      const reason = getProductExclusionReason(product, cart, new Set(), seen, productData) ||
         (usedKeys.has(getProductKey(product)) ? '' : 'not enough score for current cart');
       seen.add(getProductKey(product));
 
@@ -731,7 +764,7 @@
         ordersCount: customerContext.ordersCount,
         isLoggedInNewCustomer: customerContext.isLoggedInNewCustomer,
         isLikelyNewGuest: customerContext.isLikelyNewGuest,
-        guestMarkerExists: customerContext.guestMarkerExists
+        mode: customerContext.customerMode
       },
       newToKasya: {
         active: recommendations.mode === newToKasya.modeNew,
@@ -740,6 +773,10 @@
       },
       finalMode: recommendations.mode,
       sourceCollections,
+      allowedStorefrontCollections: {
+        defaultHandles: productData._defaultAllowedStorefrontCollections || storefrontVisibility.defaultAllowedCollectionHandles,
+        configured: productData._allowedStorefrontCollections || []
+      },
       candidateCounts,
       automatic: {
         cartProducts: recommendations.automatic.refs,
@@ -771,6 +808,10 @@
           title: product.title
         }))
       },
+      exclusionsByReason: excluded.reduce((reasons, product) => {
+        reasons[product.reason] = (reasons[product.reason] || 0) + 1;
+        return reasons;
+      }, {}),
       excluded
     };
   }
@@ -820,7 +861,6 @@
       this.setAttribute('aria-hidden', 'true');
       this.classList.remove('kasya-aov-cart--open');
       document.documentElement.classList.remove('kasya-aov-cart-is-open');
-      this.markLikelyNewGuestIfNeeded();
     }
 
     async refresh() {
@@ -1580,21 +1620,12 @@
 
       try {
         this.setUpdating(true);
-        this.markLikelyNewGuestIfNeeded();
         await addKasyaAovCartItem(variantId);
         await this.refresh();
       } catch (error) {
         console.warn('[Kasya AOV Cart] Unable to add recommended item.', error);
       } finally {
         this.setUpdating(false);
-      }
-    }
-
-    markLikelyNewGuestIfNeeded() {
-      const customerContext = getCustomerRecommendationContext(this.recommendationData);
-
-      if (this.lastRecommendationMode === newToKasya.modeNew && customerContext.isLikelyNewGuest) {
-        setStoredGuestVisitorMarker();
       }
     }
 
