@@ -9,8 +9,7 @@
     subtotalWrap: '[data-kasya-aov-cart-subtotal-wrap]',
     recommendations: '[data-kasya-aov-cart-recommendations]',
     recommendationData: '[data-kasya-aov-cart-recommendation-data]',
-    recommendationColumn: '[data-kasya-aov-cart-recommendation-column]',
-    completeCopy: '[data-kasya-aov-cart-complete-copy]',
+    recommendationCarousel: '[data-kasya-aov-cart-recommendation-carousel]',
     emptyState: '[data-kasya-aov-cart-empty-state]',
     timerText: '[data-kasya-aov-cart-timer-text]',
     progressCopy: '[data-kasya-aov-cart-progress-copy]',
@@ -112,8 +111,110 @@
     return response.json();
   }
 
+  async function fetchShopifyRecommendations(productId, intent) {
+    if (!productId) return [];
+
+    try {
+      const response = await fetch(`/recommendations/products.json?product_id=${encodeURIComponent(productId)}&limit=10&intent=${encodeURIComponent(intent)}`, {
+        headers: { Accept: 'application/json' }
+      });
+
+      if (!response.ok) return [];
+      const data = await response.json();
+
+      return Array.isArray(data.products) ? data.products : [];
+    } catch (error) {
+      console.warn('[Kasya AOV Cart] Unable to fetch Shopify recommendations.', { productId, intent, error });
+      return [];
+    }
+  }
+
+  async function fetchShopifyProductByHandle(handle) {
+    if (!handle) return null;
+
+    try {
+      const response = await fetch(`/products/${encodeURIComponent(handle)}.js`, {
+        headers: { Accept: 'application/json' }
+      });
+
+      if (!response.ok) return null;
+      return response.json();
+    } catch (error) {
+      console.warn('[Kasya AOV Cart] Unable to fetch recommended product details.', { handle, error });
+      return null;
+    }
+  }
+
   function getProductKey(product) {
     return String(product?.handle || product?.url || product?.title || '').toLowerCase();
+  }
+
+  function normalizeProductUrl(product) {
+    if (product?.url) return product.url;
+    if (product?.handle) return `/products/${product.handle}`;
+    return '#';
+  }
+
+  function normalizeProductImage(product) {
+    if (typeof product?.image === 'string') return product.image;
+    if (product?.image?.src) return product.image.src;
+    if (product?.featured_image?.src) return product.featured_image.src;
+    if (typeof product?.featured_image === 'string') return product.featured_image;
+    if (Array.isArray(product?.images) && product.images.length) {
+      return typeof product.images[0] === 'string' ? product.images[0] : product.images[0]?.src || null;
+    }
+
+    return null;
+  }
+
+  function normalizeRecommendationProduct(product) {
+    if (!product) return null;
+
+    return {
+      id: product.id || product.product_id || null,
+      handle: product.handle || String(product.url || '').split('/products/')[1]?.split('?')[0]?.split('/')[0] || '',
+      title: product.title || '',
+      url: normalizeProductUrl(product),
+      image: normalizeProductImage(product),
+      price: Number(product.price || product.price_min || product.variants?.[0]?.price || 0),
+      available: product.available !== false,
+      type: product.type || product.product_type || '',
+      vendor: product.vendor || '',
+      tags: Array.isArray(product.tags) ? product.tags : String(product.tags || '').split(',').map((tag) => tag.trim()).filter(Boolean),
+      collections: product.collections || [],
+      options: product.options_with_values || product.options || [],
+      variants: product.variants || []
+    };
+  }
+
+  async function hydrateRecommendationProduct(product) {
+    const normalized = normalizeRecommendationProduct(product);
+    if (!normalized?.handle) return normalized;
+    const hasOptionValues = normalized.options.some((option) => Array.isArray(option?.values) && option.values.length);
+    if (normalized.variants.length && hasOptionValues) return normalized;
+
+    const details = await fetchShopifyProductByHandle(normalized.handle);
+    if (!details) return normalized;
+
+    return {
+      ...normalized,
+      ...normalizeRecommendationProduct(details),
+      id: normalized.id || details.id || null,
+      image: normalized.image || normalizeProductImage(details),
+      url: normalized.url || normalizeProductUrl(details)
+    };
+  }
+
+  async function hydrateRecommendationProducts(products) {
+    const hydrated = await Promise.all((products || []).map(hydrateRecommendationProduct));
+    const seen = new Set();
+
+    return hydrated.filter((product) => {
+      const key = getProductKey(product);
+      if (!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
   }
 
   function normalizeText(value) {
@@ -381,58 +482,136 @@
     return 'fallback';
   }
 
-  function getKasyaAovRecommendations(cart, productData = {}) {
-    const candidates = getAllRecommendationCandidates(productData);
-    const cartProfiles = getCartProfiles(cart, candidates);
-    const usedKeys = new Set();
-    const loveSource = productData.love?.length ? productData.love : candidates;
-    let love = getScoredRecommendations(loveSource, cart, cartProfiles, scoreSimilarity, usedKeys);
-    let completeSource = candidates;
-    let completeCopy = 'Build a complete Kasya look.';
+  function getCartProductRefs(cart) {
+    const seen = new Set();
 
-    if (cartHasJaneSet(cart)) {
-      completeSource = [
-        ...(productData.completeJane || []),
-        ...candidates
-      ];
-      completeCopy = 'Easy pieces that pair well with your set.';
-    } else if (cartHasPants(cart) && cartHasTop(cart)) {
-      completeSource = [
-        ...(productData.fallback || []),
-        ...candidates
-      ];
-      completeCopy = 'Build a complete Kasya look.';
-    } else if (cartHasPants(cart)) {
-      completeSource = [
-        ...(productData.completePants || []),
-        ...candidates
-      ];
-      completeCopy = 'Pair it with tops that balance the look.';
-    } else if (cartHasTop(cart)) {
-      completeSource = [
-        ...(productData.completeTops || []),
-        ...candidates
-      ];
-      completeCopy = 'Add an easy bottom to complete the outfit.';
-    }
+    return (cart.items || []).map((item) => ({
+      id: item.product_id,
+      handle: item.handle || item.product_handle || String(item.url || '').split('/products/')[1]?.split('?')[0]?.split('/')[0] || '',
+      title: item.product_title || ''
+    })).filter((item) => {
+      const key = item.id || item.handle;
+      if (!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
 
-    const complete = getScoredRecommendations(completeSource, cart, cartProfiles, scoreCompleteLook, usedKeys);
-
-    if (!love.length) {
-      love = filterRecommendationProducts([...(productData.love || []), ...(productData.fallback || []), ...candidates], cart, usedKeys);
-    }
+  async function getAutomaticRecommendationPools(cart) {
+    const refs = getCartProductRefs(cart);
+    const relatedResponses = await Promise.all(refs.map((item) => fetchShopifyRecommendations(item.id, 'related')));
+    const complementaryResponses = await Promise.all(refs.map((item) => fetchShopifyRecommendations(item.id, 'complementary')));
 
     return {
-      love,
-      complete: complete.length ? complete : filterRecommendationProducts([...(productData.fallback || []), ...candidates], cart, usedKeys),
-      completeCopy
+      refs,
+      related: await hydrateRecommendationProducts(relatedResponses.flat().map(normalizeRecommendationProduct).filter(Boolean)),
+      complementary: await hydrateRecommendationProducts(complementaryResponses.flat().map(normalizeRecommendationProduct).filter(Boolean)),
+      relatedCount: relatedResponses.reduce((sum, products) => sum + products.length, 0),
+      complementaryCount: complementaryResponses.reduce((sum, products) => sum + products.length, 0)
     };
   }
 
-  function getRecommendationDebug(cart, productData = {}) {
-    const candidates = getAllRecommendationCandidates(productData);
+  function mergeRecommendationPairs(similar, complete) {
+    const used = new Set();
+    const merged = [];
+    const maxLength = Math.max(similar.length, complete.length);
+
+    for (let index = 0; index < maxLength && merged.length < 4; index += 1) {
+      [similar[index], complete[index]].forEach((product) => {
+        const key = getProductKey(product);
+        if (product && key && !used.has(key) && merged.length < 4) {
+          used.add(key);
+          merged.push(product);
+        }
+      });
+    }
+
+    return merged;
+  }
+
+  async function getKasyaAovRecommendations(cart, productData = {}) {
+    const automatic = await getAutomaticRecommendationPools(cart);
+    const automaticCandidates = [
+      ...automatic.related,
+      ...automatic.complementary
+    ];
+    const fallbackCandidates = getAllRecommendationCandidates(productData);
+    const cartProfiles = getCartProfiles(cart, [...automaticCandidates, ...fallbackCandidates]);
+    const similarUsed = new Set();
+    let similar = getScoredRecommendations(automatic.related, cart, cartProfiles, scoreSimilarity, similarUsed);
+    const completeUsed = new Set(similar.map(getProductKey));
+    let complete = getScoredRecommendations(automatic.complementary, cart, cartProfiles, scoreCompleteLook, completeUsed);
+    let usedFallback = false;
+
+    if (!complete.length) {
+      complete = getScoredRecommendations(automatic.related, cart, cartProfiles, scoreCompleteLook, completeUsed);
+    }
+
+    if (similar.length < 2 || complete.length < 2) {
+      usedFallback = true;
+      const fallbackSimilarSource = productData.love?.length ? productData.love : fallbackCandidates;
+      const fallbackCompleteSource = getFallbackCompleteSource(cart, productData, fallbackCandidates);
+
+      if (similar.length < 2) {
+        const existing = new Set(similar.map(getProductKey));
+        const fallbackSimilar = getScoredRecommendations(fallbackSimilarSource, cart, cartProfiles, scoreSimilarity, existing);
+        similar = [...similar, ...fallbackSimilar].slice(0, 4);
+      }
+
+      if (complete.length < 2) {
+        const existing = new Set([...similar.map(getProductKey), ...complete.map(getProductKey)]);
+        const fallbackComplete = getScoredRecommendations(fallbackCompleteSource, cart, cartProfiles, scoreCompleteLook, existing);
+        complete = [...complete, ...fallbackComplete].slice(0, 4);
+      }
+    }
+
+    const merged = mergeRecommendationPairs(similar, complete);
+    const fillUsed = new Set(merged.map(getProductKey));
+
+    if (merged.length < 4) {
+      const filler = filterRecommendationProducts([...automaticCandidates, ...fallbackCandidates], cart, fillUsed);
+      filler.forEach((product) => {
+        if (merged.length < 4) merged.push(product);
+      });
+    }
+
+    return {
+      similar,
+      complete,
+      merged: merged.slice(0, 4),
+      usedFallback,
+      automatic
+    };
+  }
+
+  function getFallbackCompleteSource(cart, productData, fallbackCandidates) {
+    if (cartHasJaneSet(cart)) {
+      return [...(productData.completeJane || []), ...fallbackCandidates];
+    }
+
+    if (cartHasPants(cart) && !cartHasTop(cart)) {
+      return [...(productData.completePants || []), ...fallbackCandidates];
+    }
+
+    if (cartHasTop(cart) && !cartHasPants(cart)) {
+      return [...(productData.completeTops || []), ...fallbackCandidates];
+    }
+
+    return [...(productData.fallback || []), ...fallbackCandidates];
+  }
+
+  async function getRecommendationDebug(cart, productData = {}) {
+    const recommendations = await getKasyaAovRecommendations(cart, productData);
+    const fallbackCandidates = getAllRecommendationCandidates(productData);
+    const automaticCandidates = [
+      ...recommendations.automatic.related,
+      ...recommendations.automatic.complementary
+    ];
+    const candidates = [
+      ...automaticCandidates,
+      ...fallbackCandidates
+    ];
     const cartProfiles = getCartProfiles(cart, candidates);
-    const recommendations = getKasyaAovRecommendations(cart, productData);
     const sourceCollections = productData._sources || {};
     const candidateCounts = getRecommendationSourceGroups(productData).reduce((counts, [key, products]) => {
       counts[key] = products.length;
@@ -440,7 +619,7 @@
     }, {});
     const seen = new Set();
     const usedKeys = new Set([
-      ...recommendations.love.map(getProductKey),
+      ...recommendations.similar.map(getProductKey),
       ...recommendations.complete.map(getProductKey)
     ]);
     const excluded = candidates.map((product) => {
@@ -458,6 +637,12 @@
     return {
       sourceCollections,
       candidateCounts,
+      automatic: {
+        cartProducts: recommendations.automatic.refs,
+        relatedCount: recommendations.automatic.relatedCount,
+        complementaryCount: recommendations.automatic.complementaryCount
+      },
+      usedFallback: recommendations.usedFallback,
       cartType: getDetectedCartType(cart),
       cartProfiles: cartProfiles.map((profile) => ({
         handle: profile.product.handle,
@@ -467,7 +652,7 @@
         isJaneSet: profile.isJaneSet
       })),
       finalProducts: {
-        love: recommendations.love.map((product) => ({
+        similar: recommendations.similar.map((product) => ({
           handle: product.handle,
           title: product.title,
           score: scoreSimilarity(product, cartProfiles)
@@ -476,6 +661,10 @@
           handle: product.handle,
           title: product.title,
           score: scoreCompleteLook(product, cartProfiles)
+        })),
+        merged: recommendations.merged.map((product) => ({
+          handle: product.handle,
+          title: product.title
         }))
       },
       excluded
@@ -489,6 +678,7 @@
       this.isUpdating = false;
       this.timerId = null;
       this.previousOfferSubtotal = null;
+      this.activeRecommendationProducts = [];
       this.onClick = this.onClick.bind(this);
       this.onChange = this.onChange.bind(this);
       this.onKeydown = this.onKeydown.bind(this);
@@ -539,7 +729,7 @@
         }
 
         this.renderOfferProgress(this.cart);
-        this.renderRecommendations(this.cart);
+        await this.renderRecommendations(this.cart);
       } catch (error) {
         console.warn(error);
       }
@@ -841,28 +1031,25 @@
       return (set.items || []).reduce((sum, item) => sum + (item.final_line_price || 0), 0);
     }
 
-    renderRecommendations(cart) {
-      const recommendations = getKasyaAovRecommendations(cart, this.recommendationData);
+    async renderRecommendations(cart) {
+      const recommendations = await getKasyaAovRecommendations(cart, this.recommendationData);
       const container = this.querySelector(selectors.recommendations);
-      const loveColumn = this.querySelector(`${selectors.recommendationColumn}[data-kasya-aov-cart-recommendation-column="love"]`);
-      const completeColumn = this.querySelector(`${selectors.recommendationColumn}[data-kasya-aov-cart-recommendation-column="complete"]`);
-      const completeCopy = this.querySelector(selectors.completeCopy);
+      const carousel = this.querySelector(selectors.recommendationCarousel);
 
-      if (!container || !loveColumn || !completeColumn) {
+      if (!container || !carousel) {
         return;
       }
 
-      if (!recommendations.love.length && !recommendations.complete.length) {
+      if (!recommendations.merged.length) {
         container.hidden = true;
-        loveColumn.innerHTML = '';
-        completeColumn.innerHTML = '';
+        carousel.innerHTML = '';
+        this.activeRecommendationProducts = [];
         return;
       }
 
       container.hidden = false;
-      if (completeCopy) completeCopy.textContent = recommendations.completeCopy;
-      loveColumn.innerHTML = recommendations.love.map((product) => this.renderRecommendationCard(product)).join('');
-      completeColumn.innerHTML = recommendations.complete.map((product) => this.renderRecommendationCard(product)).join('');
+      this.activeRecommendationProducts = recommendations.merged;
+      carousel.innerHTML = recommendations.merged.map((product) => this.renderRecommendationCard(product)).join('');
       this.syncRecommendationCards();
     }
 
@@ -967,8 +1154,11 @@
     }
 
     getRecommendationProductByHandle(handle) {
-      return getRecommendationSourceGroups(this.recommendationData)
+      return [
+        ...(this.activeRecommendationProducts || []),
+        ...getRecommendationSourceGroups(this.recommendationData)
         .flatMap(([, products]) => products)
+      ]
         .find((product) => product.handle === handle);
     }
 
@@ -984,11 +1174,12 @@
       }
     }
 
-    debugRecommendations() {
+    async debugRecommendations() {
       const cart = this.cart || { items: [], item_count: 0 };
-      const debug = getRecommendationDebug(cart, this.recommendationData);
-      console.table(debug.finalProducts.love);
+      const debug = await getRecommendationDebug(cart, this.recommendationData);
+      console.table(debug.finalProducts.similar);
       console.table(debug.finalProducts.complete);
+      console.table(debug.finalProducts.merged);
       console.table(debug.excluded);
       console.info('[Kasya AOV Cart] Recommendation debug', debug);
       return debug;

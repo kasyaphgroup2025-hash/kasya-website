@@ -443,31 +443,13 @@
   display: none;
 }
 
-.kasya-aov-cart__recommendations-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
 .kasya-aov-cart__recommendations h3,
 .kasya-aov-cart__recommendations h4,
 .kasya-aov-cart__recommendations p {
   margin: 0;
 }
 
-.kasya-aov-cart__recommendation-column {
-  min-width: 0;
-}
-
-.kasya-aov-cart__recommendation-column + .kasya-aov-cart__recommendation-column {
-  border-left: 1px solid var(--kasya-aov-cart-line);
-  padding-left: 10px;
-}
-
-.kasya-aov-cart__recommendation-column:first-child {
-  padding-right: 10px;
-}
-
-.kasya-aov-cart__recommendation-column-header {
+.kasya-aov-cart__recommendations-header {
   margin-bottom: 10px;
 }
 
@@ -477,7 +459,7 @@
   line-height: 1.25;
 }
 
-.kasya-aov-cart__recommendation-column-header p {
+.kasya-aov-cart__recommendations-header p {
   color: var(--kasya-aov-cart-muted);
   font-size: 10px;
   line-height: 1.35;
@@ -775,33 +757,6 @@
 
   .kasya-aov-cart__item {
     grid-template-columns: 78px minmax(0, 1fr);
-  }
-
-  .kasya-aov-cart__recommendations-grid {
-    grid-auto-columns: minmax(220px, 82%);
-    grid-auto-flow: column;
-    grid-template-columns: none;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
-    scroll-snap-type: x mandatory;
-  }
-
-  .kasya-aov-cart__recommendations-grid::-webkit-scrollbar {
-    display: none;
-  }
-
-  .kasya-aov-cart__recommendation-column {
-    scroll-snap-align: start;
-  }
-
-  .kasya-aov-cart__recommendation-column + .kasya-aov-cart__recommendation-column {
-    border-left: 0;
-    padding-left: 0;
-  }
-
-  .kasya-aov-cart__recommendation-column:first-child {
-    padding-right: 0;
   }
 
   .kasya-aov-cart__payment-badges {
