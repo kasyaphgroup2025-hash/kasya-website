@@ -156,7 +156,7 @@
 </kasya-aov-cart>
 
 {%- liquid
-  assign recommendation_groups = 'love:aov_love_products|completePants:aov_complete_pants_products|completeTops:aov_complete_tops_products|completeJane:aov_complete_jane_products|fallback:aov_fallback_products' | split: '|'
+  assign recommendation_groups = 'love:aov_love_collection|completePants:aov_tops_collection|completeTops:aov_bottoms_collection|completeJane:aov_jane_safe_collection|fallback:aov_fallback_collection' | split: '|'
 -%}
 <script type="application/json" data-kasya-aov-cart-recommendation-data>
 {
@@ -165,9 +165,11 @@
       assign group_parts = group | split: ':'
       assign group_key = group_parts[0]
       assign setting_key = group_parts[1]
+      assign source_collection = section.settings[setting_key]
     -%}
     "{{ group_key }}": [
-      {%- for product in section.settings[setting_key] limit: 4 -%}
+      {%- if source_collection != blank -%}
+      {%- for product in source_collection.products limit: 24 -%}
         {
           "handle": {{ product.handle | json }},
           "title": {{ product.title | json }},
@@ -190,8 +192,25 @@
           "variants": {{ product.variants | json }}
         }{%- unless forloop.last -%},{%- endunless -%}
       {%- endfor -%}
+      {%- endif -%}
     ]{%- unless forloop.last -%},{%- endunless -%}
   {%- endfor -%}
+  ,
+  "_sources": {
+    {%- for group in recommendation_groups -%}
+      {%- liquid
+        assign group_parts = group | split: ':'
+        assign group_key = group_parts[0]
+        assign setting_key = group_parts[1]
+        assign source_collection = section.settings[setting_key]
+      -%}
+      "{{ group_key }}": {
+        "handle": {%- if source_collection != blank -%}{{ source_collection.handle | json }}{%- else -%}null{%- endif -%},
+        "title": {%- if source_collection != blank -%}{{ source_collection.title | json }}{%- else -%}null{%- endif -%},
+        "productCount": {%- if source_collection != blank -%}{{ source_collection.products_count | default: source_collection.all_products_count | default: 0 | json }}{%- else -%}0{%- endif -%}
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  }
 }
 </script>
 
@@ -203,34 +222,29 @@
   "class": "kasya-aov-cart-section",
   "settings": [
     {
-      "type": "product_list",
-      "id": "aov_love_products",
-      "label": "Similar products candidate pool",
-      "limit": 4
+      "type": "collection",
+      "id": "aov_love_collection",
+      "label": "You’ll Love These Too source collection"
     },
     {
-      "type": "product_list",
-      "id": "aov_complete_pants_products",
-      "label": "Complete the Look candidate pool for pants cart",
-      "limit": 4
+      "type": "collection",
+      "id": "aov_tops_collection",
+      "label": "Tops source collection"
     },
     {
-      "type": "product_list",
-      "id": "aov_complete_tops_products",
-      "label": "Complete the Look candidate pool for top cart",
-      "limit": 4
+      "type": "collection",
+      "id": "aov_bottoms_collection",
+      "label": "Bottoms source collection"
     },
     {
-      "type": "product_list",
-      "id": "aov_complete_jane_products",
-      "label": "Jane-safe candidate pool",
-      "limit": 4
+      "type": "collection",
+      "id": "aov_jane_safe_collection",
+      "label": "Jane-safe source collection"
     },
     {
-      "type": "product_list",
-      "id": "aov_fallback_products",
-      "label": "General fallback candidate pool",
-      "limit": 4
+      "type": "collection",
+      "id": "aov_fallback_collection",
+      "label": "General fallback source collection"
     }
   ],
   "presets": [

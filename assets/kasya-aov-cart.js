@@ -207,10 +207,14 @@
     return (product?.variants || []).some((variant) => Number(variant.price) > 0);
   }
 
+  function getRecommendationSourceGroups(productData) {
+    return Object.entries(productData || {}).filter(([, products]) => Array.isArray(products));
+  }
+
   function getAllRecommendationCandidates(productData) {
     const seen = new Set();
 
-    return Object.values(productData || {}).flat().filter((product) => {
+    return getRecommendationSourceGroups(productData).flatMap(([, products]) => products).filter((product) => {
       const key = getProductKey(product);
       if (!key || seen.has(key)) return false;
 
@@ -313,8 +317,22 @@
     }).slice(0, 4);
   }
 
-  function getScoredRecommendations(products, cart, cartProfiles, scorer, usedKeys = new Set(), minimumScore = 1) {
+  function getProductExclusionReason(product, cart, usedKeys = new Set(), seen = new Set()) {
     const cartKeys = getCartProductKeys(cart);
+    const key = getProductKey(product);
+
+    if (!key) return 'missing product key';
+    if (seen.has(key)) return 'duplicate candidate';
+    if (usedKeys.has(key)) return 'already selected in another column';
+    if (cartKeys.has(String(product.handle || '').toLowerCase())) return 'already in cart';
+    if (!product.available) return 'unavailable or sold out';
+    if (isJaneComponentProduct(product)) return 'Jane Blouse/Jane Pants excluded';
+    if (!productHasValidPrice(product)) return 'missing valid price';
+
+    return '';
+  }
+
+  function getScoredRecommendations(products, cart, cartProfiles, scorer, usedKeys = new Set(), minimumScore = 1) {
     const seen = new Set();
 
     return (products || []).map((product, index) => ({
@@ -322,9 +340,9 @@
       score: scorer(product, cartProfiles),
       index
     })).filter(({ product, score }) => {
+      const reason = getProductExclusionReason(product, cart, usedKeys, seen);
+      if (reason) return false;
       const key = getProductKey(product);
-      if (!key || seen.has(key) || usedKeys.has(key) || cartKeys.has(String(product.handle || '').toLowerCase())) return false;
-      if (!product.available || isJaneComponentProduct(product) || !productHasValidPrice(product)) return false;
       seen.add(key);
 
       return score >= minimumScore;
@@ -355,11 +373,20 @@
     });
   }
 
+  function getDetectedCartType(cart) {
+    if (cartHasJaneSet(cart)) return 'jane-set';
+    if (cartHasPants(cart) && cartHasTop(cart)) return 'mixed-top-bottom';
+    if (cartHasPants(cart)) return 'pants-bottoms';
+    if (cartHasTop(cart)) return 'tops';
+    return 'fallback';
+  }
+
   function getKasyaAovRecommendations(cart, productData = {}) {
     const candidates = getAllRecommendationCandidates(productData);
     const cartProfiles = getCartProfiles(cart, candidates);
     const usedKeys = new Set();
-    let love = getScoredRecommendations(candidates, cart, cartProfiles, scoreSimilarity, usedKeys);
+    const loveSource = productData.love?.length ? productData.love : candidates;
+    let love = getScoredRecommendations(loveSource, cart, cartProfiles, scoreSimilarity, usedKeys);
     let completeSource = candidates;
     let completeCopy = 'Build a complete Kasya look.';
 
@@ -369,6 +396,12 @@
         ...candidates
       ];
       completeCopy = 'Easy pieces that pair well with your set.';
+    } else if (cartHasPants(cart) && cartHasTop(cart)) {
+      completeSource = [
+        ...(productData.fallback || []),
+        ...candidates
+      ];
+      completeCopy = 'Build a complete Kasya look.';
     } else if (cartHasPants(cart)) {
       completeSource = [
         ...(productData.completePants || []),
@@ -393,6 +426,59 @@
       love,
       complete: complete.length ? complete : filterRecommendationProducts([...(productData.fallback || []), ...candidates], cart, usedKeys),
       completeCopy
+    };
+  }
+
+  function getRecommendationDebug(cart, productData = {}) {
+    const candidates = getAllRecommendationCandidates(productData);
+    const cartProfiles = getCartProfiles(cart, candidates);
+    const recommendations = getKasyaAovRecommendations(cart, productData);
+    const sourceCollections = productData._sources || {};
+    const candidateCounts = getRecommendationSourceGroups(productData).reduce((counts, [key, products]) => {
+      counts[key] = products.length;
+      return counts;
+    }, {});
+    const seen = new Set();
+    const usedKeys = new Set([
+      ...recommendations.love.map(getProductKey),
+      ...recommendations.complete.map(getProductKey)
+    ]);
+    const excluded = candidates.map((product) => {
+      const reason = getProductExclusionReason(product, cart, new Set(), seen) ||
+        (usedKeys.has(getProductKey(product)) ? '' : 'not enough score for current cart');
+      seen.add(getProductKey(product));
+
+      return reason ? {
+        handle: product.handle,
+        title: product.title,
+        reason
+      } : null;
+    }).filter(Boolean);
+
+    return {
+      sourceCollections,
+      candidateCounts,
+      cartType: getDetectedCartType(cart),
+      cartProfiles: cartProfiles.map((profile) => ({
+        handle: profile.product.handle,
+        title: profile.product.title,
+        category: profile.category,
+        keywords: profile.keywords,
+        isJaneSet: profile.isJaneSet
+      })),
+      finalProducts: {
+        love: recommendations.love.map((product) => ({
+          handle: product.handle,
+          title: product.title,
+          score: scoreSimilarity(product, cartProfiles)
+        })),
+        complete: recommendations.complete.map((product) => ({
+          handle: product.handle,
+          title: product.title,
+          score: scoreCompleteLook(product, cartProfiles)
+        }))
+      },
+      excluded
     };
   }
 
@@ -881,8 +967,8 @@
     }
 
     getRecommendationProductByHandle(handle) {
-      return Object.values(this.recommendationData || {})
-        .flat()
+      return getRecommendationSourceGroups(this.recommendationData)
+        .flatMap(([, products]) => products)
         .find((product) => product.handle === handle);
     }
 
@@ -896,6 +982,16 @@
         console.warn('[Kasya AOV Cart] Unable to parse recommendation data.', error);
         return {};
       }
+    }
+
+    debugRecommendations() {
+      const cart = this.cart || { items: [], item_count: 0 };
+      const debug = getRecommendationDebug(cart, this.recommendationData);
+      console.table(debug.finalProducts.love);
+      console.table(debug.finalProducts.complete);
+      console.table(debug.excluded);
+      console.info('[Kasya AOV Cart] Recommendation debug', debug);
+      return debug;
     }
 
     renderLayoutState(cart) {
@@ -1237,6 +1333,9 @@
     fetchCart: fetchKasyaAovCart,
     changeLine: changeKasyaAovCartLine,
     addItem: addKasyaAovCartItem,
-    getRecommendations: getKasyaAovRecommendations
+    getRecommendations: getKasyaAovRecommendations,
+    debugRecommendations() {
+      return document.querySelector(selectors.root)?.debugRecommendations();
+    }
   };
 })();
