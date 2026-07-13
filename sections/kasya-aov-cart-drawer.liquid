@@ -165,6 +165,7 @@
           "image": {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 360 | json }}{%- else -%}null{%- endif -%},
           "price": {{ product.price | json }},
           "available": {{ product.available | json }},
+          "template": {{ product.template_suffix | json }},
           "type": {{ product.type | json }},
           "vendor": {{ product.vendor | json }},
           "tags": {{ product.tags | json }},
@@ -193,6 +194,7 @@
         "image": {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 360 | json }}{%- else -%}null{%- endif -%},
         "price": {{ product.price | json }},
         "available": {{ product.available | json }},
+        "template": {{ product.template_suffix | json }},
         "type": {{ product.type | json }},
         "vendor": {{ product.vendor | json }},
         "tags": {{ product.tags | json }},
@@ -206,6 +208,15 @@
         ],
         "options": {{ product.options_with_values | json }},
         "variants": {{ product.variants | json }}
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ],
+  "manualExclusions": [
+    {%- for product in section.settings.aov_excluded_recommendation_products limit: 50 -%}
+      {
+        "handle": {{ product.handle | json }},
+        "title": {{ product.title | json }},
+        "url": {{ product.url | json }}
       }{%- unless forloop.last -%},{%- endunless -%}
     {%- endfor -%}
   ],
@@ -271,6 +282,12 @@
       "id": "aov_allowed_storefront_collections",
       "label": "Allowed storefront recommendation collections",
       "limit": 20
+    },
+    {
+      "type": "product_list",
+      "id": "aov_excluded_recommendation_products",
+      "label": "Exclude from AOV recommendations",
+      "limit": 50
     },
     {
       "type": "collection",

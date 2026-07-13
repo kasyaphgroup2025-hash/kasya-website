@@ -43,12 +43,38 @@
     bundleKeywords: [
       'bundle',
       'bundles',
+      'add to bundle',
+      'add-to-bundle',
+      'bundle product',
+      'bundle linen',
+      'bundle-linen',
       'promo bundle',
       'set bundle',
       'bundle linen pants',
       'bundle-linen-pants',
       'a line maxi skirt soft linen bundle',
       'a-line-maxi-skirt-soft-linen-bundle'
+    ],
+    colorSplitPatterns: [
+      'wide leg pants soft linen',
+      'wide-leg pants soft linen',
+      'soft linen long skirt'
+    ],
+    colorSplitColors: [
+      'navy blue',
+      'red',
+      'skintone',
+      'skin tone',
+      'dark teal',
+      'emerald green',
+      'gray',
+      'army green',
+      'black',
+      'choco brown',
+      'cream',
+      'taupe',
+      'mocha',
+      'old rose'
     ],
     hiddenKeywords: [
       'jane-blouse',
@@ -61,7 +87,8 @@
       'internal',
       'test',
       'virtual',
-      'setup'
+      'setup',
+      'copy'
     ],
     defaultAllowedCollectionHandles: [
       'pants',
@@ -227,6 +254,7 @@
       image: normalizeProductImage(product),
       price: Number(product.price || product.price_min || product.variants?.[0]?.price || 0),
       available: product.available !== false,
+      template: product.template || product.template_suffix || product.templateSuffix || '',
       type: product.type || product.product_type || '',
       vendor: product.vendor || '',
       tags: Array.isArray(product.tags) ? product.tags : String(product.tags || '').split(',').map((tag) => tag.trim()).filter(Boolean),
@@ -274,11 +302,31 @@
     return normalizeText([
       product?.handle,
       product?.title,
+      product?.url,
+      product?.template,
       product?.type,
       product?.vendor,
       ...(product?.tags || []),
-      ...(product?.collections || []).flatMap((collection) => [collection.handle, collection.title])
+      ...(product?.collections || []).flatMap((collection) => [collection.handle, collection.title]),
+      ...(product?.variants || []).flatMap((variant) => getVariantTextParts(variant))
     ].filter(Boolean).join(' '));
+  }
+
+  function getVariantTextParts(variant) {
+    if (!variant) return [];
+
+    return [
+      variant.title,
+      variant.public_title,
+      variant.option1,
+      variant.option2,
+      variant.option3,
+      ...(variant.options || [])
+    ].filter(Boolean);
+  }
+
+  function getVariantText(variant) {
+    return normalizeText(getVariantTextParts(variant).join(' '));
   }
 
   function includesAny(text, words) {
@@ -358,6 +406,46 @@
     return storefrontVisibility.bundleKeywords.some((keyword) => text.includes(normalizeText(keyword)));
   }
 
+  function productHasColorSplitBundleSignal(product) {
+    const productIdentity = normalizeText([
+      product?.handle,
+      product?.title,
+      product?.url
+    ].filter(Boolean).join(' '));
+    if (!productIdentity) return false;
+
+    const hasColor = storefrontVisibility.colorSplitColors
+      .some((color) => productIdentity.includes(normalizeText(color)));
+    const hasBundleProductPattern = storefrontVisibility.colorSplitPatterns
+      .some((pattern) => productIdentity.includes(normalizeText(pattern)));
+
+    return hasColor && hasBundleProductPattern;
+  }
+
+  function variantHasBlockedSignal(variant) {
+    const text = getVariantText(variant);
+    if (!text) return false;
+
+    return text.includes('skintone') ||
+      text.includes('skin tone') ||
+      storefrontVisibility.bundleKeywords.some((keyword) => text.includes(normalizeText(keyword))) ||
+      storefrontVisibility.hiddenKeywords.some((keyword) => text.includes(normalizeText(keyword)));
+  }
+
+  function productHasSkintoneVariantSignal(product) {
+    return (product?.variants || []).some((variant) => {
+      const text = getVariantText(variant);
+      return text.includes('skintone') || text.includes('skin tone');
+    });
+  }
+
+  function getRecommendationAvailableVariants(product) {
+    return (product?.variants || []).filter((variant) => {
+      if (!variant.available || Number(variant.price) <= 0) return false;
+      return !variantHasBlockedSignal(variant);
+    });
+  }
+
   function productIsInAllowedStorefrontCollection(product, productData = {}) {
     const productCollections = getCollectionKeys(product);
     if (!productCollections.size) return true;
@@ -382,10 +470,34 @@
     }).filter(Boolean));
   }
 
+  function getManualRecommendationExclusionKeys(productData = {}) {
+    return new Set((productData.manualExclusions || []).flatMap((product) => [
+      product.handle,
+      product.url,
+      product.title
+    ]).map((value) => String(value || '').toLowerCase()).filter(Boolean));
+  }
+
+  function productIsManuallyExcluded(product, productData = {}) {
+    const exclusions = getManualRecommendationExclusionKeys(productData);
+    if (!exclusions.size) return false;
+
+    return [
+      product?.handle,
+      product?.url,
+      product?.title,
+      getProductKey(product)
+    ].some((value) => exclusions.has(String(value || '').toLowerCase()));
+  }
+
   function productHasValidPrice(product) {
+    if ((product?.variants || []).length) {
+      return getRecommendationAvailableVariants(product).length > 0;
+    }
+
     if (Number(product?.price) > 0) return true;
 
-    return (product?.variants || []).some((variant) => Number(variant.price) > 0);
+    return false;
   }
 
   function getRecommendationSourceGroups(productData) {
@@ -408,6 +520,25 @@
       seen.add(key);
       return true;
     });
+  }
+
+  function getDebugProductInfo(product, reason, source) {
+    return {
+      handle: product.handle,
+      title: product.title,
+      source,
+      reason
+    };
+  }
+
+  function dedupeDebugProducts(products) {
+    return products.reduce((deduped, product) => {
+      const key = `${product.source || ''}:${product.handle || product.title || ''}:${product.reason || ''}`.toLowerCase();
+      if (key && deduped.seen.has(key)) return deduped;
+      if (key) deduped.seen.add(key);
+      deduped.items.push(product);
+      return deduped;
+    }, { seen: new Set(), items: [] }).items;
   }
 
   function findCandidateForCartItem(item, candidates) {
@@ -513,11 +644,14 @@
     if (seen.has(key)) return 'duplicate candidate';
     if (usedKeys.has(key)) return 'already selected in another column';
     if (cartKeys.has(String(product.handle || '').toLowerCase())) return 'already in cart';
+    if (productIsManuallyExcluded(product, productData)) return 'manual AOV exclusion';
     if (!product.available) return 'unavailable or sold out';
     if (isJaneComponentProduct(product)) return 'Jane Blouse/Jane Pants excluded';
+    if (productHasColorSplitBundleSignal(product)) return 'color-split bundle product';
     if (productHasBundleSignal(product)) return 'bundle signal found';
     if (productHasHiddenSignal(product)) return 'hidden/unlisted/internal/component signal';
     if (requireAllowedStorefrontCollection && !productIsInAllowedStorefrontCollection(product, productData)) return 'not in allowed storefront collections';
+    if ((product.variants || []).length && productHasSkintoneVariantSignal(product) && !getRecommendationAvailableVariants(product).length) return 'skintone variant/option signal';
     if (!productHasValidPrice(product)) return 'missing valid price';
 
     return '';
@@ -676,11 +810,7 @@
 
       if (key) seen.add(key);
 
-      return reason ? {
-        handle: product.handle,
-        title: product.title,
-        reason
-      } : null;
+      return reason ? getDebugProductInfo(product, reason, 'new-to-kasya') : null;
     }).filter(Boolean);
 
     return {
@@ -799,10 +929,12 @@
       ...recommendations.automatic.related,
       ...recommendations.automatic.complementary
     ];
-    const candidates = [
-      ...automaticCandidates,
-      ...fallbackCandidates
+    const debugCandidates = [
+      ...recommendations.automatic.related.map((product) => ({ product, source: 'automatic-related' })),
+      ...recommendations.automatic.complementary.map((product) => ({ product, source: 'automatic-complementary' })),
+      ...fallbackCandidates.map((product) => ({ product, source: 'fallback' }))
     ];
+    const candidates = debugCandidates.map(({ product }) => product);
     const cartProfiles = getCartProfiles(cart, candidates);
     const sourceCollections = productData._sources || {};
     const starterDebug = getNewToKasyaStarterDebug(cart, productData);
@@ -815,26 +947,15 @@
       ...recommendations.similar.map(getProductKey),
       ...recommendations.complete.map(getProductKey)
     ]);
-    const excluded = candidates.map((product) => {
+    const excluded = debugCandidates.map(({ product, source }) => {
       const reason = getProductExclusionReason(product, cart, new Set(), seen, productData) ||
         (usedKeys.has(getProductKey(product)) ? '' : 'not enough score for current cart');
       seen.add(getProductKey(product));
 
-      return reason ? {
-        handle: product.handle,
-        title: product.title,
-        reason
-      } : null;
+      return reason ? getDebugProductInfo(product, reason, source) : null;
     }).filter(Boolean);
-    const excludedByBundle = [...excluded, ...starterDebug.excluded]
-      .filter((product) => product.reason === 'bundle signal found')
-      .reduce((products, product) => {
-        const key = String(product.handle || product.title || '').toLowerCase();
-        if (key && products.seen.has(key)) return products;
-        if (key) products.seen.add(key);
-        products.items.push(product);
-        return products;
-      }, { seen: new Set(), items: [] }).items;
+    const allExcluded = dedupeDebugProducts([...excluded, ...starterDebug.excluded]);
+    const excludedByReason = (reason) => allExcluded.filter((product) => product.reason === reason);
 
     return {
       customer: {
@@ -888,12 +1009,16 @@
           title: product.title
         }))
       },
-      exclusionsByReason: excluded.reduce((reasons, product) => {
+      exclusionsByReason: allExcluded.reduce((reasons, product) => {
         reasons[product.reason] = (reasons[product.reason] || 0) + 1;
         return reasons;
       }, {}),
-      excludedByBundle,
-      excluded
+      excludedByBundle: excludedByReason('bundle signal found'),
+      excludedByColorSplitBundle: excludedByReason('color-split bundle product'),
+      excludedByManualBlocklist: excludedByReason('manual AOV exclusion'),
+      excludedBySkintone: excludedByReason('skintone variant/option signal'),
+      excludedByHiddenInternal: excludedByReason('hidden/unlisted/internal/component signal'),
+      excluded: allExcluded
     };
   }
 
@@ -1350,6 +1475,7 @@
 
     getRecommendationOptions(product) {
       const options = product.options || [];
+      const validVariants = getRecommendationAvailableVariants(product);
 
       return options.map((option, index) => ({
         name: option.name || option,
@@ -1357,6 +1483,10 @@
         values: (option.values || []).map((value) => {
           if (typeof value === 'string') return value;
           return value.name || value.value || String(value);
+        }).filter((value) => {
+          if (!validVariants.length) return true;
+          const position = option.position || index + 1;
+          return validVariants.some((variant) => variant[`option${position}`] === value);
         })
       })).filter((option) => {
         const name = String(option.name || '').toLowerCase();
@@ -1372,11 +1502,9 @@
     }
 
     getSelectedRecommendationVariant(product, selections) {
-      const variants = product.variants || [];
+      const variants = getRecommendationAvailableVariants(product);
 
       return variants.find((variant) => {
-        if (!variant.available || Number(variant.price) <= 0) return false;
-
         return [1, 2, 3].every((position) => {
           const selected = selections[position];
           return !selected || variant[`option${position}`] === selected;
@@ -1391,6 +1519,7 @@
     getRecommendationProductByHandle(handle) {
       return [
         ...(this.activeRecommendationProducts || []),
+        ...getNewToKasyaProducts(this.recommendationData),
         ...getRecommendationSourceGroups(this.recommendationData)
         .flatMap(([, products]) => products)
       ]
@@ -1418,6 +1547,10 @@
       console.table(debug.newToKasya.finalProducts);
       console.table(debug.newToKasya.excluded);
       console.table(debug.excludedByBundle);
+      console.table(debug.excludedByColorSplitBundle);
+      console.table(debug.excludedByManualBlocklist);
+      console.table(debug.excludedBySkintone);
+      console.table(debug.excludedByHiddenInternal);
       console.table(debug.excluded);
       console.info('[Kasya AOV Cart] Recommendation debug', debug);
       return debug;
