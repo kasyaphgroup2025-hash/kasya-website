@@ -10,6 +10,8 @@
     recommendations: '[data-kasya-aov-cart-recommendations]',
     recommendationData: '[data-kasya-aov-cart-recommendation-data]',
     recommendationCarousel: '[data-kasya-aov-cart-recommendation-carousel]',
+    recommendationTitle: '[data-kasya-aov-cart-recommendation-title]',
+    recommendationSubtitle: '[data-kasya-aov-cart-recommendation-subtitle]',
     emptyState: '[data-kasya-aov-cart-empty-state]',
     timerText: '[data-kasya-aov-cart-timer-text]',
     progressCopy: '[data-kasya-aov-cart-progress-copy]',
@@ -28,6 +30,13 @@
     freeShippingCents: 200000,
     discountCents: 300000,
     previewDiscountCents: 45000
+  };
+
+  const newToKasya = {
+    guestMarkerKey: 'kasyaAovCartKnownVisitor',
+    modeNew: 'new-to-kasya',
+    modeAutomatic: 'automatic-youll-love-these-too',
+    modeHidden: 'hidden'
   };
 
   const formatMoney = (cents) => {
@@ -309,7 +318,13 @@
   }
 
   function getRecommendationSourceGroups(productData) {
-    return Object.entries(productData || {}).filter(([, products]) => Array.isArray(products));
+    const sourceKeys = new Set(['love', 'completePants', 'completeTops', 'completeJane', 'fallback']);
+
+    return Object.entries(productData || {}).filter(([key, products]) => sourceKeys.has(key) && Array.isArray(products));
+  }
+
+  function getNewToKasyaProducts(productData) {
+    return Array.isArray(productData?.newToKasya) ? productData.newToKasya : [];
   }
 
   function getAllRecommendationCandidates(productData) {
@@ -482,6 +497,55 @@
     return 'fallback';
   }
 
+  function getStoredGuestVisitorMarker() {
+    try {
+      return window.localStorage.getItem(newToKasya.guestMarkerKey) ||
+        window.sessionStorage.getItem(newToKasya.guestMarkerKey);
+    } catch (error) {
+      try {
+        return window.sessionStorage.getItem(newToKasya.guestMarkerKey);
+      } catch (sessionError) {
+        return null;
+      }
+    }
+  }
+
+  function setStoredGuestVisitorMarker() {
+    try {
+      window.localStorage.setItem(newToKasya.guestMarkerKey, String(Date.now()));
+    } catch (error) {
+      try {
+        window.sessionStorage.setItem(newToKasya.guestMarkerKey, String(Date.now()));
+      } catch (sessionError) {
+        console.warn('[Kasya AOV Cart] Unable to store likely-new visitor marker.', sessionError);
+      }
+    }
+  }
+
+  function getCustomerRecommendationContext(productData = {}) {
+    const customer = productData._customer || {};
+    const loggedIn = Boolean(customer.loggedIn);
+    const ordersCount = typeof customer.ordersCount === 'number' ? customer.ordersCount : null;
+    const guestMarker = getStoredGuestVisitorMarker();
+    const isLoggedInNewCustomer = loggedIn && ordersCount === 0;
+    const isReturningCustomer = loggedIn && ordersCount > 0;
+    /*
+      Guest detection is intentionally only "likely new visitor" detection.
+      It is not a confirmed first-time buyer check because order history is unavailable for guests.
+    */
+    const isLikelyNewGuest = !loggedIn && !guestMarker;
+
+    return {
+      loggedIn,
+      ordersCount,
+      isLoggedInNewCustomer,
+      isReturningCustomer,
+      isLikelyNewGuest,
+      isNewOrLikelyNew: isLoggedInNewCustomer || isLikelyNewGuest,
+      guestMarkerExists: Boolean(guestMarker)
+    };
+  }
+
   function getCartProductRefs(cart) {
     const seen = new Set();
 
@@ -529,7 +593,29 @@
     return merged;
   }
 
-  async function getKasyaAovRecommendations(cart, productData = {}) {
+  async function getKasyaAovRecommendations(cart, productData = {}, customerContext = getCustomerRecommendationContext(productData)) {
+    const starterProducts = filterRecommendationProducts(getNewToKasyaProducts(productData), cart, new Set());
+
+    if (customerContext.isNewOrLikelyNew && starterProducts.length) {
+      return {
+        similar: [],
+        complete: [],
+        merged: starterProducts.slice(0, 4),
+        usedFallback: false,
+        automatic: {
+          refs: getCartProductRefs(cart),
+          related: [],
+          complementary: [],
+          relatedCount: 0,
+          complementaryCount: 0
+        },
+        mode: newToKasya.modeNew,
+        title: 'New to Kasya? Start Here',
+        subtitle: 'Easy bestsellers to try first.',
+        starterProductCount: starterProducts.length
+      };
+    }
+
     const automatic = await getAutomaticRecommendationPools(cart);
     const automaticCandidates = [
       ...automatic.related,
@@ -580,7 +666,11 @@
       complete,
       merged: merged.slice(0, 4),
       usedFallback,
-      automatic
+      automatic,
+      mode: merged.length ? newToKasya.modeAutomatic : newToKasya.modeHidden,
+      title: 'You’ll Love These Too',
+      subtitle: 'Smart picks based on what’s in your cart.',
+      starterProductCount: starterProducts.length
     };
   }
 
@@ -601,7 +691,8 @@
   }
 
   async function getRecommendationDebug(cart, productData = {}) {
-    const recommendations = await getKasyaAovRecommendations(cart, productData);
+    const customerContext = getCustomerRecommendationContext(productData);
+    const recommendations = await getKasyaAovRecommendations(cart, productData, customerContext);
     const fallbackCandidates = getAllRecommendationCandidates(productData);
     const automaticCandidates = [
       ...recommendations.automatic.related,
@@ -635,6 +726,19 @@
     }).filter(Boolean);
 
     return {
+      customer: {
+        loggedIn: customerContext.loggedIn,
+        ordersCount: customerContext.ordersCount,
+        isLoggedInNewCustomer: customerContext.isLoggedInNewCustomer,
+        isLikelyNewGuest: customerContext.isLikelyNewGuest,
+        guestMarkerExists: customerContext.guestMarkerExists
+      },
+      newToKasya: {
+        active: recommendations.mode === newToKasya.modeNew,
+        selectedCount: getNewToKasyaProducts(productData).length,
+        renderedCount: recommendations.mode === newToKasya.modeNew ? recommendations.merged.length : 0
+      },
+      finalMode: recommendations.mode,
       sourceCollections,
       candidateCounts,
       automatic: {
@@ -679,6 +783,7 @@
       this.timerId = null;
       this.previousOfferSubtotal = null;
       this.activeRecommendationProducts = [];
+      this.lastRecommendationMode = newToKasya.modeHidden;
       this.onClick = this.onClick.bind(this);
       this.onChange = this.onChange.bind(this);
       this.onKeydown = this.onKeydown.bind(this);
@@ -715,6 +820,7 @@
       this.setAttribute('aria-hidden', 'true');
       this.classList.remove('kasya-aov-cart--open');
       document.documentElement.classList.remove('kasya-aov-cart-is-open');
+      this.markLikelyNewGuestIfNeeded();
     }
 
     async refresh() {
@@ -1032,9 +1138,12 @@
     }
 
     async renderRecommendations(cart) {
-      const recommendations = await getKasyaAovRecommendations(cart, this.recommendationData);
+      const customerContext = getCustomerRecommendationContext(this.recommendationData);
+      const recommendations = await getKasyaAovRecommendations(cart, this.recommendationData, customerContext);
       const container = this.querySelector(selectors.recommendations);
       const carousel = this.querySelector(selectors.recommendationCarousel);
+      const title = this.querySelector(selectors.recommendationTitle);
+      const subtitle = this.querySelector(selectors.recommendationSubtitle);
 
       if (!container || !carousel) {
         return;
@@ -1044,13 +1153,18 @@
         container.hidden = true;
         carousel.innerHTML = '';
         this.activeRecommendationProducts = [];
+        this.lastRecommendationMode = newToKasya.modeHidden;
         return;
       }
 
       container.hidden = false;
+      this.lastRecommendationMode = recommendations.mode;
+      if (title) title.textContent = recommendations.title;
+      if (subtitle) subtitle.textContent = recommendations.subtitle;
       this.activeRecommendationProducts = recommendations.merged;
       carousel.innerHTML = recommendations.merged.map((product) => this.renderRecommendationCard(product)).join('');
       this.syncRecommendationCards();
+
     }
 
     renderRecommendationCard(product) {
@@ -1466,12 +1580,21 @@
 
       try {
         this.setUpdating(true);
+        this.markLikelyNewGuestIfNeeded();
         await addKasyaAovCartItem(variantId);
         await this.refresh();
       } catch (error) {
         console.warn('[Kasya AOV Cart] Unable to add recommended item.', error);
       } finally {
         this.setUpdating(false);
+      }
+    }
+
+    markLikelyNewGuestIfNeeded() {
+      const customerContext = getCustomerRecommendationContext(this.recommendationData);
+
+      if (this.lastRecommendationMode === newToKasya.modeNew && customerContext.isLikelyNewGuest) {
+        setStoredGuestVisitorMarker();
       }
     }
 

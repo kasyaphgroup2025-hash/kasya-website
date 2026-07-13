@@ -85,8 +85,8 @@
 
       <section class="kasya-aov-cart__recommendations" data-kasya-aov-cart-recommendations aria-label="AOV product recommendations" hidden>
         <div class="kasya-aov-cart__recommendations-header">
-          <h3>You’ll Love These Too</h3>
-          <p>Smart picks based on what’s in your cart.</p>
+          <h3 data-kasya-aov-cart-recommendation-title>You’ll Love These Too</h3>
+          <p data-kasya-aov-cart-recommendation-subtitle>Smart picks based on what’s in your cart.</p>
         </div>
         <div class="kasya-aov-cart__recommendation-scroller" data-kasya-aov-cart-recommendation-carousel aria-label="Recommended products"></div>
       </section>
@@ -184,6 +184,35 @@
     ]{%- unless forloop.last -%},{%- endunless -%}
   {%- endfor -%}
   ,
+  "newToKasya": [
+    {%- for product in section.settings.aov_new_to_kasya_products limit: 4 -%}
+      {
+        "handle": {{ product.handle | json }},
+        "title": {{ product.title | json }},
+        "url": {{ product.url | json }},
+        "image": {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 360 | json }}{%- else -%}null{%- endif -%},
+        "price": {{ product.price | json }},
+        "available": {{ product.available | json }},
+        "type": {{ product.type | json }},
+        "vendor": {{ product.vendor | json }},
+        "tags": {{ product.tags | json }},
+        "collections": [
+          {%- for collection in product.collections -%}
+            {
+              "handle": {{ collection.handle | json }},
+              "title": {{ collection.title | json }}
+            }{%- unless forloop.last -%},{%- endunless -%}
+          {%- endfor -%}
+        ],
+        "options": {{ product.options_with_values | json }},
+        "variants": {{ product.variants | json }}
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ],
+  "_customer": {
+    "loggedIn": {%- if customer -%}true{%- else -%}false{%- endif -%},
+    "ordersCount": {%- if customer -%}{{ customer.orders_count | default: 0 | json }}{%- else -%}null{%- endif -%}
+  },
   "_sources": {
     {%- for group in recommendation_groups -%}
       {%- liquid
@@ -209,6 +238,12 @@
   "name": "Kasya AOV Cart Drawer",
   "class": "kasya-aov-cart-section",
   "settings": [
+    {
+      "type": "product_list",
+      "id": "aov_new_to_kasya_products",
+      "label": "New to Kasya starter products",
+      "limit": 4
+    },
     {
       "type": "collection",
       "id": "aov_love_collection",
