@@ -8,6 +8,7 @@
     subtotal: '[data-kasya-aov-cart-subtotal]',
     subtotalWrap: '[data-kasya-aov-cart-subtotal-wrap]',
     recommendations: '[data-kasya-aov-cart-recommendations]',
+    emptyState: '[data-kasya-aov-cart-empty-state]',
     timerText: '[data-kasya-aov-cart-timer-text]',
     progressCopy: '[data-kasya-aov-cart-progress-copy]',
     progress: '[data-kasya-aov-cart-progress]'
@@ -134,7 +135,9 @@
       this.addEventListener('click', this.onClick);
       document.addEventListener('keydown', this.onKeydown);
       document.addEventListener('afterUpdateQuantity', this.onCartUpdated);
-      this.syncTimerWithCart({ item_count: Number(this.querySelector(selectors.count)?.textContent.replace(/\D/g, '')) || 0 });
+      const initialCart = { item_count: Number(this.querySelector(selectors.count)?.textContent.replace(/\D/g, '')) || 0, items: [] };
+      this.renderLayoutState(initialCart);
+      this.syncTimerWithCart(initialCart);
     }
 
     disconnectedCallback() {
@@ -161,10 +164,15 @@
       try {
         this.cart = await fetchKasyaAovCart();
         this.renderSummary(this.cart);
-        this.renderOfferProgress(this.cart);
         this.renderItems(this.cart);
-        this.renderRecommendations(this.cart);
         this.syncTimerWithCart(this.cart);
+
+        if (this.renderLayoutState(this.cart)) {
+          return;
+        }
+
+        this.renderOfferProgress(this.cart);
+        this.renderRecommendations(this.cart);
       } catch (error) {
         console.warn(error);
       }
@@ -268,11 +276,7 @@
       }
 
       if (!cart.items.length) {
-        container.innerHTML = `
-          <div class="kasya-aov-cart__empty" data-kasya-aov-cart-empty>
-            <p>Your cart is waiting for something beautiful.</p>
-          </div>
-        `;
+        container.innerHTML = '';
         return;
       }
 
@@ -454,6 +458,21 @@
       `).join('');
     }
 
+    renderLayoutState(cart) {
+      const isEmpty = typeof cart.item_count === 'number'
+        ? cart.item_count === 0
+        : !cart.items || cart.items.length === 0;
+
+      this.classList.toggle('kasya-aov-cart--empty', isEmpty);
+
+      const emptyState = this.querySelector(selectors.emptyState);
+      if (emptyState) {
+        emptyState.toggleAttribute('hidden', !isEmpty);
+      }
+
+      return isEmpty;
+    }
+
     syncTimerWithCart(cart) {
       const itemCount = cart.item_count || 0;
       const storedState = this.getTimerState();
@@ -557,10 +576,15 @@
       if (event.detail && event.detail.cartData) {
         this.cart = event.detail.cartData;
         this.renderSummary(this.cart);
-        this.renderOfferProgress(this.cart);
         this.renderItems(this.cart);
-        this.renderRecommendations(this.cart);
         this.syncTimerWithCart(this.cart);
+
+        if (this.renderLayoutState(this.cart)) {
+          return;
+        }
+
+        this.renderOfferProgress(this.cart);
+        this.renderRecommendations(this.cart);
       }
     }
 
