@@ -267,10 +267,12 @@
     if (!image) return;
 
     function updateFabricImage(state) {
-      if (!state || !state.color) return;
+      if (!state || (!state.color && !state.previewColor)) return;
 
-      const displayColor = String(state.displayColor || state.color || '').trim();
-      const nextSrc = state.fabricCloseup || image.dataset.defaultSrc || state.featuredImage || '';
+      const displayColor = String(state.displayColor || state.color || state.previewColor || '').trim();
+      const nextSrc = state.fabricCloseup ||
+        (state.strictColorMedia ? '' : image.dataset.defaultSrc || state.featuredImage) ||
+        '';
 
       if (colorLabel && colorName && displayColor) {
         colorName.textContent = displayColor.toUpperCase();

@@ -73,7 +73,7 @@
         "text_outside_image_4NqaKf": {
           "type": "text-outside-image",
           "settings": {
-            "image": "shopify://shop_images/76_117725f0-741f-4c2f-a186-7d598bf06ee1.jpg",
+            "image": "shopify://shop_images/66_5c69feb3-3fc0-41ec-b15a-5d7ff46cd4ad.jpg",
             "link": "shopify://products/gwen-boxy-polo-blouse-viscose-linen",
             "text": "Gwen Boxy Polo Blouse - Viscose Linen",
             "text_style": "caption-with-letter-spacing",
@@ -146,7 +146,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/mary_ella.jpg",
-            "link": "shopify://products/ella-polo-blouse-soft-linen-new-colors",
+            "link": "shopify://products/ella-box-polo-soft-linen",
             "text": "ella polo blouse – Soft Linen",
             "text_style": "caption-with-letter-spacing",
             "text_size": "small",

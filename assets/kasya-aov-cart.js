@@ -39,6 +39,13 @@
 
   const formatMoneyClean = (cents) => formatMoney(cents).replace(/\.00\b/, '');
 
+  const parseMoneyToCents = (value) => {
+    const normalized = String(value || '').replace(/[^0-9.]/g, '');
+    const amount = Number.parseFloat(normalized);
+
+    return Number.isFinite(amount) ? Math.round(amount * 100) : 0;
+  };
+
   const formatTimer = (seconds) => {
     const safeSeconds = Math.max(0, seconds);
     const minutes = Math.floor(safeSeconds / 60).toString().padStart(2, '0');
@@ -180,7 +187,7 @@
       const itemLabel = `${visualItemCount} item${visualItemCount === 1 ? '' : 's'}`;
       const count = this.querySelector(selectors.count);
       const footerCount = this.querySelector(selectors.footerCount);
-      const subtotal = this.getCartSubtotal(cart);
+      const subtotal = this.getCartDisplaySubtotal(cart);
 
       if (count) count.textContent = `(${visualItemCount})`;
       if (footerCount) footerCount.textContent = itemLabel;
@@ -231,7 +238,7 @@
     }
 
     renderOfferProgress(cart) {
-      const subtotal = this.getCartSubtotal(cart);
+      const subtotal = this.getCartDisplaySubtotal(cart);
       const copy = this.querySelector(selectors.progressCopy);
       const progress = this.querySelector(selectors.progress);
       const progressPercent = Math.min((subtotal / offers.discountCents) * 100, 100);
@@ -315,20 +322,23 @@
     }
 
     renderJaneSetItem(set) {
-      const image = set.top?.image || set.pants?.image;
+      const image = set.parent?.properties?._set_parent_image || set.parent?.image || set.top?.properties?._set_parent_image || set.top?.image || set.pants?.image;
       const imageMarkup = image
         ? `<img src="${image}" alt="Jane Set" loading="lazy" width="110" height="132" class="kasya-aov-cart__item-image">`
         : '<span class="kasya-aov-cart__item-image kasya-aov-cart__item-image--placeholder"></span>';
       const details = [set.top, set.pants].filter(Boolean).map((item) => {
-        const role = item.properties?._set_role || item.product_title;
-        const variant = item.variant_title && item.variant_title !== 'Default Title' ? item.variant_title.replaceAll(' / ', ' | ') : '';
-        const sku = item.sku ? ` SKU: ${item.sku}` : '';
+        const label = item.properties?._set_component_label || item.product_title;
+        const size = item.properties?._set_component_size || item.properties?._top_size || item.properties?._pants_size || '';
+        const variant = size || (item.variant_title && item.variant_title !== 'Default Title' ? item.variant_title.replaceAll(' / ', ' | ') : '');
+        const skuValue = item.properties?._set_component_sku || item.sku || '';
+        const sku = skuValue ? ` SKU: ${skuValue}` : '';
 
-        return `<p class="kasya-aov-cart__item-variant">${this.escapeHtml(role)}${variant ? `: ${this.escapeHtml(variant)}` : ''}${this.escapeHtml(sku)}</p>`;
+        return `<p class="kasya-aov-cart__item-variant">${this.escapeHtml(label)}${variant ? `: ${this.escapeHtml(variant)}` : ''}${this.escapeHtml(sku)}</p>`;
       }).join('');
-      const quantity = Math.max(set.top?.quantity || 0, set.pants?.quantity || 0, 1);
-      const price = (set.top?.final_line_price || 0) + (set.pants?.final_line_price || 0);
-      const keys = [set.top?.key, set.pants?.key].filter(Boolean).join(',');
+      const quantity = this.getJaneSetQuantity(set);
+      const price = this.getJaneSetDisplayPrice(set);
+      const keys = [set.parent?.key, set.top?.key, set.pants?.key].filter(Boolean).join(',');
+      const setColor = this.getJaneSetColor(set);
 
       return `
         <article class="kasya-aov-cart__item kasya-aov-cart__item--jane-set" data-kasya-aov-cart-jane-set data-keys="${this.escapeHtml(keys)}">
@@ -339,7 +349,7 @@
             <div class="kasya-aov-cart__item-topline">
               <div>
                 <p class="kasya-aov-cart__item-kicker">Set</p>
-                <span class="kasya-aov-cart__item-title">Jane Set</span>
+                <span class="kasya-aov-cart__item-title">${this.escapeHtml(setColor)} Jane Set</span>
               </div>
               <button type="button" class="kasya-aov-cart__item-remove" data-kasya-aov-cart-remove-set data-keys="${this.escapeHtml(keys)}" aria-label="Remove Jane Set">
                 <span aria-hidden="true">×</span>
@@ -380,12 +390,47 @@
         displayItems.push({
           type: 'jane-set',
           setId,
+          parent: setItems.find((candidate) => candidate.properties?._set_role === 'Parent'),
           top: setItems.find((candidate) => candidate.properties?._set_role === 'Top'),
-          pants: setItems.find((candidate) => candidate.properties?._set_role === 'Pants')
+          pants: setItems.find((candidate) => candidate.properties?._set_role === 'Pants'),
+          items: setItems
         });
       });
 
       return displayItems;
+    }
+
+    getJaneSetQuantity(set) {
+      return Math.max(set.parent?.quantity || 0, set.top?.quantity || 0, set.pants?.quantity || 0, 1);
+    }
+
+    getJaneSetColor(set) {
+      return set.parent?.properties?._set_color ||
+        set.top?.properties?._set_color ||
+        set.pants?.properties?._set_color ||
+        'Jane';
+    }
+
+    getJaneSetDisplayPrice(set) {
+      const displayPrice = [
+        set.parent?.properties?._set_display_price,
+        set.top?.properties?._set_display_price,
+        set.pants?.properties?._set_display_price
+      ].map(parseMoneyToCents).find((price) => price > 0);
+
+      if (displayPrice) {
+        return displayPrice * this.getJaneSetQuantity(set);
+      }
+
+      if (set.parent?.final_line_price && set.parent.final_line_price > 100) {
+        return set.parent.final_line_price;
+      }
+
+      return (set.items || []).reduce((sum, item) => sum + (item.final_line_price || 0), 0);
+    }
+
+    getJaneSetActualPrice(set) {
+      return (set.items || []).reduce((sum, item) => sum + (item.final_line_price || 0), 0);
     }
 
     renderRecommendations(cart) {
@@ -494,8 +539,16 @@
       }
     }
 
-    getCartSubtotal(cart) {
-      return typeof cart.items_subtotal_price === 'number' ? cart.items_subtotal_price : cart.total_price || 0;
+    getCartDisplaySubtotal(cart) {
+      let subtotal = typeof cart.items_subtotal_price === 'number' ? cart.items_subtotal_price : cart.total_price || 0;
+
+      this.getDisplayItems(cart).forEach((item) => {
+        if (item.type !== 'jane-set') return;
+
+        subtotal = subtotal - this.getJaneSetActualPrice(item) + this.getJaneSetDisplayPrice(item);
+      });
+
+      return Math.max(subtotal, 0);
     }
 
     onCartUpdated(event) {
