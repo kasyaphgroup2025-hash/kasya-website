@@ -40,6 +40,16 @@
   };
 
   const storefrontVisibility = {
+    bundleKeywords: [
+      'bundle',
+      'bundles',
+      'promo bundle',
+      'set bundle',
+      'bundle linen pants',
+      'bundle-linen-pants',
+      'a line maxi skirt soft linen bundle',
+      'a-line-maxi-skirt-soft-linen-bundle'
+    ],
     hiddenKeywords: [
       'jane-blouse',
       'jane blouse',
@@ -61,7 +71,6 @@
       'kasya-set',
       'new-in',
       'core-essentials',
-      'bundles',
       'back-to-rhythm',
       'summer-collection',
       'everyday-edit',
@@ -343,6 +352,12 @@
     return storefrontVisibility.hiddenKeywords.some((keyword) => text.includes(normalizeText(keyword)));
   }
 
+  function productHasBundleSignal(product) {
+    const text = getProductText(product);
+
+    return storefrontVisibility.bundleKeywords.some((keyword) => text.includes(normalizeText(keyword)));
+  }
+
   function productIsInAllowedStorefrontCollection(product, productData = {}) {
     const productCollections = getCollectionKeys(product);
     if (!productCollections.size) return true;
@@ -500,6 +515,7 @@
     if (cartKeys.has(String(product.handle || '').toLowerCase())) return 'already in cart';
     if (!product.available) return 'unavailable or sold out';
     if (isJaneComponentProduct(product)) return 'Jane Blouse/Jane Pants excluded';
+    if (productHasBundleSignal(product)) return 'bundle signal found';
     if (productHasHiddenSignal(product)) return 'hidden/unlisted/internal/component signal';
     if (requireAllowedStorefrontCollection && !productIsInAllowedStorefrontCollection(product, productData)) return 'not in allowed storefront collections';
     if (!productHasValidPrice(product)) return 'missing valid price';
@@ -810,6 +826,15 @@
         reason
       } : null;
     }).filter(Boolean);
+    const excludedByBundle = [...excluded, ...starterDebug.excluded]
+      .filter((product) => product.reason === 'bundle signal found')
+      .reduce((products, product) => {
+        const key = String(product.handle || product.title || '').toLowerCase();
+        if (key && products.seen.has(key)) return products;
+        if (key) products.seen.add(key);
+        products.items.push(product);
+        return products;
+      }, { seen: new Set(), items: [] }).items;
 
     return {
       customer: {
@@ -867,6 +892,7 @@
         reasons[product.reason] = (reasons[product.reason] || 0) + 1;
         return reasons;
       }, {}),
+      excludedByBundle,
       excluded
     };
   }
@@ -1391,6 +1417,7 @@
       console.table(debug.finalProducts.merged);
       console.table(debug.newToKasya.finalProducts);
       console.table(debug.newToKasya.excluded);
+      console.table(debug.excludedByBundle);
       console.table(debug.excluded);
       console.info('[Kasya AOV Cart] Recommendation debug', debug);
       return debug;
