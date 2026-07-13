@@ -1931,4 +1931,19 @@
       return document.querySelector(selectors.root)?.debugRecommendations();
     }
   };
+
+  // Kasya AOV Cart Drawer basket icon testing hook - temporary draft preview only.
+  // Keeps the original cart drawer available as fallback if the AOV drawer API is missing or fails.
+  document.addEventListener('click', (event) => {
+    const cartIcon = event.target.closest('#cart-icon-bubble');
+    if (!cartIcon || !window.KasyaAovCart?.open) return;
+
+    try {
+      window.KasyaAovCart.open();
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    } catch (error) {
+      console.warn('[Kasya AOV Cart] Basket icon preview hook failed; falling back to original cart behavior.', error);
+    }
+  }, true);
 })();
