@@ -116,6 +116,75 @@
     return String(product?.handle || product?.url || product?.title || '').toLowerCase();
   }
 
+  function normalizeText(value) {
+    return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  }
+
+  function getProductText(product) {
+    return normalizeText([
+      product?.handle,
+      product?.title,
+      product?.type,
+      product?.vendor,
+      ...(product?.tags || []),
+      ...(product?.collections || []).flatMap((collection) => [collection.handle, collection.title])
+    ].filter(Boolean).join(' '));
+  }
+
+  function includesAny(text, words) {
+    return words.some((word) => text.includes(word));
+  }
+
+  function getProductCategory(product) {
+    const text = getProductText(product);
+
+    if (includesAny(text, ['pants', 'pant', 'trouser', 'bottom', 'wide leg', 'wideleg', 'culotte'])) return 'bottom';
+    if (includesAny(text, ['blouse', 'top', 'polo', 'shirt', 'camisa', 'tee'])) return 'top';
+    if (includesAny(text, ['dress'])) return 'dress';
+    if (includesAny(text, ['set', 'co ord', 'coord', 'co-ord'])) return 'set';
+    if (includesAny(text, ['kimono', 'cover up', 'coverup', 'jacket', 'outer'])) return 'layer';
+
+    return 'other';
+  }
+
+  function getProductKeywords(product) {
+    const text = getProductText(product);
+    const keywords = [
+      'pants',
+      'trouser',
+      'bottom',
+      'wide leg',
+      'wideleg',
+      'blouse',
+      'top',
+      'polo',
+      'shirt',
+      'dress',
+      'set',
+      'kimono',
+      'linen',
+      'soft linen',
+      'viscose linen',
+      'acid linen',
+      'daily',
+      'everyday',
+      'relaxed',
+      'easy'
+    ];
+
+    return keywords.filter((keyword) => text.includes(keyword));
+  }
+
+  function getCollectionKeys(product) {
+    return new Set((product?.collections || []).flatMap((collection) => {
+      return [collection.handle, collection.title].map(normalizeText).filter(Boolean);
+    }));
+  }
+
+  function getTagKeys(product) {
+    return new Set((product?.tags || []).map(normalizeText).filter(Boolean));
+  }
+
   function isJaneComponentProduct(product) {
     const key = `${product?.handle || ''} ${product?.title || ''}`.toLowerCase();
 
@@ -138,6 +207,99 @@
     return (product?.variants || []).some((variant) => Number(variant.price) > 0);
   }
 
+  function getAllRecommendationCandidates(productData) {
+    const seen = new Set();
+
+    return Object.values(productData || {}).flat().filter((product) => {
+      const key = getProductKey(product);
+      if (!key || seen.has(key)) return false;
+
+      seen.add(key);
+      return true;
+    });
+  }
+
+  function findCandidateForCartItem(item, candidates) {
+    const handle = item.handle || item.product_handle || String(item.url || '').split('/products/')[1]?.split('?')[0]?.split('/')[0] || '';
+    if (!handle) return null;
+
+    return candidates.find((product) => product.handle === handle) || null;
+  }
+
+  function getCartProfiles(cart, candidates) {
+    return (cart.items || []).map((item) => {
+      const matchedProduct = findCandidateForCartItem(item, candidates);
+      const fallbackProduct = {
+        handle: item.handle || item.product_handle || String(item.url || '').split('/products/')[1]?.split('?')[0]?.split('/')[0] || '',
+        title: item.product_title,
+        type: item.product_type,
+        vendor: item.vendor,
+        tags: [],
+        collections: []
+      };
+      const product = matchedProduct || fallbackProduct;
+
+      return {
+        product,
+        category: getProductCategory(product),
+        keywords: getProductKeywords(product),
+        collections: getCollectionKeys(product),
+        tags: getTagKeys(product),
+        isJaneSet: item.properties?._set_name === 'Jane Set'
+      };
+    });
+  }
+
+  function sharesSet(left, right) {
+    return Array.from(left || []).some((value) => right?.has(value));
+  }
+
+  function scoreSimilarity(product, cartProfiles) {
+    const productCategory = getProductCategory(product);
+    const productKeywords = new Set(getProductKeywords(product));
+    const productCollections = getCollectionKeys(product);
+    const productTags = getTagKeys(product);
+    let score = 0;
+
+    cartProfiles.forEach((profile) => {
+      if (profile.isJaneSet) score += 1;
+      if (profile.category !== 'other' && productCategory === profile.category) score += 8;
+      if (profile.product.type && product.type && normalizeText(profile.product.type) === normalizeText(product.type)) score += 5;
+      if (sharesSet(productCollections, profile.collections)) score += 6;
+      if (sharesSet(productTags, profile.tags)) score += 4;
+
+      profile.keywords.forEach((keyword) => {
+        if (productKeywords.has(keyword)) score += keyword.includes('linen') ? 4 : 2;
+      });
+    });
+
+    return score;
+  }
+
+  function scoreCompleteLook(product, cartProfiles) {
+    const productCategory = getProductCategory(product);
+    const productCollections = getCollectionKeys(product);
+    const productTags = getTagKeys(product);
+    const hasBottom = cartProfiles.some((profile) => profile.category === 'bottom');
+    const hasTop = cartProfiles.some((profile) => profile.category === 'top');
+    const hasJaneSet = cartProfiles.some((profile) => profile.isJaneSet);
+    const hasDressOrSet = cartProfiles.some((profile) => ['dress', 'set'].includes(profile.category) || profile.isJaneSet);
+    let score = 0;
+
+    if (hasJaneSet && ['top', 'bottom', 'layer', 'dress'].includes(productCategory)) score += 7;
+    if (hasBottom && productCategory === 'top') score += 10;
+    if (hasTop && productCategory === 'bottom') score += 10;
+    if (hasDressOrSet && ['layer', 'top', 'bottom'].includes(productCategory)) score += 5;
+    if (hasTop && hasBottom && ['layer', 'dress', 'set', 'other'].includes(productCategory)) score += 3;
+
+    cartProfiles.forEach((profile) => {
+      if (sharesSet(productCollections, profile.collections)) score += 4;
+      if (sharesSet(productTags, profile.tags)) score += 2;
+    });
+
+    return score;
+  }
+
   function filterRecommendationProducts(products, cart, usedKeys = new Set()) {
     const cartKeys = getCartProductKeys(cart);
 
@@ -148,6 +310,30 @@
 
       usedKeys.add(key);
       return true;
+    }).slice(0, 4);
+  }
+
+  function getScoredRecommendations(products, cart, cartProfiles, scorer, usedKeys = new Set(), minimumScore = 1) {
+    const cartKeys = getCartProductKeys(cart);
+    const seen = new Set();
+
+    return (products || []).map((product, index) => ({
+      product,
+      score: scorer(product, cartProfiles),
+      index
+    })).filter(({ product, score }) => {
+      const key = getProductKey(product);
+      if (!key || seen.has(key) || usedKeys.has(key) || cartKeys.has(String(product.handle || '').toLowerCase())) return false;
+      if (!product.available || isJaneComponentProduct(product) || !productHasValidPrice(product)) return false;
+      seen.add(key);
+
+      return score >= minimumScore;
+    }).sort((left, right) => {
+      if (right.score !== left.score) return right.score - left.score;
+      return left.index - right.index;
+    }).map(({ product }) => {
+      usedKeys.add(getProductKey(product));
+      return product;
     }).slice(0, 4);
   }
 
@@ -170,25 +356,42 @@
   }
 
   function getKasyaAovRecommendations(cart, productData = {}) {
+    const candidates = getAllRecommendationCandidates(productData);
+    const cartProfiles = getCartProfiles(cart, candidates);
     const usedKeys = new Set();
-    const love = filterRecommendationProducts(productData.love, cart, usedKeys);
-    let completeSource = productData.fallback || [];
+    let love = getScoredRecommendations(candidates, cart, cartProfiles, scoreSimilarity, usedKeys);
+    let completeSource = candidates;
     let completeCopy = 'Build a complete Kasya look.';
 
     if (cartHasJaneSet(cart)) {
-      completeSource = productData.completeJane?.length ? productData.completeJane : productData.fallback || [];
+      completeSource = [
+        ...(productData.completeJane || []),
+        ...candidates
+      ];
       completeCopy = 'Easy pieces that pair well with your set.';
     } else if (cartHasPants(cart)) {
-      completeSource = productData.completePants?.length ? productData.completePants : productData.fallback || [];
+      completeSource = [
+        ...(productData.completePants || []),
+        ...candidates
+      ];
       completeCopy = 'Pair it with tops that balance the look.';
     } else if (cartHasTop(cart)) {
-      completeSource = productData.completeTops?.length ? productData.completeTops : productData.fallback || [];
+      completeSource = [
+        ...(productData.completeTops || []),
+        ...candidates
+      ];
       completeCopy = 'Add an easy bottom to complete the outfit.';
+    }
+
+    const complete = getScoredRecommendations(completeSource, cart, cartProfiles, scoreCompleteLook, usedKeys);
+
+    if (!love.length) {
+      love = filterRecommendationProducts([...(productData.love || []), ...(productData.fallback || []), ...candidates], cart, usedKeys);
     }
 
     return {
       love,
-      complete: filterRecommendationProducts(completeSource, cart, usedKeys),
+      complete: complete.length ? complete : filterRecommendationProducts([...(productData.fallback || []), ...candidates], cart, usedKeys),
       completeCopy
     };
   }

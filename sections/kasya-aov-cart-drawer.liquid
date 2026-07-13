@@ -175,6 +175,17 @@
           "image": {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 360 | json }}{%- else -%}null{%- endif -%},
           "price": {{ product.price | json }},
           "available": {{ product.available | json }},
+          "type": {{ product.type | json }},
+          "vendor": {{ product.vendor | json }},
+          "tags": {{ product.tags | json }},
+          "collections": [
+            {%- for collection in product.collections -%}
+              {
+                "handle": {{ collection.handle | json }},
+                "title": {{ collection.title | json }}
+              }{%- unless forloop.last -%},{%- endunless -%}
+            {%- endfor -%}
+          ],
           "options": {{ product.options_with_values | json }},
           "variants": {{ product.variants | json }}
         }{%- unless forloop.last -%},{%- endunless -%}
@@ -194,31 +205,31 @@
     {
       "type": "product_list",
       "id": "aov_love_products",
-      "label": "You’ll Love These Too products",
+      "label": "Similar products candidate pool",
       "limit": 4
     },
     {
       "type": "product_list",
       "id": "aov_complete_pants_products",
-      "label": "Complete the Look products for pants cart",
+      "label": "Complete the Look candidate pool for pants cart",
       "limit": 4
     },
     {
       "type": "product_list",
       "id": "aov_complete_tops_products",
-      "label": "Complete the Look products for top cart",
+      "label": "Complete the Look candidate pool for top cart",
       "limit": 4
     },
     {
       "type": "product_list",
       "id": "aov_complete_jane_products",
-      "label": "Complete the Look products for Jane Set cart",
+      "label": "Jane-safe candidate pool",
       "limit": 4
     },
     {
       "type": "product_list",
       "id": "aov_fallback_products",
-      "label": "General fallback products",
+      "label": "General fallback candidate pool",
       "limit": 4
     }
   ],
