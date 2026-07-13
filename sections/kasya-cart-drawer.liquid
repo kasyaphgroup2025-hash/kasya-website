@@ -1,0 +1,96 @@
+{% comment %}
+  Kasya Custom AOV Cart Drawer — Phase 1 scaffold
+  Safe status: this section is not wired into theme.liquid yet, so it will not affect the live cart until intentionally enabled.
+{% endcomment %}
+
+{{ 'kasya-cart.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kasya-cart.js' | asset_url }}" defer="defer"></script>
+
+<kasya-cart-drawer
+  id="KasyaCartDrawer"
+  class="kasya-cart-drawer{% if cart == empty %} is-empty{% endif %}"
+  data-section-id="{{ section.id }}"
+  aria-hidden="true"
+>
+  <button class="kasya-cart-drawer__overlay" type="button" data-kasya-cart-close aria-label="Close cart"></button>
+
+  <aside class="kasya-cart-drawer__panel" role="dialog" aria-modal="true" aria-label="Cart" tabindex="-1">
+    <header class="kasya-cart-drawer__header">
+      <div>
+        <p class="kasya-cart-drawer__eyebrow">Kasya Cart</p>
+        <h2 class="kasya-cart-drawer__title">Your Cart</h2>
+      </div>
+      <button class="kasya-cart-drawer__close" type="button" data-kasya-cart-close aria-label="Close cart">
+        {% render 'icon-close' %}
+      </button>
+    </header>
+
+    <div class="kasya-cart-drawer__body">
+      <div class="kasya-cart-drawer__empty" data-kasya-empty-state>
+        <h3>Your cart is currently empty.</h3>
+        <p>Start with comfortable, polished Kasya essentials made for everyday movement.</p>
+        <a class="kasya-cart-drawer__button kasya-cart-drawer__button--secondary" href="{{ settings.continue_button_link | default: routes.all_products_collection_url }}">
+          Continue Shopping
+        </a>
+      </div>
+
+      <form action="{{ routes.cart_url }}" method="post" id="KasyaCartDrawer-Form" class="kasya-cart-drawer__form" data-kasya-cart-form>
+        <div class="kasya-cart-drawer__items" data-kasya-cart-items>
+          {% for item in cart.items %}
+            {% render 'kasya-cart-item', item: item, index: forloop.index %}
+          {% endfor %}
+        </div>
+      </form>
+
+      <section class="kasya-aov" data-kasya-aov-root>
+        <div class="kasya-aov__header">
+          <p class="kasya-aov__eyebrow">Recommended for your cart</p>
+          <h3 class="kasya-aov__title">{{ section.settings.aov_heading }}</h3>
+        </div>
+        <div class="kasya-aov__list" data-kasya-aov-list>
+          <p class="kasya-aov__placeholder">Recommendations will appear here after the rule logic is connected.</p>
+        </div>
+      </section>
+    </div>
+
+    <footer class="kasya-cart-drawer__footer">
+      <div class="kasya-cart-drawer__subtotal">
+        <span>Subtotal</span>
+        <strong data-kasya-cart-subtotal>{% render 'price-format', price: cart.total_price %}</strong>
+      </div>
+      <p class="kasya-cart-drawer__note">Shipping, discounts, and final promos are calculated at checkout.</p>
+
+      <button type="submit" name="checkout" form="KasyaCartDrawer-Form" class="kasya-cart-drawer__button kasya-cart-drawer__button--primary" data-kasya-checkout-button>
+        Checkout
+      </button>
+
+      <div class="kasya-cart-drawer__payments" aria-label="Available payment options">
+        <span>Payment options</span>
+        <div class="kasya-cart-drawer__payment-box">
+          <span>COD</span>
+          <span>GCash</span>
+          <span>Cards</span>
+        </div>
+      </div>
+    </footer>
+  </aside>
+</kasya-cart-drawer>
+
+{% schema %}
+{
+  "name": "Kasya AOV Cart Drawer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "aov_heading",
+      "label": "AOV recommendation heading",
+      "default": "Complete your everyday look"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Kasya AOV Cart Drawer"
+    }
+  ]
+}
+{% endschema %}
