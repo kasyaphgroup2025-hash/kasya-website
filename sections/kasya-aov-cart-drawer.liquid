@@ -23,20 +23,33 @@
 
     <div class="kasya-aov-cart__timer" role="status">
       <span class="kasya-aov-cart__timer-icon" aria-hidden="true">◷</span>
-      <span>Your products are reserved for 01:03 minutes!</span>
+      <span data-kasya-aov-cart-timer-text>
+        {%- if cart.item_count > 0 -%}
+          Your products are reserved for 03:00 minutes!
+        {%- else -%}
+          Add an item to start your reservation timer.
+        {%- endif -%}
+      </span>
     </div>
 
     <section class="kasya-aov-cart__shipping" aria-label="Free shipping progress">
-      <p class="kasya-aov-cart__shipping-copy">You are ₱502 away from getting FREE SHIPPING</p>
-      <div class="kasya-aov-cart__shipping-track" aria-hidden="true">
-        <span class="kasya-aov-cart__shipping-progress" style="width: 46%;"></span>
+      <p class="kasya-aov-cart__shipping-copy" data-kasya-aov-cart-progress-copy>
+        You are ₱2,000 away from getting FREE SHIPPING
+      </p>
+      <div class="kasya-aov-cart__shipping-track-wrap">
+        <div class="kasya-aov-cart__shipping-track" aria-hidden="true">
+          <span class="kasya-aov-cart__shipping-progress" data-kasya-aov-cart-progress style="width: 0%;"></span>
+          <span class="kasya-aov-cart__shipping-milestone kasya-aov-cart__shipping-milestone--free"></span>
+          <span class="kasya-aov-cart__shipping-milestone kasya-aov-cart__shipping-milestone--discount"></span>
+        </div>
       </div>
       <div class="kasya-aov-cart__shipping-labels">
-        <span>FREE SHIPPING</span>
-        <span>₱450 OFF</span>
+        <span class="kasya-aov-cart__shipping-label kasya-aov-cart__shipping-label--free">FREE SHIPPING</span>
+        <span class="kasya-aov-cart__shipping-label kasya-aov-cart__shipping-label--discount">₱450 OFF</span>
       </div>
       {%- comment -%}
-        Phase 2: calculate threshold copy and progress from /cart.js totals.
+        Phase 1.1 preview/testing: thresholds update from /cart.js subtotal.
+        Phase 2 can reuse these hooks for richer cart-aware offers.
       {%- endcomment -%}
     </section>
 
@@ -74,8 +87,10 @@
           {%- for index in (1..4) -%}
             <article class="kasya-aov-cart__recommendation-card">
               <div class="kasya-aov-cart__recommendation-image" aria-hidden="true"></div>
-              <h4>Kasya Pick {{ index }}</h4>
-              <p>₱0.00</p>
+              <div class="kasya-aov-cart__recommendation-info">
+                <h4>Recommended product</h4>
+                <p class="kasya-aov-cart__recommendation-price" hidden></p>
+              </div>
             </article>
           {%- endfor -%}
         </div>
@@ -84,13 +99,19 @@
 
     <footer class="kasya-aov-cart__footer">
       <section class="kasya-aov-cart__payment" aria-label="Secure checkout options">
-        <span class="kasya-aov-cart__payment-label">SECURE CHECKOUT WITH</span>
+        <div class="kasya-aov-cart__payment-topline">
+          <span class="kasya-aov-cart__payment-accept">We accept</span>
+          <span class="kasya-aov-cart__payment-label">
+            <span aria-hidden="true">LOCK</span>
+            SECURE CHECKOUT WITH
+          </span>
+        </div>
         <div class="kasya-aov-cart__payment-badges" aria-label="Payment options">
-          <span>GCash</span>
-          <span>RCBC</span>
-          <span>Chinabank</span>
-          <span>BPI</span>
-          <span>UnionBank</span>
+          <span class="kasya-aov-cart__payment-badge">GCash</span>
+          <span class="kasya-aov-cart__payment-badge">RCBC</span>
+          <span class="kasya-aov-cart__payment-badge">Chinabank</span>
+          <span class="kasya-aov-cart__payment-badge">BPI</span>
+          <span class="kasya-aov-cart__payment-badge">UnionBank</span>
         </div>
       </section>
 

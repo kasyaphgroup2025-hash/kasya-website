@@ -6,7 +6,22 @@
     count: '[data-kasya-aov-cart-count]',
     footerCount: '[data-kasya-aov-cart-footer-count]',
     subtotal: '[data-kasya-aov-cart-subtotal]',
-    recommendations: '[data-kasya-aov-cart-recommendations]'
+    recommendations: '[data-kasya-aov-cart-recommendations]',
+    timerText: '[data-kasya-aov-cart-timer-text]',
+    progressCopy: '[data-kasya-aov-cart-progress-copy]',
+    progress: '[data-kasya-aov-cart-progress]'
+  };
+
+  const reservation = {
+    duration: 180,
+    storageKey: 'kasyaAovCartReservation',
+    endedText: 'Your reservation has ended. Please proceed before items sell out.',
+    emptyText: 'Add an item to start your reservation timer.'
+  };
+
+  const offers = {
+    freeShippingCents: 200000,
+    discountCents: 300000
   };
 
   const formatMoney = (cents) => {
@@ -18,6 +33,16 @@
       style: 'currency',
       currency: window.currencyMain || 'PHP'
     }).format((cents || 0) / 100);
+  };
+
+  const formatMoneyClean = (cents) => formatMoney(cents).replace(/\.00\b/, '');
+
+  const formatTimer = (seconds) => {
+    const safeSeconds = Math.max(0, seconds);
+    const minutes = Math.floor(safeSeconds / 60).toString().padStart(2, '0');
+    const remainder = (safeSeconds % 60).toString().padStart(2, '0');
+
+    return `${minutes}:${remainder}`;
   };
 
   async function fetchKasyaAovCart() {
@@ -86,18 +111,24 @@
     constructor() {
       super();
       this.cart = null;
+      this.timerId = null;
       this.onClick = this.onClick.bind(this);
       this.onKeydown = this.onKeydown.bind(this);
+      this.onCartUpdated = this.onCartUpdated.bind(this);
     }
 
     connectedCallback() {
       this.addEventListener('click', this.onClick);
       document.addEventListener('keydown', this.onKeydown);
+      document.addEventListener('afterUpdateQuantity', this.onCartUpdated);
+      this.syncTimerWithCart({ item_count: Number(this.querySelector(selectors.count)?.textContent.replace(/\D/g, '')) || 0 });
     }
 
     disconnectedCallback() {
       this.removeEventListener('click', this.onClick);
       document.removeEventListener('keydown', this.onKeydown);
+      document.removeEventListener('afterUpdateQuantity', this.onCartUpdated);
+      this.stopTimer();
     }
 
     open() {
@@ -117,8 +148,10 @@
       try {
         this.cart = await fetchKasyaAovCart();
         this.renderSummary(this.cart);
+        this.renderOfferProgress(this.cart);
         this.renderItems(this.cart);
         this.renderRecommendations(this.cart);
+        this.syncTimerWithCart(this.cart);
       } catch (error) {
         console.warn(error);
       }
@@ -129,8 +162,10 @@
         this.classList.add('kasya-aov-cart--loading');
         this.cart = await changeKasyaAovCartLine(line, quantity);
         this.renderSummary(this.cart);
+        this.renderOfferProgress(this.cart);
         this.renderItems(this.cart);
         this.renderRecommendations(this.cart);
+        this.syncTimerWithCart(this.cart);
       } catch (error) {
         console.warn(error);
       } finally {
@@ -147,6 +182,27 @@
       if (count) count.textContent = `(${cart.item_count})`;
       if (footerCount) footerCount.textContent = itemLabel;
       if (subtotal) subtotal.textContent = formatMoney(cart.total_price);
+    }
+
+    renderOfferProgress(cart) {
+      const subtotal = this.getCartSubtotal(cart);
+      const copy = this.querySelector(selectors.progressCopy);
+      const progress = this.querySelector(selectors.progress);
+      const progressPercent = Math.min((subtotal / offers.discountCents) * 100, 100);
+
+      if (copy) {
+        if (subtotal < offers.freeShippingCents) {
+          copy.textContent = `You are ${formatMoneyClean(offers.freeShippingCents - subtotal)} away from getting FREE SHIPPING`;
+        } else if (subtotal < offers.discountCents) {
+          copy.textContent = `You unlocked FREE SHIPPING — ${formatMoneyClean(offers.discountCents - subtotal)} away from ₱450 OFF`;
+        } else {
+          copy.textContent = 'You unlocked FREE SHIPPING and ₱450 OFF';
+        }
+      }
+
+      if (progress) {
+        progress.style.width = `${progressPercent}%`;
+      }
     }
 
     renderItems(cart) {
@@ -217,10 +273,114 @@
       container.innerHTML = recommendations.map((product) => `
         <article class="kasya-aov-cart__recommendation-card">
           <img class="kasya-aov-cart__recommendation-image" src="${product.image}" alt="${product.title}">
-          <h4>${product.title}</h4>
-          <p>${product.price}</p>
+          <div class="kasya-aov-cart__recommendation-info">
+            <h4>${product.title}</h4>
+            ${product.price ? `<p class="kasya-aov-cart__recommendation-price">${product.price}</p>` : ''}
+          </div>
         </article>
       `).join('');
+    }
+
+    syncTimerWithCart(cart) {
+      const itemCount = cart.item_count || 0;
+      const storedState = this.getTimerState();
+      const now = Date.now();
+      const previousCount = storedState.itemCount || 0;
+      const shouldReset = itemCount > 0 && (!storedState.expiresAt || itemCount > previousCount);
+
+      if (itemCount === 0) {
+        this.clearTimerState();
+        this.stopTimer();
+        this.renderTimerText(reservation.emptyText);
+        return;
+      }
+
+      if (shouldReset) {
+        this.setTimerState({
+          itemCount,
+          expiresAt: now + reservation.duration * 1000
+        });
+      } else {
+        this.setTimerState({
+          itemCount,
+          expiresAt: storedState.expiresAt
+        });
+      }
+
+      this.startTimer();
+    }
+
+    startTimer() {
+      this.stopTimer();
+      this.tickTimer();
+      this.timerId = window.setInterval(() => this.tickTimer(), 1000);
+    }
+
+    stopTimer() {
+      if (this.timerId) {
+        window.clearInterval(this.timerId);
+        this.timerId = null;
+      }
+    }
+
+    tickTimer() {
+      const state = this.getTimerState();
+      const remainingSeconds = Math.ceil(((state.expiresAt || 0) - Date.now()) / 1000);
+
+      if (!state.expiresAt || remainingSeconds <= 0) {
+        this.stopTimer();
+        this.renderTimerText(reservation.endedText);
+        return;
+      }
+
+      this.renderTimerText(`Your products are reserved for ${formatTimer(remainingSeconds)} minutes!`);
+    }
+
+    renderTimerText(text) {
+      const timerText = this.querySelector(selectors.timerText);
+
+      if (timerText) {
+        timerText.textContent = text;
+      }
+    }
+
+    getTimerState() {
+      try {
+        return JSON.parse(window.sessionStorage.getItem(reservation.storageKey)) || {};
+      } catch (error) {
+        return {};
+      }
+    }
+
+    setTimerState(state) {
+      try {
+        window.sessionStorage.setItem(reservation.storageKey, JSON.stringify(state));
+      } catch (error) {
+        console.warn(error);
+      }
+    }
+
+    clearTimerState() {
+      try {
+        window.sessionStorage.removeItem(reservation.storageKey);
+      } catch (error) {
+        console.warn(error);
+      }
+    }
+
+    getCartSubtotal(cart) {
+      return typeof cart.items_subtotal_price === 'number' ? cart.items_subtotal_price : cart.total_price || 0;
+    }
+
+    onCartUpdated(event) {
+      if (event.detail && event.detail.cartData) {
+        this.cart = event.detail.cartData;
+        this.renderSummary(this.cart);
+        this.renderOfferProgress(this.cart);
+        this.renderItems(this.cart);
+        this.renderRecommendations(this.cart);
+        this.syncTimerWithCart(this.cart);
+      }
     }
 
     onClick(event) {

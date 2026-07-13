@@ -4,6 +4,7 @@
   --kasya-aov-cart-muted: #6f6f6f;
   --kasya-aov-cart-line: #ece8e3;
   --kasya-aov-cart-soft: #f8f5f1;
+  --kasya-aov-cart-cream: #fbfaf8;
   --kasya-aov-cart-white: #ffffff;
   --kasya-aov-cart-shadow: 0 24px 70px rgba(17, 17, 17, 0.18);
   color: var(--kasya-aov-cart-ink);
@@ -34,9 +35,9 @@
   box-shadow: var(--kasya-aov-cart-shadow);
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 24px);
-  margin: 12px 12px 12px auto;
-  max-width: min(460px, calc(100vw - 24px));
+  height: calc(100vh - 32px);
+  margin: 16px 16px 16px auto;
+  max-width: min(430px, calc(100vw - 32px));
   overflow: hidden;
   position: relative;
   transform: translateX(24px);
@@ -52,7 +53,7 @@
   align-items: center;
   display: flex;
   justify-content: space-between;
-  padding: 22px 22px 16px;
+  padding: 18px 20px 14px;
 }
 
 .kasya-aov-cart__title {
@@ -93,8 +94,8 @@
   font-weight: 700;
   gap: 8px;
   justify-content: center;
-  margin: 0 18px;
-  padding: 11px 14px;
+  margin: 0 16px;
+  padding: 10px 14px;
 }
 
 .kasya-aov-cart__timer-icon {
@@ -102,7 +103,7 @@
 }
 
 .kasya-aov-cart__shipping {
-  padding: 18px 22px 14px;
+  padding: 14px 20px 12px;
 }
 
 .kasya-aov-cart__shipping-copy {
@@ -112,11 +113,16 @@
   margin: 0 0 10px;
 }
 
+.kasya-aov-cart__shipping-track-wrap {
+  padding: 0 4px;
+}
+
 .kasya-aov-cart__shipping-track {
   background: #e8e0d8;
   border-radius: 999px;
   height: 8px;
   overflow: hidden;
+  position: relative;
 }
 
 .kasya-aov-cart__shipping-progress {
@@ -124,6 +130,26 @@
   border-radius: inherit;
   display: block;
   height: 100%;
+  transition: width 180ms ease;
+}
+
+.kasya-aov-cart__shipping-milestone {
+  background: var(--kasya-aov-cart-white);
+  border: 2px solid var(--kasya-aov-cart-black);
+  border-radius: 50%;
+  height: 14px;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+}
+
+.kasya-aov-cart__shipping-milestone--free {
+  left: 66.666%;
+}
+
+.kasya-aov-cart__shipping-milestone--discount {
+  left: 100%;
 }
 
 .kasya-aov-cart__shipping-labels {
@@ -133,12 +159,26 @@
   font-weight: 700;
   justify-content: space-between;
   margin-top: 8px;
+  position: relative;
+}
+
+.kasya-aov-cart__shipping-label {
+  display: block;
+}
+
+.kasya-aov-cart__shipping-label--free {
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+.kasya-aov-cart__shipping-label--discount {
+  text-align: right;
 }
 
 .kasya-aov-cart__body {
   flex: 1;
   overflow-y: auto;
-  padding: 0 22px 20px;
+  padding: 0 20px 14px;
 }
 
 .kasya-aov-cart__items {
@@ -253,10 +293,11 @@
 }
 
 .kasya-aov-cart__recommendations {
-  background: var(--kasya-aov-cart-soft);
+  background: var(--kasya-aov-cart-cream);
+  border: 1px solid var(--kasya-aov-cart-line);
   border-radius: 8px;
-  margin-top: 18px;
-  padding: 16px;
+  margin-top: 16px;
+  padding: 14px;
 }
 
 .kasya-aov-cart__recommendations-header {
@@ -295,25 +336,32 @@
 
 .kasya-aov-cart__recommendations-list {
   display: grid;
-  gap: 10px;
-  grid-auto-columns: minmax(116px, 1fr);
-  grid-auto-flow: column;
-  overflow-x: auto;
+  gap: 8px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   padding-bottom: 2px;
 }
 
 .kasya-aov-cart__recommendation-card {
+  background: var(--kasya-aov-cart-white);
+  border: 1px solid var(--kasya-aov-cart-line);
+  border-radius: 8px;
   min-width: 0;
+  overflow: hidden;
 }
 
 .kasya-aov-cart__recommendation-image {
   aspect-ratio: 1 / 1.2;
   background: linear-gradient(135deg, #ffffff, #e8ded4);
-  border: 1px solid var(--kasya-aov-cart-line);
-  border-radius: 8px;
+  border: 0;
+  border-bottom: 1px solid var(--kasya-aov-cart-line);
+  border-radius: 0;
   display: block;
   object-fit: cover;
   width: 100%;
+}
+
+.kasya-aov-cart__recommendation-info {
+  padding: 8px 8px 10px;
 }
 
 .kasya-aov-cart__recommendation-card h4 {
@@ -339,34 +387,58 @@
   background: var(--kasya-aov-cart-white);
   border-top: 1px solid var(--kasya-aov-cart-line);
   box-shadow: 0 -14px 34px rgba(17, 17, 17, 0.06);
-  padding: 14px 22px 20px;
+  padding: 12px 20px 16px;
 }
 
 .kasya-aov-cart__payment {
-  margin-bottom: 14px;
+  border: 1px solid var(--kasya-aov-cart-line);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  padding: 10px;
+}
+
+.kasya-aov-cart__payment-topline {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.kasya-aov-cart__payment-accept {
+  color: var(--kasya-aov-cart-ink);
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .kasya-aov-cart__payment-label {
   color: var(--kasya-aov-cart-muted);
-  display: block;
+  display: inline-flex;
+  gap: 4px;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0;
-  margin-bottom: 8px;
+  text-align: right;
 }
 
 .kasya-aov-cart__payment-badges {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   gap: 6px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
-.kasya-aov-cart__payment-badges span {
+.kasya-aov-cart__payment-badge {
+  align-items: center;
+  background: var(--kasya-aov-cart-white);
   border: 1px solid var(--kasya-aov-cart-line);
-  border-radius: 999px;
-  font-size: 11px;
+  border-radius: 5px;
+  display: flex;
+  font-size: 10px;
   font-weight: 700;
-  padding: 5px 8px;
+  justify-content: center;
+  min-height: 30px;
+  padding: 4px 5px;
+  text-align: center;
 }
 
 .kasya-aov-cart__checkout-form {
@@ -384,7 +456,7 @@
 .kasya-aov-cart__checkout-note {
   color: var(--kasya-aov-cart-muted);
   font-size: 12px;
-  margin: 6px 0 14px;
+  margin: 5px 0 12px;
 }
 
 .kasya-aov-cart__checkout {
@@ -400,7 +472,7 @@
   font-weight: 800;
   justify-content: space-between;
   letter-spacing: 0;
-  min-height: 50px;
+  min-height: 48px;
   padding: 0 18px;
   width: 100%;
 }
@@ -435,6 +507,18 @@
   }
 
   .kasya-aov-cart__recommendations-list {
-    grid-auto-columns: 42%;
+    grid-auto-columns: 38%;
+    grid-auto-flow: column;
+    grid-template-columns: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .kasya-aov-cart__recommendations-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .kasya-aov-cart__payment-badges {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
