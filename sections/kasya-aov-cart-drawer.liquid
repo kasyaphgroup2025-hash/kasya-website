@@ -83,33 +83,23 @@
         {%- endif -%}
       </section>
 
-      <section class="kasya-aov-cart__recommendations" aria-label="AOV product recommendations">
-        <div class="kasya-aov-cart__recommendations-header">
-          <div>
-            <h3>You’ll Love These Too</h3>
-            <p>Same collection, same fabric, same category.</p>
+      <section class="kasya-aov-cart__recommendations" data-kasya-aov-cart-recommendations aria-label="AOV product recommendations" hidden>
+        <div class="kasya-aov-cart__recommendations-grid">
+          <div class="kasya-aov-cart__recommendation-column">
+            <div class="kasya-aov-cart__recommendation-column-header">
+              <h3>You’ll Love These Too</h3>
+              <p>More easy pieces you may also like.</p>
+            </div>
+            <div class="kasya-aov-cart__recommendation-scroller" data-kasya-aov-cart-recommendation-column="love" aria-label="You’ll Love These Too products"></div>
           </div>
-          <a href="{{ routes.all_products_collection_url }}" class="kasya-aov-cart__recommendations-link">See All</a>
-        </div>
 
-        <div class="kasya-aov-cart__recommendations-list" data-kasya-aov-cart-recommendations>
-          {%- comment -%}
-            Phase 2: replace these placeholders with products returned by getKasyaAovRecommendations(cart).
-            Future rules:
-            - Pants in cart recommend tops.
-            - Tops in cart recommend bottoms.
-            - Jane Set in cart recommends non-Jane products only.
-            - Exclude individual Jane Blouse and Jane Pants from recommendation output.
-          {%- endcomment -%}
-          {%- for index in (1..4) -%}
-            <article class="kasya-aov-cart__recommendation-card">
-              <div class="kasya-aov-cart__recommendation-image" aria-hidden="true"></div>
-              <div class="kasya-aov-cart__recommendation-info">
-                <h4>Recommended product</h4>
-                <p class="kasya-aov-cart__recommendation-price" hidden></p>
-              </div>
-            </article>
-          {%- endfor -%}
+          <div class="kasya-aov-cart__recommendation-column">
+            <div class="kasya-aov-cart__recommendation-column-header">
+              <h3>Complete the Look</h3>
+              <p data-kasya-aov-cart-complete-copy>Build a complete Kasya look.</p>
+            </div>
+            <div class="kasya-aov-cart__recommendation-scroller" data-kasya-aov-cart-recommendation-column="complete" aria-label="Complete the Look products"></div>
+          </div>
         </div>
       </section>
     </div>
@@ -165,13 +155,73 @@
   </aside>
 </kasya-aov-cart>
 
+{%- liquid
+  assign recommendation_groups = 'love:aov_love_products|completePants:aov_complete_pants_products|completeTops:aov_complete_tops_products|completeJane:aov_complete_jane_products|fallback:aov_fallback_products' | split: '|'
+-%}
+<script type="application/json" data-kasya-aov-cart-recommendation-data>
+{
+  {%- for group in recommendation_groups -%}
+    {%- liquid
+      assign group_parts = group | split: ':'
+      assign group_key = group_parts[0]
+      assign setting_key = group_parts[1]
+    -%}
+    "{{ group_key }}": [
+      {%- for product in section.settings[setting_key] limit: 4 -%}
+        {
+          "handle": {{ product.handle | json }},
+          "title": {{ product.title | json }},
+          "url": {{ product.url | json }},
+          "image": {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 360 | json }}{%- else -%}null{%- endif -%},
+          "price": {{ product.price | json }},
+          "available": {{ product.available | json }},
+          "options": {{ product.options_with_values | json }},
+          "variants": {{ product.variants | json }}
+        }{%- unless forloop.last -%},{%- endunless -%}
+      {%- endfor -%}
+    ]{%- unless forloop.last -%},{%- endunless -%}
+  {%- endfor -%}
+}
+</script>
+
 <script src="{{ 'kasya-aov-cart.js' | asset_url }}" defer="defer"></script>
 
 {% schema %}
 {
   "name": "Kasya AOV Cart Drawer",
   "class": "kasya-aov-cart-section",
-  "settings": [],
+  "settings": [
+    {
+      "type": "product_list",
+      "id": "aov_love_products",
+      "label": "You’ll Love These Too products",
+      "limit": 4
+    },
+    {
+      "type": "product_list",
+      "id": "aov_complete_pants_products",
+      "label": "Complete the Look products for pants cart",
+      "limit": 4
+    },
+    {
+      "type": "product_list",
+      "id": "aov_complete_tops_products",
+      "label": "Complete the Look products for top cart",
+      "limit": 4
+    },
+    {
+      "type": "product_list",
+      "id": "aov_complete_jane_products",
+      "label": "Complete the Look products for Jane Set cart",
+      "limit": 4
+    },
+    {
+      "type": "product_list",
+      "id": "aov_fallback_products",
+      "label": "General fallback products",
+      "limit": 4
+    }
+  ],
   "presets": [
     {
       "name": "Kasya AOV Cart Drawer"
