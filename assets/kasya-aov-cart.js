@@ -11,7 +11,8 @@
     emptyState: '[data-kasya-aov-cart-empty-state]',
     timerText: '[data-kasya-aov-cart-timer-text]',
     progressCopy: '[data-kasya-aov-cart-progress-copy]',
-    progress: '[data-kasya-aov-cart-progress]'
+    progress: '[data-kasya-aov-cart-progress]',
+    milestone: '[data-kasya-aov-cart-milestone]'
   };
 
   const reservation = {
@@ -126,6 +127,7 @@
       this.cart = null;
       this.isUpdating = false;
       this.timerId = null;
+      this.previousOfferSubtotal = null;
       this.onClick = this.onClick.bind(this);
       this.onKeydown = this.onKeydown.bind(this);
       this.onCartUpdated = this.onCartUpdated.bind(this);
@@ -266,6 +268,41 @@
       if (progress) {
         progress.style.width = `${progressPercent}%`;
       }
+
+      this.renderMilestones(subtotal);
+    }
+
+    renderMilestones(subtotal) {
+      const freeUnlocked = subtotal >= offers.freeShippingCents;
+      const discountUnlocked = subtotal >= offers.discountCents;
+
+      this.classList.toggle('kasya-aov-cart--free-shipping-unlocked', freeUnlocked);
+      this.classList.toggle('kasya-aov-cart--discount-unlocked', discountUnlocked);
+
+      if (this.previousOfferSubtotal !== null) {
+        if (this.previousOfferSubtotal < offers.freeShippingCents && freeUnlocked) {
+          this.animateMilestone('free');
+        }
+
+        if (this.previousOfferSubtotal < offers.discountCents && discountUnlocked) {
+          this.animateMilestone('discount');
+        }
+      }
+
+      this.previousOfferSubtotal = subtotal;
+    }
+
+    animateMilestone(name) {
+      const milestone = this.querySelector(`${selectors.milestone}[data-kasya-aov-cart-milestone="${name}"]`);
+      if (!milestone) return;
+
+      milestone.classList.remove('kasya-aov-cart__shipping-milestone--animate');
+      window.requestAnimationFrame(() => {
+        milestone.classList.add('kasya-aov-cart__shipping-milestone--animate');
+        window.setTimeout(() => {
+          milestone.classList.remove('kasya-aov-cart__shipping-milestone--animate');
+        }, 900);
+      });
     }
 
     renderItems(cart) {
@@ -468,6 +505,11 @@
       const emptyState = this.querySelector(selectors.emptyState);
       if (emptyState) {
         emptyState.toggleAttribute('hidden', !isEmpty);
+      }
+
+      if (isEmpty) {
+        this.previousOfferSubtotal = 0;
+        this.classList.remove('kasya-aov-cart--free-shipping-unlocked', 'kasya-aov-cart--discount-unlocked');
       }
 
       return isEmpty;
