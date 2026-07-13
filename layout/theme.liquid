@@ -241,6 +241,11 @@
     {%- if settings.cart_type == "drawer" and request.page_type != 'cart' -%}
       <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
       {%- section 'cart-drawer' -%}
+      {% comment %}
+        Kasya AOV Cart Drawer preview hook — not connected to live cart icon yet.
+        Temporary Phase 1.1 review/testing render only; open manually with window.KasyaAovCart.open().
+      {% endcomment %}
+      {%- section 'kasya-aov-cart-drawer' -%}
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
