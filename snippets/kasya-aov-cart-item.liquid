@@ -27,6 +27,7 @@
         class="kasya-aov-cart__item-remove"
         data-kasya-aov-cart-remove
         data-line="{{ item.index | plus: 1 }}"
+        data-key="{{ item.key }}"
         aria-label="Remove {{ item.product.title | escape }}"
       >
         <span aria-hidden="true">×</span>
@@ -52,6 +53,7 @@
           class="kasya-aov-cart__quantity-button"
           data-kasya-aov-cart-decrease
           data-line="{{ item.index | plus: 1 }}"
+          data-key="{{ item.key }}"
           aria-label="Decrease quantity for {{ item.product.title | escape }}"
         >
           -
@@ -62,6 +64,7 @@
           class="kasya-aov-cart__quantity-button"
           data-kasya-aov-cart-increase
           data-line="{{ item.index | plus: 1 }}"
+          data-key="{{ item.key }}"
           aria-label="Increase quantity for {{ item.product.title | escape }}"
         >
           +

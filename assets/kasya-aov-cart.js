@@ -66,14 +66,17 @@
     return response.json();
   }
 
-  async function changeKasyaAovCartLine(line, quantity) {
+  async function changeKasyaAovCartLine(identifier, quantity) {
+    const body = typeof identifier === 'string'
+      ? { id: identifier, quantity }
+      : { line: identifier, quantity };
     const response = await fetch('/cart/change.js', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ line, quantity })
+      body: JSON.stringify(body)
     });
 
     if (!response.ok) {
@@ -120,6 +123,7 @@
     constructor() {
       super();
       this.cart = null;
+      this.isUpdating = false;
       this.timerId = null;
       this.onClick = this.onClick.bind(this);
       this.onKeydown = this.onKeydown.bind(this);
@@ -166,19 +170,17 @@
       }
     }
 
-    async updateQuantity(line, quantity) {
+    async updateQuantity(identifier, quantity) {
+      if (this.isUpdating || !identifier && identifier !== 0) return;
+
       try {
-        this.classList.add('kasya-aov-cart--loading');
-        this.cart = await changeKasyaAovCartLine(line, quantity);
-        this.renderSummary(this.cart);
-        this.renderOfferProgress(this.cart);
-        this.renderItems(this.cart);
-        this.renderRecommendations(this.cart);
-        this.syncTimerWithCart(this.cart);
+        this.setUpdating(true);
+        await changeKasyaAovCartLine(identifier, quantity);
+        await this.refresh();
       } catch (error) {
-        console.warn(error);
+        console.warn('[Kasya AOV Cart] Unable to update cart item.', error);
       } finally {
-        this.classList.remove('kasya-aov-cart--loading');
+        this.setUpdating(false);
       }
     }
 
@@ -302,7 +304,7 @@
           <div class="kasya-aov-cart__item-content">
             <div class="kasya-aov-cart__item-topline">
               <a class="kasya-aov-cart__item-title" href="${item.url}">${this.escapeHtml(item.product_title)}</a>
-              <button type="button" class="kasya-aov-cart__item-remove" data-kasya-aov-cart-remove data-line="${line}" aria-label="Remove ${this.escapeHtml(item.product_title)}">
+              <button type="button" class="kasya-aov-cart__item-remove" data-kasya-aov-cart-remove data-line="${line}" data-key="${this.escapeHtml(item.key)}" aria-label="Remove ${this.escapeHtml(item.product_title)}">
                 <span aria-hidden="true">×</span>
               </button>
             </div>
@@ -310,9 +312,9 @@
             ${skuMarkup}
             <div class="kasya-aov-cart__item-bottomline">
               <div class="kasya-aov-cart__quantity" aria-label="Quantity controls for ${this.escapeHtml(item.product_title)}">
-                <button type="button" class="kasya-aov-cart__quantity-button" data-kasya-aov-cart-decrease data-line="${line}" aria-label="Decrease quantity for ${this.escapeHtml(item.product_title)}">-</button>
+                <button type="button" class="kasya-aov-cart__quantity-button" data-kasya-aov-cart-decrease data-line="${line}" data-key="${this.escapeHtml(item.key)}" aria-label="Decrease quantity for ${this.escapeHtml(item.product_title)}">-</button>
                 <span class="kasya-aov-cart__quantity-value" data-kasya-aov-cart-quantity>${item.quantity}</span>
-                <button type="button" class="kasya-aov-cart__quantity-button" data-kasya-aov-cart-increase data-line="${line}" aria-label="Increase quantity for ${this.escapeHtml(item.product_title)}">+</button>
+                <button type="button" class="kasya-aov-cart__quantity-button" data-kasya-aov-cart-increase data-line="${line}" data-key="${this.escapeHtml(item.key)}" aria-label="Increase quantity for ${this.escapeHtml(item.product_title)}">+</button>
               </div>
               <div class="kasya-aov-cart__item-price">${formatMoney(item.final_line_price)}</div>
             </div>
@@ -337,11 +339,11 @@
       }).join('');
       const quantity = this.getJaneSetQuantity(set);
       const price = this.getJaneSetDisplayPrice(set);
-      const keys = [set.parent?.key, set.top?.key, set.pants?.key].filter(Boolean).join(',');
+      const keys = (set.items || []).map((item) => item.key).filter(Boolean).join(',');
       const setColor = this.getJaneSetColor(set);
 
       return `
-        <article class="kasya-aov-cart__item kasya-aov-cart__item--jane-set" data-kasya-aov-cart-jane-set data-keys="${this.escapeHtml(keys)}">
+        <article class="kasya-aov-cart__item kasya-aov-cart__item--jane-set" data-kasya-aov-cart-jane-set data-set-id="${this.escapeHtml(set.setId)}" data-keys="${this.escapeHtml(keys)}">
           <div class="kasya-aov-cart__item-media">
             ${imageMarkup}
           </div>
@@ -570,7 +572,7 @@
 
       const removeButton = event.target.closest('[data-kasya-aov-cart-remove]');
       if (removeButton) {
-        this.updateQuantity(Number(removeButton.dataset.line), 0);
+        this.updateQuantity(this.getLineIdentifier(removeButton), 0);
         return;
       }
 
@@ -584,7 +586,7 @@
       if (decreaseButton) {
         const lineElement = decreaseButton.closest('[data-kasya-aov-cart-item]');
         const quantity = Number(lineElement.querySelector('[data-kasya-aov-cart-quantity]').textContent);
-        this.updateQuantity(Number(decreaseButton.dataset.line), Math.max(quantity - 1, 0));
+        this.updateQuantity(this.getLineIdentifier(decreaseButton), Math.max(quantity - 1, 0));
         return;
       }
 
@@ -592,7 +594,7 @@
       if (increaseButton) {
         const lineElement = increaseButton.closest('[data-kasya-aov-cart-item]');
         const quantity = Number(lineElement.querySelector('[data-kasya-aov-cart-quantity]').textContent);
-        this.updateQuantity(Number(increaseButton.dataset.line), quantity + 1);
+        this.updateQuantity(this.getLineIdentifier(increaseButton), quantity + 1);
       }
     }
 
@@ -603,10 +605,10 @@
     }
 
     async removeItemsByKey(keys) {
-      if (!keys.length) return;
+      if (this.isUpdating || !keys.length) return;
 
       try {
-        this.classList.add('kasya-aov-cart--loading');
+        this.setUpdating(true);
         const response = await fetch('/cart/update.js', {
           method: 'POST',
           headers: {
@@ -625,17 +627,29 @@
           throw new Error('Unable to remove Jane Set.');
         }
 
-        this.cart = await response.json();
-        this.renderSummary(this.cart);
-        this.renderOfferProgress(this.cart);
-        this.renderItems(this.cart);
-        this.renderRecommendations(this.cart);
-        this.syncTimerWithCart(this.cart);
+        await this.refresh();
       } catch (error) {
-        console.warn(error);
+        console.warn('[Kasya AOV Cart] Unable to remove Jane Set.', error);
       } finally {
-        this.classList.remove('kasya-aov-cart--loading');
+        this.setUpdating(false);
       }
+    }
+
+    getLineIdentifier(control) {
+      const key = control.dataset.key || control.closest('[data-kasya-aov-cart-item]')?.dataset.key;
+      if (key) return key;
+
+      const line = Number(control.dataset.line || control.closest('[data-kasya-aov-cart-item]')?.dataset.line);
+      return Number.isFinite(line) ? line : null;
+    }
+
+    setUpdating(isUpdating) {
+      this.isUpdating = isUpdating;
+      this.classList.toggle('kasya-aov-cart--loading', isUpdating);
+      this.querySelectorAll('button').forEach((button) => {
+        button.disabled = isUpdating;
+        button.setAttribute('aria-disabled', String(isUpdating));
+      });
     }
 
     escapeHtml(value) {
