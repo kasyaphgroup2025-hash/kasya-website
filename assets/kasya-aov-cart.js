@@ -23,6 +23,7 @@
     duration: 180,
     storageKey: 'kasyaAovCartReservation',
     endedText: 'Your reservation has ended. Please proceed before items sell out.',
+    endedEmphasis: 'reservation has ended.',
     emptyText: 'Add an item to start your reservation timer.'
   };
 
@@ -1463,11 +1464,11 @@
 
       if (!state.expiresAt || remainingSeconds <= 0) {
         this.stopTimer();
-        this.renderTimerText(reservation.endedText);
+        this.renderTimerEndedText();
         return;
       }
 
-      this.renderTimerText(`Your products are reserved for ${formatTimer(remainingSeconds)} minutes!`);
+      this.renderTimerCountdown(formatTimer(remainingSeconds));
     }
 
     renderTimerText(text) {
@@ -1476,6 +1477,37 @@
       if (timerText) {
         timerText.textContent = text;
       }
+    }
+
+    renderTimerCountdown(time) {
+      const timerText = this.querySelector(selectors.timerText);
+      if (!timerText) return;
+
+      const timerTime = document.createElement('strong');
+      timerTime.className = 'kasya-aov-cart__timer-time';
+      timerTime.dataset.kasyaAovCartTimerTime = '';
+      timerTime.textContent = time;
+
+      timerText.replaceChildren(
+        document.createTextNode('Your products are reserved for '),
+        timerTime,
+        document.createTextNode(' minutes!')
+      );
+    }
+
+    renderTimerEndedText() {
+      const timerText = this.querySelector(selectors.timerText);
+      if (!timerText) return;
+
+      const emphasis = document.createElement('strong');
+      emphasis.className = 'kasya-aov-cart__timer-emphasis';
+      emphasis.textContent = reservation.endedEmphasis;
+
+      timerText.replaceChildren(
+        document.createTextNode('Your '),
+        emphasis,
+        document.createTextNode(' Please proceed before items sell out.')
+      );
     }
 
     getTimerState() {

@@ -92,7 +92,7 @@
   color: var(--kasya-aov-cart-white);
   display: flex;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 400;
   gap: 8px;
   justify-content: center;
   margin: 0 16px;
@@ -101,6 +101,11 @@
 
 .kasya-aov-cart__timer-icon {
   font-size: 16px;
+}
+
+.kasya-aov-cart__timer-time,
+.kasya-aov-cart__timer-emphasis {
+  font-weight: 700;
 }
 
 .kasya-aov-cart__empty-state {
