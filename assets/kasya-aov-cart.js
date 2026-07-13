@@ -243,6 +243,33 @@
     return null;
   }
 
+  function normalizeProductImages(product) {
+    const images = [];
+
+    if (product?.image) {
+      images.push(product.image);
+    }
+
+    if (product?.featured_image) {
+      images.push(product.featured_image);
+    }
+
+    if (Array.isArray(product?.images)) {
+      images.push(...product.images);
+    }
+
+    return images.map((image) => {
+      if (typeof image === 'string') {
+        return { src: image, alt: '' };
+      }
+
+      return {
+        src: image?.src || image?.url || image?.preview_image?.src || '',
+        alt: image?.alt || image?.altText || ''
+      };
+    }).filter((image) => image.src);
+  }
+
   function normalizeRecommendationProduct(product) {
     if (!product) return null;
 
@@ -252,6 +279,7 @@
       title: product.title || '',
       url: normalizeProductUrl(product),
       image: normalizeProductImage(product),
+      images: normalizeProductImages(product),
       price: Number(product.price || product.price_min || product.variants?.[0]?.price || 0),
       available: product.available !== false,
       template: product.template || product.template_suffix || product.templateSuffix || '',
@@ -451,6 +479,54 @@
     if (name.includes('color') || name.includes('colour')) return 1;
     if (name.includes('size')) return 2;
     return 3;
+  }
+
+  function getVariantImage(variant) {
+    const image = variant?.featured_image || variant?.image || variant?.featured_media?.preview_image;
+
+    if (typeof image === 'string') return { src: image, alt: variant?.title || '' };
+    if (image?.src) return { src: image.src, alt: image.alt || variant?.title || '' };
+    if (image?.url) return { src: image.url, alt: image.alt || variant?.title || '' };
+
+    return null;
+  }
+
+  function getColorOptionPosition(product) {
+    const colorOption = (product?.options || []).find((option, index) => {
+      const name = normalizeText(option?.name || option || '');
+      return name.includes('color') || name.includes('colour') || index === 0 && name.includes('shade');
+    });
+
+    return colorOption?.position || (product?.options || []).indexOf(colorOption) + 1 || null;
+  }
+
+  function getSelectedRecommendationColor(product, selections, variant) {
+    const colorPosition = getColorOptionPosition(product);
+    if (!colorPosition) return '';
+
+    return selections[colorPosition] || variant?.[`option${colorPosition}`] || '';
+  }
+
+  function getRecommendationImageForSelection(product, variant, selections = {}) {
+    const variantImage = getVariantImage(variant);
+    if (variantImage?.src) return variantImage;
+
+    const selectedColor = normalizeText(getSelectedRecommendationColor(product, selections, variant));
+    if (selectedColor) {
+      const matchedImage = (product.images || []).find((image) => {
+        const imageText = normalizeText(`${image.alt || ''} ${image.src || ''}`);
+        return imageText.includes(selectedColor);
+      });
+
+      if (matchedImage?.src) {
+        return {
+          src: matchedImage.src,
+          alt: matchedImage.alt || `${product.title} ${getSelectedRecommendationColor(product, selections, variant)}`
+        };
+      }
+    }
+
+    return product.image ? { src: product.image, alt: product.title } : null;
   }
 
   function productIsInAllowedStorefrontCollection(product, productData = {}) {
@@ -1421,11 +1497,12 @@
     }
 
     renderRecommendationCard(product) {
-      const imageMarkup = product.image
-        ? `<img class="kasya-aov-cart__recommendation-image" src="${this.escapeHtml(product.image)}" alt="${this.escapeHtml(product.title)}" loading="lazy">`
-        : '<div class="kasya-aov-cart__recommendation-image kasya-aov-cart__recommendation-image--placeholder" aria-hidden="true"></div>';
       const options = this.getRecommendationOptions(product);
       const selectedVariant = this.getSelectedRecommendationVariant(product, {});
+      const selectedImage = getRecommendationImageForSelection(product, selectedVariant, {});
+      const imageMarkup = selectedImage?.src
+        ? `<img class="kasya-aov-cart__recommendation-image" src="${this.escapeHtml(selectedImage.src)}" alt="${this.escapeHtml(selectedImage.alt || product.title)}" loading="lazy">`
+        : '<div class="kasya-aov-cart__recommendation-image kasya-aov-cart__recommendation-image--placeholder" aria-hidden="true"></div>';
       const optionMarkup = options.map((option) => this.renderRecommendationOption(product, option)).join('');
       const buttonLabel = selectedVariant ? 'Add' : 'Choose options';
 
@@ -1470,14 +1547,21 @@
       const product = this.getRecommendationProductByHandle(card.dataset.productHandle);
       const button = card.querySelector('[data-kasya-aov-cart-recommendation-add]');
       const price = card.querySelector('.kasya-aov-cart__recommendation-price');
+      const image = card.querySelector('.kasya-aov-cart__recommendation-image');
       if (!product || !button) return;
 
       const selections = this.getRecommendationSelections(card);
       const variant = this.getSelectedRecommendationVariant(product, selections);
+      const selectedImage = getRecommendationImageForSelection(product, variant, selections);
       button.dataset.variantId = variant?.id || '';
       button.disabled = !variant;
       button.textContent = variant ? 'Add' : 'Choose options';
       if (price) price.textContent = formatMoney(this.getRecommendationPrice(product, variant));
+      if (image?.tagName === 'IMG' && selectedImage?.src) {
+        image.setAttribute('src', selectedImage.src);
+        image.removeAttribute('srcset');
+        image.setAttribute('alt', selectedImage.alt || product.title);
+      }
     }
 
     getRecommendationOptions(product) {

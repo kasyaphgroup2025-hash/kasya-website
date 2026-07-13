@@ -874,6 +874,13 @@
     margin-top: 3px;
   }
 
+  .kasya-aov-cart__recommendation-card .kasya-aov-cart__recommendation-price {
+    color: var(--kasya-aov-cart-ink);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
   .kasya-aov-cart__recommendation-options {
     gap: 4px;
     margin-top: 6px;
