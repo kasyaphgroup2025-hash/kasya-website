@@ -38,6 +38,10 @@
     ].filter(Boolean).join(' '));
   }
 
+  function isKasyaAovCartContext(element) {
+    return Boolean(element?.closest?.('kasya-aov-cart, .kasya-aov-cart, [data-kasya-aov-cart], [data-kasya-aov-cart-root]'));
+  }
+
   function deleteControlFrom(target) {
     const control = target.closest?.('button, a, [role="button"]');
     if (!control) return null;
@@ -115,6 +119,8 @@
   }
 
   function blockJaneProductNavigation(event) {
+    if (isKasyaAovCartContext(event.target)) return;
+
     const directControl = event.target.closest?.('button, a, [role="button"]');
     if (isAllowedCartControl(directControl)) return;
 
@@ -373,6 +379,8 @@
   });
 
   document.addEventListener('click', event => {
+    if (isKasyaAovCartContext(event.target)) return;
+
     const clickedLink = event.target.closest?.('a');
     const rawControl = event.target.closest?.('button, a, [role="button"]');
     const clickedImage =

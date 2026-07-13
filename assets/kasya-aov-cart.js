@@ -304,7 +304,7 @@
           <div class="kasya-aov-cart__item-content">
             <div class="kasya-aov-cart__item-topline">
               <a class="kasya-aov-cart__item-title" href="${item.url}">${this.escapeHtml(item.product_title)}</a>
-              <button type="button" class="kasya-aov-cart__item-remove" data-kasya-aov-cart-remove data-line="${line}" data-key="${this.escapeHtml(item.key)}" aria-label="Remove ${this.escapeHtml(item.product_title)}">
+              <button type="button" class="kasya-aov-cart__item-remove" data-kasya-aov-cart-remove data-kasya-remove-line data-line="${line}" data-key="${this.escapeHtml(item.key)}" data-line-key="${this.escapeHtml(item.key)}" aria-label="Remove ${this.escapeHtml(item.product_title)}">
                 <span aria-hidden="true">×</span>
               </button>
             </div>
@@ -312,9 +312,9 @@
             ${skuMarkup}
             <div class="kasya-aov-cart__item-bottomline">
               <div class="kasya-aov-cart__quantity" aria-label="Quantity controls for ${this.escapeHtml(item.product_title)}">
-                <button type="button" class="kasya-aov-cart__quantity-button" data-kasya-aov-cart-decrease data-line="${line}" data-key="${this.escapeHtml(item.key)}" aria-label="Decrease quantity for ${this.escapeHtml(item.product_title)}">-</button>
+                <button type="button" class="kasya-aov-cart__quantity-button" data-kasya-aov-cart-decrease data-line="${line}" data-key="${this.escapeHtml(item.key)}" data-line-key="${this.escapeHtml(item.key)}" aria-label="Decrease quantity for ${this.escapeHtml(item.product_title)}">-</button>
                 <span class="kasya-aov-cart__quantity-value" data-kasya-aov-cart-quantity>${item.quantity}</span>
-                <button type="button" class="kasya-aov-cart__quantity-button" data-kasya-aov-cart-increase data-line="${line}" data-key="${this.escapeHtml(item.key)}" aria-label="Increase quantity for ${this.escapeHtml(item.product_title)}">+</button>
+                <button type="button" class="kasya-aov-cart__quantity-button" data-kasya-aov-cart-increase data-line="${line}" data-key="${this.escapeHtml(item.key)}" data-line-key="${this.escapeHtml(item.key)}" aria-label="Increase quantity for ${this.escapeHtml(item.product_title)}">+</button>
               </div>
               <div class="kasya-aov-cart__item-price">${formatMoney(item.final_line_price)}</div>
             </div>
@@ -343,7 +343,7 @@
       const setColor = this.getJaneSetColor(set);
 
       return `
-        <article class="kasya-aov-cart__item kasya-aov-cart__item--jane-set" data-kasya-aov-cart-jane-set data-set-id="${this.escapeHtml(set.setId)}" data-keys="${this.escapeHtml(keys)}">
+        <article class="kasya-aov-cart__item kasya-aov-cart__item--jane-set" data-kasya-aov-cart-jane-set data-set-id="${this.escapeHtml(set.setId)}" data-set-group-id="${this.escapeHtml(set.setId)}" data-keys="${this.escapeHtml(keys)}" data-line-keys="${this.escapeHtml(keys)}">
           <div class="kasya-aov-cart__item-media">
             ${imageMarkup}
           </div>
@@ -353,7 +353,7 @@
                 <p class="kasya-aov-cart__item-kicker">Set</p>
                 <span class="kasya-aov-cart__item-title">${this.escapeHtml(setColor)} Jane Set</span>
               </div>
-              <button type="button" class="kasya-aov-cart__item-remove" data-kasya-aov-cart-remove-set data-keys="${this.escapeHtml(keys)}" aria-label="Remove Jane Set">
+              <button type="button" class="kasya-aov-cart__item-remove" data-kasya-aov-cart-remove-set data-kasya-aov-remove-set data-set-id="${this.escapeHtml(set.setId)}" data-set-group-id="${this.escapeHtml(set.setId)}" data-keys="${this.escapeHtml(keys)}" data-line-keys="${this.escapeHtml(keys)}" aria-label="Remove Jane Set">
                 <span aria-hidden="true">×</span>
               </button>
             </div>
@@ -566,24 +566,38 @@
 
     onClick(event) {
       if (event.target.closest(selectors.close)) {
+        event.preventDefault();
+        event.stopPropagation();
         this.close();
         return;
       }
 
       const removeButton = event.target.closest('[data-kasya-aov-cart-remove]');
       if (removeButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation?.();
         this.updateQuantity(this.getLineIdentifier(removeButton), 0);
         return;
       }
 
-      const removeSetButton = event.target.closest('[data-kasya-aov-cart-remove-set]');
+      const removeSetButton = event.target.closest('[data-kasya-aov-cart-remove-set], [data-kasya-aov-remove-set]');
       if (removeSetButton) {
-        this.removeItemsByKey((removeSetButton.dataset.keys || '').split(',').filter(Boolean));
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation?.();
+        this.removeJaneSetByGroup(
+          removeSetButton.dataset.setId || removeSetButton.dataset.setGroupId,
+          (removeSetButton.dataset.keys || removeSetButton.dataset.lineKeys || '').split(',').filter(Boolean)
+        );
         return;
       }
 
       const decreaseButton = event.target.closest('[data-kasya-aov-cart-decrease]');
       if (decreaseButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation?.();
         const lineElement = decreaseButton.closest('[data-kasya-aov-cart-item]');
         const quantity = Number(lineElement.querySelector('[data-kasya-aov-cart-quantity]').textContent);
         this.updateQuantity(this.getLineIdentifier(decreaseButton), Math.max(quantity - 1, 0));
@@ -592,6 +606,9 @@
 
       const increaseButton = event.target.closest('[data-kasya-aov-cart-increase]');
       if (increaseButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation?.();
         const lineElement = increaseButton.closest('[data-kasya-aov-cart-item]');
         const quantity = Number(lineElement.querySelector('[data-kasya-aov-cart-quantity]').textContent);
         this.updateQuantity(this.getLineIdentifier(increaseButton), quantity + 1);
@@ -604,11 +621,11 @@
       }
     }
 
-    async removeItemsByKey(keys) {
-      if (this.isUpdating || !keys.length) return;
+    async removeItemsByKey(keys, options = {}) {
+      if ((!options.keepUpdatingState && this.isUpdating) || !keys.length) return;
 
       try {
-        this.setUpdating(true);
+        if (!options.keepUpdatingState) this.setUpdating(true);
         const response = await fetch('/cart/update.js', {
           method: 'POST',
           headers: {
@@ -631,12 +648,48 @@
       } catch (error) {
         console.warn('[Kasya AOV Cart] Unable to remove Jane Set.', error);
       } finally {
+        if (!options.keepUpdatingState) this.setUpdating(false);
+      }
+    }
+
+    async removeJaneSetByGroup(setId, renderedKeys = []) {
+      if (this.isUpdating || !setId) {
+        console.warn('[Kasya AOV Cart] Missing Jane Set group id; removal skipped.');
+        return;
+      }
+
+      try {
+        this.setUpdating(true);
+        const latestCart = await fetchKasyaAovCart();
+        const setKeys = (latestCart.items || [])
+          .filter((item) => {
+            return item.properties?._set_id === setId &&
+              item.properties?._set_name === 'Jane Set' &&
+              ['Parent', 'Top', 'Pants'].includes(item.properties?._set_role);
+          })
+          .map((item) => item.key)
+          .filter(Boolean);
+
+        if (!setKeys.length) {
+          console.warn('[Kasya AOV Cart] No matching Jane Set keys found; removal skipped.', { setId });
+          return;
+        }
+
+        const renderedKeySet = new Set(renderedKeys.filter(Boolean));
+        if (renderedKeySet.size && setKeys.some((key) => !renderedKeySet.has(key))) {
+          console.warn('[Kasya AOV Cart] Jane Set keys changed since render; using latest verified cart keys.', { setId, setKeys });
+        }
+
+        await this.removeItemsByKey(setKeys, { keepUpdatingState: true });
+      } catch (error) {
+        console.warn('[Kasya AOV Cart] Unable to remove Jane Set group.', error);
+      } finally {
         this.setUpdating(false);
       }
     }
 
     getLineIdentifier(control) {
-      const key = control.dataset.key || control.closest('[data-kasya-aov-cart-item]')?.dataset.key;
+      const key = control.dataset.key || control.dataset.lineKey || control.closest('[data-kasya-aov-cart-item]')?.dataset.key;
       if (key) return key;
 
       const line = Number(control.dataset.line || control.closest('[data-kasya-aov-cart-item]')?.dataset.line);
