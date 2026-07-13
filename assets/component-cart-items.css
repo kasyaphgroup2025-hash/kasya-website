@@ -269,3 +269,15 @@ cart-remove-button .link {
 .cart-item__vendor {
   word-break: break-all;
 }
+
+.jane-set-cart-item__warning {
+  margin: 0.8rem 0 0;
+  color: #b42318;
+  font-size: 1.2rem;
+  line-height: 1.4;
+}
+
+.jane-set-cart-item jane-set-remove-button {
+  display: inline-flex;
+  margin-top: 0.8rem;
+}

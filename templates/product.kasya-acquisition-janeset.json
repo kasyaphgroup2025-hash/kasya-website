@@ -1,0 +1,375 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "kasya_lp_product_hero": {
+      "type": "kasya-lp-jane-set-hero",
+      "settings": {
+        "product": "jane-set-premium-ity",
+        "blouse_product": "jane-blouse-premium-ity",
+        "pants_product": "jane-pants-premium-ity",
+        "default_media_preview_color": "Black",
+        "set_price_text": "₱1,699",
+        "product_label": "KASYA SETS",
+        "heading": "JANE SET",
+        "subtitle": "Premium ITY",
+        "description": "A soft blouse-and-pants set made for easy, polished everyday wear."
+      }
+    },
+    "kasya_lp_fit_confidence": {
+      "type": "kasya-lp-fit-confidence",
+      "blocks": {
+        "fit_note_1": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Relaxed coordinated fit"
+          }
+        },
+        "fit_note_2": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Soft semi-stretch feel"
+          }
+        },
+        "fit_note_3": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Separate top and pants sizing"
+          }
+        },
+        "fit_note_4": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Size up if you prefer extra room"
+          }
+        }
+      },
+      "block_order": [
+        "fit_note_1",
+        "fit_note_2",
+        "fit_note_3",
+        "fit_note_4"
+      ],
+      "settings": {
+        "heading": "HOW IT FITS",
+        "subheading": "Choose your top and pants sizes separately for an easier fit.",
+        "front_label": "FRONT VIEW",
+        "front_description": "Shows the full set and relaxed silhouette.",
+        "side_label": "SIDE VIEW",
+        "side_description": "Shows the soft drape and body room.",
+        "back_label": "BACK VIEW",
+        "back_description": "Shows the clean fall from behind.",
+        "model_info": "Model is 5'2 and wears size M for the top and size L for the pants."
+      }
+    },
+    "kasya_lp_fabric_quality": {
+      "type": "kasya-lp-fabric-quality",
+      "blocks": {
+        "fabric_note_1": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "≈",
+            "title": "Smooth feel",
+            "description": "Soft on the skin for daily comfort."
+          }
+        },
+        "fabric_note_2": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "◯",
+            "title": "Semi-stretch",
+            "description": "Gives gentle ease as you move."
+          }
+        },
+        "fabric_note_3": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "✱",
+            "title": "Relaxed drape",
+            "description": "Falls naturally without looking stiff."
+          }
+        },
+        "fabric_note_4": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "✓",
+            "title": "Easy polish",
+            "description": "Put-together without feeling overdressed."
+          }
+        }
+      },
+      "block_order": [
+        "fabric_note_1",
+        "fabric_note_2",
+        "fabric_note_3",
+        "fabric_note_4"
+      ],
+      "settings": {
+        "heading": "FABRIC & FEEL",
+        "subheading": "Soft Korean ITY knit with a smooth feel and relaxed drape.",
+        "main_note": "Made to feel easy on the body while keeping the full set polished for everyday wear.",
+        "show_feature_notes": true
+      }
+    },
+    "kasya_lp_lifestyle": {
+      "type": "kasya-lp-lifestyle",
+      "blocks": {
+        "lifestyle_1": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "shopify://shop_images/office_jane.png",
+            "title": "Office Day",
+            "description": "Polished enough for work, easy enough for long hours."
+          }
+        },
+        "lifestyle_2": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "shopify://shop_images/errands_jane.png",
+            "title": "Errands",
+            "description": "Soft, simple, and easy to move in."
+          }
+        },
+        "lifestyle_3": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "shopify://shop_images/family_lunch.png",
+            "title": "Family Lunch",
+            "description": "Comfortable, modest, and effortlessly put-together."
+          }
+        },
+        "lifestyle_4": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "shopify://shop_images/TRAVELLL.png",
+            "title": "Travel",
+            "description": "A relaxed set for moving through a full day."
+          }
+        }
+      },
+      "block_order": [
+        "lifestyle_1",
+        "lifestyle_2",
+        "lifestyle_3",
+        "lifestyle_4"
+      ],
+      "settings": {
+        "heading": "WHERE TO WEAR IT",
+        "subheading": "For the days you want comfort to still look intentional."
+      }
+    },
+    "kasya_lp_reviews": {
+      "type": "kasya-lp-reviews",
+      "blocks": {
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "name": "Angelo B.",
+            "title": "Comfortable",
+            "comment": "Love the pants, super versatile, can pair it with any top.",
+            "date_text": "",
+            "size_text": "Large",
+            "fit_text": "Wideleg Fit"
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "name": "Jojima F.",
+            "title": "Versatile",
+            "comment": "Sobrang comfortable po talaga.",
+            "date_text": "",
+            "size_text": "Medium",
+            "fit_text": "True to size"
+          }
+        },
+        "review_3": {
+          "type": "review",
+          "settings": {
+            "rating": 4,
+            "name": "Mary L.",
+            "title": "Good",
+            "comment": "Experienced some shrinkage, but still loved the product nonetheless.",
+            "date_text": "",
+            "size_text": "XL",
+            "fit_text": "Size smaller"
+          }
+        }
+      },
+      "block_order": [
+        "review_1",
+        "review_2",
+        "review_3"
+      ],
+      "disabled": true,
+      "settings": {
+        "heading": "Reviews",
+        "average_rating_text": "(4.8)",
+        "show_average_stars": true,
+        "background_color": "#fbf8f4",
+        "view_more_text": "View more",
+        "view_more_link": "",
+        "show_view_more": true
+      }
+    },
+    "kasya_lp_reassurance": {
+      "type": "kasya-lp-reassurance",
+      "blocks": {
+        "reassurance_1": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "shipping",
+            "title": "Ships within",
+            "description": "7 business days"
+          }
+        },
+        "reassurance_2": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "payment",
+            "title": "Easy payment",
+            "description": "COD, GCash, and card payments available."
+          }
+        },
+        "reassurance_3": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "return",
+            "title": "Size exchange",
+            "description": "Accepted for unworn items with tags attached."
+          }
+        },
+        "reassurance_4": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "message",
+            "title": "Need help?",
+            "description": "Message us for sizing assistance."
+          }
+        }
+      },
+      "block_order": [
+        "reassurance_1",
+        "reassurance_2",
+        "reassurance_3",
+        "reassurance_4"
+      ],
+      "settings": {
+        "heading": "Shipping & Return",
+        "subheading": "Helpful details before checkout.",
+        "background_color": "#ffffff",
+        "card_color": "#ffffff"
+      }
+    },
+    "kasya_lp_faq": {
+      "type": "kasya-lp-faq",
+      "blocks": {
+        "faq_1": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fit & sizing",
+            "question": "Can I choose different sizes for the top and pants?",
+            "answer": "Yes. You can choose your top size and pants size separately before adding the Jane Set to cart.",
+            "open_by_default": true
+          }
+        },
+        "faq_2": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fit & sizing",
+            "question": "What size should I get?",
+            "answer": "Choose your usual size for a relaxed fit. If you prefer more room around the bust, arms, waist, or hips, we recommend sizing up.",
+            "open_by_default": false
+          }
+        },
+        "faq_3": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fit & sizing",
+            "question": "Is the fit loose or fitted?",
+            "answer": "The Jane Set has a relaxed silhouette. The blouse drapes softly, while the pants have an easy wide-leg shape.",
+            "open_by_default": false
+          }
+        },
+        "faq_4": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fabric & feel",
+            "question": "What is Premium ITY?",
+            "answer": "Premium ITY is a soft knit fabric with a smooth feel, relaxed drape, and gentle semi-stretch for everyday comfort.",
+            "open_by_default": false
+          }
+        },
+        "faq_5": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fabric & feel",
+            "question": "Is it stretchable?",
+            "answer": "It has gentle semi-stretch, but it is not highly stretchable. For extra ease, especially around the body, sizing up is recommended.",
+            "open_by_default": false
+          }
+        },
+        "faq_6": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Product details",
+            "question": "Is this sold as a set?",
+            "answer": "Yes. Jane is sold as a blouse-and-pants set. The blouse and pants are not sold separately on this page.",
+            "open_by_default": false
+          }
+        },
+        "faq_7": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Care",
+            "question": "How do I wash it?",
+            "answer": "Wash gently with mild detergent. Avoid bleach, hot water, and high-heat drying. Hang to dry to help maintain the fabric and shape.",
+            "open_by_default": false
+          }
+        },
+        "faq_8": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Exchange",
+            "question": "Can I exchange if the size does not fit?",
+            "answer": "Yes, size exchange may be requested within 7 days as long as the item is unworn, unwashed, and has the tags attached.",
+            "open_by_default": false
+          }
+        }
+      },
+      "block_order": [
+        "faq_1",
+        "faq_2",
+        "faq_3",
+        "faq_4",
+        "faq_5",
+        "faq_6",
+        "faq_7",
+        "faq_8"
+      ],
+      "settings": {
+        "heading": "FREQUENTLY ASKED",
+        "subheading": "",
+        "first_item_open_by_default": true
+      }
+    }
+  },
+  "order": [
+    "kasya_lp_product_hero",
+    "kasya_lp_fit_confidence",
+    "kasya_lp_fabric_quality",
+    "kasya_lp_lifestyle",
+    "kasya_lp_reviews",
+    "kasya_lp_reassurance",
+    "kasya_lp_faq"
+  ]
+}

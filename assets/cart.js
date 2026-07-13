@@ -11,6 +11,37 @@ class CartRemoveButton extends HTMLElement {
 
 customElements.define('cart-remove-button', CartRemoveButton);
 
+class JaneSetRemoveButton extends HTMLElement {
+  constructor() {
+    super();
+    this.addEventListener('click', (event) => {
+      event.preventDefault();
+      this.removeSet();
+    });
+  }
+
+  connectedCallback() {
+    if (this.dataset.incomplete !== 'true') return;
+
+    window.janeSetOrphansRemoving = window.janeSetOrphansRemoving || new Set();
+    const removalId = [this.dataset.topKey, this.dataset.pantsKey].filter(Boolean).join('|');
+    if (!removalId || window.janeSetOrphansRemoving.has(removalId)) return;
+
+    window.janeSetOrphansRemoving.add(removalId);
+    window.setTimeout(() => this.removeSet(), 0);
+  }
+
+  removeSet() {
+    const cartItems = this.closest('cart-items') || this.closest('cart-drawer-items');
+    if (!cartItems || typeof cartItems.removeSet !== 'function') return;
+
+    this.querySelector('button')?.setAttribute('disabled', 'disabled');
+    cartItems.removeSet([this.dataset.topKey, this.dataset.pantsKey]);
+  }
+}
+
+customElements.define('jane-set-remove-button', JaneSetRemoveButton);
+
 class CartItems extends HTMLElement {
   constructor() {
     super();
@@ -109,6 +140,49 @@ class CartItems extends HTMLElement {
       }).finally(() => {
         this.querySelectorAll('.loading-overlay').forEach((overlay) => overlay.classList.add('hidden'));
         this.disableLoading();
+      });
+  }
+
+  removeSet(keys) {
+    const lineKeys = keys.filter(Boolean);
+    if (!lineKeys.length) return;
+
+    this.classList.add('cart__items--disabled');
+    this.lineItemStatusElement.setAttribute('aria-hidden', false);
+
+    const updates = lineKeys.reduce((result, key) => {
+      result[key] = 0;
+      return result;
+    }, {});
+    const body = JSON.stringify({
+      updates,
+      sections: this.getSectionsToRender().map((section) => section.id),
+      sections_url: window.location.pathname
+    });
+    const errors = document.getElementById('cart-errors') || document.getElementById('CartDrawer-CartErrors');
+
+    fetch(`${routes.cart_update_url}`, {...fetchConfig(), ...{ body }})
+      .then((response) => response.json())
+      .then((parsedState) => {
+        if (parsedState.errors) throw new Error(parsedState.errors);
+
+        this.renderContents(parsedState);
+        document.dispatchEvent(new CustomEvent('afterCartChanged', {detail: {
+          source: 'jane-set-remove',
+          cartData: parsedState
+        }}));
+        errors?.classList.add('hidden');
+      })
+      .catch((error) => {
+        if (errors) {
+          errors.classList.remove('hidden');
+          const message = errors.querySelector('span');
+          if (message) message.textContent = error.message || window.cartStrings.error;
+        }
+      })
+      .finally(() => {
+        this.lineItemStatusElement.setAttribute('aria-hidden', true);
+        this.classList.remove('cart__items--disabled');
       });
   }
 

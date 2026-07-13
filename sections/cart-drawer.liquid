@@ -1,15 +1,40 @@
 {%-liquid
   assign has_gift_wrapping = false
+  assign drawer_visual_count = cart.item_count
+  assign counted_jane_set_ids = '|'
+
   if settings.gift_wrapping_enable and settings.gift_wrapping_show_at != 'cart_page' and settings.gift_wrapping_product != blank
     assign has_gift_wrapping = true
   endif
+
+  for item in cart.items
+    if item.properties._set_id != blank and item.properties._set_name == 'Jane Set'
+      assign jane_set_count_token = '|' | append: item.properties._set_id | append: '|'
+
+      unless counted_jane_set_ids contains jane_set_count_token
+        assign jane_set_component_quantity = 0
+        for component in cart.items
+          if component.properties._set_id == item.properties._set_id and component.properties._set_name == 'Jane Set'
+            assign jane_set_component_quantity = jane_set_component_quantity | plus: component.quantity
+          endif
+        endfor
+
+        if jane_set_component_quantity > 0
+          assign drawer_visual_count = drawer_visual_count | minus: jane_set_component_quantity | plus: 1
+        endif
+        assign counted_jane_set_ids = counted_jane_set_ids | append: item.properties._set_id | append: '|'
+      endunless
+    endif
+  endfor
 -%}
 <cart-drawer class="flex drawer drawer--cart{% if cart == empty %} is-empty{% endif %} h100">
   <div id="CartDrawer" class="cart-drawer">
     <div id="CartDrawer-Overlay"class="cart-drawer__overlay drawer__overlay"></div>
     <div class="drawer__inner drawer__inner--{{ section.settings.drawer_size }} drawer__inner--cart" role="dialog" aria-modal="true" aria-label="{{ 'sections.cart.title' | t }}" tabindex="-1">       
       <div class="drawer__header flex justify-space-between align-center">
-        <h2 class="drawer__heading margin0 h4 font-heading-bold">{{ 'sections.cart.title' | t }}</h2>
+        <h2 class="drawer__heading margin0 h4 font-heading-bold">
+          {{ 'sections.cart.title' | t }} ({{ drawer_visual_count }})
+        </h2>
         <button class="drawer__close" type="button" onclick="this.closest('cart-drawer').close()" aria-label="{{ 'accessibility.close' | t }}">{% render 'icon-close' %}</button>
       </div>
       {%- if section.settings.show_free_shipping_bar and settings.free_shipping_enable -%}
@@ -63,7 +88,35 @@
                 <div class="drawer__cart-items-wrapper">
                   <table class="cart-items cart-items--drawer" role="table">
                     <tbody role="rowgroup">
+                      {%- assign rendered_jane_set_ids = '|' -%}
                       {%- for item in cart.items -%}
+                        {%- if item.properties._set_id != blank and item.properties._set_name == 'Jane Set' -%}
+                          {%- capture jane_set_token -%}|{{ item.properties._set_id }}|{%- endcapture -%}
+                          {%- if rendered_jane_set_ids contains jane_set_token -%}
+                            {%- continue -%}
+                          {%- endif -%}
+
+                          {%- assign jane_set_top = false -%}
+                          {%- assign jane_set_pants = false -%}
+                          {%- for component in cart.items -%}
+                            {%- if component.properties._set_id == item.properties._set_id and component.properties._set_name == 'Jane Set' -%}
+                              {%- if component.properties._set_role == 'Top' -%}
+                                {%- assign jane_set_top = component -%}
+                              {%- elsif component.properties._set_role == 'Pants' -%}
+                                {%- assign jane_set_pants = component -%}
+                              {%- endif -%}
+                            {%- endif -%}
+                          {%- endfor -%}
+
+                          {%- render 'jane-set-cart-item',
+                            set_id: item.properties._set_id,
+                            top_item: jane_set_top,
+                            pants_item: jane_set_pants,
+                            in_drawer: true
+                          -%}
+                          {%- assign rendered_jane_set_ids = rendered_jane_set_ids | append: item.properties._set_id | append: '|' -%}
+                          {%- continue -%}
+                        {%- endif -%}
                         <tr id="CartDrawer-Item-{{ item.index | plus: 1 }}" class="cart-item{% unless forloop.first %} cart-item--border{% endunless %}" role="row">
                           <td class="cart-item__media" role="cell" headers="CartDrawer-ColumnProductImage">
                             {% if item.image %}

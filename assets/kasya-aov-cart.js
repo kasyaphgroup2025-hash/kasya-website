@@ -6,6 +6,7 @@
     count: '[data-kasya-aov-cart-count]',
     footerCount: '[data-kasya-aov-cart-footer-count]',
     subtotal: '[data-kasya-aov-cart-subtotal]',
+    subtotalWrap: '[data-kasya-aov-cart-subtotal-wrap]',
     recommendations: '[data-kasya-aov-cart-recommendations]',
     timerText: '[data-kasya-aov-cart-timer-text]',
     progressCopy: '[data-kasya-aov-cart-progress-copy]',
@@ -21,7 +22,8 @@
 
   const offers = {
     freeShippingCents: 200000,
-    discountCents: 300000
+    discountCents: 300000,
+    previewDiscountCents: 45000
   };
 
   const formatMoney = (cents) => {
@@ -174,14 +176,58 @@
     }
 
     renderSummary(cart) {
-      const itemLabel = `${cart.item_count} item${cart.item_count === 1 ? '' : 's'}`;
+      const visualItemCount = this.getDisplayItems(cart).length;
+      const itemLabel = `${visualItemCount} item${visualItemCount === 1 ? '' : 's'}`;
       const count = this.querySelector(selectors.count);
       const footerCount = this.querySelector(selectors.footerCount);
-      const subtotal = this.querySelector(selectors.subtotal);
+      const subtotal = this.getCartSubtotal(cart);
 
-      if (count) count.textContent = `(${cart.item_count})`;
+      if (count) count.textContent = `(${visualItemCount})`;
       if (footerCount) footerCount.textContent = itemLabel;
-      if (subtotal) subtotal.textContent = formatMoney(cart.total_price);
+      this.renderSubtotal(subtotal);
+    }
+
+    renderSubtotal(subtotal) {
+      const subtotalWrap = this.querySelector(selectors.subtotalWrap);
+
+      if (!subtotalWrap) {
+        const subtotalElement = this.querySelector(selectors.subtotal);
+        if (subtotalElement) subtotalElement.textContent = formatMoney(subtotal);
+        return;
+      }
+
+      if (subtotal >= offers.discountCents) {
+        const finalSubtotal = Math.max(subtotal - offers.previewDiscountCents, 0);
+
+        subtotalWrap.innerHTML = `
+          <div class="kasya-aov-cart__subtotal-row">
+            <span>Subtotal</span>
+            <strong>${formatMoney(subtotal)}</strong>
+          </div>
+          <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--savings">
+            <span>Save ₱450</span>
+            <strong>-${formatMoney(offers.previewDiscountCents)}</strong>
+          </div>
+          <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--final">
+            <span>Final</span>
+            <strong data-kasya-aov-cart-subtotal>${formatMoney(finalSubtotal)}</strong>
+          </div>
+        `;
+        return;
+      }
+
+      subtotalWrap.innerHTML = `
+        <div class="kasya-aov-cart__subtotal-row">
+          <span>Subtotal (<span data-kasya-aov-cart-footer-count></span>)</span>
+          <strong data-kasya-aov-cart-subtotal>${formatMoney(subtotal)}</strong>
+        </div>
+      `;
+
+      const footerCount = this.querySelector(selectors.footerCount);
+      if (footerCount && this.cart) {
+        const visualItemCount = this.getDisplayItems(this.cart).length;
+        footerCount.textContent = `${visualItemCount} item${visualItemCount === 1 ? '' : 's'}`;
+      }
     }
 
     renderOfferProgress(cart) {
@@ -221,7 +267,13 @@
         return;
       }
 
-      container.innerHTML = cart.items.map((item, index) => this.renderItem(item, index + 1)).join('');
+      container.innerHTML = this.getDisplayItems(cart).map((item) => {
+        if (item.type === 'jane-set') {
+          return this.renderJaneSetItem(item);
+        }
+
+        return this.renderItem(item.item, item.line);
+      }).join('');
     }
 
     renderItem(item, line) {
@@ -260,6 +312,80 @@
           </div>
         </article>
       `;
+    }
+
+    renderJaneSetItem(set) {
+      const image = set.top?.image || set.pants?.image;
+      const imageMarkup = image
+        ? `<img src="${image}" alt="Jane Set" loading="lazy" width="110" height="132" class="kasya-aov-cart__item-image">`
+        : '<span class="kasya-aov-cart__item-image kasya-aov-cart__item-image--placeholder"></span>';
+      const details = [set.top, set.pants].filter(Boolean).map((item) => {
+        const role = item.properties?._set_role || item.product_title;
+        const variant = item.variant_title && item.variant_title !== 'Default Title' ? item.variant_title.replaceAll(' / ', ' | ') : '';
+        const sku = item.sku ? ` SKU: ${item.sku}` : '';
+
+        return `<p class="kasya-aov-cart__item-variant">${this.escapeHtml(role)}${variant ? `: ${this.escapeHtml(variant)}` : ''}${this.escapeHtml(sku)}</p>`;
+      }).join('');
+      const quantity = Math.max(set.top?.quantity || 0, set.pants?.quantity || 0, 1);
+      const price = (set.top?.final_line_price || 0) + (set.pants?.final_line_price || 0);
+      const keys = [set.top?.key, set.pants?.key].filter(Boolean).join(',');
+
+      return `
+        <article class="kasya-aov-cart__item kasya-aov-cart__item--jane-set" data-kasya-aov-cart-jane-set data-keys="${this.escapeHtml(keys)}">
+          <div class="kasya-aov-cart__item-media">
+            ${imageMarkup}
+          </div>
+          <div class="kasya-aov-cart__item-content">
+            <div class="kasya-aov-cart__item-topline">
+              <div>
+                <p class="kasya-aov-cart__item-kicker">Set</p>
+                <span class="kasya-aov-cart__item-title">Jane Set</span>
+              </div>
+              <button type="button" class="kasya-aov-cart__item-remove" data-kasya-aov-cart-remove-set data-keys="${this.escapeHtml(keys)}" aria-label="Remove Jane Set">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            ${details}
+            <div class="kasya-aov-cart__item-bottomline">
+              <div class="kasya-aov-cart__quantity kasya-aov-cart__quantity--locked" aria-label="Jane Set quantity">
+                <span class="kasya-aov-cart__quantity-value">${quantity}</span>
+              </div>
+              <div class="kasya-aov-cart__item-price">${formatMoney(price)}</div>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    getDisplayItems(cart) {
+      const renderedSetIds = new Set();
+      const displayItems = [];
+
+      cart.items.forEach((item, index) => {
+        const setId = item.properties?._set_id;
+        const isJaneSet = setId && item.properties?._set_name === 'Jane Set';
+
+        if (!isJaneSet) {
+          displayItems.push({ type: 'item', item, line: index + 1 });
+          return;
+        }
+
+        if (renderedSetIds.has(setId)) return;
+        renderedSetIds.add(setId);
+
+        const setItems = cart.items.filter((candidate) => {
+          return candidate.properties?._set_id === setId && candidate.properties?._set_name === 'Jane Set';
+        });
+
+        displayItems.push({
+          type: 'jane-set',
+          setId,
+          top: setItems.find((candidate) => candidate.properties?._set_role === 'Top'),
+          pants: setItems.find((candidate) => candidate.properties?._set_role === 'Pants')
+        });
+      });
+
+      return displayItems;
     }
 
     renderRecommendations(cart) {
@@ -395,6 +521,12 @@
         return;
       }
 
+      const removeSetButton = event.target.closest('[data-kasya-aov-cart-remove-set]');
+      if (removeSetButton) {
+        this.removeItemsByKey((removeSetButton.dataset.keys || '').split(',').filter(Boolean));
+        return;
+      }
+
       const decreaseButton = event.target.closest('[data-kasya-aov-cart-decrease]');
       if (decreaseButton) {
         const lineElement = decreaseButton.closest('[data-kasya-aov-cart-item]');
@@ -414,6 +546,42 @@
     onKeydown(event) {
       if (event.key === 'Escape' && this.classList.contains('kasya-aov-cart--open')) {
         this.close();
+      }
+    }
+
+    async removeItemsByKey(keys) {
+      if (!keys.length) return;
+
+      try {
+        this.classList.add('kasya-aov-cart--loading');
+        const response = await fetch('/cart/update.js', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            updates: keys.reduce((updates, key) => {
+              updates[key] = 0;
+              return updates;
+            }, {})
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Unable to remove Jane Set.');
+        }
+
+        this.cart = await response.json();
+        this.renderSummary(this.cart);
+        this.renderOfferProgress(this.cart);
+        this.renderItems(this.cart);
+        this.renderRecommendations(this.cart);
+        this.syncTimerWithCart(this.cart);
+      } catch (error) {
+        console.warn(error);
+      } finally {
+        this.classList.remove('kasya-aov-cart--loading');
       }
     }
 

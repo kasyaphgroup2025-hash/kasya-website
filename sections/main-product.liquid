@@ -4,6 +4,7 @@
   data-section="{{ section.id }}"
   data-update-url="true"
   data-url="{{ product.url }}"
+  {% if request.page_type == 'product' and template.suffix == 'wl-byob' %}data-widelegpants-template="true"{% endif %}
   {% if section.settings.enable_sticky_cart %}data-sync-element="ProductInfo-Sticky-{{ section.id }}"{% endif %}
   data-option-size="{{ product.options.size }}"
 >
@@ -70,6 +71,10 @@
 
   assign has_countdown = false
   assign product_form_id = 'product-form-' | append: section.id
+  assign is_widelegpants_template = false
+  if request.page_type == 'product' and template.suffix == 'wl-byob'
+    assign is_widelegpants_template = true
+  endif
 
   assign only_use_variant_price = false
   assign price_block = section.blocks | where: "type", "price" | first
@@ -77,6 +82,17 @@
     assign only_use_variant_price = price_block.settings.variant_price
   endif
   assign cart_qty = cart | item_count_for_variant: product.selected_or_first_available_variant.id
+
+  assign is_jane_set_direct_product = false
+  assign jane_product_title = product.title | downcase
+  if product.handle == 'jane-pants-premium-ity' or product.handle == 'jane-blouse-premium-ity' or product.handle == 'jane-set-premium-ity' or product.handle == 'jane-coordinates-set-premium-ity'
+    assign is_jane_set_direct_product = true
+  elsif jane_product_title contains 'jane pants' or jane_product_title contains 'jane blouse' or jane_product_title contains 'jane set' or jane_product_title contains 'jane coordinates set'
+    assign is_jane_set_direct_product = true
+  endif
+  if template.suffix == 'kasya-acquisition-janeset'
+    assign is_jane_set_direct_product = false
+  endif
 -%}
 
 <style>
@@ -111,6 +127,11 @@
   #MediaGallery-{{ section.id }}{
     --object-fit:{%- if section.settings.image_fit -%}cover{%- else -%}contain{%- endif -%};
   }  
+  {%- if is_widelegpants_template -%}
+    #MainProduct-{{ section.id }} .product-form__input__option-value--required {
+      color: #d71920;
+    }
+  {%- endif -%}
 </style>
 <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
 {%- if product.quantity_price_breaks_configured? -%}
@@ -151,7 +172,9 @@
             {%- for block in section.blocks -%}
               {%- case block.type -%}
               {%- when '@app' -%}
-                {%- render block -%}
+                {%- unless is_jane_set_direct_product -%}
+                  {%- render block -%}
+                {%- endunless -%}
               {%- when 'text' -%}
                 {%- if block.settings.text != blank -%}
                   <p class="product__text
@@ -175,6 +198,7 @@
                   <h1 class="font-heading-extra-bold margin0{% if block.settings.title_size != 'h1' %} {{ block.settings.title_size }}{% endif %}">{{ product.title | escape }}</h1>
                 </div>
               {%- when 'price' -%}
+                {%- unless is_jane_set_direct_product -%}
                 <div class="product__price-block">
                   <div id="price-top-{{ section.id }}" {{ block.shopify_attributes }}>
                     {%- unless product.price_varies and only_use_variant_price == false -%}
@@ -222,6 +246,7 @@
                     </div>
                   {%- endif -%}  
                 </div>
+                {%- endunless -%}
               {%- when 'description' -%}
                 {%- render 'main-product-description', product: product, section: section, block: block -%}
               {%- when 'custom_liquid' -%}
@@ -272,6 +297,9 @@
                 {%- assign share_url = product.selected_variant.url | default: product.url | prepend: request.origin -%}
                 {%- render 'main-product-share', share_url: share_url, title: product.title, block: block, featured_media: featured_media -%}
               {%- when 'sale_box' -%}
+                {%- if is_jane_set_direct_product -%}
+                  {%- render 'jane-set-direct-product-notice' -%}
+                {%- else -%}
                 <div class="product__sale-box product__info-box flex flex-column{% if block.settings.picker_type == 'button' %} overflow-hidden{% endif %}" {{ block.shopify_attributes }}>
                   {% liquid
                     assign has_size_chart = false
@@ -351,7 +379,7 @@
                           <span class="product-form__error-message"></span>
                         </div>
                         {%- form 'product', product, id: product_form_id, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
-                          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}"{% if product.selected_or_first_available_variant.available == false or quantity_rule_soldout %} disabled{% endif %} class="product-variant-id">
+                          <input type="hidden" name="id" value="{% unless is_widelegpants_template %}{{ product.selected_or_first_available_variant.id }}{% endunless %}"{% if is_widelegpants_template or product.selected_or_first_available_variant.available == false or quantity_rule_soldout %} disabled{% endif %} class="product-variant-id">
                           {%- if gift_card_recipient_feature_active -%}
                             {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
                           {%- endif -%}
@@ -361,7 +389,8 @@
                               type="submit"
                               name="add"
                               class="product-form__submit button flex w100 cart-submit-button button--bold"
-                              {% if product.selected_or_first_available_variant.available == false or quantity_rule_soldout %}disabled{% endif %}
+                              {% if is_widelegpants_template or product.selected_or_first_available_variant.available == false or quantity_rule_soldout %}disabled{% endif %}
+                              {% if is_widelegpants_template %}aria-disabled="true"{% endif %}
                               {% if product.selected_or_first_available_variant.inventory_management == 'shopify' and product.selected_or_first_available_variant.inventory_quantity < product.selected_or_first_available_variant.quantity_rule.min and product.selected_or_first_available_variant.inventory_policy == 'continue' and settings.enable_pre_order_text %}data-pre-order="true"{% endif %}
                               id="card-submit-button-{{ section.id }}"
                             >
@@ -443,6 +472,7 @@
                   {%- endif -%}  
                 </div>
                 <script src="{{ 'pickup-availability.js' | asset_url }}" defer="defer"></script>
+                {%- endif -%}
               {%- when 'rating' -%}
                 {%- render 'main-product-rating', product: product, block: block, allow_anchor: true -%}
               {%- when 'complementary' -%}
@@ -556,8 +586,154 @@
     <script src="{{ 'product-price.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'complementary-products.js' | asset_url }}" defer="defer"></script>
   {%- endif -%}
+  {%- if is_widelegpants_template -%}
+    <script>
+      (() => {
+        const productInfo = document.getElementById('MainProduct-{{ section.id }}');
+        if (!productInfo || productInfo.dataset.widelegpantsInitialized === 'true') return;
+        productInfo.dataset.widelegpantsInitialized = 'true';
+
+        const variants = {{ product.variants | json }};
+        const addToCartText = {{ 'products.product.add_to_cart' | t | json }};
+        const soldOutText = {{ 'products.product.sold_out' | t | json }};
+
+        const getPicker = () => productInfo.querySelector('variant-radios[data-section="{{ section.id }}"]');
+        const getForm = () => productInfo.querySelector('#{{ product_form_id }}');
+        const getVariantInput = () => getForm()?.querySelector('input[name="id"]');
+        const getSubmitButton = () => getForm()?.querySelector('[name="add"]');
+        const getStickyForm = () => document.getElementById('product-form-Sticky-{{ section.id }}');
+        const getStickyVariantInput = () => getStickyForm()?.querySelector('input[name="id"]');
+        const getStickySubmitButton = () => getStickyForm()?.querySelector('[name="add"]');
+        const getPaymentButtons = () => productInfo.querySelectorAll('.shopify-payment-button button');
+
+        const getFieldsets = () => Array.from(productInfo.querySelectorAll('.product-form__input--variant-picker'));
+        const getCheckedInputs = () => getFieldsets().map((fieldset) => fieldset.querySelector('input[type="radio"]:checked'));
+        const getSelectedValues = () => getCheckedInputs().map((input) => input?.value || '');
+        const hasCompleteSelection = () => getSelectedValues().every(Boolean);
+        const getSelectedOptionIds = () => getCheckedInputs().map((input) => input?.dataset.optionValueId).filter(Boolean);
+
+        const findSelectedVariant = () => {
+          const selectedValues = getSelectedValues();
+          if (!selectedValues.every(Boolean)) return null;
+
+          return variants.find((variant) => {
+            return selectedValues.every((value, index) => variant.options[index] === value);
+          }) || null;
+        };
+
+        const setSubmitState = (variant) => {
+          const variantInput = getVariantInput();
+          const submitButton = getSubmitButton();
+          const submitText = submitButton?.querySelector('span');
+          const enabled = Boolean(variant?.id && variant.available && hasCompleteSelection());
+
+          if (variantInput) {
+            variantInput.value = enabled ? variant.id : '';
+            variantInput.disabled = !enabled;
+          }
+
+          const stickyVariantInput = getStickyVariantInput();
+          if (stickyVariantInput) {
+            stickyVariantInput.value = enabled ? variant.id : '';
+            stickyVariantInput.disabled = !enabled;
+          }
+
+          if (submitButton) {
+            submitButton.disabled = !enabled;
+            submitButton.setAttribute('aria-disabled', String(!enabled));
+            if (submitText) {
+              submitText.textContent = enabled ? addToCartText : (variant && !variant.available ? soldOutText : addToCartText);
+            }
+          }
+
+          const stickySubmitButton = getStickySubmitButton();
+          const stickySubmitText = stickySubmitButton?.querySelector('span');
+          if (stickySubmitButton) {
+            stickySubmitButton.disabled = !enabled;
+            stickySubmitButton.setAttribute('aria-disabled', String(!enabled));
+            if (stickySubmitText) {
+              stickySubmitText.textContent = enabled ? addToCartText : (variant && !variant.available ? soldOutText : addToCartText);
+            }
+          }
+
+          getPaymentButtons().forEach((button) => {
+            button.disabled = !enabled;
+            button.setAttribute('aria-disabled', String(!enabled));
+          });
+        };
+
+        const syncLabels = () => {
+          getFieldsets().forEach((fieldset) => {
+            const optionValue = fieldset.querySelector('.product-form__input__option-value');
+            const checkedInput = fieldset.querySelector('input[type="radio"]:checked');
+            if (!optionValue) return;
+
+            if (checkedInput) {
+              optionValue.textContent = checkedInput.value;
+              optionValue.classList.remove('product-form__input__option-value--required');
+            } else {
+              optionValue.textContent = 'Please select';
+              optionValue.classList.add('product-form__input__option-value--required');
+            }
+          });
+        };
+
+        const syncState = () => {
+          syncLabels();
+          setSubmitState(findSelectedVariant());
+        };
+
+        const resetInitialSelection = () => {
+          getPicker()?.querySelectorAll('input[type="radio"]:checked').forEach((input) => {
+            input.checked = false;
+            input.removeAttribute('checked');
+          });
+          syncState();
+        };
+
+        const handlePickerChange = (event) => {
+          const picker = getPicker();
+          if (!picker || !picker.contains(event.target)) return;
+
+          event.stopImmediatePropagation();
+          syncState();
+
+          if (!hasCompleteSelection()) return;
+
+          const selectedOptionValues = getSelectedOptionIds();
+          if (selectedOptionValues.length !== getFieldsets().length) return;
+
+          document.dispatchEvent(new CustomEvent('optionValueSelectionChange', {
+            detail: {
+              sectionId: '{{ section.id }}',
+              target: event.target,
+              selectedOptionValues
+            }
+          }));
+        };
+
+        const handleSubmit = (event) => {
+          if (hasCompleteSelection() && findSelectedVariant()?.available) return;
+          event.preventDefault();
+          event.stopPropagation();
+          syncState();
+        };
+
+        productInfo.addEventListener('change', handlePickerChange, true);
+        getForm()?.addEventListener('submit', handleSubmit, true);
+        document.addEventListener('afterVariantChanged', (event) => {
+          if (event.detail?.sectionId !== '{{ section.id }}') return;
+          window.requestAnimationFrame(syncState);
+        });
+
+        resetInitialSelection();
+      })();
+    </script>
+  {%- endif -%}
 </product-info>
-{%- render 'main-product-sticky-cart', section: section, product: product, product_form_id: product_form_id, featured_media: featured_media, cart_qty: cart_qty -%}
+{%- unless is_jane_set_direct_product -%}
+  {%- render 'main-product-sticky-cart', section: section, product: product, product_form_id: product_form_id, featured_media: featured_media, cart_qty: cart_qty -%}
+{%- endunless -%}
 {% schema %}
 {
   "name": "t:sections.main-product.name",

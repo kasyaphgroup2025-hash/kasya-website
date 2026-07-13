@@ -11,6 +11,12 @@
     {% render 'main-product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
 {% endcomment %}
 {%- assign final_section_id = section_id | default: section.id -%}
+{%- liquid
+  assign is_widelegpants_template = false
+  if request.page_type == 'product' and template.suffix == 'wl-byob'
+    assign is_widelegpants_template = true
+  endif
+-%}
 {%- unless product.has_only_default_variant -%}
   {%-liquid
     assign size_name = block.settings.size_chart_option | downcase
@@ -51,13 +57,13 @@
           {% unless has_size_chart and block.settings.size_chart_same_row_size_option and option_name_downcase == size_name %}
             <legend class="product-form__input__form-label text-small margin-bottom-1rem">
               {{ option.name }}:
-              <span class="product-form__input__option-value font-body-bold">{{ option.selected_value }}</span>
+              <span class="product-form__input__option-value font-body-bold{% if is_widelegpants_template %} product-form__input__option-value--required{% endif %}">{% if is_widelegpants_template %}Please select{% else %}{{ option.selected_value }}{% endif %}</span>
             </legend>
           {% else %}
             <div class="flex justify-space-between margin-bottom-1rem">
               <legend class="product-form__input__form-label text-small">
                 {{ option.name }}:
-                <span class="product-form__input__option-value font-body-bold">{{ option.selected_value }}</span>
+                <span class="product-form__input__option-value font-body-bold{% if is_widelegpants_template %} product-form__input__option-value--required{% endif %}">{% if is_widelegpants_template %}Please select{% else %}{{ option.selected_value }}{% endif %}</span>
               </legend>
               {%- render 'product-size-chart-button', product: product, block: block -%} 
             </div>
@@ -116,7 +122,7 @@
                   form="{{ product_form_id }}"
                   data-option-value-id="{{ value.id }}"
                   data-product-url="{{ value.product_url }}"
-                  {% if value.selected %}
+                  {% if value.selected and is_widelegpants_template == false %}
                     checked="checked"
                   {% endif %}
                 >
