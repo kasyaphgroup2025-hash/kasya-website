@@ -75,6 +75,22 @@
     </section>
 
     <div class="kasya-aov-cart__body">
+      {%- if section.settings.aov_cart_drawer_image != blank -%}
+        {%- assign cart_drawer_image_alt = section.settings.aov_cart_drawer_image.alt | default: 'Kasya cart image' -%}
+        <div class="kasya-aov-cart__image-frame">
+          {{
+            section.settings.aov_cart_drawer_image
+            | image_url: width: 720
+            | image_tag:
+              class: 'kasya-aov-cart__image',
+              loading: 'lazy',
+              sizes: '(max-width: 749px) 100vw, 420px',
+              widths: '320, 480, 720',
+              alt: cart_drawer_image_alt
+          }}
+        </div>
+      {%- endif -%}
+
       <section class="kasya-aov-cart__items" data-kasya-aov-cart-items aria-label="Cart items">
         {%- if cart.item_count > 0 -%}
           {%- for item in cart.items -%}
@@ -281,6 +297,11 @@
   "name": "Kasya AOV Cart Drawer",
   "class": "kasya-aov-cart-section",
   "settings": [
+    {
+      "type": "image_picker",
+      "id": "aov_cart_drawer_image",
+      "label": "Cart drawer image"
+    },
     {
       "type": "product_list",
       "id": "aov_new_to_kasya_products",
