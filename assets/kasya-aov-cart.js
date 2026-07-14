@@ -9,6 +9,7 @@
     subtotalWrap: '[data-kasya-aov-cart-subtotal-wrap]',
     recommendations: '[data-kasya-aov-cart-recommendations]',
     recommendationData: '[data-kasya-aov-cart-recommendation-data]',
+    stockData: '[data-kasya-aov-cart-stock-data]',
     recommendationCarousel: '[data-kasya-aov-cart-recommendation-carousel]',
     recommendationTitle: '[data-kasya-aov-cart-recommendation-title]',
     recommendationSubtitle: '[data-kasya-aov-cart-recommendation-subtitle]',
@@ -583,7 +584,12 @@
     return false;
   }
 
-  function getLowStockCount(item) {
+  function getLowStockCount(item, stockByKey = {}) {
+    const stockFromLiquid = Number(stockByKey[item?.key]);
+    if (Number.isFinite(stockFromLiquid) && stockFromLiquid > 0 && stockFromLiquid <= 5) {
+      return stockFromLiquid;
+    }
+
     const variant = item?.variant || {};
     const inventoryManagement = variant.inventory_management || item?.variant_inventory_management || item?.inventory_management || '';
     const inventoryPolicy = variant.inventory_policy || item?.variant_inventory_policy || item?.inventory_policy || '';
@@ -1131,6 +1137,7 @@
       this.previousOfferSubtotal = null;
       this.activeRecommendationProducts = [];
       this.lastRecommendationMode = newToKasya.modeHidden;
+      this.lowStockByKey = {};
       this.onClick = this.onClick.bind(this);
       this.onChange = this.onChange.bind(this);
       this.onKeydown = this.onKeydown.bind(this);
@@ -1143,6 +1150,7 @@
       document.addEventListener('keydown', this.onKeydown);
       document.addEventListener('afterUpdateQuantity', this.onCartUpdated);
       this.recommendationData = this.getRecommendationData();
+      this.lowStockByKey = this.getLowStockData();
       const initialCart = { item_count: Number(this.querySelector(selectors.count)?.textContent.replace(/\D/g, '')) || 0, items: [] };
       this.renderLayoutState(initialCart);
       this.syncTimerWithCart(initialCart);
@@ -1172,6 +1180,7 @@
     async refresh() {
       try {
         this.cart = await fetchKasyaAovCart();
+        await this.refreshLowStockData();
         this.renderSummary(this.cart);
         this.renderItems(this.cart);
         this.syncTimerWithCart(this.cart);
@@ -1343,7 +1352,7 @@
       const skuMarkup = item.sku
         ? `<p class="kasya-aov-cart__item-sku">SKU: ${this.escapeHtml(item.sku)}</p>`
         : '';
-      const lowStockCount = getLowStockCount(item);
+      const lowStockCount = getLowStockCount(item, this.lowStockByKey);
       const lowStockMarkup = lowStockCount
         ? `<p class="kasya-aov-cart__item-low-stock">${lowStockCount} only left</p>`
         : '';
@@ -1651,6 +1660,37 @@
       } catch (error) {
         console.warn('[Kasya AOV Cart] Unable to parse recommendation data.', error);
         return {};
+      }
+    }
+
+    getLowStockData(root = document) {
+      const dataElement = root.querySelector(selectors.stockData);
+      if (!dataElement) return {};
+
+      try {
+        const data = JSON.parse(dataElement.textContent || '{}');
+        return data.items || {};
+      } catch (error) {
+        console.warn('[Kasya AOV Cart] Unable to parse low stock data.', error);
+        return {};
+      }
+    }
+
+    async refreshLowStockData() {
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.set('section_id', 'kasya-aov-cart-drawer');
+        const response = await fetch(url.toString(), {
+          credentials: 'same-origin',
+          headers: { Accept: 'text/html' }
+        });
+        if (!response.ok) return;
+
+        const html = await response.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        this.lowStockByKey = this.getLowStockData(doc);
+      } catch (error) {
+        console.warn('[Kasya AOV Cart] Unable to refresh low stock data.', error);
       }
     }
 

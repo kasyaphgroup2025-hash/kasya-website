@@ -169,6 +169,21 @@
   </aside>
 </kasya-aov-cart>
 
+<script type="application/json" data-kasya-aov-cart-stock-data>
+{
+  "items": {
+    {%- assign low_stock_item_rendered = false -%}
+    {%- for item in cart.items -%}
+      {%- if item.variant.inventory_management == 'shopify' and item.variant.inventory_policy != 'continue' and item.variant.inventory_quantity > 0 and item.variant.inventory_quantity <= 5 -%}
+        {%- if low_stock_item_rendered -%},{%- endif -%}
+        {{ item.key | json }}: {{ item.variant.inventory_quantity | json }}
+        {%- assign low_stock_item_rendered = true -%}
+      {%- endif -%}
+    {%- endfor -%}
+  }
+}
+</script>
+
 {%- liquid
   assign recommendation_groups = 'love:aov_love_collection|completePants:aov_tops_collection|completeTops:aov_bottoms_collection|completeJane:aov_jane_safe_collection|fallback:aov_fallback_collection' | split: '|'
 -%}
