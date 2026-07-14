@@ -1531,6 +1531,7 @@
       const options = this.getRecommendationOptions(product);
       const selectedVariant = this.getSelectedRecommendationVariant(product, {});
       const selectedImage = getRecommendationImageForSelection(product, selectedVariant, {});
+      const tracking = this.getRecommendationTracking();
       const imageMarkup = selectedImage?.src
         ? `<img class="kasya-aov-cart__recommendation-image" src="${this.escapeHtml(selectedImage.src)}" alt="${this.escapeHtml(selectedImage.alt || product.title)}" loading="lazy">`
         : '<div class="kasya-aov-cart__recommendation-image kasya-aov-cart__recommendation-image--placeholder" aria-hidden="true"></div>';
@@ -1538,7 +1539,7 @@
       const buttonLabel = selectedVariant ? 'Add' : 'Choose options';
 
       return `
-        <article class="kasya-aov-cart__recommendation-card" data-kasya-aov-cart-recommendation-card data-product-handle="${this.escapeHtml(product.handle)}">
+        <article class="kasya-aov-cart__recommendation-card" data-kasya-aov-cart-recommendation-card data-product-handle="${this.escapeHtml(product.handle)}" data-kasya-aov-source="${this.escapeHtml(tracking.source)}" data-kasya-aov-section="${this.escapeHtml(tracking.section)}">
           <a class="kasya-aov-cart__recommendation-image-link" href="${this.escapeHtml(product.url)}" tabindex="-1" aria-hidden="true">
             ${imageMarkup}
           </a>
@@ -1546,12 +1547,43 @@
             <a href="${this.escapeHtml(product.url)}" class="kasya-aov-cart__recommendation-title">${this.escapeHtml(product.title)}</a>
             <p class="kasya-aov-cart__recommendation-price">${formatMoney(this.getRecommendationPrice(product, selectedVariant))}</p>
             ${optionMarkup ? `<div class="kasya-aov-cart__recommendation-options">${optionMarkup}</div>` : ''}
-            <button type="button" class="kasya-aov-cart__recommendation-add" data-kasya-aov-cart-recommendation-add data-variant-id="${selectedVariant?.id || ''}" ${selectedVariant ? '' : 'disabled'}>
+            <button type="button" class="kasya-aov-cart__recommendation-add" data-kasya-aov-cart-recommendation-add data-variant-id="${selectedVariant?.id || ''}" data-kasya-aov-source="${this.escapeHtml(tracking.source)}" data-kasya-aov-section="${this.escapeHtml(tracking.section)}" ${selectedVariant ? '' : 'disabled'}>
               ${buttonLabel}
             </button>
           </div>
         </article>
       `;
+    }
+
+    getRecommendationTracking(mode = this.lastRecommendationMode) {
+      if (mode === newToKasya.modeNew) {
+        return {
+          source: 'new_here',
+          section: 'New Here'
+        };
+      }
+
+      if (mode === newToKasya.modeAutomatic) {
+        return {
+          source: 'youll_love_these_too',
+          section: 'You\'ll Love These Too'
+        };
+      }
+
+      const section = this.querySelector(selectors.recommendationTitle)?.textContent?.trim() || 'AOV Recommendation';
+
+      return {
+        source: this.getRecommendationTrackingSource(section),
+        section
+      };
+    }
+
+    getRecommendationTrackingSource(section) {
+      return String(section || 'aov_recommendation')
+        .toLowerCase()
+        .replace(/&/g, ' and ')
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '') || 'aov_recommendation';
     }
 
     renderRecommendationOption(product, option) {
@@ -2024,7 +2056,18 @@
 
       try {
         this.setUpdating(true);
-        await addKasyaAovCartItem(variantId);
+        const card = button.closest('[data-kasya-aov-cart-recommendation-card]');
+        const fallbackTracking = this.getRecommendationTracking();
+        const tracking = {
+          source: button.dataset.kasyaAovSource || card?.dataset.kasyaAovSource || fallbackTracking.source,
+          section: button.dataset.kasyaAovSection || card?.dataset.kasyaAovSection || fallbackTracking.section
+        };
+
+        await addKasyaAovCartItem(variantId, 1, {
+          _kasya_aov_source: tracking.source,
+          _kasya_aov_section: tracking.section,
+          _kasya_aov_added_from: 'cart_drawer'
+        });
         await this.refresh();
       } catch (error) {
         console.warn('[Kasya AOV Cart] Unable to add recommended item.', error);
