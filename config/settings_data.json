@@ -704,6 +704,7 @@
       "kasya-aov-cart-drawer": {
         "type": "kasya-aov-cart-drawer",
         "settings": {
+          "aov_payment_gcash_logo": "shopify://shop_images/gcash-logo-y8aCB2W7.jpg",
           "aov_new_to_kasya_products": [],
           "aov_allowed_storefront_collections": [],
           "aov_excluded_recommendation_products": [],
