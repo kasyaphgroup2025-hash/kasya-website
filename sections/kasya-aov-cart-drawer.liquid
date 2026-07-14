@@ -303,6 +303,20 @@
     "premiere",
     "northern-blossom"
   ],
+  "acquisitionPairings": {
+    "wideLeg": {
+      "trigger": {%- render 'kasya-aov-product-json', product: section.settings.aov_pairing_wide_leg_trigger_product -%},
+      "products": {%- render 'kasya-aov-product-list-json', products: section.settings.aov_pairing_wide_leg_products, limit: 4 -%}
+    },
+    "aLine": {
+      "trigger": {%- render 'kasya-aov-product-json', product: section.settings.aov_pairing_a_line_trigger_product -%},
+      "products": {%- render 'kasya-aov-product-list-json', products: section.settings.aov_pairing_a_line_products, limit: 4 -%}
+    },
+    "ellaV2": {
+      "trigger": {%- render 'kasya-aov-product-json', product: section.settings.aov_pairing_ella_v2_trigger_product -%},
+      "products": {%- render 'kasya-aov-product-list-json', products: section.settings.aov_pairing_ella_v2_products, limit: 4 -%}
+    }
+  },
   "_sources": {
     {%- for group in recommendation_groups -%}
       {%- liquid
@@ -375,6 +389,43 @@
       "id": "aov_excluded_recommendation_products",
       "label": "Exclude from AOV recommendations",
       "limit": 50
+    },
+    {
+      "type": "header",
+      "content": "Acquisition Product Pairing Rules"
+    },
+    {
+      "type": "product",
+      "id": "aov_pairing_wide_leg_trigger_product",
+      "label": "Wide-Leg Pants trigger product"
+    },
+    {
+      "type": "product_list",
+      "id": "aov_pairing_wide_leg_products",
+      "label": "Wide-Leg Pants paired products",
+      "limit": 4
+    },
+    {
+      "type": "product",
+      "id": "aov_pairing_a_line_trigger_product",
+      "label": "A-Line Maxi Skirt trigger product"
+    },
+    {
+      "type": "product_list",
+      "id": "aov_pairing_a_line_products",
+      "label": "A-Line Maxi Skirt paired products",
+      "limit": 4
+    },
+    {
+      "type": "product",
+      "id": "aov_pairing_ella_v2_trigger_product",
+      "label": "Ella V2 trigger product"
+    },
+    {
+      "type": "product_list",
+      "id": "aov_pairing_ella_v2_products",
+      "label": "Ella V2 paired products",
+      "limit": 4
     }
   ],
   "presets": [

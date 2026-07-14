@@ -1,0 +1,35 @@
+{%- if product != blank -%}
+  {
+    "id": {{ product.id | json }},
+    "handle": {{ product.handle | json }},
+    "title": {{ product.title | json }},
+    "url": {{ product.url | json }},
+    "image": {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 360 | json }}{%- else -%}null{%- endif -%},
+    "images": [
+      {%- for image in product.images -%}
+        {
+          "src": {{ image | image_url: width: 360 | json }},
+          "alt": {{ image.alt | default: product.title | json }}
+        }{%- unless forloop.last -%},{%- endunless -%}
+      {%- endfor -%}
+    ],
+    "price": {{ product.price | json }},
+    "available": {{ product.available | json }},
+    "template": {{ product.template_suffix | json }},
+    "type": {{ product.type | json }},
+    "vendor": {{ product.vendor | json }},
+    "tags": {{ product.tags | json }},
+    "collections": [
+      {%- for collection in product.collections -%}
+        {
+          "handle": {{ collection.handle | json }},
+          "title": {{ collection.title | json }}
+        }{%- unless forloop.last -%},{%- endunless -%}
+      {%- endfor -%}
+    ],
+    "options": {{ product.options_with_values | json }},
+    "variants": {{ product.variants | json }}
+  }
+{%- else -%}
+  null
+{%- endif -%}
