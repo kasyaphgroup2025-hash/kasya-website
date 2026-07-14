@@ -647,10 +647,10 @@
 
 .kasya-aov-cart__payment-topline {
   align-items: center;
-  display: grid;
-  gap: 8px;
-  grid-template-columns: auto 1fr;
+  display: flex;
+  justify-content: center;
   margin-bottom: 7px;
+  text-align: center;
 }
 
 .kasya-aov-cart__payment-accept {
@@ -738,6 +738,10 @@
 
 .kasya-aov-cart__subtotal-amount {
   color: var(--kasya-aov-cart-ink);
+}
+
+.kasya-aov-cart__subtotal-row--final .kasya-aov-cart__subtotal-amount {
+  color: #D71920;
 }
 
 .kasya-aov-cart__checkout-note {
@@ -926,27 +930,13 @@
   }
 
   .kasya-aov-cart__payment-topline {
-    display: grid;
-    gap: 6px;
-    grid-template-columns: auto 1fr;
+    justify-content: center;
     margin-bottom: 5px;
   }
 
   .kasya-aov-cart__payment-accept {
-    font-size: 10px;
+    font-size: 11px;
     white-space: nowrap;
-  }
-
-  .kasya-aov-cart__payment-label {
-    font-size: 8px;
-    gap: 2px;
-    justify-content: flex-end;
-    white-space: nowrap;
-  }
-
-  .kasya-aov-cart__payment-label::before,
-  .kasya-aov-cart__payment-label::after {
-    display: none;
   }
 
   .kasya-aov-cart__payment-badges {

@@ -111,27 +111,43 @@
     <footer class="kasya-aov-cart__footer">
       <section class="kasya-aov-cart__payment" aria-label="Secure checkout options">
         <div class="kasya-aov-cart__payment-topline">
-          <span class="kasya-aov-cart__payment-accept">We accept</span>
-          <span class="kasya-aov-cart__payment-label">
-            <span aria-hidden="true">🔒</span>
-            SECURE CHECKOUT WITH
-          </span>
+          <span class="kasya-aov-cart__payment-accept">We accept:</span>
         </div>
         <div class="kasya-aov-cart__payment-badges" aria-label="Payment options">
           <span class="kasya-aov-cart__payment-badge">
-            <img src="{{ 'payment-gcash.svg' | asset_url }}" alt="GCash" width="96" height="32" loading="lazy">
+            {%- if section.settings.aov_payment_gcash_logo != blank -%}
+              {{ section.settings.aov_payment_gcash_logo | image_url: width: 160 | image_tag: alt: 'GCash', loading: 'lazy', widths: '80, 120, 160' }}
+            {%- else -%}
+              <img src="{{ 'payment-gcash.svg' | asset_url }}" alt="GCash" width="96" height="32" loading="lazy">
+            {%- endif -%}
           </span>
           <span class="kasya-aov-cart__payment-badge">
-            <img src="{{ 'payment-rcbc.svg' | asset_url }}" alt="RCBC" width="96" height="32" loading="lazy">
+            {%- if section.settings.aov_payment_rcbc_logo != blank -%}
+              {{ section.settings.aov_payment_rcbc_logo | image_url: width: 160 | image_tag: alt: 'RCBC', loading: 'lazy', widths: '80, 120, 160' }}
+            {%- else -%}
+              <img src="{{ 'payment-rcbc.svg' | asset_url }}" alt="RCBC" width="96" height="32" loading="lazy">
+            {%- endif -%}
           </span>
           <span class="kasya-aov-cart__payment-badge kasya-aov-cart__payment-badge--wide">
-            <img src="{{ 'payment-chinabank.svg' | asset_url }}" alt="Chinabank" width="116" height="32" loading="lazy">
+            {%- if section.settings.aov_payment_chinabank_logo != blank -%}
+              {{ section.settings.aov_payment_chinabank_logo | image_url: width: 180 | image_tag: alt: 'Chinabank', loading: 'lazy', widths: '100, 140, 180' }}
+            {%- else -%}
+              <img src="{{ 'payment-chinabank.svg' | asset_url }}" alt="Chinabank" width="116" height="32" loading="lazy">
+            {%- endif -%}
           </span>
           <span class="kasya-aov-cart__payment-badge">
-            <img src="{{ 'payment-bpi.svg' | asset_url }}" alt="BPI" width="96" height="32" loading="lazy">
+            {%- if section.settings.aov_payment_bpi_logo != blank -%}
+              {{ section.settings.aov_payment_bpi_logo | image_url: width: 160 | image_tag: alt: 'BPI', loading: 'lazy', widths: '80, 120, 160' }}
+            {%- else -%}
+              <img src="{{ 'payment-bpi.svg' | asset_url }}" alt="BPI" width="96" height="32" loading="lazy">
+            {%- endif -%}
           </span>
           <span class="kasya-aov-cart__payment-badge kasya-aov-cart__payment-badge--wide">
-            <img src="{{ 'payment-unionbank.svg' | asset_url }}" alt="UnionBank" width="116" height="32" loading="lazy">
+            {%- if section.settings.aov_payment_unionbank_logo != blank -%}
+              {{ section.settings.aov_payment_unionbank_logo | image_url: width: 180 | image_tag: alt: 'UnionBank', loading: 'lazy', widths: '100, 140, 180' }}
+            {%- else -%}
+              <img src="{{ 'payment-unionbank.svg' | asset_url }}" alt="UnionBank" width="116" height="32" loading="lazy">
+            {%- endif -%}
           </span>
         </div>
       </section>
@@ -301,6 +317,31 @@
       "type": "image_picker",
       "id": "aov_cart_drawer_image",
       "label": "Cart drawer image"
+    },
+    {
+      "type": "image_picker",
+      "id": "aov_payment_gcash_logo",
+      "label": "GCash logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "aov_payment_rcbc_logo",
+      "label": "RCBC logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "aov_payment_chinabank_logo",
+      "label": "Chinabank logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "aov_payment_bpi_logo",
+      "label": "BPI logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "aov_payment_unionbank_logo",
+      "label": "UnionBank logo"
     },
     {
       "type": "product_list",
