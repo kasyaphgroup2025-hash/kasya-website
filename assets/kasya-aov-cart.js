@@ -560,6 +560,10 @@
     }).filter(Boolean));
   }
 
+  function getCartProductIds(cart) {
+    return new Set((cart.items || []).map((item) => String(item.product_id || '')).filter(Boolean));
+  }
+
   function getManualRecommendationExclusionKeys(productData = {}) {
     return new Set((productData.manualExclusions || []).flatMap((product) => [
       product.handle,
@@ -615,6 +619,22 @@
     return productPrice > 0 ? '' : 'missing valid price';
   }
 
+  function acquisitionProductHasHiddenSignal(product) {
+    const hiddenSignals = ['hidden', 'unlisted', 'internal', 'component', 'virtual', 'setup'];
+    const searchableValues = [
+      product?.handle,
+      product?.title,
+      product?.template,
+      product?.type,
+      ...(product?.tags || [])
+    ].map(normalizeText).filter(Boolean);
+
+    return searchableValues.some((value) => {
+      const tokens = new Set(value.split(' ').filter(Boolean));
+      return hiddenSignals.some((signal) => tokens.has(signal) || value === signal);
+    });
+  }
+
   function getLowStockCount(item, stockByKey = {}) {
     const stockFromLiquid = Number(stockByKey[item?.key]);
     if (Number.isFinite(stockFromLiquid) && stockFromLiquid > 0 && stockFromLiquid <= 5) {
@@ -664,7 +684,7 @@
     const excluded = [];
 
     selectedProducts.forEach((product) => {
-      const key = getProductKey(product);
+      const key = String(product?.id || product?.handle || '').toLowerCase();
       const reason = getAcquisitionPairingExclusionReason(product, cart, seen, productData);
       if (key) seen.add(key);
 
@@ -906,17 +926,19 @@
   }
 
   function getAcquisitionPairingExclusionReason(product, cart, seen = new Set(), productData = {}) {
-    const cartKeys = getCartProductKeys(cart);
+    const cartHandles = getCartProductKeys(cart);
+    const cartProductIds = getCartProductIds(cart);
     const handle = String(product?.handle || '').toLowerCase();
-    const key = getProductKey(product);
+    const productId = String(product?.id || '');
+    const key = String(product?.id || product?.handle || '').toLowerCase();
 
     if (!handle) return 'missing product handle';
     if (seen.has(key)) return 'duplicate paired product';
-    if (cartKeys.has(handle)) return 'already in cart';
+    if ((productId && cartProductIds.has(productId)) || cartHandles.has(handle)) return 'already in cart';
     if (productIsManuallyExcluded(product, productData)) return 'manual AOV exclusion';
     if (!productIsAvailable(product)) return 'unavailable or sold out';
     if (isJaneComponentProduct(product)) return 'Jane Blouse/Jane Pants excluded';
-    if (productHasHiddenSignal(product)) return 'hidden/unlisted/internal/component signal';
+    if (acquisitionProductHasHiddenSignal(product)) return 'hidden/unlisted/internal/component signal';
 
     const priceOrVariantReason = getAcquisitionProductPriceOrVariantExclusionReason(product);
     if (priceOrVariantReason) return priceOrVariantReason;
