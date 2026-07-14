@@ -583,6 +583,23 @@
     return false;
   }
 
+  function getLowStockCount(item) {
+    const variant = item?.variant || {};
+    const inventoryManagement = variant.inventory_management || item?.variant_inventory_management || item?.inventory_management || '';
+    const inventoryPolicy = variant.inventory_policy || item?.variant_inventory_policy || item?.inventory_policy || '';
+    const inventoryQuantity = Number(
+      variant.inventory_quantity ??
+      item?.variant_inventory_quantity ??
+      item?.inventory_quantity
+    );
+
+    if (inventoryManagement !== 'shopify') return null;
+    if (inventoryPolicy === 'continue') return null;
+    if (!Number.isFinite(inventoryQuantity) || inventoryQuantity <= 0 || inventoryQuantity > 5) return null;
+
+    return inventoryQuantity;
+  }
+
   function getRecommendationSourceGroups(productData) {
     const sourceKeys = new Set(['love', 'completePants', 'completeTops', 'completeJane', 'fallback']);
 
@@ -1326,6 +1343,10 @@
       const skuMarkup = item.sku
         ? `<p class="kasya-aov-cart__item-sku">SKU: ${this.escapeHtml(item.sku)}</p>`
         : '';
+      const lowStockCount = getLowStockCount(item);
+      const lowStockMarkup = lowStockCount
+        ? `<p class="kasya-aov-cart__item-low-stock">${lowStockCount} only left</p>`
+        : '';
 
       return `
         <article class="kasya-aov-cart__item" data-kasya-aov-cart-item data-line="${line}" data-key="${this.escapeHtml(item.key)}">
@@ -1341,6 +1362,7 @@
             </div>
             ${variantMarkup}
             ${skuMarkup}
+            ${lowStockMarkup}
             <div class="kasya-aov-cart__item-bottomline">
               <div class="kasya-aov-cart__quantity" aria-label="Quantity controls for ${this.escapeHtml(item.product_title)}">
                 <button type="button" class="kasya-aov-cart__quantity-button" data-kasya-aov-cart-decrease data-line="${line}" data-key="${this.escapeHtml(item.key)}" data-line-key="${this.escapeHtml(item.key)}" aria-label="Decrease quantity for ${this.escapeHtml(item.product_title)}">-</button>

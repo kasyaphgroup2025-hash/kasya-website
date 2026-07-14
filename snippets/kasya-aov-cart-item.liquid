@@ -48,6 +48,10 @@
       <p class="kasya-aov-cart__item-sku">SKU: {{ item.variant.sku }}</p>
     {%- endif -%}
 
+    {%- if item.variant.inventory_management == 'shopify' and item.variant.inventory_policy != 'continue' and item.variant.inventory_quantity > 0 and item.variant.inventory_quantity <= 5 -%}
+      <p class="kasya-aov-cart__item-low-stock">{{ item.variant.inventory_quantity }} only left</p>
+    {%- endif -%}
+
     <div class="kasya-aov-cart__item-bottomline">
       <div class="kasya-aov-cart__quantity" aria-label="Quantity controls for {{ item.product.title | escape }}">
         <button
