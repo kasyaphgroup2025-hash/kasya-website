@@ -1344,6 +1344,40 @@
         if (!response.ok) throw new Error('Unable to remove an incomplete Jane Set.');
       }
 
+      function updateCartIconBubbleFromResponse(cartResponse, cartState) {
+        const cartIcon = document.getElementById('cart-icon-bubble');
+        if (!cartIcon) return;
+
+        const cartIconHtml = cartResponse?.sections?.['cart-icon-bubble'];
+        if (cartIconHtml) {
+          const parsedHtml = new DOMParser().parseFromString(cartIconHtml, 'text/html');
+          const updatedCartIcon = parsedHtml.getElementById('cart-icon-bubble') || parsedHtml.querySelector('#cart-icon-bubble');
+          const updatedCartIconContent = updatedCartIcon || parsedHtml.querySelector('.shopify-section') || parsedHtml.body;
+          if (updatedCartIconContent) {
+            cartIcon.innerHTML = updatedCartIconContent.innerHTML;
+            return;
+          }
+        }
+
+        if (!cartState || typeof cartState.item_count !== 'number') return;
+        cartIcon.querySelectorAll('.cart-count-bubble span[aria-hidden="true"], .cart-count-bubble span:not(.visually-hidden)').forEach((countNode) => {
+          countNode.textContent = cartState.item_count;
+        });
+      }
+
+      function openKasyaAovCartAfterJaneSetAdd(cartResponse, cartState) {
+        if (!window.KasyaAovCart || typeof window.KasyaAovCart.open !== 'function') return false;
+
+        try {
+          updateCartIconBubbleFromResponse(cartResponse, cartState);
+          window.KasyaAovCart.open();
+          return true;
+        } catch (aovError) {
+          console.warn('[Jane Set Add] AOV cart drawer refresh was unavailable.', aovError);
+          return false;
+        }
+      }
+
       try {
         const nativeCartDrawer = document.querySelector('cart-drawer');
         let canUseNativeCartDrawer =
@@ -1363,6 +1397,7 @@
             console.warn('[Jane Set Add] Native cart drawer sections are unavailable.', drawerError);
           }
         }
+        sections = [...new Set([...sections, 'cart-icon-bubble'])];
 
         console.info('[Jane Set Add] adding reviewed set');
         const response = await fetch('/cart/add.js', {
@@ -1439,7 +1474,9 @@
         updateControls();
 
         let cartWasOpened = false;
-        if (canUseNativeCartDrawer && cartResponse.sections) {
+        cartWasOpened = openKasyaAovCartAfterJaneSetAdd(cartResponse, verifiedCart);
+
+        if (!cartWasOpened && canUseNativeCartDrawer && cartResponse.sections) {
           try {
             nativeCartDrawer.setActiveElement?.(document.activeElement);
             nativeCartDrawer.classList.remove('is-empty');
