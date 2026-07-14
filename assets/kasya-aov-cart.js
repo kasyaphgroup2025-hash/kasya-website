@@ -470,7 +470,7 @@
 
   function getRecommendationAvailableVariants(product) {
     return (product?.variants || []).filter((variant) => {
-      if (!variant.available || Number(variant.price) <= 0) return false;
+      if (!variantIsAvailable(variant) || Number(variant.price) <= 0) return false;
       return !variantHasBlockedSignal(variant);
     });
   }
@@ -574,14 +574,20 @@
     ].some((value) => exclusions.has(String(value || '').toLowerCase()));
   }
 
-  function productHasValidPrice(product) {
-    if ((product?.variants || []).length) {
-      return getRecommendationAvailableVariants(product).length > 0;
+  function variantIsAvailable(variant) {
+    return variant?.available !== false && variant?.available !== 'false';
+  }
+
+  function getProductPriceOrVariantExclusionReason(product) {
+    const variants = product?.variants || [];
+
+    if (variants.length) {
+      if (!variants.some((variant) => Number(variant.price) > 0)) return 'missing valid price';
+      if (!getRecommendationAvailableVariants(product).length) return 'no valid available variant';
+      return '';
     }
 
-    if (Number(product?.price) > 0) return true;
-
-    return false;
+    return Number(product?.price) > 0 ? '' : 'missing valid price';
   }
 
   function getLowStockCount(item, stockByKey = {}) {
@@ -758,7 +764,8 @@
     if (productHasHiddenSignal(product)) return 'hidden/unlisted/internal/component signal';
     if (requireAllowedStorefrontCollection && !productIsInAllowedStorefrontCollection(product, productData)) return 'not in allowed storefront collections';
     if ((product.variants || []).length && productHasSkintoneVariantSignal(product) && !getRecommendationAvailableVariants(product).length) return 'skintone variant/option signal';
-    if (!productHasValidPrice(product)) return 'missing valid price';
+    const priceOrVariantReason = getProductPriceOrVariantExclusionReason(product);
+    if (priceOrVariantReason) return priceOrVariantReason;
 
     return '';
   }
@@ -820,9 +827,9 @@
     const isReturningCustomer = loggedIn && ordersCount > 0;
     /*
       Guest purchase history cannot be confirmed unless the customer logs in.
-      Guests are therefore treated as likely new visitors whenever starter products are configured.
+      Guests are treated as unknown, not confirmed new customers.
     */
-    const isLikelyNewGuest = !loggedIn;
+    const isLikelyNewGuest = false;
 
     return {
       loggedIn,
@@ -830,10 +837,10 @@
       isLoggedInNewCustomer,
       isReturningCustomer,
       isLikelyNewGuest,
-      isNewOrLikelyNew: isLoggedInNewCustomer || isLikelyNewGuest,
+      isNewOrLikelyNew: isLoggedInNewCustomer,
       customerMode: loggedIn
         ? (isReturningCustomer ? 'logged-in-returning' : 'logged-in-new')
-        : 'guest-likely-new'
+        : 'guest-unknown'
     };
   }
 
@@ -922,6 +929,7 @@
     return {
       selectedCount: selectedProducts.length,
       renderedCount: finalProducts.length,
+      requiredMinimum: 2,
       finalProducts: finalProducts.map((product) => ({
         handle: product.handle,
         title: product.title
@@ -930,10 +938,24 @@
     };
   }
 
+  function getNewToKasyaInactiveReason(customerContext, starterProductCount) {
+    if (!customerContext.isNewOrLikelyNew) {
+      return customerContext.loggedIn
+        ? 'logged-in returning or unknown customer'
+        : 'guest customer treated as unknown';
+    }
+
+    if (starterProductCount < 2) {
+      return 'fewer than 2 valid starter products';
+    }
+
+    return '';
+  }
+
   async function getKasyaAovRecommendations(cart, productData = {}, customerContext = getCustomerRecommendationContext(productData)) {
     const starterProducts = getNewToKasyaStarterProducts(cart, productData);
 
-    if (customerContext.isNewOrLikelyNew && starterProducts.length) {
+    if (customerContext.isNewOrLikelyNew && starterProducts.length >= 2) {
       return {
         similar: [],
         complete: [],
@@ -1073,8 +1095,13 @@
       },
       newToKasya: {
         active: recommendations.mode === newToKasya.modeNew,
+        eligibleCustomer: customerContext.isNewOrLikelyNew,
+        inactiveReason: recommendations.mode === newToKasya.modeNew
+          ? ''
+          : getNewToKasyaInactiveReason(customerContext, starterDebug.renderedCount),
         selectedCount: starterDebug.selectedCount,
         renderedCount: recommendations.mode === newToKasya.modeNew ? recommendations.merged.length : starterDebug.renderedCount,
+        requiredMinimum: starterDebug.requiredMinimum,
         finalProducts: starterDebug.finalProducts,
         excluded: starterDebug.excluded
       },
