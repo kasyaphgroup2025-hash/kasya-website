@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 116 32" role="img" aria-labelledby="title">
+  <title id="title">Chinabank</title>
+  <rect width="116" height="32" rx="6" fill="#fff"/>
+  <circle cx="17" cy="16" r="9" fill="#d71920"/>
+  <path d="M17 8.5l2.2 5.1 5.5.5-4.1 3.6 1.2 5.4-4.8-2.8-4.8 2.8 1.2-5.4-4.1-3.6 5.5-.5z" fill="#f3c43b"/>
+  <text x="31" y="20.2" fill="#d71920" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="800">Chinabank</text>
+</svg>

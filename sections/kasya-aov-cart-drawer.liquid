@@ -101,27 +101,21 @@
             SECURE CHECKOUT WITH
           </span>
         </div>
-        {%- comment -%}
-          Payment image filenames prepared for upload:
-          payment-gcash.png, payment-rcbc.png, payment-chinabank.png,
-          payment-bpi.png, payment-unionbank.png.
-          No matching logo assets are present yet, so placeholders are rendered.
-        {%- endcomment -%}
         <div class="kasya-aov-cart__payment-badges" aria-label="Payment options">
-          <span class="kasya-aov-cart__payment-badge" data-payment-logo-file="payment-gcash.png">
-            <span>GCash</span>
+          <span class="kasya-aov-cart__payment-badge">
+            <img src="{{ 'payment-gcash.svg' | asset_url }}" alt="GCash" width="96" height="32" loading="lazy">
           </span>
-          <span class="kasya-aov-cart__payment-badge" data-payment-logo-file="payment-rcbc.png">
-            <span>RCBC</span>
+          <span class="kasya-aov-cart__payment-badge">
+            <img src="{{ 'payment-rcbc.svg' | asset_url }}" alt="RCBC" width="96" height="32" loading="lazy">
           </span>
-          <span class="kasya-aov-cart__payment-badge" data-payment-logo-file="payment-chinabank.png">
-            <span>Chinabank</span>
+          <span class="kasya-aov-cart__payment-badge kasya-aov-cart__payment-badge--wide">
+            <img src="{{ 'payment-chinabank.svg' | asset_url }}" alt="Chinabank" width="116" height="32" loading="lazy">
           </span>
-          <span class="kasya-aov-cart__payment-badge" data-payment-logo-file="payment-bpi.png">
-            <span>BPI</span>
+          <span class="kasya-aov-cart__payment-badge">
+            <img src="{{ 'payment-bpi.svg' | asset_url }}" alt="BPI" width="96" height="32" loading="lazy">
           </span>
-          <span class="kasya-aov-cart__payment-badge" data-payment-logo-file="payment-unionbank.png">
-            <span>UnionBank</span>
+          <span class="kasya-aov-cart__payment-badge kasya-aov-cart__payment-badge--wide">
+            <img src="{{ 'payment-unionbank.svg' | asset_url }}" alt="UnionBank" width="116" height="32" loading="lazy">
           </span>
         </div>
       </section>
@@ -130,7 +124,7 @@
         <div class="kasya-aov-cart__subtotal" data-kasya-aov-cart-subtotal-wrap>
           <div class="kasya-aov-cart__subtotal-row">
             <span>Subtotal (<span data-kasya-aov-cart-footer-count>{{ cart.item_count }} item{% unless cart.item_count == 1 %}s{% endunless %}</span>)</span>
-            <strong data-kasya-aov-cart-subtotal>{{ cart.total_price | money }}</strong>
+            <strong class="kasya-aov-cart__subtotal-amount" data-kasya-aov-cart-subtotal>{{ cart.total_price | money }}</strong>
           </div>
         </div>
         <p class="kasya-aov-cart__checkout-note">Shipping calculated at checkout.</p>

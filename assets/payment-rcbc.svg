@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 32" role="img" aria-labelledby="title">
+  <title id="title">RCBC</title>
+  <rect width="96" height="32" rx="6" fill="#fff"/>
+  <rect x="9" y="9" width="15" height="15" rx="2" fill="#d71920"/>
+  <path d="M12 19.8h9v-3.1h-9v-2h9V11.8h-9z" fill="#fff"/>
+  <text x="31" y="20.5" fill="#123c7c" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="800">RCBC</text>
+</svg>

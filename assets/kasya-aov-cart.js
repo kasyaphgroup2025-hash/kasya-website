@@ -1211,7 +1211,7 @@
         subtotalWrap.innerHTML = `
           <div class="kasya-aov-cart__subtotal-row">
             <span>Subtotal</span>
-            <strong>${formatMoney(subtotal)}</strong>
+            <strong class="kasya-aov-cart__subtotal-amount">${formatMoney(subtotal)}</strong>
           </div>
           <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--savings">
             <span>Save ₱450</span>
@@ -1219,7 +1219,7 @@
           </div>
           <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--final">
             <span>Final</span>
-            <strong data-kasya-aov-cart-subtotal>${formatMoney(finalSubtotal)}</strong>
+            <strong class="kasya-aov-cart__subtotal-amount" data-kasya-aov-cart-subtotal>${formatMoney(finalSubtotal)}</strong>
           </div>
         `;
         return;
@@ -1228,7 +1228,7 @@
       subtotalWrap.innerHTML = `
         <div class="kasya-aov-cart__subtotal-row">
           <span>Subtotal (<span data-kasya-aov-cart-footer-count></span>)</span>
-          <strong data-kasya-aov-cart-subtotal>${formatMoney(subtotal)}</strong>
+          <strong class="kasya-aov-cart__subtotal-amount" data-kasya-aov-cart-subtotal>${formatMoney(subtotal)}</strong>
         </div>
       `;
 

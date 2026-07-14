@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 32" role="img" aria-labelledby="title">
+  <title id="title">BPI</title>
+  <rect width="96" height="32" rx="6" fill="#fff"/>
+  <rect x="10" y="8" width="17" height="17" rx="2" fill="#a00013"/>
+  <path d="M13 21.5h11M15 18.5h7M18.5 11.5l5 4h-10z" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="36" y="21" fill="#a00013" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800">BPI</text>
+</svg>
