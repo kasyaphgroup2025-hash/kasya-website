@@ -628,10 +628,52 @@
     return Array.isArray(productData?.newToKasya) ? productData.newToKasya : [];
   }
 
+  function productIsAvailable(product) {
+    return product?.available !== false && product?.available !== 'false';
+  }
+
   function getAcquisitionPairings(productData = {}) {
     return productData.acquisitionPairings && typeof productData.acquisitionPairings === 'object'
       ? productData.acquisitionPairings
       : {};
+  }
+
+  function getFilteredAcquisitionPairingProducts(pairingData = {}, cart, productData = {}) {
+    const selectedProducts = Array.isArray(pairingData.products) ? pairingData.products.slice(0, 4) : [];
+    const finalProducts = filterRecommendationProducts(
+      selectedProducts,
+      cart,
+      new Set(),
+      productData,
+      { requireAllowedStorefrontCollection: false }
+    );
+    const finalKeys = new Set(finalProducts.map(getProductKey));
+    const seen = new Set();
+    const excluded = selectedProducts.map((product, index) => {
+      const key = getProductKey(product);
+      let reason = getProductExclusionReason(
+        product,
+        cart,
+        new Set(),
+        seen,
+        productData,
+        { requireAllowedStorefrontCollection: false }
+      );
+
+      if (!reason && !finalKeys.has(key)) {
+        reason = index >= 4 ? 'beyond max 4 paired products' : 'not rendered';
+      }
+
+      if (key) seen.add(key);
+
+      return reason ? getDebugProductInfo(product, reason, 'acquisition-pairing') : null;
+    }).filter(Boolean);
+
+    return {
+      selectedProducts,
+      finalProducts,
+      excluded
+    };
   }
 
   function getAcquisitionPairingMatch(cart, productData = {}) {
@@ -644,21 +686,56 @@
       const triggerKey = getProductKey(trigger);
       if (!trigger || !triggerKey || !cartKeys.has(triggerKey)) return null;
 
-      const products = filterRecommendationProducts(
-        Array.isArray(data.products) ? data.products : [],
-        cart,
-        new Set(),
-        productData,
-        { requireAllowedStorefrontCollection: false }
-      );
+      const filteredProducts = getFilteredAcquisitionPairingProducts(data, cart, productData);
 
       return {
         key: pairing.key,
         label: pairing.label,
         trigger,
-        products
+        selectedProducts: filteredProducts.selectedProducts,
+        products: filteredProducts.finalProducts,
+        excluded: filteredProducts.excluded
       };
     }).find(Boolean) || null;
+  }
+
+  function getAcquisitionPairingDebug(cart, productData = {}) {
+    const pairings = getAcquisitionPairings(productData);
+    const match = getAcquisitionPairingMatch(cart, productData);
+    const groups = acquisitionPairingPriority.reduce((debugGroups, pairing) => {
+      const data = pairings[pairing.key] || {};
+      const filteredProducts = getFilteredAcquisitionPairingProducts(data, cart, productData);
+      const triggerKey = getProductKey(data.trigger);
+      const cartHasTrigger = Boolean(triggerKey && getCartProductKeys(cart).has(triggerKey));
+
+      debugGroups[pairing.key] = {
+        label: pairing.label,
+        cartHasTrigger,
+        trigger: data.trigger
+          ? {
+              handle: data.trigger.handle,
+              title: data.trigger.title
+            }
+          : null,
+        selectedCount: filteredProducts.selectedProducts.length,
+        renderedCount: filteredProducts.finalProducts.length,
+        finalProducts: filteredProducts.finalProducts.map((product) => ({
+          handle: product.handle,
+          title: product.title
+        })),
+        excluded: filteredProducts.excluded
+      };
+
+      return debugGroups;
+    }, {});
+
+    return {
+      activeGroup: match?.products?.length ? match.key : null,
+      selectedCount: match?.selectedProducts?.length || 0,
+      renderedCount: match?.products?.length || 0,
+      excluded: match?.excluded || [],
+      groups
+    };
   }
 
   function getAllRecommendationCandidates(productData) {
@@ -796,7 +873,7 @@
     if (usedKeys.has(key)) return 'already selected in another column';
     if (cartKeys.has(String(product.handle || '').toLowerCase())) return 'already in cart';
     if (productIsManuallyExcluded(product, productData)) return 'manual AOV exclusion';
-    if (!product.available) return 'unavailable or sold out';
+    if (!productIsAvailable(product)) return 'unavailable or sold out';
     if (isJaneComponentProduct(product)) return 'Jane Blouse/Jane Pants excluded';
     if (productHasColorSplitBundleSignal(product)) return 'color-split bundle product';
     if (productHasBundleSignal(product)) return 'bundle signal found';
@@ -1142,6 +1219,7 @@
     const cartProfiles = getCartProfiles(cart, candidates);
     const sourceCollections = productData._sources || {};
     const starterDebug = getNewToKasyaStarterDebug(cart, productData);
+    const acquisitionPairingDebug = getAcquisitionPairingDebug(cart, productData);
     const candidateCounts = getRecommendationSourceGroups(productData).reduce((counts, [key, products]) => {
       counts[key] = products.length;
       return counts;
@@ -1181,7 +1259,10 @@
         finalProducts: starterDebug.finalProducts,
         excluded: starterDebug.excluded
       },
-      acquisitionPairing: recommendations.acquisitionPairing || { active: false },
+      acquisitionPairing: {
+        ...(recommendations.acquisitionPairing || { active: false }),
+        ...acquisitionPairingDebug
+      },
       finalMode: recommendations.mode,
       sourceCollections,
       allowedStorefrontCollections: {
@@ -1836,6 +1917,8 @@
       console.table(debug.finalProducts.similar);
       console.table(debug.finalProducts.complete);
       console.table(debug.finalProducts.merged);
+      console.table(debug.acquisitionPairing.groups || {});
+      console.table(debug.acquisitionPairing.excluded || []);
       console.table(debug.newToKasya.finalProducts);
       console.table(debug.newToKasya.excluded);
       console.table(debug.excludedByBundle);
