@@ -40,6 +40,12 @@
     modeHidden: 'hidden'
   };
 
+  const acquisitionPairingPriority = [
+    { key: 'ellaV2', label: 'Ella V2' },
+    { key: 'aLine', label: 'A-Line Maxi Skirt' },
+    { key: 'wideLeg', label: 'Wide-Leg Pants' }
+  ];
+
   const storefrontVisibility = {
     bundleKeywords: [
       'bundle',
@@ -622,6 +628,39 @@
     return Array.isArray(productData?.newToKasya) ? productData.newToKasya : [];
   }
 
+  function getAcquisitionPairings(productData = {}) {
+    return productData.acquisitionPairings && typeof productData.acquisitionPairings === 'object'
+      ? productData.acquisitionPairings
+      : {};
+  }
+
+  function getAcquisitionPairingMatch(cart, productData = {}) {
+    const pairings = getAcquisitionPairings(productData);
+    const cartKeys = getCartProductKeys(cart);
+
+    return acquisitionPairingPriority.map((pairing) => {
+      const data = pairings[pairing.key] || {};
+      const trigger = data.trigger;
+      const triggerKey = getProductKey(trigger);
+      if (!trigger || !triggerKey || !cartKeys.has(triggerKey)) return null;
+
+      const products = filterRecommendationProducts(
+        Array.isArray(data.products) ? data.products : [],
+        cart,
+        new Set(),
+        productData,
+        { requireAllowedStorefrontCollection: false }
+      );
+
+      return {
+        key: pairing.key,
+        label: pairing.label,
+        trigger,
+        products
+      };
+    }).find(Boolean) || null;
+  }
+
   function getAllRecommendationCandidates(productData) {
     const seen = new Set();
 
@@ -953,6 +992,37 @@
   }
 
   async function getKasyaAovRecommendations(cart, productData = {}, customerContext = getCustomerRecommendationContext(productData)) {
+    const acquisitionPairing = getAcquisitionPairingMatch(cart, productData);
+    if (acquisitionPairing?.products?.length) {
+      return {
+        similar: [],
+        complete: [],
+        merged: acquisitionPairing.products.slice(0, 4),
+        usedFallback: false,
+        automatic: {
+          refs: getCartProductRefs(cart),
+          related: [],
+          complementary: [],
+          relatedCount: 0,
+          complementaryCount: 0
+        },
+        mode: newToKasya.modeAutomatic,
+        title: 'Frequently Bought Together',
+        subtitle: 'Based on what customers usually buy together.',
+        starterProductCount: getNewToKasyaStarterProducts(cart, productData).length,
+        acquisitionPairing: {
+          active: true,
+          key: acquisitionPairing.key,
+          label: acquisitionPairing.label,
+          trigger: {
+            handle: acquisitionPairing.trigger.handle,
+            title: acquisitionPairing.trigger.title
+          },
+          productCount: acquisitionPairing.products.length
+        }
+      };
+    }
+
     const starterProducts = getNewToKasyaStarterProducts(cart, productData);
 
     if (customerContext.isNewOrLikelyNew && starterProducts.length >= 2) {
@@ -971,7 +1041,10 @@
         mode: newToKasya.modeNew,
         title: 'New to Kasya? Start Here',
         subtitle: 'Easy bestsellers to try first.',
-        starterProductCount: starterProducts.length
+        starterProductCount: starterProducts.length,
+        acquisitionPairing: {
+          active: false
+        }
       };
     }
 
@@ -1029,7 +1102,10 @@
       mode: merged.length ? newToKasya.modeAutomatic : newToKasya.modeHidden,
       title: 'You’ll Love These Too',
       subtitle: 'Smart picks based on what’s in your cart.',
-      starterProductCount: starterProducts.length
+      starterProductCount: starterProducts.length,
+      acquisitionPairing: {
+        active: false
+      }
     };
   }
 
@@ -1105,6 +1181,7 @@
         finalProducts: starterDebug.finalProducts,
         excluded: starterDebug.excluded
       },
+      acquisitionPairing: recommendations.acquisitionPairing || { active: false },
       finalMode: recommendations.mode,
       sourceCollections,
       allowedStorefrontCollections: {
