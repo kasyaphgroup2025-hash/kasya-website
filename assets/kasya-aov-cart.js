@@ -596,6 +596,25 @@
     return Number(product?.price) > 0 ? '' : 'missing valid price';
   }
 
+  function getAcquisitionProductPriceOrVariantExclusionReason(product) {
+    const variants = product?.variants || [];
+    const productPrice = Number(product?.price);
+
+    if (variants.length) {
+      const hasPricedVariant = variants.some((variant) => Number(variant.price) > 0 || productPrice > 0);
+      if (!hasPricedVariant) return 'missing valid price';
+
+      const hasAvailablePricedVariant = variants.some((variant) => {
+        return variantIsAvailable(variant) && (Number(variant.price) > 0 || productPrice > 0);
+      });
+      if (!hasAvailablePricedVariant) return 'no valid available variant';
+
+      return '';
+    }
+
+    return productPrice > 0 ? '' : 'missing valid price';
+  }
+
   function getLowStockCount(item, stockByKey = {}) {
     const stockFromLiquid = Number(stockByKey[item?.key]);
     if (Number.isFinite(stockFromLiquid) && stockFromLiquid > 0 && stockFromLiquid <= 5) {
@@ -640,34 +659,22 @@
 
   function getFilteredAcquisitionPairingProducts(pairingData = {}, cart, productData = {}) {
     const selectedProducts = Array.isArray(pairingData.products) ? pairingData.products.slice(0, 4) : [];
-    const finalProducts = filterRecommendationProducts(
-      selectedProducts,
-      cart,
-      new Set(),
-      productData,
-      { requireAllowedStorefrontCollection: false }
-    );
-    const finalKeys = new Set(finalProducts.map(getProductKey));
     const seen = new Set();
-    const excluded = selectedProducts.map((product, index) => {
+    const finalProducts = [];
+    const excluded = [];
+
+    selectedProducts.forEach((product) => {
       const key = getProductKey(product);
-      let reason = getProductExclusionReason(
-        product,
-        cart,
-        new Set(),
-        seen,
-        productData,
-        { requireAllowedStorefrontCollection: false }
-      );
-
-      if (!reason && !finalKeys.has(key)) {
-        reason = index >= 4 ? 'beyond max 4 paired products' : 'not rendered';
-      }
-
+      const reason = getAcquisitionPairingExclusionReason(product, cart, seen, productData);
       if (key) seen.add(key);
 
-      return reason ? getDebugProductInfo(product, reason, 'acquisition-pairing') : null;
-    }).filter(Boolean);
+      if (reason) {
+        excluded.push(getDebugProductInfo(product, reason, 'acquisition-pairing'));
+        return;
+      }
+
+      finalProducts.push(product);
+    });
 
     return {
       selectedProducts,
@@ -719,6 +726,10 @@
           : null,
         selectedCount: filteredProducts.selectedProducts.length,
         renderedCount: filteredProducts.finalProducts.length,
+        selectedProducts: filteredProducts.selectedProducts.map((product) => ({
+          handle: product.handle,
+          title: product.title
+        })),
         finalProducts: filteredProducts.finalProducts.map((product) => ({
           handle: product.handle,
           title: product.title
@@ -733,6 +744,14 @@
       activeGroup: match?.products?.length ? match.key : null,
       selectedCount: match?.selectedProducts?.length || 0,
       renderedCount: match?.products?.length || 0,
+      selectedProducts: (match?.selectedProducts || []).map((product) => ({
+        handle: product.handle,
+        title: product.title
+      })),
+      finalProducts: (match?.products || []).map((product) => ({
+        handle: product.handle,
+        title: product.title
+      })),
       excluded: match?.excluded || [],
       groups
     };
@@ -881,6 +900,25 @@
     if (requireAllowedStorefrontCollection && !productIsInAllowedStorefrontCollection(product, productData)) return 'not in allowed storefront collections';
     if ((product.variants || []).length && productHasSkintoneVariantSignal(product) && !getRecommendationAvailableVariants(product).length) return 'skintone variant/option signal';
     const priceOrVariantReason = getProductPriceOrVariantExclusionReason(product);
+    if (priceOrVariantReason) return priceOrVariantReason;
+
+    return '';
+  }
+
+  function getAcquisitionPairingExclusionReason(product, cart, seen = new Set(), productData = {}) {
+    const cartKeys = getCartProductKeys(cart);
+    const handle = String(product?.handle || '').toLowerCase();
+    const key = getProductKey(product);
+
+    if (!handle) return 'missing product handle';
+    if (seen.has(key)) return 'duplicate paired product';
+    if (cartKeys.has(handle)) return 'already in cart';
+    if (productIsManuallyExcluded(product, productData)) return 'manual AOV exclusion';
+    if (!productIsAvailable(product)) return 'unavailable or sold out';
+    if (isJaneComponentProduct(product)) return 'Jane Blouse/Jane Pants excluded';
+    if (productHasHiddenSignal(product)) return 'hidden/unlisted/internal/component signal';
+
+    const priceOrVariantReason = getAcquisitionProductPriceOrVariantExclusionReason(product);
     if (priceOrVariantReason) return priceOrVariantReason;
 
     return '';
