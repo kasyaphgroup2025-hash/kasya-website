@@ -99,25 +99,56 @@ if (!customElements.get('product-form')) {
           const finalResponse = {
             sections: response
           };
-          this.completeAddToCartAction(finalResponse, variantId);
+          this.completeAddToCartAction(finalResponse, variantId, { useKasyaAovCart: false });
         });
     }
 
-    completeAddToCartAction(response, variantId) {
+    completeAddToCartAction(response, variantId, options = {}) {
       const quickAddDrawer = this.closest('quick-add-drawer');
+      const shouldUseKasyaAovCart = options.useKasyaAovCart !== false && window.KasyaAovCart && typeof window.KasyaAovCart.open === 'function';
+      const renderOriginalCart = () => {
+        this.cart.renderContents(response);
+      };
+      const openKasyaAovCart = () => {
+        if (!shouldUseKasyaAovCart) return false;
+
+        try {
+          this.updateCartIconBubble(response);
+          window.KasyaAovCart.open();
+          return true;
+        } catch (error) {
+          console.warn('[Kasya AOV Cart] Add-to-cart hook failed; falling back to original cart drawer.', error);
+          return false;
+        }
+      };
+      const completeCartOpen = () => {
+        if (!openKasyaAovCart()) renderOriginalCart();
+      };
+
       if (quickAddDrawer) {
         document.body.addEventListener('drawerClosed', () => {
-          setTimeout(() => { this.cart.renderContents(response) });
+          setTimeout(completeCartOpen);
         }, { once: true });
         quickAddDrawer.close();
       } else {
-        this.cart.renderContents(response);
+        completeCartOpen();
       }
       document.dispatchEvent(new CustomEvent('afterCartChanged', {detail: {
         productVariantId: variantId,
         source: 'product-form',
         cartData: response
       }}));
+    }
+
+    updateCartIconBubble(response) {
+      const cartIconHtml = response?.sections?.['cart-icon-bubble'];
+      const currentCartIcon = document.getElementById('cart-icon-bubble');
+      if (!cartIconHtml || !currentCartIcon) return;
+
+      const parsedHtml = new DOMParser().parseFromString(cartIconHtml, 'text/html');
+      const updatedCartIcon = parsedHtml.getElementById('cart-icon-bubble') || parsedHtml.querySelector('#cart-icon-bubble');
+      const updatedCartIconContent = updatedCartIcon || parsedHtml.querySelector('.shopify-section') || parsedHtml.body;
+      if (updatedCartIconContent) currentCartIcon.innerHTML = updatedCartIconContent.innerHTML;
     }
 
     toggleSubmitButton(disable = true, text) {

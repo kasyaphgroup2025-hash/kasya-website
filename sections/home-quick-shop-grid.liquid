@@ -857,6 +857,30 @@
         document.documentElement.classList.add('overflow-hidden');
       };
 
+      const updateCartIconBubbleFromResponse = (response) => {
+        const cartIconHtml = response?.sections?.['cart-icon-bubble'];
+        const currentCartIcon = document.getElementById('cart-icon-bubble');
+        if (!cartIconHtml || !currentCartIcon) return;
+
+        const parsedHtml = new DOMParser().parseFromString(cartIconHtml, 'text/html');
+        const updatedCartIcon = parsedHtml.getElementById('cart-icon-bubble') || parsedHtml.querySelector('#cart-icon-bubble');
+        const updatedCartIconContent = updatedCartIcon || parsedHtml.querySelector('.shopify-section') || parsedHtml.body;
+        if (updatedCartIconContent) currentCartIcon.innerHTML = updatedCartIconContent.innerHTML;
+      };
+
+      const openKasyaAovCartAfterAdd = (response) => {
+        if (!window.KasyaAovCart || typeof window.KasyaAovCart.open !== 'function') return false;
+
+        try {
+          updateCartIconBubbleFromResponse(response);
+          window.KasyaAovCart.open();
+          return true;
+        } catch (error) {
+          console.warn('[Kasya AOV Cart] Home quick-shop hook failed; falling back to original cart drawer.', error);
+          return false;
+        }
+      };
+
       const addToCart = (variantId) => {
         const cart = getCartDrawer();
         if (!cart || typeof cart.renderContents !== 'function' || typeof cart.getSectionsToRender !== 'function') {
@@ -883,7 +907,7 @@
             closeSelector();
             hasHomepageCartAdd = true;
             cart.classList.remove('is-empty');
-            cart.renderContents(response);
+            if (!openKasyaAovCartAfterAdd(response)) cart.renderContents(response);
             setTimeout(updateFloatingCart, 350);
             document.dispatchEvent(new CustomEvent('afterCartChanged', { detail: { productVariantId: variantId, source: 'home-quick-shop', cartData: response } }));
           });
