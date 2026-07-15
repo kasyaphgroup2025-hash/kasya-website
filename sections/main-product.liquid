@@ -100,6 +100,7 @@
   assign kasya_bundle_type = product.type | default: '' | downcase
   assign kasya_bundle_tags = product.tags | join: ',' | downcase
   assign is_kasya_bundle_product_page = false
+  assign kasya_bundle_force_native_close = false
   if request.page_type == 'product'
     if product.handle == 'summer-collection-gwen-gaby-terno-set-viscose-linen' or product.handle == 'where-your-outfit-gets-cheaper' or product.handle == 'summer-collection-terno-set-viscose-linen' or product.handle == 'long-linen-skirt-bundle' or product.handle == 'a-line-maxi-skirt-soft-linen-bundle' or product.handle == 'choco-brown-wideleg-linen-pants-copy-2'
       assign is_kasya_bundle_product_page = true
@@ -117,6 +118,10 @@
         endif
       endfor
     endunless
+
+    if product.handle == 'long-linen-skirt-bundle' or product.handle == 'where-your-outfit-gets-cheaper'
+      assign kasya_bundle_force_native_close = true
+    endif
   endif
 -%}
 
@@ -760,7 +765,7 @@
   {%- render 'main-product-sticky-cart', section: section, product: product, product_form_id: product_form_id, featured_media: featured_media, cart_qty: cart_qty -%}
 {%- endunless -%}
 {%- if is_kasya_bundle_product_page -%}
-  {%- render 'kasya-bundle-aov-cart-bridge' -%}
+  {%- render 'kasya-bundle-aov-cart-bridge', defensive_native_drawer_close: kasya_bundle_force_native_close -%}
 {%- endif -%}
 {% schema %}
 {

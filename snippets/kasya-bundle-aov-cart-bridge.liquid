@@ -2,6 +2,7 @@
   (() => {
     if (window.__kasyaBundleAovCartBridge) return;
     window.__kasyaBundleAovCartBridge = true;
+    const shouldDefensivelyCloseNativeDrawer = {{ defensive_native_drawer_close | default: false | json }};
 
     const updateCartIconBubble = (response) => {
       const cartIconHtml = response?.sections?.['cart-icon-bubble'];
@@ -14,12 +15,33 @@
       if (updatedCartIconContent) currentCartIcon.innerHTML = updatedCartIconContent.innerHTML;
     };
 
+    const closeNativeCartDrawer = () => {
+      if (!shouldDefensivelyCloseNativeDrawer) return;
+
+      const cartDrawer = document.querySelector('cart-drawer');
+      if (!cartDrawer) return;
+
+      if (typeof cartDrawer.close === 'function' && cartDrawer.classList.contains('active')) {
+        try {
+          cartDrawer.close({ target: cartDrawer });
+        } catch (error) {
+          console.warn('[Kasya AOV Cart] Native drawer close failed; hiding native drawer defensively.', error);
+        }
+      }
+
+      window.setTimeout(() => {
+        cartDrawer.classList.remove('active', 'animate', 'closing', 'start-closing', 'busy');
+        document.body.classList.remove('open-drawer-fixed');
+      }, 80);
+    };
+
     const openKasyaAovCart = (response) => {
       if (!window.KasyaAovCart || typeof window.KasyaAovCart.open !== 'function') return false;
 
       try {
         updateCartIconBubble(response);
         window.KasyaAovCart.open();
+        closeNativeCartDrawer();
         return true;
       } catch (error) {
         console.warn('[Kasya AOV Cart] Bundle page hook failed; falling back to original cart drawer.', error);

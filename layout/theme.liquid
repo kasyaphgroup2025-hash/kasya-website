@@ -250,6 +250,7 @@
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
       {%- liquid
         assign is_kasya_bundle_product_page = false
+        assign kasya_bundle_force_native_close = false
         if request.page_type == 'product' and product
           assign kasya_bundle_title = product.title | downcase
           assign kasya_bundle_handle = product.handle | downcase
@@ -273,10 +274,14 @@
               endif
             endfor
           endunless
+
+          if product.handle == 'long-linen-skirt-bundle' or product.handle == 'where-your-outfit-gets-cheaper'
+            assign kasya_bundle_force_native_close = true
+          endif
         endif
       -%}
       {%- if is_kasya_bundle_product_page -%}
-        {%- render 'kasya-bundle-aov-cart-bridge' -%}
+        {%- render 'kasya-bundle-aov-cart-bridge', defensive_native_drawer_close: kasya_bundle_force_native_close -%}
       {%- endif -%}
     {%- endif -%}
 
