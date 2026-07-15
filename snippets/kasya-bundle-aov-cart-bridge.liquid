@@ -1,0 +1,75 @@
+<script>
+  (() => {
+    if (window.__kasyaBundleAovCartBridge) return;
+    window.__kasyaBundleAovCartBridge = true;
+
+    const updateCartIconBubble = (response) => {
+      const cartIconHtml = response?.sections?.['cart-icon-bubble'];
+      const currentCartIcon = document.getElementById('cart-icon-bubble');
+      if (!cartIconHtml || !currentCartIcon) return;
+
+      const parsedHtml = new DOMParser().parseFromString(cartIconHtml, 'text/html');
+      const updatedCartIcon = parsedHtml.getElementById('cart-icon-bubble') || parsedHtml.querySelector('#cart-icon-bubble');
+      const updatedCartIconContent = updatedCartIcon || parsedHtml.querySelector('.shopify-section') || parsedHtml.body;
+      if (updatedCartIconContent) currentCartIcon.innerHTML = updatedCartIconContent.innerHTML;
+    };
+
+    const openKasyaAovCart = (response) => {
+      if (!window.KasyaAovCart || typeof window.KasyaAovCart.open !== 'function') return false;
+
+      try {
+        updateCartIconBubble(response);
+        window.KasyaAovCart.open();
+        return true;
+      } catch (error) {
+        console.warn('[Kasya AOV Cart] Bundle page hook failed; falling back to original cart drawer.', error);
+        return false;
+      }
+    };
+
+    const patchCartDrawer = () => {
+      const cartDrawer = document.querySelector('cart-drawer');
+      if (!cartDrawer || cartDrawer.dataset.kasyaBundleAovBridge === 'true') return;
+
+      cartDrawer.dataset.kasyaBundleAovBridge = 'true';
+      const originalRenderContents = typeof cartDrawer.renderContents === 'function'
+        ? cartDrawer.renderContents.bind(cartDrawer)
+        : null;
+      const originalOpen = typeof cartDrawer.open === 'function'
+        ? cartDrawer.open.bind(cartDrawer)
+        : null;
+
+      if (originalRenderContents) {
+        cartDrawer.renderContents = (parsedState, ...args) => {
+          if (openKasyaAovCart(parsedState)) {
+            document.dispatchEvent(new CustomEvent('afterCartChanged', {
+              detail: {
+                source: 'bundle-product-page',
+                cartData: parsedState
+              }
+            }));
+            return;
+          }
+
+          originalRenderContents(parsedState, ...args);
+        };
+      }
+
+      if (originalOpen) {
+        cartDrawer.open = (...args) => {
+          if (openKasyaAovCart()) return;
+          originalOpen(...args);
+        };
+      }
+    };
+
+    // Kasya AOV Cart Drawer testing hook for confirmed bundle product pages only.
+    // Keeps the original drawer available as fallback when the custom AOV drawer is unavailable.
+    if (window.customElements && typeof window.customElements.whenDefined === 'function') {
+      window.customElements.whenDefined('cart-drawer').then(patchCartDrawer).catch(patchCartDrawer);
+    }
+
+    patchCartDrawer();
+    document.addEventListener('DOMContentLoaded', patchCartDrawer, { once: true });
+  })();
+</script>

@@ -248,6 +248,36 @@
       {% endcomment %}
       {%- section 'kasya-aov-cart-drawer' -%}
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
+      {%- liquid
+        assign is_kasya_bundle_product_page = false
+        if request.page_type == 'product' and product
+          assign kasya_bundle_title = product.title | downcase
+          assign kasya_bundle_handle = product.handle | downcase
+          assign kasya_bundle_template = template.suffix | default: '' | downcase
+          assign kasya_bundle_type = product.type | default: '' | downcase
+          assign kasya_bundle_tags = product.tags | join: ',' | downcase
+
+          if product.handle == 'summer-collection-gwen-gaby-terno-set-viscose-linen' or product.handle == 'where-your-outfit-gets-cheaper' or product.handle == 'summer-collection-terno-set-viscose-linen' or product.handle == 'long-linen-skirt-bundle' or product.handle == 'choco-brown-wideleg-linen-pants-copy-2'
+            assign is_kasya_bundle_product_page = true
+          elsif kasya_bundle_title contains 'bundle' or kasya_bundle_handle contains 'bundle' or kasya_bundle_template contains 'bundle' or kasya_bundle_type contains 'bundle' or kasya_bundle_tags contains 'bundle'
+            assign is_kasya_bundle_product_page = true
+          endif
+
+          unless is_kasya_bundle_product_page
+            for bundle_collection in product.collections
+              assign bundle_collection_title = bundle_collection.title | downcase
+              assign bundle_collection_handle = bundle_collection.handle | downcase
+              if bundle_collection_title contains 'bundle' or bundle_collection_handle contains 'bundle'
+                assign is_kasya_bundle_product_page = true
+                break
+              endif
+            endfor
+          endunless
+        endif
+      -%}
+      {%- if is_kasya_bundle_product_page -%}
+        {%- render 'kasya-bundle-aov-cart-bridge' -%}
+      {%- endif -%}
     {%- endif -%}
 
     <link rel="stylesheet" href="{{ 'component-popup.css' | asset_url }}" media="print" onload="this.media='all'">
