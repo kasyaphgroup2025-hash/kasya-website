@@ -37,6 +37,7 @@
   const newToKasya = {
     modeNew: 'new-to-kasya',
     modeAutomatic: 'automatic-youll-love-these-too',
+    modeFrequentlyBoughtTogether: 'frequently-bought-together',
     modeHidden: 'hidden'
   };
 
@@ -1143,7 +1144,7 @@
           relatedCount: 0,
           complementaryCount: 0
         },
-        mode: newToKasya.modeAutomatic,
+        mode: newToKasya.modeFrequentlyBoughtTogether,
         title: 'Frequently Bought Together',
         subtitle: 'Based on what customers usually buy together.',
         starterProductCount: getNewToKasyaStarterProducts(cart, productData).length,
@@ -1812,6 +1813,13 @@
         return {
           source: 'youll_love_these_too',
           section: 'You\'ll Love These Too'
+        };
+      }
+
+      if (mode === newToKasya.modeFrequentlyBoughtTogether) {
+        return {
+          source: 'frequently_bought_together',
+          section: 'Frequently Bought Together'
         };
       }
 
