@@ -82,7 +82,7 @@
   }
 </style>
 
-<div class="bundle-carousel">
+<div class="bundle-carousel" data-kasya-direct-bundle-section>
   <div class="carousel" data-flickity='{ 
     "wrapAround": true,
     "pageDots": false,
@@ -98,7 +98,7 @@
       <p>Get our most-loved colors in one curated set:<br>
       Red, Emerald Green, Black, Choco Brown, and Navy Blue – all in the same size!</p>
       <img src="https://i.postimg.cc/FRDLgpCp/1.png" alt="Skirt Bundle">
-      <form method="post" action="/cart/add">
+      <form method="post" action="/cart/add" data-kasya-direct-bundle-form>
         <select name="id">
           <option value="49375383748898">Small - ₱1,381.05</option>
           <option value="49375383781666">Medium - ₱1,431.05</option>
@@ -117,7 +117,7 @@
       <p>Your fave easy-to-wear dress, now in a best-selling trio:<br>
       Includes Black, Choco Brown, and Navy Blue – all in one size! <strong>₱2,199</strong></p>
       <img src="https://i.postimg.cc/q7SJC3B5/Dress.png" alt="Dress Bundle">
-      <form method="post" action="/cart/add">
+      <form method="post" action="/cart/add" data-kasya-direct-bundle-form>
         <select name="id">
           <option value="50074727711010">Small - ₱2,199</option>
           <option value="50075760361762">Small to Medium - ₱2,199</option>
@@ -136,7 +136,7 @@
       <p>Snag our most in-demand colors in one comfy-chic bundle:<br>
       Red, Emerald Green, Black, Choco Brown, and Navy Blue – same size for all!</p>
       <img src="https://i.postimg.cc/CMjhz53c/Wideleg.png" alt="Wideleg Pants Bundle">
-      <form method="post" action="/cart/add">
+      <form method="post" action="/cart/add" data-kasya-direct-bundle-form>
         <select name="id">
           <option value="49599964807458">Medium - ₱2,120.75</option>
           <option value="49599964840226">XL - ₱2,120.75</option>
@@ -168,5 +168,106 @@
   <img src="https://i.imgur.com/MrJACYN.png" alt="KasyaPH Benefits">
 </div>
 
+<script>
+  (function () {
+    const section = document.querySelector('[data-kasya-direct-bundle-section]');
+    if (!section) return;
 
+    const getNativeCart = () => document.querySelector('cart-drawer') || document.querySelector('cart-notification') || document.querySelector('cart-items');
 
+    const updateCartIconBubble = (response) => {
+      const cartIconHtml = response?.sections?.['cart-icon-bubble'];
+      const currentCartIcon = document.getElementById('cart-icon-bubble');
+      if (!cartIconHtml || !currentCartIcon) return;
+
+      const parsedHtml = new DOMParser().parseFromString(cartIconHtml, 'text/html');
+      const updatedCartIcon = parsedHtml.getElementById('cart-icon-bubble') || parsedHtml.querySelector('#cart-icon-bubble');
+      const updatedCartIconContent = updatedCartIcon || parsedHtml.querySelector('.shopify-section') || parsedHtml.body;
+      if (updatedCartIconContent) currentCartIcon.innerHTML = updatedCartIconContent.innerHTML;
+    };
+
+    const openKasyaAovCart = (response) => {
+      if (!window.KasyaAovCart || typeof window.KasyaAovCart.open !== 'function') return false;
+
+      try {
+        updateCartIconBubble(response);
+        window.KasyaAovCart.open();
+        return true;
+      } catch (error) {
+        console.warn('[Kasya Direct Bundle] AOV cart drawer unavailable; falling back to native cart drawer.', error);
+        return false;
+      }
+    };
+
+    const renderNativeCartFallback = (response) => {
+      const nativeCart = getNativeCart();
+      if (nativeCart && typeof nativeCart.renderContents === 'function') {
+        nativeCart.classList?.remove('is-empty');
+        nativeCart.renderContents(response);
+        return;
+      }
+
+      window.location.assign('/cart');
+    };
+
+    const buildAddRequest = (form) => {
+      const nativeCart = getNativeCart();
+      const formData = new FormData(form);
+      const sections = nativeCart && typeof nativeCart.getSectionsToRender === 'function'
+        ? nativeCart.getSectionsToRender().map((item) => item.id)
+        : ['cart-icon-bubble'];
+
+      formData.append('sections', [...new Set([...sections, 'cart-icon-bubble'])]);
+      formData.append('sections_url', window.location.pathname);
+      nativeCart?.setActiveElement?.(document.activeElement);
+
+      const config = typeof fetchConfig === 'function'
+        ? fetchConfig('javascript')
+        : { method: 'POST', headers: { Accept: 'application/json' } };
+
+      config.headers = config.headers || {};
+      config.headers['X-Requested-With'] = 'XMLHttpRequest';
+      delete config.headers['Content-Type'];
+      config.body = formData;
+
+      return config;
+    };
+
+    section.querySelectorAll('[data-kasya-direct-bundle-form]').forEach((form) => {
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation?.();
+
+        const button = form.querySelector('[type="submit"]');
+        if (button?.disabled) return;
+
+        try {
+          if (button) button.disabled = true;
+          const response = await fetch('/cart/add.js', buildAddRequest(form));
+          const data = await response.json();
+
+          if (!response.ok || data.status) {
+            throw new Error(data.description || data.message || 'Unable to add bundle to cart.');
+          }
+
+          if (!openKasyaAovCart(data)) {
+            renderNativeCartFallback(data);
+          }
+
+          document.dispatchEvent(new CustomEvent('afterCartChanged', {
+            detail: {
+              productVariantId: new FormData(form).get('id'),
+              source: 'direct-bundle',
+              cartData: data
+            }
+          }));
+        } catch (error) {
+          console.warn('[Kasya Direct Bundle] Unable to add bundle to cart.', error);
+        } finally {
+          if (button) button.disabled = false;
+        }
+      }, true);
+    });
+  })();
+</script>
