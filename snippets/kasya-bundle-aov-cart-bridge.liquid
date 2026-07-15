@@ -93,12 +93,31 @@
       }
     };
 
+    const patchCartDrawerPrototypeOpen = () => {
+      if (!shouldDefensivelyCloseNativeDrawer || !window.customElements) return;
+
+      const CartDrawerElement = window.customElements.get('cart-drawer');
+      const prototype = CartDrawerElement?.prototype;
+      if (!prototype || prototype.kasyaBundleAovOpenPatched === true || typeof prototype.open !== 'function') return;
+
+      const originalOpen = prototype.open;
+      prototype.open = function(...args) {
+        if (openKasyaAovCart()) return;
+        originalOpen.apply(this, args);
+      };
+      prototype.kasyaBundleAovOpenPatched = true;
+    };
+
     // Kasya AOV Cart Drawer testing hook for confirmed bundle product pages only.
     // Keeps the original drawer available as fallback when the custom AOV drawer is unavailable.
     if (window.customElements && typeof window.customElements.whenDefined === 'function') {
-      window.customElements.whenDefined('cart-drawer').then(patchCartDrawer).catch(patchCartDrawer);
+      window.customElements.whenDefined('cart-drawer').then(() => {
+        patchCartDrawerPrototypeOpen();
+        patchCartDrawer();
+      }).catch(patchCartDrawer);
     }
 
+    patchCartDrawerPrototypeOpen();
     patchCartDrawer();
     document.addEventListener('DOMContentLoaded', patchCartDrawer, { once: true });
   })();
