@@ -93,6 +93,16 @@
   if template.suffix == 'kasya-acquisition-janeset'
     assign is_jane_set_direct_product = false
   endif
+
+  assign kasya_bundle_title = product.title | downcase
+  assign kasya_bundle_handle = product.handle | downcase
+  assign kasya_bundle_template = template.suffix | default: '' | downcase
+  assign is_kasya_bundle_product_page = false
+  if request.page_type == 'product'
+    if kasya_bundle_title contains 'bundle' or kasya_bundle_handle contains 'bundle' or kasya_bundle_template contains 'bundle'
+      assign is_kasya_bundle_product_page = true
+    endif
+  endif
 -%}
 
 <style>
@@ -734,11 +744,11 @@
 {%- unless is_jane_set_direct_product -%}
   {%- render 'main-product-sticky-cart', section: section, product: product, product_form_id: product_form_id, featured_media: featured_media, cart_qty: cart_qty -%}
 {%- endunless -%}
-{%- if product.handle == 'summer-collection-gwen-gaby-terno-set-viscose-linen' -%}
+{%- if is_kasya_bundle_product_page -%}
   <script>
     (() => {
-      if (window.__kasyaGwenGabyAovCartBridge) return;
-      window.__kasyaGwenGabyAovCartBridge = true;
+      if (window.__kasyaBundleAovCartBridge) return;
+      window.__kasyaBundleAovCartBridge = true;
 
       const updateCartIconBubble = (response) => {
         const cartIconHtml = response?.sections?.['cart-icon-bubble'];
@@ -759,16 +769,16 @@
           window.KasyaAovCart.open();
           return true;
         } catch (error) {
-          console.warn('[Kasya AOV Cart] Gwen + Gaby bundle hook failed; falling back to original cart drawer.', error);
+          console.warn('[Kasya AOV Cart] Bundle page hook failed; falling back to original cart drawer.', error);
           return false;
         }
       };
 
       const patchCartDrawer = () => {
         const cartDrawer = document.querySelector('cart-drawer');
-        if (!cartDrawer || cartDrawer.dataset.kasyaGwenGabyAovBridge === 'true') return;
+        if (!cartDrawer || cartDrawer.dataset.kasyaBundleAovBridge === 'true') return;
 
-        cartDrawer.dataset.kasyaGwenGabyAovBridge = 'true';
+        cartDrawer.dataset.kasyaBundleAovBridge = 'true';
         const originalRenderContents = typeof cartDrawer.renderContents === 'function'
           ? cartDrawer.renderContents.bind(cartDrawer)
           : null;
@@ -781,7 +791,7 @@
             if (openKasyaAovCart(parsedState)) {
               document.dispatchEvent(new CustomEvent('afterCartChanged', {
                 detail: {
-                  source: 'gwen-gaby-bundle',
+                  source: 'bundle-product-page',
                   cartData: parsedState
                 }
               }));
@@ -800,7 +810,7 @@
         }
       };
 
-      // Kasya AOV Cart Drawer testing hook for Gwen + Gaby bundle page only.
+      // Kasya AOV Cart Drawer testing hook for bundle product pages only.
       // Keeps the original drawer available as fallback when the custom AOV drawer is unavailable.
       if (window.customElements && typeof window.customElements.whenDefined === 'function') {
         window.customElements.whenDefined('cart-drawer').then(patchCartDrawer).catch(patchCartDrawer);
