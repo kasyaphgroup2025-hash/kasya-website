@@ -29,10 +29,18 @@
         }
       }
 
-      window.setTimeout(() => {
-        cartDrawer.classList.remove('active', 'animate', 'closing', 'start-closing', 'busy');
-        document.body.classList.remove('open-drawer-fixed');
-      }, 80);
+      cartDrawer.classList.remove('active', 'animate', 'closing', 'start-closing', 'busy');
+      cartDrawer.removeAttribute('open');
+      cartDrawer.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('open-drawer-fixed');
+    };
+
+    const suppressNativeCartDrawer = () => {
+      if (!shouldDefensivelyCloseNativeDrawer) return;
+
+      [0, 100, 300, 700, 1500].forEach((delay) => {
+        window.setTimeout(closeNativeCartDrawer, delay);
+      });
     };
 
     const openKasyaAovCart = (response) => {
@@ -41,7 +49,7 @@
       try {
         updateCartIconBubble(response);
         window.KasyaAovCart.open();
-        closeNativeCartDrawer();
+        suppressNativeCartDrawer();
         return true;
       } catch (error) {
         console.warn('[Kasya AOV Cart] Bundle page hook failed; falling back to original cart drawer.', error);
