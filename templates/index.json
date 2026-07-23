@@ -12,6 +12,7 @@
     "home_88_hero": {
       "type": "home-88-hero",
       "settings": {
+        "mobile_image": "shopify://shop_images/01_campaign_hero_original_ba75049d-754c-4af9-8fe0-c799b9eedabb.png",
         "image_alt": "The Interlude Edit by Kasya",
         "mobile_image_position": "center center",
         "desktop_image_position": "center center",
