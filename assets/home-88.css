@@ -431,11 +431,14 @@ body.home-88-header-enabled.home-88-header-solid .section-header .cart-count-bub
 }
 
 #home-88-product-grid .home-88-products__grid {
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   width: 100%;
   max-width: 144rem;
   margin: 0 auto;
+  padding-top: var(--home-88-grid-padding-top, 20px);
+  padding-bottom: var(--home-88-grid-padding-bottom, 20px);
   background: var(--home-88-grid-bg, #d9c5a5);
 }
 
@@ -470,7 +473,7 @@ body.home-88-header-enabled.home-88-header-solid .section-header .cart-count-bub
 }
 
 #home-88-product-grid .home-88-products__details {
-  padding: 0.8rem 0.8rem 1.2rem;
+  padding: 0.7rem 0.8rem 1.2rem;
   background: var(--home-88-grid-bg, #d9c5a5);
 }
 
@@ -509,14 +512,13 @@ body.home-88-header-enabled.home-88-header-solid .section-header .cart-count-bub
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.6rem;
   align-items: start;
-  min-height: 3.8rem;
 }
 
 #home-88-product-grid .home-88-products__title {
   min-width: 0;
   margin: 0;
   font-family: inherit;
-  font-size: clamp(1.2rem, 3.3vw, 1.55rem);
+  font-size: var(--home-88-product-name-mobile, 16px);
   font-weight: 400;
   line-height: 1.15;
 }
@@ -530,16 +532,20 @@ body.home-88-header-enabled.home-88-header-solid .section-header .cart-count-bub
   display: grid;
   justify-items: end;
   color: #151515;
-  font-size: clamp(1.15rem, 3.2vw, 1.5rem);
-  font-weight: 400;
+  font-size: var(--home-88-product-price-mobile, 18px);
   line-height: 1.15;
   white-space: nowrap;
+}
+
+#home-88-product-grid .home-88-products__prices > span {
+  font-weight: 700;
 }
 
 #home-88-product-grid .home-88-products__prices s,
 #home-88-product-grid .home-88-products__modal-prices s {
   color: #685f53;
   font-size: 0.86em;
+  font-weight: 400;
 }
 
 #home-88-product-grid .home-88-products__quick-shop {
@@ -731,11 +737,14 @@ html.home-88-quick-shop-open {
   }
 
   #home-88-product-grid .home-88-products__details {
-    padding: 1rem 1rem 1.5rem;
+    padding: 0.8rem 1rem 1.5rem;
   }
 
-  #home-88-product-grid .home-88-products__title,
+  #home-88-product-grid .home-88-products__title {
+    font-size: var(--home-88-product-name-desktop, 18px);
+  }
+
   #home-88-product-grid .home-88-products__prices {
-    font-size: clamp(1.15rem, 1.15vw, 1.6rem);
+    font-size: var(--home-88-product-price-desktop, 22px);
   }
 }

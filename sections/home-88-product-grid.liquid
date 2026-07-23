@@ -5,7 +5,7 @@
   id="home-88-product-grid"
   class="home-88-products"
   data-section-id="{{ section.id }}"
-  style="--home-88-intro-bg: {{ section.settings.intro_background }}; --home-88-grid-bg: {{ section.settings.grid_background }}; --home-88-intro-top: {{ section.settings.intro_padding_top }}px; --home-88-intro-bottom: {{ section.settings.intro_padding_bottom }}px; --home-88-intro-heading-mobile: {{ section.settings.heading_size_mobile }}px; --home-88-intro-heading-desktop: {{ section.settings.heading_size_desktop }}px; --home-88-intro-copy-mobile: {{ section.settings.description_size_mobile }}px; --home-88-intro-copy-desktop: {{ section.settings.description_size_desktop }}px;"
+  style="--home-88-intro-bg: {{ section.settings.intro_background }}; --home-88-grid-bg: {{ section.settings.grid_background }}; --home-88-intro-top: {{ section.settings.intro_padding_top }}px; --home-88-intro-bottom: {{ section.settings.intro_padding_bottom }}px; --home-88-intro-heading-mobile: {{ section.settings.heading_size_mobile }}px; --home-88-intro-heading-desktop: {{ section.settings.heading_size_desktop }}px; --home-88-intro-copy-mobile: {{ section.settings.description_size_mobile }}px; --home-88-intro-copy-desktop: {{ section.settings.description_size_desktop }}px; --home-88-grid-padding-top: {{ section.settings.product_grid_padding_top }}px; --home-88-grid-padding-bottom: {{ section.settings.product_grid_padding_bottom }}px; --home-88-product-name-mobile: {{ section.settings.product_name_size_mobile }}px; --home-88-product-name-desktop: {{ section.settings.product_name_size_desktop }}px; --home-88-product-price-mobile: {{ section.settings.product_price_size_mobile }}px; --home-88-product-price-desktop: {{ section.settings.product_price_size_desktop }}px;"
 >
   <header class="home-88-products__intro">
     {%- if section.settings.section_heading != blank -%}
@@ -213,7 +213,15 @@
     { "type": "range", "id": "heading_size_mobile", "label": "Mobile heading size", "min": 20, "max": 48, "step": 1, "unit": "px", "default": 32 },
     { "type": "range", "id": "heading_size_desktop", "label": "Desktop heading size", "min": 28, "max": 64, "step": 1, "unit": "px", "default": 44 },
     { "type": "range", "id": "description_size_mobile", "label": "Mobile description size", "min": 12, "max": 24, "step": 1, "unit": "px", "default": 16 },
-    { "type": "range", "id": "description_size_desktop", "label": "Desktop description size", "min": 14, "max": 30, "step": 1, "unit": "px", "default": 20 }
+    { "type": "range", "id": "description_size_desktop", "label": "Desktop description size", "min": 14, "max": 30, "step": 1, "unit": "px", "default": 20 },
+    { "type": "header", "content": "Product grid spacing" },
+    { "type": "range", "id": "product_grid_padding_top", "label": "Product grid top padding", "min": 0, "max": 60, "step": 2, "unit": "px", "default": 20 },
+    { "type": "range", "id": "product_grid_padding_bottom", "label": "Product grid bottom padding", "min": 0, "max": 60, "step": 2, "unit": "px", "default": 20 },
+    { "type": "header", "content": "Product card typography" },
+    { "type": "range", "id": "product_name_size_mobile", "label": "Mobile product name size", "min": 12, "max": 26, "step": 1, "unit": "px", "default": 16 },
+    { "type": "range", "id": "product_name_size_desktop", "label": "Desktop product name size", "min": 14, "max": 32, "step": 1, "unit": "px", "default": 18 },
+    { "type": "range", "id": "product_price_size_mobile", "label": "Mobile product price size", "min": 14, "max": 30, "step": 1, "unit": "px", "default": 18 },
+    { "type": "range", "id": "product_price_size_desktop", "label": "Desktop product price size", "min": 16, "max": 36, "step": 1, "unit": "px", "default": 22 }
   ],
   "blocks": [
     {

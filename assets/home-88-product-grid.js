@@ -31,7 +31,6 @@
       this.form?.addEventListener('submit', this.onSubmit, options);
       document.addEventListener('keydown', this.onKeyDown, options);
       document.addEventListener('shopify:block:select', this.onBlockSelect, options);
-      document.addEventListener('shopify:block:deselect', this.onBlockDeselect, options);
     }
 
     disconnectedCallback() {
@@ -81,6 +80,11 @@
     }
 
     onClick = (event) => {
+      if (event.target === this.modal) {
+        this.closeModal();
+        return;
+      }
+
       const swatch = event.target.closest('[data-card-swatch]');
       if (swatch && this.contains(swatch)) {
         const card = swatch.closest('[data-product-card]');
@@ -142,12 +146,6 @@
       if (!blockId) return;
       const card = this.querySelector(`[data-block-id="${CSS.escape(blockId)}"]`);
       if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    };
-
-    onBlockDeselect = (event) => {
-      if (event.detail?.blockId && this.activeCard?.dataset.blockId === event.detail.blockId) {
-        this.closeModal(false);
-      }
     };
 
     getFocusable() {
