@@ -235,6 +235,7 @@
           "settings": {
             "look_title": "THE SOFT EDIT",
             "look_description": "Gentle structure and easy comfort for quieter moments.",
+            "thumbnail_image": "shopify://shop_images/01_campaign_hero_original_ba75049d-754c-4af9-8fe0-c799b9eedabb.png",
             "thumbnail_alt": "The Soft Edit",
             "front_image_alt": "The Soft Edit front view",
             "side_image_alt": "The Soft Edit side view",
@@ -260,30 +261,30 @@
       "settings": {
         "heading": "YOUR OUTFIT IS ALREADY CONSIDERED",
         "subtitle": "Three ways to wear the 8.8 collection",
-        "thumbnail_helper_text": "Choose your favorite look",
+        "thumbnail_helper_text": "CHOOSE YOUR FAVORITE LOOK",
         "background_color": "#ffffff",
         "text_color": "#171714",
         "padding_top_mobile": 48,
         "padding_bottom_mobile": 48,
         "padding_top_desktop": 80,
         "padding_bottom_desktop": 80,
-        "heading_size_mobile": 25,
+        "heading_size_mobile": 18,
         "heading_size_desktop": 42,
         "subtitle_size_mobile": 13,
-        "subtitle_size_desktop": 18,
-        "label_size_mobile": 11,
+        "subtitle_size_desktop": 16,
+        "label_size_mobile": 9,
         "label_size_desktop": 13,
-        "look_title_size_mobile": 17,
-        "look_title_size_desktop": 30,
-        "description_size_mobile": 12,
+        "look_title_size_mobile": 15,
+        "look_title_size_desktop": 28,
+        "description_size_mobile": 10,
         "description_size_desktop": 17,
-        "thumbnail_helper_size_mobile": 11,
-        "thumbnail_helper_size_desktop": 14,
-        "thumbnail_title_size_mobile": 11,
+        "thumbnail_helper_size_mobile": 9,
+        "thumbnail_helper_size_desktop": 13,
+        "thumbnail_title_size_mobile": 8,
         "thumbnail_title_size_desktop": 14,
-        "product_title_size_mobile": 11,
+        "product_title_size_mobile": 10,
         "product_title_size_desktop": 15,
-        "product_button_size_mobile": 9,
+        "product_button_size_mobile": 8,
         "product_button_size_desktop": 12,
         "flatlay_gap": 8,
         "active_thumbnail_scale": 110,
@@ -541,7 +542,6 @@
     },
     "home_shop_the_look": {
       "type": "home-shop-the-look",
-      "disabled": true,
       "blocks": {
         "look_1": {
           "type": "look",
@@ -638,6 +638,7 @@
         "look_3",
         "look_4"
       ],
+      "disabled": true,
       "settings": {
         "section_heading": "Shop the Look"
       }
