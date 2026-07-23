@@ -218,7 +218,7 @@
         });
 
         if (this.isColorOption(option.name) && activeMapping?.optionValue) {
-          const exactValue = Array.from(select.options).find((item) => item.value === activeMapping.optionValue);
+          const exactValue = Array.from(select.options).find((item) => normalize(item.value) === normalize(activeMapping.optionValue));
           if (exactValue) select.value = exactValue.value;
         }
 
@@ -303,7 +303,12 @@
       const colorSelect = this.getSelects().find((select) => this.isColorOption(select.dataset.optionName));
       const color = colorSelect?.value || '';
       const mapping = this.findMapping(color);
-      const image = this.selectedVariant?.featuredImage?.src || mapping?.src || this.product.featuredImage?.src;
+      const colorPosition = Number(colorSelect?.dataset.optionPosition || 0) - 1;
+      const colorVariant = color && colorPosition >= 0
+        ? this.product.variants.find((variant) => normalize(variant.options[colorPosition]) === normalize(color))
+        : null;
+      const colorImage = mapping?.src || colorVariant?.featuredImage?.src || this.product.featuredImage?.src;
+      const image = this.selectedVariant?.featuredImage?.src || colorImage;
       this.renderImage(image, color || mapping?.label);
       this.renderPrice(this.selectedVariant || this.product);
     }
