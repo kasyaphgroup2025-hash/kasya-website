@@ -383,9 +383,9 @@
         "icon_size": 20,
         "heading_size_mobile": 14,
         "heading_size_desktop": 26,
-        "title_size_mobile": 8,
+        "title_size_mobile": 10,
         "title_size_desktop": 15,
-        "description_size_mobile": 7,
+        "description_size_mobile": 8,
         "description_size_desktop": 12,
         "description_line_height_mobile": 120,
         "description_line_height_desktop": 120
