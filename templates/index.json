@@ -163,11 +163,11 @@
         "section_description": "Polished essentials in fabrics that move with you",
         "intro_background": "#ffffff",
         "grid_background": "#d8bf9f",
-        "intro_padding_top": 64,
-        "intro_padding_bottom": 64,
-        "heading_size_mobile": 26,
+        "intro_padding_top": 48,
+        "intro_padding_bottom": 48,
+        "heading_size_mobile": 20,
         "heading_size_desktop": 44,
-        "description_size_mobile": 12,
+        "description_size_mobile": 13,
         "description_size_desktop": 20,
         "product_grid_padding_top": 20,
         "product_grid_padding_bottom": 20,
@@ -645,7 +645,6 @@
     },
     "home_other_collections": {
       "type": "home-other-collections",
-      "disabled": true,
       "blocks": {
         "collection_card_1": {
           "type": "collection_card",
@@ -683,6 +682,7 @@
         "collection_card_2",
         "collection_card_3"
       ],
+      "disabled": true,
       "settings": {
         "kicker": "Keep exploring",
         "heading": "Find Your Next Look",
