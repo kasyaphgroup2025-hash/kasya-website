@@ -356,7 +356,7 @@
         "home_88_fabric_4": {
           "type": "fabric",
           "settings": {
-            "title": "Woven Linen",
+            "title": "Acid Linen",
             "description": "Structured, durable and made to last.",
             "icon_alt": "",
             "background_color": "#d8d7d2",
@@ -380,7 +380,7 @@
         "padding_bottom_desktop": 32,
         "card_gap": 8,
         "card_padding": 4,
-        "icon_size": 38,
+        "icon_size": 30,
         "heading_size_mobile": 14,
         "heading_size_desktop": 26,
         "title_size_mobile": 10,
