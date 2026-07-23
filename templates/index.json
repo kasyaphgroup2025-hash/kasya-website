@@ -29,6 +29,65 @@
         "secondary_button_link": "#home-88-shop-the-look"
       }
     },
+    "home_88_product_grid": {
+      "type": "home-88-product-grid",
+      "blocks": {
+        "home_88_product_1": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "custom_title": "Daliah Polo"
+          }
+        },
+        "home_88_product_2": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "custom_title": "Kianna Puff Sleeves"
+          }
+        },
+        "home_88_product_3": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "custom_title": "Mia Palazzo Pants"
+          }
+        },
+        "home_88_product_4": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "custom_title": "Lea Trouser"
+          }
+        },
+        "home_88_product_5": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "custom_title": "Naomi Culottes"
+          }
+        }
+      },
+      "block_order": [
+        "home_88_product_1",
+        "home_88_product_2",
+        "home_88_product_3",
+        "home_88_product_4",
+        "home_88_product_5"
+      ],
+      "settings": {
+        "section_heading": "THE INTERLUDE EDIT",
+        "section_description": "Polished essentials in fabrics that move with you",
+        "intro_background": "#ffffff",
+        "grid_background": "#d9c5a5",
+        "intro_padding_top": 64,
+        "intro_padding_bottom": 64,
+        "heading_size_mobile": 32,
+        "heading_size_desktop": 44,
+        "description_size_mobile": 16,
+        "description_size_desktop": 20
+      }
+    },
     "home_hero_photo": {
       "type": "home-hero-photo",
       "disabled": true,
@@ -49,6 +108,7 @@
     },
     "home_rhythm_article": {
       "type": "home-rhythm-article",
+      "disabled": true,
       "settings": {
         "article_image": "shopify://shop_images/DSC7377.jpg",
         "image_alt": "Back to Rhythm article image",
@@ -59,6 +119,7 @@
     },
     "home_quick_shop_grid": {
       "type": "home-quick-shop-grid",
+      "disabled": true,
       "blocks": {
         "quick_product_1": {
           "type": "product_card",
@@ -292,6 +353,7 @@
   },
   "order": [
     "home_88_hero",
+    "home_88_product_grid",
     "home_hero_photo",
     "home_rhythm_article",
     "home_quick_shop_grid",

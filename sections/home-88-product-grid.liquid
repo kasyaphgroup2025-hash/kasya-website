@@ -1,0 +1,266 @@
+{{ 'home-88.css' | asset_url | stylesheet_tag }}
+{{ 'home-88-product-grid.js' | asset_url | script_tag }}
+
+<home-88-product-grid
+  id="home-88-product-grid"
+  class="home-88-products"
+  data-section-id="{{ section.id }}"
+  style="--home-88-intro-bg: {{ section.settings.intro_background }}; --home-88-grid-bg: {{ section.settings.grid_background }}; --home-88-intro-top: {{ section.settings.intro_padding_top }}px; --home-88-intro-bottom: {{ section.settings.intro_padding_bottom }}px; --home-88-intro-heading-mobile: {{ section.settings.heading_size_mobile }}px; --home-88-intro-heading-desktop: {{ section.settings.heading_size_desktop }}px; --home-88-intro-copy-mobile: {{ section.settings.description_size_mobile }}px; --home-88-intro-copy-desktop: {{ section.settings.description_size_desktop }}px;"
+>
+  <header class="home-88-products__intro">
+    {%- if section.settings.section_heading != blank -%}
+      <h2 class="home-88-products__heading">{{ section.settings.section_heading | escape }}</h2>
+    {%- endif -%}
+    {%- if section.settings.section_description != blank -%}
+      <p class="home-88-products__description">{{ section.settings.section_description | escape }}</p>
+    {%- endif -%}
+  </header>
+
+  <div class="home-88-products__transition" aria-hidden="true"></div>
+
+  <div class="home-88-products__grid">
+    {%- for block in section.blocks limit: 5 -%}
+      {%- liquid
+        assign product = block.settings.product
+        assign display_title = block.settings.custom_title | default: product.title | default: 'Select a product'
+        assign product_url = product.url | default: '#'
+        assign initial_image = block.settings.color_1_image | default: product.featured_image
+        assign initial_alt = block.settings.color_1_image_alt | default: initial_image.alt | default: display_title
+      -%}
+
+      <article class="home-88-products__card" data-product-card data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+        <a class="home-88-products__image-link" href="{{ product_url }}" aria-label="View {{ display_title | escape }}">
+          {%- if initial_image != blank -%}
+            {{ initial_image
+              | image_url: width: 1000
+              | image_tag:
+                class: 'home-88-products__image',
+                loading: 'lazy',
+                widths: '160, 220, 300, 400, 500, 700, 850, 1000',
+                sizes: '(min-width: 750px) min(20vw, 280px), 50vw',
+                alt: initial_alt
+            }}
+          {%- else -%}
+            <div class="home-88-products__image home-88-products__image--placeholder" aria-hidden="true"></div>
+          {%- endif -%}
+        </a>
+
+        <div class="home-88-products__details">
+          <div class="home-88-products__swatches" role="group" aria-label="Colors for {{ display_title | escape }}">
+            {%- assign has_active_swatch = false -%}
+            {%- for color_index in (1..4) -%}
+              {%- liquid
+                assign label_key = 'color_' | append: color_index | append: '_label'
+                assign swatch_key = 'color_' | append: color_index | append: '_swatch'
+                assign value_key = 'color_' | append: color_index | append: '_option_value'
+                assign image_key = 'color_' | append: color_index | append: '_image'
+                assign color_label = block.settings[label_key]
+                assign swatch_color = block.settings[swatch_key]
+                assign option_value = block.settings[value_key]
+                assign color_image = block.settings[image_key]
+              -%}
+              {%- if color_label != blank or color_image != blank -%}
+                <button
+                  class="home-88-products__swatch{% unless has_active_swatch %} is-active{% endunless %}"
+                  type="button"
+                  style="--swatch-color: {{ swatch_color }};"
+                  data-card-swatch
+                  data-color-index="{{ color_index }}"
+                  data-option-value="{{ option_value | escape }}"
+                  aria-label="Show {{ display_title | escape }} in {{ color_label | default: option_value | default: 'color' | escape }}"
+                  aria-pressed="{% unless has_active_swatch %}true{% else %}false{% endunless %}"
+                ></button>
+                {%- assign has_active_swatch = true -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+
+          <div class="home-88-products__meta">
+            <h3 class="home-88-products__title">
+              <a href="{{ product_url }}">{{ display_title | escape }}</a>
+            </h3>
+            <div class="home-88-products__prices">
+              {%- if product != blank -%}
+                <span data-card-price>{{ product.price | money }}</span>
+                {%- if product.compare_at_price_max > product.price -%}
+                  <s data-card-compare-price>{{ product.compare_at_price_max | money }}</s>
+                {%- endif -%}
+              {%- else -%}
+                <span>—</span>
+              {%- endif -%}
+            </div>
+          </div>
+
+          <button
+            class="home-88-products__quick-shop"
+            type="button"
+            data-quick-shop-open
+            aria-haspopup="dialog"
+            {% if product == blank %}disabled{% endif %}
+          >Quick Shop</button>
+        </div>
+
+        <script type="application/json" data-color-mappings>
+          [
+            {%- for color_index in (1..4) -%}
+              {%- liquid
+                assign label_key = 'color_' | append: color_index | append: '_label'
+                assign value_key = 'color_' | append: color_index | append: '_option_value'
+                assign image_key = 'color_' | append: color_index | append: '_image'
+                assign alt_key = 'color_' | append: color_index | append: '_image_alt'
+                assign color_image = block.settings[image_key]
+                if color_index == 1 and color_image == blank
+                  assign color_image = product.featured_image
+                endif
+                assign color_alt = block.settings[alt_key] | default: color_image.alt | default: display_title
+              -%}
+              {
+                "index": {{ color_index }},
+                "label": {{ block.settings[label_key] | json }},
+                "optionValue": {{ block.settings[value_key] | json }},
+                "src": {%- if color_image != blank -%}{{ color_image | image_url: width: 1000 | json }}{%- else -%}null{%- endif -%},
+                "alt": {{ color_alt | json }}
+              }{% unless forloop.last %},{% endunless %}
+            {%- endfor -%}
+          ]
+        </script>
+
+        {%- if product != blank -%}
+          <script type="application/json" data-product-json>
+            {
+              "id": {{ product.id | json }},
+              "title": {{ product.title | json }},
+              "displayTitle": {{ display_title | json }},
+              "url": {{ product.url | json }},
+              "price": {{ product.price | json }},
+              "priceFormatted": {{ product.price | money | json }},
+              "compareAtPrice": {{ product.compare_at_price_max | json }},
+              "compareAtPriceFormatted": {%- if product.compare_at_price_max > product.price -%}{{ product.compare_at_price_max | money | json }}{%- else -%}null{%- endif -%},
+              "featuredImage": {
+                "src": {%- if product.featured_image != blank -%}{{ product.featured_image | image_url: width: 1000 | json }}{%- else -%}null{%- endif -%},
+                "alt": {{ product.featured_image.alt | default: display_title | json }}
+              },
+              "options": [
+                {%- for option in product.options_with_values -%}
+                  {
+                    "name": {{ option.name | json }},
+                    "position": {{ option.position | json }},
+                    "values": {{ option.values | json }}
+                  }{% unless forloop.last %},{% endunless %}
+                {%- endfor -%}
+              ],
+              "variants": [
+                {%- for variant in product.variants -%}
+                  {
+                    "id": {{ variant.id | json }},
+                    "available": {{ variant.available | json }},
+                    "options": {{ variant.options | json }},
+                    "price": {{ variant.price | json }},
+                    "priceFormatted": {{ variant.price | money | json }},
+                    "compareAtPrice": {{ variant.compare_at_price | json }},
+                    "compareAtPriceFormatted": {%- if variant.compare_at_price != blank -%}{{ variant.compare_at_price | money | json }}{%- else -%}null{%- endif -%},
+                    "featuredImage": {
+                      "src": {%- if variant.featured_image != blank -%}{{ variant.featured_image | image_url: width: 1000 | json }}{%- else -%}null{%- endif -%},
+                      "alt": {{ variant.featured_image.alt | default: display_title | json }}
+                    }
+                  }{% unless forloop.last %},{% endunless %}
+                {%- endfor -%}
+              ]
+            }
+          </script>
+        {%- endif -%}
+      </article>
+    {%- endfor -%}
+  </div>
+
+  <div class="home-88-products__modal" data-quick-shop-modal hidden>
+    <div class="home-88-products__modal-panel" role="dialog" aria-modal="true" aria-labelledby="Home88QuickShopTitle-{{ section.id }}" tabindex="-1" data-modal-panel>
+      <button class="home-88-products__modal-close" type="button" aria-label="Close Quick Shop" data-modal-close>&times;</button>
+      <div class="home-88-products__modal-summary">
+        <div class="home-88-products__modal-image-wrap">
+          <img class="home-88-products__modal-image" src="" alt="" data-modal-image>
+        </div>
+        <div>
+          <h3 id="Home88QuickShopTitle-{{ section.id }}" class="home-88-products__modal-title" data-modal-title></h3>
+          <div class="home-88-products__modal-prices">
+            <span data-modal-price></span>
+            <s data-modal-compare-price hidden></s>
+          </div>
+        </div>
+      </div>
+      <p class="home-88-products__modal-instruction">Choose all required options to add this item to your cart.</p>
+      <form data-quick-shop-form>
+        <div class="home-88-products__modal-options" data-modal-options></div>
+        <p class="home-88-products__modal-status" data-modal-status aria-live="polite"></p>
+        <button class="home-88-products__modal-submit" type="submit" data-modal-submit disabled>Add to Cart</button>
+      </form>
+    </div>
+  </div>
+</home-88-product-grid>
+
+{% schema %}
+{
+  "name": "Home 8.8 product grid",
+  "tag": "section",
+  "class": "section-home-88-product-grid",
+  "settings": [
+    { "type": "text", "id": "section_heading", "label": "Section heading", "default": "THE INTERLUDE EDIT" },
+    { "type": "textarea", "id": "section_description", "label": "Section description", "default": "Polished essentials in fabrics that move with you" },
+    { "type": "color", "id": "intro_background", "label": "Introduction background", "default": "#ffffff" },
+    { "type": "color", "id": "grid_background", "label": "Product-grid background", "default": "#d9c5a5" },
+    { "type": "range", "id": "intro_padding_top", "label": "Introduction top padding", "min": 24, "max": 120, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "intro_padding_bottom", "label": "Introduction bottom padding", "min": 24, "max": 120, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "heading_size_mobile", "label": "Mobile heading size", "min": 20, "max": 48, "step": 1, "unit": "px", "default": 32 },
+    { "type": "range", "id": "heading_size_desktop", "label": "Desktop heading size", "min": 28, "max": 64, "step": 1, "unit": "px", "default": 44 },
+    { "type": "range", "id": "description_size_mobile", "label": "Mobile description size", "min": 12, "max": 24, "step": 1, "unit": "px", "default": 16 },
+    { "type": "range", "id": "description_size_desktop", "label": "Desktop description size", "min": 14, "max": 30, "step": 1, "unit": "px", "default": 20 }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Shopify product" },
+        { "type": "text", "id": "custom_title", "label": "Custom display title", "info": "Leave blank to use the Shopify product title." },
+        { "type": "header", "content": "Color 1" },
+        { "type": "image_picker", "id": "color_1_image", "label": "Color 1 card image" },
+        { "type": "text", "id": "color_1_image_alt", "label": "Color 1 image alt text" },
+        { "type": "text", "id": "color_1_label", "label": "Color 1 swatch label" },
+        { "type": "color", "id": "color_1_swatch", "label": "Color 1 swatch color", "default": "#222222" },
+        { "type": "text", "id": "color_1_option_value", "label": "Color 1 product option value", "info": "Enter the exact Shopify color option value, when applicable." },
+        { "type": "header", "content": "Color 2" },
+        { "type": "image_picker", "id": "color_2_image", "label": "Color 2 card image" },
+        { "type": "text", "id": "color_2_image_alt", "label": "Color 2 image alt text" },
+        { "type": "text", "id": "color_2_label", "label": "Color 2 swatch label" },
+        { "type": "color", "id": "color_2_swatch", "label": "Color 2 swatch color", "default": "#d4c0a0" },
+        { "type": "text", "id": "color_2_option_value", "label": "Color 2 product option value", "info": "Enter the exact Shopify color option value, when applicable." },
+        { "type": "header", "content": "Color 3" },
+        { "type": "image_picker", "id": "color_3_image", "label": "Color 3 card image" },
+        { "type": "text", "id": "color_3_image_alt", "label": "Color 3 image alt text" },
+        { "type": "text", "id": "color_3_label", "label": "Color 3 swatch label" },
+        { "type": "color", "id": "color_3_swatch", "label": "Color 3 swatch color", "default": "#8a735d" },
+        { "type": "text", "id": "color_3_option_value", "label": "Color 3 product option value", "info": "Enter the exact Shopify color option value, when applicable." },
+        { "type": "header", "content": "Color 4" },
+        { "type": "image_picker", "id": "color_4_image", "label": "Color 4 card image" },
+        { "type": "text", "id": "color_4_image_alt", "label": "Color 4 image alt text" },
+        { "type": "text", "id": "color_4_label", "label": "Color 4 swatch label" },
+        { "type": "color", "id": "color_4_swatch", "label": "Color 4 swatch color", "default": "#f0ebe1" },
+        { "type": "text", "id": "color_4_option_value", "label": "Color 4 product option value", "info": "Enter the exact Shopify color option value, when applicable." }
+      ]
+    }
+  ],
+  "max_blocks": 5,
+  "presets": [
+    {
+      "name": "Home 8.8 product grid",
+      "blocks": [
+        { "type": "product", "settings": { "custom_title": "Daliah Polo" } },
+        { "type": "product", "settings": { "custom_title": "Kianna Puff Sleeves" } },
+        { "type": "product", "settings": { "custom_title": "Mia Palazzo Pants" } },
+        { "type": "product", "settings": { "custom_title": "Lea Trouser" } },
+        { "type": "product", "settings": { "custom_title": "Naomi Culottes" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
