@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   width: min(100%, 144rem);
-  height: var(--story-height-mobile);
+  height: var(--home-88-story-height-mobile);
   margin: 0 auto;
   overflow: hidden;
   font-family: "Helvetica Now Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -19,7 +19,9 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width: 100%;
   min-width: 0;
+  min-height: 0;
   height: 100%;
   overflow: hidden;
   padding: var(--story-padding-mobile);
@@ -55,7 +57,9 @@
 }
 
 #home-88-collection-story .home-88-story__media {
+  width: 100%;
   min-width: 0;
+  min-height: 0;
   height: 100%;
   overflow: hidden;
   background: #dedbd2;
@@ -66,6 +70,7 @@
   display: block;
   width: 100%;
   height: 100%;
+  min-height: 0;
   object-fit: cover;
   object-position: var(--story-position-mobile);
 }
@@ -83,7 +88,7 @@
 
 @media screen and (min-width: 750px) {
   #home-88-collection-story {
-    height: var(--story-height-desktop);
+    height: var(--home-88-story-height-desktop);
   }
 
   #home-88-collection-story .home-88-story__copy {
