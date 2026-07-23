@@ -1,23 +1,26 @@
 (() => {
-  if (customElements.get('home-88-product-grid')) return;
+  if (window.Home88ProductGridManager) {
+    window.Home88ProductGridManager.initializeAll();
+    return;
+  }
 
   const normalize = (value) => String(value || '').trim().toLowerCase();
 
-  class Home88ProductGrid extends HTMLElement {
-    connectedCallback() {
-      if (this.controller) return;
-
+  class Home88ProductGridController {
+    constructor(root) {
+      this.root = root;
+      this.sectionId = root.dataset.sectionId;
       this.controller = new AbortController();
-      this.modal = this.querySelector('[data-quick-shop-modal]');
-      this.panel = this.querySelector('[data-modal-panel]');
-      this.form = this.querySelector('[data-quick-shop-form]');
-      this.optionsNode = this.querySelector('[data-modal-options]');
-      this.titleNode = this.querySelector('[data-modal-title]');
-      this.priceNode = this.querySelector('[data-modal-price]');
-      this.comparePriceNode = this.querySelector('[data-modal-compare-price]');
-      this.imageNode = this.querySelector('[data-modal-image]');
-      this.statusNode = this.querySelector('[data-modal-status]');
-      this.submitButton = this.querySelector('[data-modal-submit]');
+      this.modal = root.querySelector('[data-quick-shop-modal]');
+      this.panel = root.querySelector('[data-modal-panel]');
+      this.form = root.querySelector('[data-quick-shop-form]');
+      this.optionsNode = root.querySelector('[data-modal-options]');
+      this.titleNode = root.querySelector('[data-modal-title]');
+      this.priceNode = root.querySelector('[data-modal-price]');
+      this.comparePriceNode = root.querySelector('[data-modal-compare-price]');
+      this.imageNode = root.querySelector('[data-modal-image]');
+      this.statusNode = root.querySelector('[data-modal-status]');
+      this.submitButton = root.querySelector('[data-modal-submit]');
       this.activeCard = null;
       this.activeTrigger = null;
       this.product = null;
@@ -26,14 +29,14 @@
       this.submitting = false;
 
       const options = { signal: this.controller.signal };
-      this.addEventListener('click', this.onClick, options);
-      this.addEventListener('change', this.onChange, options);
+      root.addEventListener('click', this.onClick, options);
+      root.addEventListener('change', this.onChange, options);
       this.form?.addEventListener('submit', this.onSubmit, options);
       document.addEventListener('keydown', this.onKeyDown, options);
       document.addEventListener('shopify:block:select', this.onBlockSelect, options);
     }
 
-    disconnectedCallback() {
+    destroy() {
       this.closeModal(false);
       this.controller?.abort();
       this.controller = null;
@@ -45,7 +48,6 @@
       try {
         return JSON.parse(node.textContent);
       } catch (error) {
-        console.warn('[Home 8.8 Quick Shop] Invalid product data.', error);
         return null;
       }
     }
@@ -86,15 +88,16 @@
       }
 
       const swatch = event.target.closest('[data-card-swatch]');
-      if (swatch && this.contains(swatch)) {
+      if (swatch && this.root.contains(swatch)) {
         const card = swatch.closest('[data-product-card]');
         const mapping = this.getMappings(card).find((item) => Number(item.index) === Number(swatch.dataset.colorIndex));
         this.setCardColor(card, mapping, swatch);
         return;
       }
 
-      const openButton = event.target.closest('[data-quick-shop-open]');
-      if (openButton && this.contains(openButton) && !openButton.disabled) {
+      const openButton = event.target.closest('[data-home-88-quick-shop-trigger]');
+      if (openButton && this.root.contains(openButton) && !openButton.disabled) {
+        event.preventDefault();
         this.openModal(openButton.closest('[data-product-card]'), openButton);
         return;
       }
@@ -144,7 +147,7 @@
     onBlockSelect = (event) => {
       const blockId = event.detail?.blockId;
       if (!blockId) return;
-      const card = this.querySelector(`[data-block-id="${CSS.escape(blockId)}"]`);
+      const card = this.root.querySelector(`[data-block-id="${CSS.escape(blockId)}"]`);
       if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
 
@@ -197,7 +200,7 @@
         field.className = 'home-88-products__modal-field';
 
         const label = document.createElement('label');
-        const selectId = `Home88Option-${this.dataset.sectionId}-${card.dataset.blockId}-${position}`;
+        const selectId = `Home88Option-${this.sectionId}-${card.dataset.blockId}-${position}`;
         label.htmlFor = selectId;
         label.textContent = option.name;
 
@@ -226,6 +229,7 @@
       this.renderImage(activeMapping?.src || product.featuredImage?.src, activeMapping?.label || activeMapping?.optionValue);
       this.renderPrice(product);
       this.modal.hidden = false;
+      this.modal.setAttribute('aria-hidden', 'false');
       document.documentElement.classList.add('home-88-quick-shop-open');
       this.updateSelection();
       requestAnimationFrame(() => this.getFocusable()[0]?.focus() || this.panel?.focus());
@@ -234,6 +238,7 @@
     closeModal(restoreFocus = true) {
       if (!this.modal || this.modal.hidden) return;
       this.modal.hidden = true;
+      this.modal.setAttribute('aria-hidden', 'true');
       document.documentElement.classList.remove('home-88-quick-shop-open');
       if (restoreFocus) this.activeTrigger?.focus();
       this.activeCard = null;
@@ -366,9 +371,7 @@
         try {
           window.KasyaAovCart.open();
           openedAovCart = true;
-        } catch (error) {
-          console.warn('[Home 8.8 Quick Shop] Kasya AOV Cart handoff failed.', error);
-        }
+        } catch (error) {}
       }
 
       if (!openedAovCart && cart && typeof cart.renderContents === 'function') {
@@ -402,5 +405,40 @@
     };
   }
 
-  customElements.define('home-88-product-grid', Home88ProductGrid);
+  const controllers = new Map();
+
+  const initialize = (root) => {
+    if (!root?.dataset.sectionId) return;
+    const sectionId = root.dataset.sectionId;
+    controllers.get(sectionId)?.destroy();
+    controllers.set(sectionId, new Home88ProductGridController(root));
+  };
+
+  const initializeAll = (scope = document) => {
+    if (scope.matches?.('home-88-product-grid[data-section-id]')) initialize(scope);
+    scope.querySelectorAll?.('home-88-product-grid[data-section-id]').forEach(initialize);
+  };
+
+  const onSectionLoad = (event) => initializeAll(event.target);
+  const onSectionUnload = (event) => {
+    const root = event.target.matches?.('home-88-product-grid[data-section-id]')
+      ? event.target
+      : event.target.querySelector?.('home-88-product-grid[data-section-id]');
+    if (!root) return;
+    const current = controllers.get(root.dataset.sectionId);
+    if (current?.root !== root) return;
+    current.destroy();
+    controllers.delete(root.dataset.sectionId);
+  };
+
+  document.addEventListener('shopify:section:load', onSectionLoad);
+  document.addEventListener('shopify:section:unload', onSectionUnload);
+
+  window.Home88ProductGridManager = { initialize, initializeAll };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => initializeAll(), { once: true });
+  } else {
+    initializeAll();
+  }
 })();

@@ -510,7 +510,7 @@ body.home-88-header-enabled.home-88-header-solid .section-header .cart-count-bub
 #home-88-product-grid .home-88-products__meta {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.6rem;
+  gap: 0.4rem;
   align-items: start;
 }
 
@@ -518,21 +518,25 @@ body.home-88-header-enabled.home-88-header-solid .section-header .cart-count-bub
   min-width: 0;
   margin: 0;
   font-family: inherit;
-  font-size: var(--home-88-product-name-mobile, 16px);
+  font-size: clamp(11px, 3.4vw, var(--home-88-product-name-mobile, 13px));
   font-weight: 400;
+  letter-spacing: -0.035em;
   line-height: 1.15;
+  white-space: nowrap;
 }
 
 #home-88-product-grid .home-88-products__title a {
+  display: block;
   color: #151515;
   text-decoration: none;
+  white-space: inherit;
 }
 
 #home-88-product-grid .home-88-products__prices {
   display: grid;
   justify-items: end;
   color: #151515;
-  font-size: var(--home-88-product-price-mobile, 18px);
+  font-size: clamp(14px, 4.6vw, var(--home-88-product-price-mobile, 18px));
   line-height: 1.15;
   white-space: nowrap;
 }
@@ -741,10 +745,10 @@ html.home-88-quick-shop-open {
   }
 
   #home-88-product-grid .home-88-products__title {
-    font-size: var(--home-88-product-name-desktop, 18px);
+    font-size: clamp(11px, 1.4vw, var(--home-88-product-name-desktop, 18px));
   }
 
   #home-88-product-grid .home-88-products__prices {
-    font-size: var(--home-88-product-price-desktop, 22px);
+    font-size: clamp(14px, 1.8vw, var(--home-88-product-price-desktop, 22px));
   }
 }

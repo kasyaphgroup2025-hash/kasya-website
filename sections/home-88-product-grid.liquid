@@ -1,5 +1,4 @@
 {{ 'home-88.css' | asset_url | stylesheet_tag }}
-{{ 'home-88-product-grid.js' | asset_url | script_tag }}
 
 <home-88-product-grid
   id="home-88-product-grid"
@@ -94,9 +93,12 @@
           <button
             class="home-88-products__quick-shop"
             type="button"
-            data-quick-shop-open
+            data-home-88-quick-shop-trigger
+            data-section-id="{{ section.id }}"
+            data-block-id="{{ block.id }}"
+            data-product-id="{{ product.id }}"
             aria-haspopup="dialog"
-            {% if product == blank %}disabled{% endif %}
+            {% if product == blank or product.available == false %}disabled{% endif %}
           >Quick Shop</button>
         </div>
 
@@ -173,7 +175,7 @@
     {%- endfor -%}
   </div>
 
-  <div class="home-88-products__modal" data-quick-shop-modal hidden>
+  <div class="home-88-products__modal" data-quick-shop-modal aria-hidden="true" hidden>
     <div class="home-88-products__modal-panel" role="dialog" aria-modal="true" aria-labelledby="Home88QuickShopTitle-{{ section.id }}" tabindex="-1" data-modal-panel>
       <button class="home-88-products__modal-close" type="button" aria-label="Close Quick Shop" data-modal-close>&times;</button>
       <div class="home-88-products__modal-summary">
@@ -198,6 +200,8 @@
   </div>
 </home-88-product-grid>
 
+<script src="{{ 'home-88-product-grid.js' | asset_url }}" defer="defer"></script>
+
 {% schema %}
 {
   "name": "Home 8.8 product grid",
@@ -218,7 +222,7 @@
     { "type": "range", "id": "product_grid_padding_top", "label": "Product grid top padding", "min": 0, "max": 60, "step": 2, "unit": "px", "default": 20 },
     { "type": "range", "id": "product_grid_padding_bottom", "label": "Product grid bottom padding", "min": 0, "max": 60, "step": 2, "unit": "px", "default": 20 },
     { "type": "header", "content": "Product card typography" },
-    { "type": "range", "id": "product_name_size_mobile", "label": "Mobile product name size", "min": 12, "max": 26, "step": 1, "unit": "px", "default": 16 },
+    { "type": "range", "id": "product_name_size_mobile", "label": "Mobile product name size", "min": 11, "max": 22, "step": 1, "unit": "px", "default": 13 },
     { "type": "range", "id": "product_name_size_desktop", "label": "Desktop product name size", "min": 14, "max": 32, "step": 1, "unit": "px", "default": 18 },
     { "type": "range", "id": "product_price_size_mobile", "label": "Mobile product price size", "min": 14, "max": 30, "step": 1, "unit": "px", "default": 18 },
     { "type": "range", "id": "product_price_size_desktop", "label": "Desktop product price size", "min": 16, "max": 36, "step": 1, "unit": "px", "default": 22 }
