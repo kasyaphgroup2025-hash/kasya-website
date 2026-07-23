@@ -36,7 +36,13 @@
 
 #home-88-rhythm-collection .home-88-rhythm__overlay {
   z-index: 1;
-  background: rgba(0, 0, 0, var(--rhythm-overlay));
+  background: linear-gradient(
+    90deg,
+    rgb(0 0 0 / calc(var(--rhythm-overlay) * 1.8)) 0%,
+    rgb(0 0 0 / calc(var(--rhythm-overlay) * 1.15)) 34%,
+    rgb(0 0 0 / calc(var(--rhythm-overlay) * 0.4)) 62%,
+    rgb(0 0 0 / 0) 90%
+  );
   pointer-events: none;
 }
 
@@ -118,6 +124,16 @@
 
   #home-88-rhythm-collection .home-88-rhythm__media img {
     object-position: var(--rhythm-position-desktop);
+  }
+
+  #home-88-rhythm-collection .home-88-rhythm__overlay {
+    background: linear-gradient(
+      90deg,
+      rgb(0 0 0 / calc(var(--rhythm-overlay) * 1.8)) 0%,
+      rgb(0 0 0 / calc(var(--rhythm-overlay) * 1.15)) 28%,
+      rgb(0 0 0 / calc(var(--rhythm-overlay) * 0.4)) 50%,
+      rgb(0 0 0 / 0) 72%
+    );
   }
 
   #home-88-rhythm-collection .home-88-rhythm__content {
