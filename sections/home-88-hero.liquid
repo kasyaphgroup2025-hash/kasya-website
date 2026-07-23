@@ -1,0 +1,216 @@
+{{ 'home-88.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign mobile_image = section.settings.mobile_image | default: section.settings.desktop_image
+  assign desktop_image = section.settings.desktop_image | default: section.settings.mobile_image
+  assign image_alt = section.settings.image_alt | escape
+  assign primary_button_link = section.settings.primary_button_link | default: '#home-88-product-grid'
+  assign secondary_button_link = section.settings.secondary_button_link | default: '#home-88-shop-the-look'
+-%}
+
+<section
+  id="Home88Hero-{{ section.id }}"
+  class="home-88-hero"
+  aria-labelledby="Home88HeroHeading-{{ section.id }}"
+  data-home-88-hero
+  style="--home-88-mobile-position: {{ section.settings.mobile_image_position }}; --home-88-desktop-position: {{ section.settings.desktop_image_position }};"
+>
+  <div class="home-88-hero__media">
+    {%- if mobile_image != blank -%}
+      <picture class="home-88-hero__picture">
+        {%- if desktop_image != blank -%}
+          <source
+            media="(min-width: 750px)"
+            srcset="
+              {{ desktop_image | image_url: width: 750 }} 750w,
+              {{ desktop_image | image_url: width: 1100 }} 1100w,
+              {{ desktop_image | image_url: width: 1500 }} 1500w,
+              {{ desktop_image | image_url: width: 2000 }} 2000w,
+              {{ desktop_image | image_url: width: 2400 }} 2400w
+            "
+            sizes="100vw"
+          >
+        {%- endif -%}
+        {{- mobile_image
+          | image_url: width: 1500
+          | image_tag:
+            class: 'home-88-hero__image',
+            widths: '320, 375, 550, 750, 900, 1200, 1500',
+            sizes: '100vw',
+            loading: 'eager',
+            fetchpriority: 'high',
+            alt: image_alt
+        -}}
+      </picture>
+    {%- else -%}
+      <div class="home-88-hero__placeholder" aria-hidden="true"></div>
+    {%- endif -%}
+  </div>
+
+  <div class="home-88-hero__inner">
+    <div class="home-88-hero__content">
+      {%- if section.settings.headline != blank -%}
+        <h1 id="Home88HeroHeading-{{ section.id }}" class="home-88-hero__headline">{{ section.settings.headline | escape }}</h1>
+      {%- endif -%}
+
+      {%- if section.settings.collection_name != blank -%}
+        <p class="home-88-hero__collection">{{ section.settings.collection_name | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.description != blank -%}
+        <p class="home-88-hero__description">{{ section.settings.description | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.primary_button_label != blank or section.settings.secondary_button_label != blank -%}
+        <div class="home-88-hero__actions">
+          {%- if section.settings.primary_button_label != blank -%}
+            <a class="home-88-hero__button home-88-hero__button--primary" href="{{ primary_button_link | escape }}">
+              {{ section.settings.primary_button_label | escape }}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.secondary_button_label != blank -%}
+            <a class="home-88-hero__button home-88-hero__button--secondary" href="{{ secondary_button_link | escape }}">
+              {{ section.settings.secondary_button_label | escape }}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  (() => {
+    const section = document.getElementById('Home88Hero-{{ section.id }}');
+    if (!section || !document.body) return;
+
+    if (window.home88HeroController) window.home88HeroController.destroy();
+
+    const header = document.querySelector('.section-header');
+    let lastScrollY = Math.max(window.scrollY, 0);
+    let ticking = false;
+
+    const updateHeader = () => {
+      const currentScrollY = Math.max(window.scrollY, 0);
+      const scrollingDown = currentScrollY > lastScrollY + 8;
+      const scrollingUp = currentScrollY < lastScrollY - 8;
+
+      if (currentScrollY < 16) {
+        document.body.classList.remove('home-88-header-hidden', 'home-88-header-solid');
+      } else if (scrollingDown) {
+        document.body.classList.remove('home-88-header-solid');
+        document.body.classList.add('home-88-header-hidden');
+      } else if (scrollingUp) {
+        document.body.classList.remove('home-88-header-hidden');
+        document.body.classList.add('home-88-header-solid');
+      }
+
+      lastScrollY = currentScrollY;
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(updateHeader);
+    };
+
+    const onClick = (event) => {
+      const link = event.target.closest('a[href^="#"]');
+      if (!link || !section.contains(link)) return;
+
+      const targetId = link.getAttribute('href');
+      if (targetId !== '#home-88-product-grid' && targetId !== '#home-88-shop-the-look') return;
+
+      const target = document.querySelector(targetId);
+      if (!target) return;
+
+      event.preventDefault();
+      target.scrollIntoView({
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        block: 'start'
+      });
+    };
+
+    const onSectionUnload = (event) => {
+      if (event.target.contains(section)) destroy();
+    };
+
+    const destroy = () => {
+      window.removeEventListener('scroll', onScroll);
+      section.removeEventListener('click', onClick);
+      document.removeEventListener('shopify:section:unload', onSectionUnload);
+      document.body.classList.remove('home-88-header-enabled', 'home-88-header-hidden', 'home-88-header-solid');
+      if (window.home88HeroController && window.home88HeroController.section === section) {
+        delete window.home88HeroController;
+      }
+    };
+
+    if (header) {
+      document.body.classList.add('home-88-header-enabled');
+      window.addEventListener('scroll', onScroll, { passive: true });
+      updateHeader();
+    }
+
+    section.addEventListener('click', onClick);
+    document.addEventListener('shopify:section:unload', onSectionUnload);
+    window.home88HeroController = { section, destroy };
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Home 8.8 hero",
+  "tag": "section",
+  "class": "section-home-88-hero",
+  "settings": [
+    { "type": "image_picker", "id": "mobile_image", "label": "Mobile hero image" },
+    { "type": "image_picker", "id": "desktop_image", "label": "Desktop hero image" },
+    { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "The Interlude Edit by Kasya" },
+    {
+      "type": "select",
+      "id": "mobile_image_position",
+      "label": "Mobile image position",
+      "default": "center center",
+      "options": [
+        { "value": "left top", "label": "Top left" },
+        { "value": "center top", "label": "Top center" },
+        { "value": "right top", "label": "Top right" },
+        { "value": "left center", "label": "Middle left" },
+        { "value": "center center", "label": "Middle center" },
+        { "value": "right center", "label": "Middle right" },
+        { "value": "left bottom", "label": "Bottom left" },
+        { "value": "center bottom", "label": "Bottom center" },
+        { "value": "right bottom", "label": "Bottom right" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "desktop_image_position",
+      "label": "Desktop image position",
+      "default": "center center",
+      "options": [
+        { "value": "left top", "label": "Top left" },
+        { "value": "center top", "label": "Top center" },
+        { "value": "right top", "label": "Top right" },
+        { "value": "left center", "label": "Middle left" },
+        { "value": "center center", "label": "Middle center" },
+        { "value": "right center", "label": "Middle right" },
+        { "value": "left bottom", "label": "Bottom left" },
+        { "value": "center bottom", "label": "Bottom center" },
+        { "value": "right bottom", "label": "Bottom right" }
+      ]
+    },
+    { "type": "textarea", "id": "headline", "label": "Headline", "default": "EASE, EVEN\nWHEN THE DAY\nSHIFTS" },
+    { "type": "text", "id": "collection_name", "label": "Collection name", "default": "THE INTERLUDE EDIT" },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Polished silhouettes and easy comfort for the moments between rain and sun, work and rest, plans and unexpected turns." },
+    { "type": "text", "id": "primary_button_label", "label": "Primary button label", "default": "View Collection" },
+    { "type": "url", "id": "primary_button_link", "label": "Primary button link", "info": "Defaults to #home-88-product-grid." },
+    { "type": "text", "id": "secondary_button_label", "label": "Secondary button label", "default": "Shop The Look" },
+    { "type": "url", "id": "secondary_button_link", "label": "Secondary button link", "info": "Defaults to #home-88-shop-the-look." }
+  ],
+  "presets": [
+    { "name": "Home 8.8 hero" }
+  ]
+}
+{% endschema %}
