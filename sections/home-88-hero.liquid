@@ -13,7 +13,7 @@
   class="home-88-hero"
   aria-labelledby="Home88HeroHeading-{{ section.id }}"
   data-home-88-hero
-  style="--home-88-mobile-position: {{ section.settings.mobile_image_position }}; --home-88-desktop-position: {{ section.settings.desktop_image_position }};"
+  style="--home-88-mobile-position: {{ section.settings.mobile_image_position }}; --home-88-desktop-position: {{ section.settings.desktop_image_position }}; --home-88-headline-mobile-size: {{ section.settings.headline_size_mobile }}px; --home-88-headline-desktop-size: {{ section.settings.headline_size_desktop }}px; --home-88-headline-line-height: {{ section.settings.headline_line_height }}%; --home-88-headline-max-width: {{ section.settings.headline_max_width }}px;"
 >
   <div class="home-88-hero__media">
     {%- if mobile_image != blank -%}
@@ -207,6 +207,11 @@
       ]
     },
     { "type": "textarea", "id": "headline", "label": "Headline", "default": "EASE, EVEN\nWHEN THE DAY\nSHIFTS" },
+    { "type": "header", "content": "Headline sizing" },
+    { "type": "range", "id": "headline_size_mobile", "label": "Mobile headline size", "min": 24, "max": 52, "step": 1, "unit": "px", "default": 38 },
+    { "type": "range", "id": "headline_size_desktop", "label": "Desktop headline size", "min": 32, "max": 80, "step": 1, "unit": "px", "default": 52 },
+    { "type": "range", "id": "headline_line_height", "label": "Headline line height", "min": 80, "max": 130, "step": 1, "unit": "%", "default": 100 },
+    { "type": "range", "id": "headline_max_width", "label": "Headline content width", "min": 220, "max": 600, "step": 10, "unit": "px", "default": 420 },
     { "type": "text", "id": "collection_name", "label": "Collection name", "default": "THE INTERLUDE EDIT" },
     { "type": "textarea", "id": "description", "label": "Description", "default": "Polished silhouettes and easy comfort for the moments between rain and sun, work and rest, plans and unexpected turns." },
     { "type": "text", "id": "primary_button_label", "label": "Primary button label", "default": "View Collection" },
