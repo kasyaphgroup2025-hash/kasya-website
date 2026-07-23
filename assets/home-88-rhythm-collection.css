@@ -1,52 +1,44 @@
 #home-88-rhythm-collection {
-  display: grid;
-  grid-template-columns: minmax(0, var(--rhythm-left-mobile)) minmax(0, calc(100% - var(--rhythm-left-mobile)));
+  position: relative;
   width: 100%;
-  min-height: var(--rhythm-height-mobile);
+  height: var(--rhythm-height-mobile);
   overflow: hidden;
   border-top: 0.1rem solid var(--rhythm-divider);
+  background: #34362d;
   font-family: "Helvetica Now Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 400;
 }
 
 #home-88-rhythm-collection *,
 #home-88-rhythm-collection *::before,
-#home-88-rhythm-collection *::after { box-sizing: border-box; }
-
-#home-88-rhythm-collection .home-88-rhythm__left,
-#home-88-rhythm-collection .home-88-rhythm__right {
-  position: relative;
-  min-width: 0;
-  min-height: var(--rhythm-height-mobile);
-  overflow: hidden;
+#home-88-rhythm-collection *::after {
+  box-sizing: border-box;
 }
 
-#home-88-rhythm-collection .home-88-rhythm__left { background: #252719; }
-#home-88-rhythm-collection .home-88-rhythm__right { background: #dedbd2; }
-
-#home-88-rhythm-collection .home-88-rhythm__left-media,
+#home-88-rhythm-collection .home-88-rhythm__media,
 #home-88-rhythm-collection .home-88-rhythm__overlay {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+#home-88-rhythm-collection .home-88-rhythm__media img,
+#home-88-rhythm-collection .home-88-rhythm__media svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: cover;
+  object-position: var(--rhythm-position-mobile);
 }
 
 #home-88-rhythm-collection .home-88-rhythm__overlay {
   z-index: 1;
   background: rgba(0, 0, 0, var(--rhythm-overlay));
+  pointer-events: none;
 }
-
-#home-88-rhythm-collection .home-88-rhythm__left-media img,
-#home-88-rhythm-collection .home-88-rhythm__left-media svg,
-#home-88-rhythm-collection .home-88-rhythm__right img,
-#home-88-rhythm-collection .home-88-rhythm__right svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-#home-88-rhythm-collection .home-88-rhythm__left-media img { object-position: var(--rhythm-left-position-mobile); }
-#home-88-rhythm-collection .home-88-rhythm__right img { object-position: var(--rhythm-right-position-mobile); }
 
 #home-88-rhythm-collection .home-88-rhythm__content {
   position: relative;
@@ -54,7 +46,9 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: var(--rhythm-height-mobile);
+  width: var(--rhythm-content-mobile);
+  height: 100%;
+  min-height: 0;
   padding: var(--rhythm-padding-mobile);
   color: var(--rhythm-text);
 }
@@ -69,7 +63,7 @@
 }
 
 #home-88-rhythm-collection p {
-  margin: clamp(1rem, 3vw, 2rem) 0 0;
+  margin: clamp(0.7rem, 2vw, 1.4rem) 0 0;
   font-size: var(--rhythm-description-mobile);
   line-height: var(--rhythm-line-mobile);
 }
@@ -77,13 +71,13 @@
 #home-88-rhythm-collection .home-88-rhythm__button {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.7rem;
+  gap: 0.6rem;
   align-items: center;
   width: fit-content;
   max-width: 100%;
-  min-height: 3.4rem;
-  margin-top: clamp(1.4rem, 4vw, 2.8rem);
-  padding: 0.6rem 0.8rem 0.6rem 1rem;
+  min-height: 3.2rem;
+  margin-top: clamp(0.9rem, 2.5vw, 1.8rem);
+  padding: 0.5rem 0.7rem 0.5rem 0.9rem;
   border: 0.1rem solid var(--rhythm-button-border);
   border-radius: 0.2rem;
   background: var(--rhythm-button-bg);
@@ -94,32 +88,55 @@
   white-space: nowrap;
 }
 
-#home-88-rhythm-collection .home-88-rhythm__button[aria-disabled="true"] { pointer-events: none; }
+#home-88-rhythm-collection .home-88-rhythm__button[aria-disabled="true"] {
+  pointer-events: none;
+}
 
 #home-88-rhythm-collection .home-88-rhythm__button svg {
-  width: 1.4em;
-  height: 1.4em;
+  width: 1.35em;
+  height: 1.35em;
   stroke-width: 1.5;
 }
 
 @media screen and (max-width: 349px) {
-  #home-88-rhythm-collection .home-88-rhythm__content { padding: min(var(--rhythm-padding-mobile), 12px); }
-  #home-88-rhythm-collection .home-88-rhythm__button { gap: 0.4rem; padding-right: 0.5rem; padding-left: 0.6rem; font-size: min(var(--rhythm-button-mobile), 8px); }
+  #home-88-rhythm-collection .home-88-rhythm__content {
+    padding: min(var(--rhythm-padding-mobile), 12px);
+  }
+
+  #home-88-rhythm-collection .home-88-rhythm__button {
+    gap: 0.35rem;
+    padding-right: 0.45rem;
+    padding-left: 0.6rem;
+    font-size: min(var(--rhythm-button-mobile), 8px);
+  }
 }
 
 @media screen and (min-width: 750px) {
   #home-88-rhythm-collection {
-    grid-template-columns: minmax(0, var(--rhythm-left-desktop)) minmax(0, calc(100% - var(--rhythm-left-desktop)));
-    min-height: var(--rhythm-height-desktop);
+    height: var(--rhythm-height-desktop);
   }
 
-  #home-88-rhythm-collection .home-88-rhythm__left,
-  #home-88-rhythm-collection .home-88-rhythm__right,
-  #home-88-rhythm-collection .home-88-rhythm__content { min-height: var(--rhythm-height-desktop); }
-  #home-88-rhythm-collection .home-88-rhythm__content { padding: var(--rhythm-padding-desktop); }
-  #home-88-rhythm-collection h2 { font-size: var(--rhythm-heading-desktop); }
-  #home-88-rhythm-collection p { max-width: 58rem; font-size: var(--rhythm-description-desktop); line-height: var(--rhythm-line-desktop); }
-  #home-88-rhythm-collection .home-88-rhythm__button { min-height: 4.2rem; padding: 0.8rem 1rem 0.8rem 1.4rem; font-size: var(--rhythm-button-desktop); }
-  #home-88-rhythm-collection .home-88-rhythm__left-media img { object-position: var(--rhythm-left-position-desktop); }
-  #home-88-rhythm-collection .home-88-rhythm__right img { object-position: var(--rhythm-right-position-desktop); }
+  #home-88-rhythm-collection .home-88-rhythm__media img {
+    object-position: var(--rhythm-position-desktop);
+  }
+
+  #home-88-rhythm-collection .home-88-rhythm__content {
+    width: var(--rhythm-content-desktop);
+    padding: var(--rhythm-padding-desktop);
+  }
+
+  #home-88-rhythm-collection h2 {
+    font-size: var(--rhythm-heading-desktop);
+  }
+
+  #home-88-rhythm-collection p {
+    font-size: var(--rhythm-description-desktop);
+    line-height: var(--rhythm-line-desktop);
+  }
+
+  #home-88-rhythm-collection .home-88-rhythm__button {
+    min-height: 3.8rem;
+    padding: 0.7rem 0.9rem 0.7rem 1.2rem;
+    font-size: var(--rhythm-button-desktop);
+  }
 }
