@@ -9,8 +9,24 @@
  */
 {
   "sections": {
+    "home_88_hero": {
+      "type": "home-88-hero",
+      "settings": {
+        "image_alt": "The Interlude Edit by Kasya",
+        "mobile_image_position": "center center",
+        "desktop_image_position": "center center",
+        "headline": "EASE, EVEN\nWHEN THE DAY\nSHIFTS",
+        "collection_name": "THE INTERLUDE EDIT",
+        "description": "Polished silhouettes and easy comfort for the moments between rain and sun, work and rest, plans and unexpected turns.",
+        "primary_button_label": "View Collection",
+        "primary_button_link": "#home-88-product-grid",
+        "secondary_button_label": "Shop The Look",
+        "secondary_button_link": "#home-88-shop-the-look"
+      }
+    },
     "home_hero_photo": {
       "type": "home-hero-photo",
+      "disabled": true,
       "settings": {
         "mobile_image": "shopify://shop_images/6.6_MOBILE_CRO_38ec4f15-4b2b-42d9-8ad1-8e2b5bf894ef.jpg",
         "desktop_image": "shopify://shop_images/6.6_MOBILE_CRO_688885ce-cea8-41fb-8a35-f6f27dd2ff02.jpg",
@@ -270,6 +286,7 @@
     }
   },
   "order": [
+    "home_88_hero",
     "home_hero_photo",
     "home_rhythm_article",
     "home_quick_shop_grid",
