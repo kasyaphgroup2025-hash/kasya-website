@@ -41,6 +41,52 @@
       padding-top: {{ section.settings.padding_top }}px;
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
+
+  }
+
+  #ImageWithText--{{ section.id }} .newsletter__heading--first-order {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: none;
+    min-height: 6.4rem;
+    margin: 0;
+    padding: 1rem 1.6rem;
+    border-radius: 0;
+    background: #1d2c46;
+    color: #fff;
+    box-shadow: none;
+    font-family: "Helvetica Now Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: clamp(1.8rem, 5vw, 2.2rem);
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.1;
+    text-align: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  #ImageWithText--{{ section.id }} .newsletter__heading--first-order + * {
+    margin-top: 0 !important;
+  }
+
+  @media screen and (max-width: 359px) {
+    #ImageWithText--{{ section.id }} .newsletter__heading--first-order {
+      font-size: 1.7rem;
+      white-space: normal;
+      text-wrap: balance;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    #ImageWithText--{{ section.id }} .newsletter__heading--first-order {
+      min-height: 7.6rem;
+      padding-right: 2.4rem;
+      padding-left: 2.4rem;
+      font-size: clamp(2.4rem, 2.1vw, 3rem);
+    }
   }
 </style>
 
@@ -90,7 +136,7 @@
                 {%- when '@app' -%}
                   {% render block %}
                 {%- when 'heading' -%}
-                  <h2 class="newsletter__heading image-with-text__heading break newsletter__override-color-{{ section.id }} {{ block.settings.heading_size }} font-heading-extra-bold" {{ block.shopify_attributes }}>{{ block.settings.heading | escape }}</h2>
+                  <h2 class="newsletter__heading image-with-text__heading break newsletter__override-color-{{ section.id }} {{ block.settings.heading_size }} font-heading-extra-bold{% if block.settings.heading == 'Get 10% off your first order' %} newsletter__heading--first-order{% endif %}" {{ block.shopify_attributes }}>{{ block.settings.heading | escape }}</h2>
                 {%- when 'paragraph' -%}
                   <div class="newsletter__subheading image-with-text__text rte newsletter__override-color-{{ section.id }} color-foreground light" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
                 {%- when 'email_form' -%}
