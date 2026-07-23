@@ -1,8 +1,9 @@
 #home-88-collection-story {
   display: grid;
-  grid-template-columns: minmax(0, 48fr) minmax(0, 52fr);
-  width: 100%;
-  min-height: var(--story-height-mobile);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: min(100%, 144rem);
+  height: var(--story-height-mobile);
+  margin: 0 auto;
   overflow: hidden;
   font-family: "Helvetica Now Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 400;
@@ -19,7 +20,8 @@
   flex-direction: column;
   justify-content: center;
   min-width: 0;
-  min-height: var(--story-height-mobile);
+  height: 100%;
+  overflow: hidden;
   padding: var(--story-padding-mobile);
   background: var(--story-bg);
   color: var(--story-text);
@@ -35,26 +37,27 @@
 }
 
 #home-88-collection-story .home-88-story__opening {
-  margin: clamp(1.2rem, 4vw, 2.4rem) 0 0;
+  margin: clamp(0.7rem, 2.5vw, 1.6rem) 0 0;
   font-size: var(--story-opening-mobile);
   line-height: var(--story-line-mobile);
 }
 
 #home-88-collection-story .home-88-story__body {
-  margin-top: clamp(1rem, 3vw, 2rem);
+  margin-top: clamp(0.6rem, 2vw, 1.4rem);
   font-size: var(--story-body-mobile);
   line-height: var(--story-line-mobile);
 }
 
 #home-88-collection-story .home-88-story__closing {
-  margin: clamp(1rem, 3vw, 2rem) 0 0;
+  margin: clamp(0.6rem, 2vw, 1.4rem) 0 0;
   font-size: var(--story-closing-mobile);
   line-height: var(--story-line-mobile);
 }
 
 #home-88-collection-story .home-88-story__media {
   min-width: 0;
-  min-height: var(--story-height-mobile);
+  height: 100%;
+  overflow: hidden;
   background: #dedbd2;
 }
 
@@ -71,17 +74,16 @@
   #home-88-collection-story .home-88-story__copy {
     padding: min(var(--story-padding-mobile), 12px);
   }
+
+  #home-88-collection-story h2 { font-size: min(var(--story-heading-mobile), 16px); }
+  #home-88-collection-story .home-88-story__opening { font-size: min(var(--story-opening-mobile), 10px); }
+  #home-88-collection-story .home-88-story__body { font-size: min(var(--story-body-mobile), 9px); }
+  #home-88-collection-story .home-88-story__closing { font-size: min(var(--story-closing-mobile), 9px); }
 }
 
 @media screen and (min-width: 750px) {
   #home-88-collection-story {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    min-height: var(--story-height-desktop);
-  }
-
-  #home-88-collection-story .home-88-story__copy,
-  #home-88-collection-story .home-88-story__media {
-    min-height: var(--story-height-desktop);
+    height: var(--story-height-desktop);
   }
 
   #home-88-collection-story .home-88-story__copy {
