@@ -162,13 +162,19 @@
         "section_heading": "THE INTERLUDE EDIT",
         "section_description": "Polished essentials in fabrics that move with you",
         "intro_background": "#ffffff",
-        "grid_background": "#D8BF9F",
+        "grid_background": "#d8bf9f",
         "intro_padding_top": 64,
         "intro_padding_bottom": 64,
-        "heading_size_mobile": 30,
+        "heading_size_mobile": 26,
         "heading_size_desktop": 44,
         "description_size_mobile": 12,
-        "description_size_desktop": 20
+        "description_size_desktop": 20,
+        "product_grid_padding_top": 20,
+        "product_grid_padding_bottom": 20,
+        "product_name_size_mobile": 13,
+        "product_name_size_desktop": 18,
+        "product_price_size_mobile": 18,
+        "product_price_size_desktop": 22
       }
     },
     "home_hero_photo": {
