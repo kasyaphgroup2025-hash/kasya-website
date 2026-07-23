@@ -1,0 +1,90 @@
+#home-88-fabrics {
+  width: 100%;
+  overflow: hidden;
+  padding: var(--fabrics-top-mobile) 0 var(--fabrics-bottom-mobile);
+  background: var(--fabrics-bg);
+  color: var(--fabrics-text);
+  font-family: "Helvetica Now Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+}
+
+#home-88-fabrics *,
+#home-88-fabrics *::before,
+#home-88-fabrics *::after { box-sizing: border-box; }
+
+#home-88-fabrics .home-88-fabrics__inner {
+  width: min(100%, 144rem);
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+#home-88-fabrics h2 {
+  max-width: 90rem;
+  margin: 0 auto clamp(2rem, 6vw, 4.8rem);
+  color: inherit;
+  font: inherit;
+  font-size: var(--fabrics-heading-mobile);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-align: center;
+}
+
+#home-88-fabrics .home-88-fabrics__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--fabrics-gap);
+  width: 100%;
+}
+
+#home-88-fabrics .home-88-fabrics__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: clamp(12rem, 39vw, 20rem);
+  padding: var(--fabrics-card-padding);
+  border-radius: 0.2rem;
+  background: var(--fabric-card-bg);
+  color: var(--fabric-card-text);
+  text-align: center;
+}
+
+#home-88-fabrics .home-88-fabrics__icon {
+  width: var(--fabrics-icon);
+  height: var(--fabrics-icon);
+  margin-bottom: clamp(0.6rem, 2vw, 1.4rem);
+  object-fit: contain;
+}
+
+#home-88-fabrics h3 {
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  font-size: var(--fabrics-title-mobile);
+  line-height: 1.1;
+}
+
+#home-88-fabrics p {
+  margin: 0.6rem 0 0;
+  font-size: var(--fabrics-description-mobile);
+  line-height: var(--fabrics-line-mobile);
+}
+
+@media screen and (max-width: 349px) {
+  #home-88-fabrics .home-88-fabrics__inner { padding: 0 0.6rem; }
+  #home-88-fabrics .home-88-fabrics__grid { gap: min(var(--fabrics-gap), 4px); }
+  #home-88-fabrics .home-88-fabrics__card { min-height: 11rem; padding: min(var(--fabrics-card-padding), 6px); }
+  #home-88-fabrics .home-88-fabrics__icon { width: min(var(--fabrics-icon), 22px); height: min(var(--fabrics-icon), 22px); }
+  #home-88-fabrics h3 { font-size: min(var(--fabrics-title-mobile), 9px); }
+  #home-88-fabrics p { font-size: min(var(--fabrics-description-mobile), 7px); }
+}
+
+@media screen and (min-width: 750px) {
+  #home-88-fabrics { padding-top: var(--fabrics-top-desktop); padding-bottom: var(--fabrics-bottom-desktop); }
+  #home-88-fabrics .home-88-fabrics__inner { padding: 0 clamp(2.4rem, 5vw, 7.2rem); }
+  #home-88-fabrics h2 { font-size: var(--fabrics-heading-desktop); }
+  #home-88-fabrics .home-88-fabrics__card { min-height: clamp(18rem, 20vw, 28rem); }
+  #home-88-fabrics h3 { font-size: var(--fabrics-title-desktop); }
+  #home-88-fabrics p { max-width: 22rem; font-size: var(--fabrics-description-desktop); line-height: var(--fabrics-line-desktop); }
+}

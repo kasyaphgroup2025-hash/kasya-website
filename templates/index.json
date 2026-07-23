@@ -290,6 +290,141 @@
         "thumbnail_gap": 12
       }
     },
+    "home_88_collection_story": {
+      "type": "home-88-collection-story",
+      "settings": {
+        "heading": "THE INTERLUDE EDIT",
+        "opening_line": "Some days do not stay one way.",
+        "main_body": "The weather changes. The pace moves. Plans unfold differently than expected.\n\nThe Interlude Edit brings together polished silhouettes, breathable comfort, and versatile shapes designed to help you move through each shift with quiet composure.",
+        "closing_line": "Not dressed for only one moment, but ready for everything in between.",
+        "story_background": "#1d2107",
+        "story_text_color": "#ffffff",
+        "editorial_image_alt": "The Interlude Edit editorial interior",
+        "image_position_mobile": "center center",
+        "image_position_desktop": "center center",
+        "section_height_mobile": 500,
+        "section_height_desktop": 580,
+        "panel_padding_mobile": 16,
+        "panel_padding_desktop": 64,
+        "heading_size_mobile": 18,
+        "heading_size_desktop": 34,
+        "opening_size_mobile": 12,
+        "opening_size_desktop": 18,
+        "body_size_mobile": 10,
+        "body_size_desktop": 16,
+        "closing_size_mobile": 10,
+        "closing_size_desktop": 16,
+        "line_height_mobile": 135,
+        "line_height_desktop": 145
+      }
+    },
+    "home_88_fabrics": {
+      "type": "home-88-fabrics",
+      "blocks": {
+        "home_88_fabric_1": {
+          "type": "fabric",
+          "settings": {
+            "title": "Acid Linen",
+            "description": "Light, breathable and crisp.",
+            "icon_alt": "",
+            "background_color": "#d8bf9f",
+            "text_color": "#171714"
+          }
+        },
+        "home_88_fabric_2": {
+          "type": "fabric",
+          "settings": {
+            "title": "Soft Linen",
+            "description": "Soft to the touch with natural drape.",
+            "icon_alt": "",
+            "background_color": "#a8ad8b",
+            "text_color": "#171714"
+          }
+        },
+        "home_88_fabric_3": {
+          "type": "fabric",
+          "settings": {
+            "title": "Knitted",
+            "description": "Flexible comfort that moves with you.",
+            "icon_alt": "",
+            "background_color": "#172437",
+            "text_color": "#ffffff"
+          }
+        },
+        "home_88_fabric_4": {
+          "type": "fabric",
+          "settings": {
+            "title": "Acid Linen",
+            "description": "Structured, durable and made to last.",
+            "icon_alt": "",
+            "background_color": "#d8d7d2",
+            "text_color": "#171714"
+          }
+        }
+      },
+      "block_order": [
+        "home_88_fabric_1",
+        "home_88_fabric_2",
+        "home_88_fabric_3",
+        "home_88_fabric_4"
+      ],
+      "settings": {
+        "heading": "DIFFERENT FABRICS FOR DIFFERENT KINDS OF EASE",
+        "background_color": "#ffffff",
+        "text_color": "#171714",
+        "padding_top_mobile": 44,
+        "padding_bottom_mobile": 44,
+        "padding_top_desktop": 68,
+        "padding_bottom_desktop": 68,
+        "card_gap": 8,
+        "card_padding": 14,
+        "icon_size": 34,
+        "heading_size_mobile": 20,
+        "heading_size_desktop": 34,
+        "title_size_mobile": 11,
+        "title_size_desktop": 17,
+        "description_size_mobile": 9,
+        "description_size_desktop": 14,
+        "description_line_height_mobile": 130,
+        "description_line_height_desktop": 140
+      }
+    },
+    "home_88_rhythm_collection": {
+      "type": "home-88-rhythm-collection",
+      "settings": {
+        "left_image_alt": "Rhythm Collection editorial background",
+        "left_position_mobile": "center center",
+        "left_position_desktop": "center center",
+        "overlay_opacity": 45,
+        "heading": "CONTINUE THE RHYTHM",
+        "description": "The Rhythm Collection is designed for everyday ease. More pieces in the same calm, polished spirit, made to mix, match, and move with you.",
+        "button_label": "Explore the Rhythm Collection",
+        "rhythm_collection": "",
+        "custom_url": "",
+        "right_image_alt": "Rhythm Collection clothing rack",
+        "right_position_mobile": "center center",
+        "right_position_desktop": "center center",
+        "text_color": "#ffffff",
+        "button_background": "#172437",
+        "button_text_color": "#ffffff",
+        "button_border_color": "#ffffff",
+        "divider_color": "#ffffff",
+        "section_height_mobile": 420,
+        "section_height_desktop": 560,
+        "left_width_mobile": 56,
+        "left_width_desktop": 56,
+        "content_padding_mobile": 16,
+        "content_padding_desktop": 64,
+        "heading_size_mobile": 20,
+        "heading_size_desktop": 38,
+        "description_size_mobile": 10,
+        "description_size_desktop": 16,
+        "button_size_mobile": 9,
+        "button_size_desktop": 13,
+        "description_line_height_mobile": 135,
+        "description_line_height_desktop": 145
+      }
+    },
     "home_hero_photo": {
       "type": "home-hero-photo",
       "disabled": true,
@@ -509,6 +644,7 @@
     },
     "home_other_collections": {
       "type": "home-other-collections",
+      "disabled": true,
       "blocks": {
         "collection_card_1": {
           "type": "collection_card",
@@ -558,6 +694,9 @@
     "home_88_hero",
     "home_88_product_grid",
     "home_88_outfit_considered",
+    "home_88_collection_story",
+    "home_88_fabrics",
+    "home_88_rhythm_collection",
     "home_hero_photo",
     "home_rhythm_article",
     "home_quick_shop_grid",
