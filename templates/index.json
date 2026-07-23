@@ -376,19 +376,19 @@
         "text_color": "#171714",
         "padding_top_mobile": 32,
         "padding_bottom_mobile": 32,
-        "padding_top_desktop": 48,
-        "padding_bottom_desktop": 48,
-        "card_gap": 6,
-        "card_padding": 10,
-        "icon_size": 28,
-        "heading_size_mobile": 20,
+        "padding_top_desktop": 32,
+        "padding_bottom_desktop": 32,
+        "card_gap": 8,
+        "card_padding": 4,
+        "icon_size": 20,
+        "heading_size_mobile": 14,
         "heading_size_desktop": 26,
-        "title_size_mobile": 9,
+        "title_size_mobile": 8,
         "title_size_desktop": 15,
         "description_size_mobile": 7,
         "description_size_desktop": 12,
-        "description_line_height_mobile": 130,
-        "description_line_height_desktop": 140
+        "description_line_height_mobile": 120,
+        "description_line_height_desktop": 120
       }
     },
     "home_88_rhythm_collection": {
