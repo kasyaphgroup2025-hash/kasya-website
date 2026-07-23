@@ -83,7 +83,7 @@
         "home_88_product_3": {
           "type": "product",
           "settings": {
-            "product": "",
+            "product": "soft-linen-long-skirts-copy",
             "custom_title": "Mia Palazzo Pants",
             "color_1_image_alt": "",
             "color_1_label": "",
@@ -97,6 +97,7 @@
             "color_3_label": "",
             "color_3_swatch": "#8a735d",
             "color_3_option_value": "",
+            "color_4_image": "shopify://shop_images/01_campaign_hero_original.png",
             "color_4_image_alt": "",
             "color_4_label": "",
             "color_4_swatch": "#f0ebe1",
@@ -161,7 +162,7 @@
         "section_heading": "THE INTERLUDE EDIT",
         "section_description": "Polished essentials in fabrics that move with you",
         "intro_background": "#ffffff",
-        "grid_background": "#d9c5a5",
+        "grid_background": "#D8BF9F",
         "intro_padding_top": 64,
         "intro_padding_bottom": 64,
         "heading_size_mobile": 30,
