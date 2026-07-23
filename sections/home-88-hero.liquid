@@ -50,7 +50,12 @@
   <div class="home-88-hero__inner">
     <div class="home-88-hero__content">
       {%- if section.settings.headline != blank -%}
-        <h1 id="Home88HeroHeading-{{ section.id }}" class="home-88-hero__headline">{{ section.settings.headline | escape }}</h1>
+        {%- assign headline_lines = section.settings.headline | escape | newline_to_br | split: '<br />' -%}
+        <h1 id="Home88HeroHeading-{{ section.id }}" class="home-88-hero__headline">
+          {%- for line in headline_lines -%}
+            <span>{{ line | strip }}</span>
+          {%- endfor -%}
+        </h1>
       {%- endif -%}
 
       {%- if section.settings.collection_name != blank -%}
