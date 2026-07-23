@@ -15,12 +15,12 @@
 #home-88-fabrics .home-88-fabrics__inner {
   width: min(100%, 144rem);
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 0.6rem;
 }
 
 #home-88-fabrics h2 {
   max-width: 90rem;
-  margin: 0 auto clamp(2rem, 6vw, 4.8rem);
+  margin: 0 auto clamp(1.6rem, 4vw, 3rem);
   color: inherit;
   font: inherit;
   font-size: var(--fabrics-heading-mobile);
@@ -37,24 +37,46 @@
 }
 
 #home-88-fabrics .home-88-fabrics__card {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(0.35rem, 1vw, 1rem);
   align-items: center;
-  justify-content: center;
   min-width: 0;
-  min-height: clamp(12rem, 39vw, 20rem);
-  padding: var(--fabrics-card-padding);
+  height: 88px;
+  padding: min(var(--fabrics-card-padding), 6px);
   border-radius: 0.2rem;
   background: var(--fabric-card-bg);
   color: var(--fabric-card-text);
-  text-align: center;
+  text-align: left;
 }
 
-#home-88-fabrics .home-88-fabrics__icon {
-  width: var(--fabrics-icon);
-  height: var(--fabrics-icon);
-  margin-bottom: clamp(0.6rem, 2vw, 1.4rem);
+#home-88-fabrics .home-88-fabrics__icon-wrap {
+  display: grid;
+  place-items: center;
+  width: min(var(--fabrics-icon), 22px);
+  min-width: 0;
+  color: currentColor;
+}
+
+#home-88-fabrics .home-88-fabrics__icon,
+#home-88-fabrics .home-88-fabrics__fallback-icon {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(var(--fabrics-icon), 22px);
   object-fit: contain;
+}
+
+#home-88-fabrics .home-88-fabrics__fallback-icon {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#home-88-fabrics .home-88-fabrics__content {
+  min-width: 0;
 }
 
 #home-88-fabrics h3 {
@@ -66,7 +88,7 @@
 }
 
 #home-88-fabrics p {
-  margin: 0.6rem 0 0;
+  margin: 0.3rem 0 0;
   font-size: var(--fabrics-description-mobile);
   line-height: var(--fabrics-line-mobile);
 }
@@ -74,9 +96,9 @@
 @media screen and (max-width: 349px) {
   #home-88-fabrics .home-88-fabrics__inner { padding: 0 0.6rem; }
   #home-88-fabrics .home-88-fabrics__grid { gap: min(var(--fabrics-gap), 4px); }
-  #home-88-fabrics .home-88-fabrics__card { min-height: 11rem; padding: min(var(--fabrics-card-padding), 6px); }
-  #home-88-fabrics .home-88-fabrics__icon { width: min(var(--fabrics-icon), 22px); height: min(var(--fabrics-icon), 22px); }
-  #home-88-fabrics h3 { font-size: min(var(--fabrics-title-mobile), 9px); }
+  #home-88-fabrics .home-88-fabrics__card { gap: 0.3rem; height: 84px; padding: min(var(--fabrics-card-padding), 4px); }
+  #home-88-fabrics .home-88-fabrics__icon-wrap { width: min(var(--fabrics-icon), 18px); }
+  #home-88-fabrics h3 { font-size: min(var(--fabrics-title-mobile), 8px); }
   #home-88-fabrics p { font-size: min(var(--fabrics-description-mobile), 7px); }
 }
 
@@ -84,7 +106,10 @@
   #home-88-fabrics { padding-top: var(--fabrics-top-desktop); padding-bottom: var(--fabrics-bottom-desktop); }
   #home-88-fabrics .home-88-fabrics__inner { padding: 0 clamp(2.4rem, 5vw, 7.2rem); }
   #home-88-fabrics h2 { font-size: var(--fabrics-heading-desktop); }
-  #home-88-fabrics .home-88-fabrics__card { min-height: clamp(18rem, 20vw, 28rem); }
+  #home-88-fabrics .home-88-fabrics__card { gap: 1.2rem; height: 92px; padding: var(--fabrics-card-padding); }
+  #home-88-fabrics .home-88-fabrics__icon-wrap { width: min(var(--fabrics-icon), 30px); }
+  #home-88-fabrics .home-88-fabrics__icon,
+  #home-88-fabrics .home-88-fabrics__fallback-icon { max-height: min(var(--fabrics-icon), 30px); }
   #home-88-fabrics h3 { font-size: var(--fabrics-title-desktop); }
   #home-88-fabrics p { max-width: 22rem; font-size: var(--fabrics-description-desktop); line-height: var(--fabrics-line-desktop); }
 }
