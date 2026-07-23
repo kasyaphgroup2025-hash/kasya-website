@@ -38,10 +38,10 @@
   z-index: 1;
   background: linear-gradient(
     90deg,
-    rgb(0 0 0 / calc(var(--rhythm-overlay) * 1.8)) 0%,
-    rgb(0 0 0 / calc(var(--rhythm-overlay) * 1.15)) 34%,
-    rgb(0 0 0 / calc(var(--rhythm-overlay) * 0.4)) 62%,
-    rgb(0 0 0 / 0) 90%
+    rgba(0, 0, 0, 0.62) 0%,
+    rgba(0, 0, 0, 0.42) 30%,
+    rgba(0, 0, 0, 0.18) 58%,
+    rgba(0, 0, 0, 0) 82%
   );
   pointer-events: none;
 }
@@ -129,10 +129,10 @@
   #home-88-rhythm-collection .home-88-rhythm__overlay {
     background: linear-gradient(
       90deg,
-      rgb(0 0 0 / calc(var(--rhythm-overlay) * 1.8)) 0%,
-      rgb(0 0 0 / calc(var(--rhythm-overlay) * 1.15)) 28%,
-      rgb(0 0 0 / calc(var(--rhythm-overlay) * 0.4)) 50%,
-      rgb(0 0 0 / 0) 72%
+      rgba(0, 0, 0, 0.62) 0%,
+      rgba(0, 0, 0, 0.4) 28%,
+      rgba(0, 0, 0, 0.14) 52%,
+      rgba(0, 0, 0, 0) 76%
     );
   }
 
