@@ -177,6 +177,99 @@
         "product_price_size_desktop": 22
       }
     },
+    "home_88_outfit_considered": {
+      "type": "home-88-outfit-considered",
+      "blocks": {
+        "home_88_look_1": {
+          "type": "look",
+          "settings": {
+            "look_title": "THE WORK-DAY EDIT",
+            "look_description": "Clean, composed, and ready for whatever the day holds.",
+            "thumbnail_alt": "The Work-Day Edit",
+            "front_image_alt": "The Work-Day Edit front view",
+            "side_image_alt": "The Work-Day Edit side view",
+            "back_image_alt": "The Work-Day Edit back view",
+            "mobile_image_position": "center center",
+            "desktop_image_position": "center center",
+            "product_1": "",
+            "product_1_title": "Daliah Polo",
+            "product_1_image_alt": "Daliah Polo flatlay",
+            "product_1_button_label": "See Color & Fit",
+            "product_2": "",
+            "product_2_title": "Mia Palazzo Pants",
+            "product_2_image_alt": "Mia Palazzo Pants flatlay",
+            "product_2_button_label": "See Color & Fit"
+          }
+        },
+        "home_88_look_2": {
+          "type": "look",
+          "settings": {
+            "look_title": "THE WEEKEND EDIT",
+            "look_description": "Relaxed polish for plans that unfold at their own pace.",
+            "thumbnail_alt": "The Weekend Edit",
+            "front_image_alt": "The Weekend Edit front view",
+            "side_image_alt": "The Weekend Edit side view",
+            "back_image_alt": "The Weekend Edit back view",
+            "mobile_image_position": "center center",
+            "desktop_image_position": "center center",
+            "product_1": "",
+            "product_1_title": "Product One",
+            "product_1_image_alt": "First product flatlay",
+            "product_1_button_label": "See Color & Fit",
+            "product_2": "",
+            "product_2_title": "Product Two",
+            "product_2_image_alt": "Second product flatlay",
+            "product_2_button_label": "See Color & Fit"
+          }
+        },
+        "home_88_look_3": {
+          "type": "look",
+          "settings": {
+            "look_title": "THE SOFT EDIT",
+            "look_description": "Gentle structure and easy comfort for quieter moments.",
+            "thumbnail_alt": "The Soft Edit",
+            "front_image_alt": "The Soft Edit front view",
+            "side_image_alt": "The Soft Edit side view",
+            "back_image_alt": "The Soft Edit back view",
+            "mobile_image_position": "center center",
+            "desktop_image_position": "center center",
+            "product_1": "",
+            "product_1_title": "Product One",
+            "product_1_image_alt": "First product flatlay",
+            "product_1_button_label": "See Color & Fit",
+            "product_2": "",
+            "product_2_title": "Product Two",
+            "product_2_image_alt": "Second product flatlay",
+            "product_2_button_label": "See Color & Fit"
+          }
+        }
+      },
+      "block_order": [
+        "home_88_look_1",
+        "home_88_look_2",
+        "home_88_look_3"
+      ],
+      "settings": {
+        "heading": "YOUR OUTFIT IS ALREADY CONSIDERED",
+        "background_color": "#ffffff",
+        "text_color": "#171714",
+        "padding_top_mobile": 48,
+        "padding_bottom_mobile": 48,
+        "padding_top_desktop": 80,
+        "padding_bottom_desktop": 80,
+        "heading_size_mobile": 25,
+        "heading_size_desktop": 42,
+        "look_title_size_mobile": 17,
+        "look_title_size_desktop": 30,
+        "description_size_mobile": 12,
+        "description_size_desktop": 17,
+        "product_title_size_mobile": 11,
+        "product_title_size_desktop": 15,
+        "flatlay_gap": 8,
+        "active_thumbnail_scale": 105,
+        "thumbnail_gap": 12
+      }
+    },
     "home_hero_photo": {
       "type": "home-hero-photo",
       "disabled": true,
@@ -293,6 +386,7 @@
     },
     "home_shop_the_look": {
       "type": "home-shop-the-look",
+      "disabled": true,
       "blocks": {
         "look_1": {
           "type": "look",
@@ -443,6 +537,7 @@
   "order": [
     "home_88_hero",
     "home_88_product_grid",
+    "home_88_outfit_considered",
     "home_hero_photo",
     "home_rhythm_article",
     "home_quick_shop_grid",
