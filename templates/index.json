@@ -171,9 +171,9 @@
         "description_size_desktop": 22,
         "product_grid_padding_top": 20,
         "product_grid_padding_bottom": 20,
-        "product_name_size_mobile": 13,
+        "product_name_size_mobile": 14,
         "product_name_size_desktop": 16,
-        "product_price_size_mobile": 18,
+        "product_price_size_mobile": 14,
         "product_price_size_desktop": 17
       }
     },
