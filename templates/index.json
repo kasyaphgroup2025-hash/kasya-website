@@ -12,7 +12,7 @@
     "home_88_hero": {
       "type": "home-88-hero",
       "settings": {
-        "mobile_image": "shopify://shop_images/01_campaign_hero_original_ba75049d-754c-4af9-8fe0-c799b9eedabb.png",
+        "mobile_image": "shopify://shop_images/HERO_BANNER.jpg",
         "image_alt": "The Interlude Edit by Kasya",
         "mobile_image_position": "center center",
         "desktop_image_position": "center center",
@@ -37,19 +37,20 @@
           "settings": {
             "product": "ella-polo-blouse-soft-linen-new-colors",
             "custom_title": "Daliah Polo",
-            "color_1_image": "shopify://shop_images/DALIAH_POLO_-_BLACK_1.jpg",
+            "color_1_image": "shopify://shop_images/PRODUCT_BANNER_4.jpg",
             "color_1_image_alt": "",
             "color_1_label": "",
             "color_1_swatch": "#222222",
             "color_1_option_value": "",
-            "color_2_image": "shopify://shop_images/INAH_-_CREAM_1_1.png",
+            "color_2_image": "shopify://shop_images/PRODUCT_BANNER_5.jpg",
             "color_2_image_alt": "",
             "color_2_label": "",
             "color_2_swatch": "#d4c0a0",
             "color_2_option_value": "",
+            "color_3_image": "shopify://shop_images/PRODUCT_BANNER_4.jpg",
             "color_3_image_alt": "",
             "color_3_label": "",
-            "color_3_swatch": "#8a735d",
+            "color_3_swatch": "#002147",
             "color_3_option_value": "",
             "color_4_image_alt": "",
             "color_4_label": "",
@@ -62,6 +63,7 @@
           "settings": {
             "product": "ella-box-polo-soft-linen",
             "custom_title": "Kianna Puff Sleeves",
+            "color_1_image": "shopify://shop_images/PRODUCT_BANNER_3.jpg",
             "color_1_image_alt": "",
             "color_1_label": "",
             "color_1_swatch": "#222222",
@@ -394,7 +396,7 @@
     "home_88_rhythm_collection": {
       "type": "home-88-rhythm-collection",
       "settings": {
-        "left_image": "shopify://shop_images/ChatGPT_Image_Jul_23_2026_01_50_05_PM_1.png",
+        "left_image": "shopify://shop_images/15_82f5a39a-c244-46ca-8f0d-a1e9aa37a5c3.jpg",
         "left_image_alt": "Rhythm Collection editorial background",
         "left_position_mobile": "center center",
         "left_position_desktop": "center center",
