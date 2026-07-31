@@ -12,12 +12,12 @@
     "kasya_lp_product_hero": {
       "type": "kasya-lp-product-hero",
       "settings": {
-        "product": "mia-palazzo-pants-soft-linen",
+        "product": "kianna-puff-sleeves-blouse-knitted",
         "show_header": false,
         "logo_text": "KASYA",
         "product_label": "KASYA BASICS",
-        "heading": "Daliah Polo",
-        "subtitle": "Acid Linen",
+        "heading": "Kianna blouse",
+        "subtitle": "Knitted",
         "rating_text": "",
         "description": "Effortless everyday style designed for comfort, movement, and repeat wear",
         "default_color": "Black",
