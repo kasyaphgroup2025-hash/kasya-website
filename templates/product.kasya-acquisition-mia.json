@@ -12,12 +12,12 @@
     "kasya_lp_product_hero": {
       "type": "kasya-lp-product-hero",
       "settings": {
-        "product": "",
+        "product": "mia-palazzo-pants-soft-linen",
         "show_header": false,
         "logo_text": "KASYA",
         "product_label": "KASYA BASICS",
-        "heading": "HAZEL TROUSER",
-        "subtitle": "Viscose Linen",
+        "heading": "mia palazzo",
+        "subtitle": "Soft Linen",
         "rating_text": "",
         "description": "Effortless everyday style designed for comfort, movement, and repeat wear",
         "default_color": "Black",
