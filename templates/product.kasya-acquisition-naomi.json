@@ -12,11 +12,11 @@
     "kasya_lp_product_hero": {
       "type": "kasya-lp-product-hero",
       "settings": {
-        "product": "",
+        "product": "naomi-culottes-acid-linen",
         "show_header": false,
         "logo_text": "KASYA",
         "product_label": "KASYA BASICS",
-        "heading": "Daliah Polo",
+        "heading": "Naomi cullotes",
         "subtitle": "Acid Linen",
         "rating_text": "",
         "description": "Effortless everyday style designed for comfort, movement, and repeat wear",
