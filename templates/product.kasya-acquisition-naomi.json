@@ -16,15 +16,15 @@
         "show_header": false,
         "logo_text": "KASYA",
         "product_label": "KASYA BASICS",
-        "heading": "Naomi cullotes",
+        "heading": "NAOMI CULOTTES",
         "subtitle": "Acid Linen",
         "rating_text": "",
-        "description": "Effortless everyday style designed for comfort, movement, and repeat wear",
+        "description": "Relaxed wide-leg movement with easy structure for office days and everyday routines.",
         "default_color": "Black",
         "color_option_name": "Color",
         "size_option_name": "Size",
         "show_size_chart": true,
-        "size_helper_text": "Choose your usual size for a relaxed fit. Size up if you prefer extra room around the waist or tummy.",
+        "size_helper_text": "Designed with a relaxed culotte silhouette that provides room through the hips and legs. The wide shape creates comfortable movement without making the outfit feel overly loose or unstructured. Please check the product size chart before placing your order.",
         "size_chart_trigger_text": "Not sure about your size? View size chart",
         "size_chart_note": "Measurements may vary slightly due to fabric behavior and manual production.",
         "cta_text": "ADD TO CART",
@@ -37,25 +37,31 @@
         "fit_note_1": {
           "type": "fit_note",
           "settings": {
-            "note": "Relaxed polo fit"
+            "note": "Relaxed culotte silhouette"
           }
         },
         "fit_note_2": {
           "type": "fit_note",
           "settings": {
-            "note": "Semi-crop length"
+            "note": "Room through the hips and legs"
           }
         },
         "fit_note_3": {
           "type": "fit_note",
           "settings": {
-            "note": "Roomy around the bust and waist"
+            "note": "Clean waistband"
           }
         },
         "fit_note_4": {
           "type": "fit_note",
           "settings": {
-            "note": "Size up if you prefer extra room"
+            "note": "Functional pocket construction"
+          }
+        },
+        "fit_note_5": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Comfortable coverage"
           }
         }
       },
@@ -63,18 +69,19 @@
         "fit_note_1",
         "fit_note_2",
         "fit_note_3",
-        "fit_note_4"
+        "fit_note_4",
+        "fit_note_5"
       ],
       "settings": {
         "heading": "HOW IT FITS",
-        "subheading": "See how the garment falls from every angle before choosing your size.",
+        "subheading": "See how the relaxed culotte silhouette provides room, coverage, and easy movement.",
         "front_label": "FRONT VIEW",
-        "front_description": "Shows the collar, front opening, and pocket details.",
+        "front_description": "Shows the clean waistband and relaxed wide-leg shape.",
         "side_label": "SIDE VIEW",
-        "side_description": "Shows the semi-crop length and relaxed body fit.",
+        "side_description": "Shows the comfortable room through the hips and legs.",
         "back_label": "BACK VIEW",
-        "back_description": "Shows the clean back fit and easy coverage.",
-        "model_info": "Model is 5'2 and wears size M."
+        "back_description": "Shows the easy coverage and controlled culotte silhouette.",
+        "model_info": ""
       }
     },
     "kasya_lp_fabric_quality": {
@@ -84,32 +91,32 @@
           "type": "fabric_note",
           "settings": {
             "icon": "≈",
-            "title": "Soft drape",
-            "description": "Falls naturally without feeling stiff or bulky."
+            "title": "Easy structure",
+            "description": "Keeps the wide silhouette looking neat."
           }
         },
         "fabric_note_2": {
           "type": "fabric_note",
           "settings": {
             "icon": "◯",
-            "title": "Breathable feel",
-            "description": "Comfortable enough for warm days and long wear."
+            "title": "Comfortable movement",
+            "description": "Provides room through the hips and legs."
           }
         },
         "fabric_note_3": {
           "type": "fabric_note",
           "settings": {
             "icon": "✱",
-            "title": "Everyday structure",
-            "description": "Polished enough for errands, work, and casual plans."
+            "title": "Everyday coverage",
+            "description": "The culotte shape feels relaxed without looking overly loose."
           }
         },
         "fabric_note_4": {
           "type": "fabric_note",
           "settings": {
             "icon": "✓",
-            "title": "Easy care",
-            "description": "Wash gently and hang to dry to help maintain shape and fabric quality."
+            "title": "Practical pockets",
+            "description": "Functional pocket construction for daily routines."
           }
         }
       },
@@ -121,8 +128,8 @@
       ],
       "settings": {
         "heading": "FABRIC & QUALITY",
-        "subheading": "Acid linen-feel fabric with a relaxed drape, made for everyday comfort.",
-        "main_note": "Designed to feel light, breathable, and comfortable for daily wear while still giving enough structure to look polished.",
+        "subheading": "Acid Linen designed for comfortable daily wear with enough structure to keep the outfit composed.",
+        "main_note": "Acid Linen gives the roomy culotte silhouette an easy but controlled everyday structure.",
         "show_feature_notes": true
       }
     },
@@ -132,45 +139,25 @@
         "lifestyle_1": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/Daliah_Black_Office.png",
-            "title": "Office Day",
-            "description": "Polished enough for work, relaxed enough for long hours."
+            "title": "Office and Meetings",
+            "description": "Pair with the Kianna Blouse for a softer office look."
           }
         },
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/Ella_Black_Office.png",
-            "title": "Errands",
-            "description": "Easy to move in while still looking put-together."
-          }
-        },
-        "lifestyle_3": {
-          "type": "lifestyle_card",
-          "settings": {
-            "image": "shopify://shop_images/Daliah_Black_Family-Lunch.png",
-            "title": "Family Lunch",
-            "description": "Comfortable, modest, and effortless to style."
-          }
-        },
-        "lifestyle_4": {
-          "type": "lifestyle_card",
-          "settings": {
-            "image": "shopify://shop_images/Daliah_Black_Travel.png",
-            "title": "Travel",
-            "description": "Relaxed fit that moves with you through a long day."
+            "title": "Casual Days",
+            "description": "Wear with a tucked-in basic top for an easy everyday outfit."
           }
         }
       },
       "block_order": [
         "lifestyle_1",
-        "lifestyle_2",
-        "lifestyle_3",
-        "lifestyle_4"
+        "lifestyle_2"
       ],
       "settings": {
         "heading": "WHERE TO WEAR IT",
-        "subheading": "Everyday moments made easier, softer, and more put-together."
+        "subheading": "A composed wide-leg bottom for workdays, errands, and casual meetings."
       }
     },
     "kasya_lp_reviews": {
@@ -286,7 +273,7 @@
           "settings": {
             "category_label": "Fit & body",
             "question": "What size should I get?",
-            "answer": "Choose your usual size for a relaxed fit. If you prefer extra room around the bust, arms, or tummy area, we recommend sizing up.",
+            "answer": "The Naomi Culottes is available in sizes M to 3XL. Its relaxed silhouette provides room through the hips and legs; please check the product size chart before ordering.",
             "open_by_default": true
           }
         },
@@ -294,8 +281,8 @@
           "type": "faq",
           "settings": {
             "category_label": "Fit & body",
-            "question": "Is it good for the bust area?",
-            "answer": "Yes. The fit is designed to feel relaxed around the bust area without clinging too tightly. If you prefer more room, we recommend sizing up.",
+            "question": "How does the item fit?",
+            "answer": "It has a relaxed culotte silhouette with room through the hips and legs, comfortable coverage, and a clean waistband.",
             "open_by_default": false
           }
         },
@@ -303,8 +290,8 @@
           "type": "faq",
           "settings": {
             "category_label": "Fabric & feel",
-            "question": "Is the fabric stretchable?",
-            "answer": "The fabric has a soft, relaxed drape but is not highly stretchable. If you want more room around the waist or hips, sizing up may be better.",
+            "question": "What fabric is used?",
+            "answer": "The Naomi Culottes uses Acid Linen with enough structure to keep its wide silhouette composed.",
             "open_by_default": false
           }
         },
@@ -312,17 +299,17 @@
           "type": "faq",
           "settings": {
             "category_label": "Fabric & feel",
-            "question": "Is it see-through?",
-            "answer": "The fabric is designed for everyday wear. For lighter colors, we recommend wearing skin-tone undergarments for extra confidence.",
+            "question": "How should I wash it?",
+            "answer": "Wash with cold water and mild detergent. Avoid bleach and high-heat drying, hang to dry, and use low heat when ironing if needed.",
             "open_by_default": false
           }
         },
         "faq_5": {
           "type": "faq",
           "settings": {
-            "category_label": "Fabric & feel",
-            "question": "Will it shrink after washing?",
-            "answer": "Slight shrinkage may happen due to fabric behavior, especially if washed in hot water or dried using high heat. For best care, wash gently and hang to dry.",
+            "category_label": "Logistics",
+            "question": "When will my order ship?",
+            "answer": "Orders ship within 7 business days.",
             "open_by_default": false
           }
         },
@@ -330,26 +317,26 @@
           "type": "faq",
           "settings": {
             "category_label": "Risk reversal",
-            "question": "Can I exchange if the size does not fit?",
-            "answer": "Yes, size exchange may be requested within 7 days as long as the item is unworn, unwashed, and has the tags attached. Please review our return and exchange policy before purchase.",
+            "question": "Can I return it?",
+            "answer": "Returns are accepted for unworn items with tags attached. Please review the store return policy before purchase.",
             "open_by_default": false
           }
         },
         "faq_7": {
           "type": "faq",
           "settings": {
-            "category_label": "Logistics",
-            "question": "How long is delivery?",
-            "answer": "Orders are prepared and shipped from Cavite. Delivery timeline depends on your location and will be shown at checkout.",
+            "category_label": "Product details",
+            "question": "What practical details does it have?",
+            "answer": "It has a clean waistband and functional pocket construction for everyday routines.",
             "open_by_default": false
           }
         },
         "faq_8": {
           "type": "faq",
           "settings": {
-            "category_label": "Logistics",
-            "question": "How do I wash it?",
-            "answer": "Wash gently using mild detergent. Avoid bleach, hot water, and high-heat drying. Hang to dry to help maintain the garment's shape and fabric quality.",
+            "category_label": "Product options",
+            "question": "What colors and sizes are available?",
+            "answer": "The approved options are Black, Cinnamon, and Navy in sizes M to 3XL. Current availability is shown in the selectors above.",
             "open_by_default": false
           }
         }

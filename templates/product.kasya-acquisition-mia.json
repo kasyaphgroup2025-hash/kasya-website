@@ -16,15 +16,15 @@
         "show_header": false,
         "logo_text": "KASYA",
         "product_label": "KASYA BASICS",
-        "heading": "mia palazzo",
+        "heading": "MIA PALAZZO PANTS",
         "subtitle": "Soft Linen",
         "rating_text": "",
-        "description": "Effortless everyday style designed for comfort, movement, and repeat wear",
+        "description": "Relaxed wide-leg movement with a polished finish for office days, travel, and everyday errands.",
         "default_color": "Black",
         "color_option_name": "Color",
         "size_option_name": "Size",
         "show_size_chart": true,
-        "size_helper_text": "Choose your usual size for a relaxed fit. Size up if you prefer extra room around the waist or tummy.",
+        "size_helper_text": "Designed with a roomy palazzo silhouette that falls loosely from the waist down. The wide-leg construction allows full movement without feeling tight around the legs. Please check the product size chart before placing your order.",
         "size_chart_trigger_text": "Not sure about your size? View size chart",
         "size_chart_note": "Measurements may vary slightly due to fabric behavior and manual production.",
         "cta_text": "ADD TO CART",
@@ -37,25 +37,31 @@
         "fit_note_1": {
           "type": "fit_note",
           "settings": {
-            "note": "Clean straight-leg fit"
+            "note": "Roomy palazzo silhouette"
           }
         },
         "fit_note_2": {
           "type": "fit_note",
           "settings": {
-            "note": "Comfortable back garter"
+            "note": "Garterized waistband"
           }
         },
         "fit_note_3": {
           "type": "fit_note",
           "settings": {
-            "note": "True to size for a relaxed fit"
+            "note": "Adjustable waist string"
           }
         },
         "fit_note_4": {
           "type": "fit_note",
           "settings": {
-            "note": "Size up if you prefer extra room"
+            "note": "Functional side pockets"
+          }
+        },
+        "fit_note_5": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Wide-leg movement"
           }
         }
       },
@@ -63,18 +69,19 @@
         "fit_note_1",
         "fit_note_2",
         "fit_note_3",
-        "fit_note_4"
+        "fit_note_4",
+        "fit_note_5"
       ],
       "settings": {
         "heading": "HOW IT FITS",
-        "subheading": "See how the garment falls from every angle before choosing your size.",
+        "subheading": "See how the wide-leg silhouette falls from the waist through the hem before choosing your size.",
         "front_label": "FRONT VIEW",
-        "front_description": "Shows the full silhouette and length.",
+        "front_description": "Shows the relaxed waistband and full palazzo volume.",
         "side_label": "SIDE VIEW",
-        "side_description": "Shows the drape around the waist, hips, and tummy.",
+        "side_description": "Shows the loose fall through the hips and legs.",
         "back_label": "BACK VIEW",
-        "back_description": "Shows how it falls from behind.",
-        "model_info": "Model is 5'2 and wears size L."
+        "back_description": "Shows the comfortable coverage and flowing wide-leg shape.",
+        "model_info": ""
       }
     },
     "kasya_lp_fabric_quality": {
@@ -84,32 +91,32 @@
           "type": "fabric_note",
           "settings": {
             "icon": "≈",
-            "title": "Soft drape",
-            "description": "Falls naturally without feeling stiff or bulky."
+            "title": "Relaxed drape",
+            "description": "Falls softly without looking stiff."
           }
         },
         "fabric_note_2": {
           "type": "fabric_note",
           "settings": {
             "icon": "◯",
-            "title": "Breathable feel",
-            "description": "Comfortable enough for warm days and long wear."
+            "title": "Breathable comfort",
+            "description": "Designed for comfortable everyday wear."
           }
         },
         "fabric_note_3": {
           "type": "fabric_note",
           "settings": {
             "icon": "✱",
-            "title": "Everyday structure",
-            "description": "Polished enough for errands, work, and casual plans."
+            "title": "Easy movement",
+            "description": "The wide-leg construction allows room through the legs."
           }
         },
         "fabric_note_4": {
           "type": "fabric_note",
           "settings": {
             "icon": "✓",
-            "title": "Easy care",
-            "description": "Wash gently and hang to dry to help maintain shape and fabric quality."
+            "title": "Practical finish",
+            "description": "Adjustable waist and functional side pockets."
           }
         }
       },
@@ -121,8 +128,8 @@
       ],
       "settings": {
         "heading": "FABRIC & QUALITY",
-        "subheading": "Viscose linen-feel fabric with a relaxed drape, made for everyday comfort.",
-        "main_note": "Designed to feel light, breathable, and comfortable for daily wear while still giving enough structure to look polished.",
+        "subheading": "Soft Linen with a relaxed drape and comfortable feel for long office days, travel, and everyday movement.",
+        "main_note": "Soft Linen balances a relaxed fall with comfortable movement for everyday wear.",
         "show_feature_notes": true
       }
     },
@@ -132,45 +139,25 @@
         "lifestyle_1": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/Hazel_AcidBlack_Office.png",
             "title": "Office Day",
-            "description": "Polished enough for work, relaxed enough for long hours."
+            "description": "Pair with a structured or tucked-in top for a balanced office outfit."
           }
         },
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/Hazel_AcidBlack_Errands.png",
-            "title": "Errands",
-            "description": "Easy to move in while still looking put-together."
-          }
-        },
-        "lifestyle_3": {
-          "type": "lifestyle_card",
-          "settings": {
-            "image": "shopify://shop_images/Hazel_AcidBlack_Family-Lunch.png",
-            "title": "Family Lunch",
-            "description": "Comfortable, modest, and effortless to style."
-          }
-        },
-        "lifestyle_4": {
-          "type": "lifestyle_card",
-          "settings": {
-            "image": "shopify://shop_images/Hazel_AcidBlack_Travel.png",
-            "title": "Travel",
-            "description": "Relaxed fit that moves with you through a long day."
+            "title": "Travel and Errands",
+            "description": "The roomy silhouette and adjustable waist support comfortable movement."
           }
         }
       },
       "block_order": [
         "lifestyle_1",
-        "lifestyle_2",
-        "lifestyle_3",
-        "lifestyle_4"
+        "lifestyle_2"
       ],
       "settings": {
         "heading": "WHERE TO WEAR IT",
-        "subheading": "Everyday moments made easier, softer, and more put-together."
+        "subheading": "An easy wide-leg bottom for polished work outfits and relaxed plans."
       }
     },
     "kasya_lp_reviews": {
@@ -286,7 +273,7 @@
           "settings": {
             "category_label": "Fit & body",
             "question": "What size should I get?",
-            "answer": "Choose your usual size for a relaxed fit. If you prefer extra room around the waist, hips, or tummy area, we recommend sizing up.",
+            "answer": "The Mia Palazzo Pants is available in sizes M to 3XL. Its roomy silhouette falls loosely from the waist down; please check the product size chart before ordering.",
             "open_by_default": true
           }
         },
@@ -294,8 +281,8 @@
           "type": "faq",
           "settings": {
             "category_label": "Fit & body",
-            "question": "Is it good for the tummy area?",
-            "answer": "Yes. It has a back garter waistband that gives extra comfort around the waist and tummy area. The straight-cut fit keeps the front looking clean while still allowing ease for daily movement.",
+            "question": "How does the item fit?",
+            "answer": "It has a roomy palazzo silhouette with generous wide-leg volume, a garterized waistband, and an adjustable waist string.",
             "open_by_default": false
           }
         },
@@ -303,8 +290,8 @@
           "type": "faq",
           "settings": {
             "category_label": "Fabric & feel",
-            "question": "Is the fabric stretchable?",
-            "answer": "The fabric has a soft, relaxed drape but is not highly stretchable. If you want more room around the waist or hips, sizing up may be better.",
+            "question": "What fabric is used?",
+            "answer": "The Mia Palazzo Pants uses Soft Linen with a relaxed drape and comfortable feel for everyday movement.",
             "open_by_default": false
           }
         },
@@ -312,17 +299,17 @@
           "type": "faq",
           "settings": {
             "category_label": "Fabric & feel",
-            "question": "Is it see-through?",
-            "answer": "The fabric is designed for everyday wear. For lighter colors, we recommend wearing skin-tone undergarments for extra confidence.",
+            "question": "How should I wash it?",
+            "answer": "Wash with cold water and mild detergent. Avoid bleach and high-heat drying, hang to dry, and use low heat when ironing if needed.",
             "open_by_default": false
           }
         },
         "faq_5": {
           "type": "faq",
           "settings": {
-            "category_label": "Fabric & feel",
-            "question": "Will it shrink after washing?",
-            "answer": "Slight shrinkage may happen due to fabric behavior, especially if washed in hot water or dried using high heat. For best care, wash gently and hang to dry.",
+            "category_label": "Logistics",
+            "question": "When will my order ship?",
+            "answer": "Orders ship within 7 business days.",
             "open_by_default": false
           }
         },
@@ -330,26 +317,26 @@
           "type": "faq",
           "settings": {
             "category_label": "Risk reversal",
-            "question": "Can I exchange if the size does not fit?",
-            "answer": "Yes, size exchange may be requested within 7 days as long as the item is unworn, unwashed, and has the tags attached. Please review our return and exchange policy before purchase.",
+            "question": "Can I return it?",
+            "answer": "Returns are accepted for unworn items with tags attached. Please review the store return policy before purchase.",
             "open_by_default": false
           }
         },
         "faq_7": {
           "type": "faq",
           "settings": {
-            "category_label": "Logistics",
-            "question": "How long is delivery?",
-            "answer": "Orders are prepared and shipped from Cavite. Delivery timeline depends on your location and will be shown at checkout.",
+            "category_label": "Product details",
+            "question": "What practical details does it have?",
+            "answer": "It has an adjustable waist string, functional side pockets, and a clean bottom hem.",
             "open_by_default": false
           }
         },
         "faq_8": {
           "type": "faq",
           "settings": {
-            "category_label": "Logistics",
-            "question": "How do I wash it?",
-            "answer": "Wash gently using mild detergent. Avoid bleach, hot water, and high-heat drying. Hang to dry to help maintain the garment's shape and fabric quality.",
+            "category_label": "Product options",
+            "question": "What colors and sizes are available?",
+            "answer": "The approved options are Black and Light Gray in sizes M to 3XL. Current availability is shown in the selectors above.",
             "open_by_default": false
           }
         }
