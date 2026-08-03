@@ -149,11 +149,27 @@
             "title": "Travel and Errands",
             "description": "The roomy silhouette and adjustable waist support comfortable movement."
           }
+        },
+        "lifestyle_card_amB8E4": {
+          "type": "lifestyle_card",
+          "settings": {
+            "title": "Travel and Errands",
+            "description": "The roomy silhouette and adjustable waist support comfortable movement."
+          }
+        },
+        "lifestyle_card_DibyFR": {
+          "type": "lifestyle_card",
+          "settings": {
+            "title": "Travel and Errands",
+            "description": "The roomy silhouette and adjustable waist support comfortable movement."
+          }
         }
       },
       "block_order": [
         "lifestyle_1",
-        "lifestyle_2"
+        "lifestyle_2",
+        "lifestyle_card_amB8E4",
+        "lifestyle_card_DibyFR"
       ],
       "settings": {
         "heading": "WHERE TO WEAR IT",
