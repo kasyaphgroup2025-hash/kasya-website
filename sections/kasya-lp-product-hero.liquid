@@ -18,7 +18,7 @@
     assign require_explicit_variant_selection = false
     assign hide_landing_header = false
     assign show_initial_media_preview = false
-    assign explicit_selection_templates = 'kasya-acquisition-dahlia,kasya-acquisition-ellav2,kasya-acquisition-hazel,kasya-acquisition-inah' | split: ','
+    assign explicit_selection_templates = 'kasya-acquisition-dahlia,kasya-acquisition-ellav2,kasya-acquisition-hazel,kasya-acquisition-inah,kasya-acquisition-mia,kasya-acquisition-kianna,kasya-acquisition-naomi,kasya-acqusition-lea' | split: ','
     assign lp_product_title_downcase = lp_product.title | downcase
 
     if template.suffix == 'kasya-acquisition-test' and lp_product.handle == 'wideleg-linen-pants'
@@ -981,6 +981,7 @@
     const showInitialMediaPreview = section.dataset.initialMediaPreview === 'true';
 
     const defaultColor = {{ section.settings.default_color | json }};
+    const productHandle = {{ lp_product.handle | json }};
     const colorOptionName = {{ section.settings.color_option_name | json }};
     const sizeOptionName = {{ section.settings.size_option_name | json }};
     const ctaText = {{ section.settings.cta_text | json }};
@@ -1006,6 +1007,7 @@
       const compactValue = value.replace(/\s+/g, '');
 
       if (value.includes('black')) return '#000000';
+      if (productHandle === 'naomi-culottes-acid-linen' && value === 'cinnamon') return '#AD753C';
 
       const swatchMap = [
         { names: ['dusty lilac', 'soft lilac', 'light lilac', 'lilac', 'lavender'], color: '#C8B4D9' },
