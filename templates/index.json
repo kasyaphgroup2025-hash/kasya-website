@@ -414,10 +414,11 @@
     "home_88_rhythm_collection": {
       "type": "home-88-rhythm-collection",
       "settings": {
-        "left_image": "shopify://shop_images/15_82f5a39a-c244-46ca-8f0d-a1e9aa37a5c3.jpg",
+        "desktop_banner_image": "shopify://shop_images/15_82f5a39a-c244-46ca-8f0d-a1e9aa37a5c3.jpg",
+        "mobile_banner_image": "",
         "left_image_alt": "Rhythm Collection editorial background",
-        "left_position_mobile": "center center",
-        "left_position_desktop": "center center",
+        "mobile_image_position": "center center",
+        "desktop_image_position": "center center",
         "overlay_opacity": 40,
         "heading": "CONTINUE THE RHYTHM",
         "description": "The Rhythm Collection is designed for everyday ease. More pieces in the same calm, polished spirit, made to mix, match, and move with you.",
