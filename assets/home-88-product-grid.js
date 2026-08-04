@@ -62,6 +62,24 @@
       return this.getMappings(card).find((mapping) => Number(mapping.index) === index) || null;
     }
 
+    isComingSoonColor(value) {
+      return ['navy blue', 'navy', 'cinnamon'].includes(normalize(value));
+    }
+
+    updateComingSoonOverlay(card, mapping) {
+      const overlay = card.querySelector('[data-coming-soon-overlay]');
+      if (!overlay) return;
+
+      const colorValue = mapping.optionValue || mapping.label || '';
+      const showOverlay = this.isComingSoonColor(colorValue);
+      const previousState = card.dataset.comingSoonVisible === 'true';
+
+      if (showOverlay === previousState && overlay.hidden === !showOverlay) return;
+
+      overlay.hidden = !showOverlay;
+      card.dataset.comingSoonVisible = String(showOverlay);
+    }
+
     setCardColor(card, mapping, swatch = null) {
       if (!mapping) return;
 
@@ -79,6 +97,8 @@
         image.removeAttribute('sizes');
         image.alt = mapping.alt || `${title} – ${mapping.label || mapping.optionValue || 'color'}`;
       }
+
+      this.updateComingSoonOverlay(card, mapping);
     }
 
     onClick = (event) => {

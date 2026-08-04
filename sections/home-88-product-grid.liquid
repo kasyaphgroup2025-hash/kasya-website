@@ -25,10 +25,21 @@
         assign product_url = product.url | default: '#'
         assign initial_image = block.settings.color_1_image | default: product.featured_image
         assign initial_alt = block.settings.color_1_image_alt | default: initial_image.alt | default: display_title
+        assign initial_color_value = block.settings.color_1_option_value | default: block.settings.color_1_label | strip | downcase
+        assign is_daliah_product = false
+        if product.handle == 'ella-polo-blouse-soft-linen-new-colors' or product.handle == 'daliah-polo-acid-linen'
+          assign is_daliah_product = true
+        endif
+        assign initial_color_coming_soon = false
+        if is_daliah_product
+          if initial_color_value == 'navy blue' or initial_color_value == 'navy' or initial_color_value == 'cinnamon'
+            assign initial_color_coming_soon = true
+          endif
+        endif
       -%}
 
-      <article class="home-88-products__card" data-product-card data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
-        <a class="home-88-products__image-link" href="{{ product_url }}" aria-label="View {{ display_title | escape }}">
+      <article class="home-88-products__card" data-product-card data-block-id="{{ block.id }}"{% if is_daliah_product %} data-daliah-product-card="true"{% endif %} {{ block.shopify_attributes }}>
+        <a class="home-88-products__image-link" href="{{ product_url }}" aria-label="View {{ display_title | escape }}"{% if is_daliah_product %} aria-describedby="Home88ComingSoon-{{ section.id }}-{{ block.id }}"{% endif %}>
           {%- if initial_image != blank -%}
             {{ initial_image
               | image_url: width: 1000
@@ -41,6 +52,17 @@
             }}
           {%- else -%}
             <div class="home-88-products__image home-88-products__image--placeholder" aria-hidden="true"></div>
+          {%- endif -%}
+          {%- if is_daliah_product -%}
+            <span
+              id="Home88ComingSoon-{{ section.id }}-{{ block.id }}"
+              class="home-88-products__coming-soon"
+              data-coming-soon-overlay
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+              {% unless initial_color_coming_soon %}hidden{% endunless %}
+            >COMING SOON</span>
           {%- endif -%}
         </a>
 
