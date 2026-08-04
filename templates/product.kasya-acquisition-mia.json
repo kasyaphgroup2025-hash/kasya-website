@@ -16,7 +16,7 @@
         "show_header": false,
         "logo_text": "KASYA",
         "product_label": "KASYA BASICS",
-        "heading": "MIA PALAZZO PANTS",
+        "heading": "MIA PALAZZO",
         "subtitle": "Soft Linen",
         "rating_text": "",
         "description": "Relaxed wide-leg movement with a polished finish for office days, travel, and everyday errands.",
@@ -24,7 +24,7 @@
         "color_option_name": "Color",
         "size_option_name": "Size",
         "show_size_chart": true,
-        "size_helper_text": "Designed with a roomy palazzo silhouette that falls loosely from the waist down. The wide-leg construction allows full movement without feeling tight around the legs. Please check the product size chart before placing your order.",
+        "size_helper_text": "Choose your usual size for a relaxed fit. Size up if you prefer extra room around the waist or tummy.",
         "size_chart_trigger_text": "Not sure about your size? View size chart",
         "size_chart_note": "Measurements may vary slightly due to fabric behavior and manual production.",
         "cta_text": "ADD TO CART",
@@ -74,7 +74,7 @@
       ],
       "settings": {
         "heading": "HOW IT FITS",
-        "subheading": "See how the wide-leg silhouette falls from the waist through the hem before choosing your size.",
+        "subheading": "See how the garment falls from every angle before choosing your size.",
         "front_label": "FRONT VIEW",
         "front_description": "Shows the relaxed waistband and full palazzo volume.",
         "side_label": "SIDE VIEW",
@@ -149,11 +149,27 @@
             "title": "Travel and Errands",
             "description": "The roomy silhouette and adjustable waist support comfortable movement."
           }
+        },
+        "lifestyle_card_amB8E4": {
+          "type": "lifestyle_card",
+          "settings": {
+            "title": "Travel and Errands",
+            "description": "The roomy silhouette and adjustable waist support comfortable movement."
+          }
+        },
+        "lifestyle_card_DibyFR": {
+          "type": "lifestyle_card",
+          "settings": {
+            "title": "Travel and Errands",
+            "description": "The roomy silhouette and adjustable waist support comfortable movement."
+          }
         }
       },
       "block_order": [
         "lifestyle_1",
-        "lifestyle_2"
+        "lifestyle_2",
+        "lifestyle_card_amB8E4",
+        "lifestyle_card_DibyFR"
       ],
       "settings": {
         "heading": "WHERE TO WEAR IT",
