@@ -143,10 +143,41 @@
   }
 
   .kasya-lp-fabric-quality__image-wrap {
+    position: relative;
     margin-top: 16px;
     overflow: hidden;
     border-radius: 8px;
     background: #f3f3f3;
+  }
+
+  .kasya-lp-fabric-quality__image-wrap.is-coming-soon::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.18);
+    pointer-events: none;
+  }
+
+  .kasya-lp-fabric-quality__image-wrap.is-coming-soon::after {
+    content: "COMING SOON";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    color: #ffffff;
+    font-family: "Helvetica Now Display", Helvetica, Arial, sans-serif;
+    font-size: clamp(24px, 6vw, 46px);
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    text-align: center;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.34);
+    text-transform: uppercase;
+    pointer-events: none;
   }
 
   .kasya-lp-fabric-quality__image {
@@ -260,6 +291,7 @@
     if (!section) return;
 
     const image = section.querySelector('[data-fabric-image]');
+    const imageWrap = section.querySelector('.kasya-lp-fabric-quality__image-wrap');
     const placeholder = section.querySelector('[data-fabric-placeholder]');
     const colorLabel = section.querySelector('[data-fabric-color-shown]');
     const colorName = section.querySelector('[data-fabric-color-name]');
@@ -291,11 +323,19 @@
           placeholder.hidden = true;
         }
 
+        if (imageWrap) {
+          imageWrap.classList.toggle('is-coming-soon', Boolean(state.comingSoon));
+        }
+
         return;
       }
 
       image.removeAttribute('src');
       image.hidden = true;
+
+      if (imageWrap) {
+        imageWrap.classList.remove('is-coming-soon');
+      }
 
       if (placeholder) {
         placeholder.hidden = false;

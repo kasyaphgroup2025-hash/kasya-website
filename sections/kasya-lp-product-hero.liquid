@@ -18,6 +18,7 @@
     assign require_explicit_variant_selection = false
     assign hide_landing_header = false
     assign show_initial_media_preview = false
+    assign enable_daliah_coming_soon_overlay = false
     assign explicit_selection_templates = 'kasya-acquisition-dahlia,kasya-acquisition-ellav2,kasya-acquisition-hazel,kasya-acquisition-inah,kasya-acquisition-mia,kasya-acquisition-kianna,kasya-acquisition-naomi,kasya-acqusition-lea' | split: ','
     assign lp_product_title_downcase = lp_product.title | downcase
 
@@ -35,6 +36,12 @@
       endif
     endif
 
+    if template.suffix == 'kasya-acquisition-dahlia'
+      if lp_product.handle contains 'daliah' or lp_product_title_downcase contains 'daliah'
+        assign enable_daliah_coming_soon_overlay = true
+      endif
+    endif
+
     for media in lp_product.media
       if media.media_type == 'image' and media.preview_image != blank and media.alt == 'LP | Size Chart'
         assign size_chart_image = media.preview_image
@@ -45,7 +52,7 @@
   endif
 %}
 
-<section class="kasya-product-hero{% if section.settings.enable_sticky_atc %} kasya-product-hero--sticky-enabled{% endif %}" data-kasya-hero data-section-id="{{ section.id }}"{% if require_explicit_variant_selection %} data-require-explicit-variant-selection="true"{% endif %}{% if show_initial_media_preview %} data-initial-media-preview="true"{% endif %}>
+<section class="kasya-product-hero{% if section.settings.enable_sticky_atc %} kasya-product-hero--sticky-enabled{% endif %}" data-kasya-hero data-section-id="{{ section.id }}"{% if require_explicit_variant_selection %} data-require-explicit-variant-selection="true"{% endif %}{% if show_initial_media_preview %} data-initial-media-preview="true"{% endif %}{% if enable_daliah_coming_soon_overlay %} data-daliah-coming-soon-overlay="true"{% endif %}>
   {% if lp_product == blank %}
     <div class="kasya-product-hero__empty">
       <p>Select a product in this section's settings.</p>
@@ -430,10 +437,40 @@
   }
 
   .kasya-product-hero__slide {
+    position: relative;
     flex: 0 0 100%;
     width: 100%;
     scroll-snap-align: start;
     background: #f2f2f2;
+  }
+
+  .kasya-product-hero--coming-soon-active .kasya-product-hero__slide::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.18);
+    pointer-events: none;
+  }
+
+  .kasya-product-hero--coming-soon-active .kasya-product-hero__slide::after {
+    content: "COMING SOON";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-family: "Helvetica Now Display", Helvetica, Arial, sans-serif;
+    font-size: clamp(28px, 8vw, 58px);
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    text-align: center;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.36);
+    text-transform: uppercase;
+    pointer-events: none;
   }
 
   .kasya-product-hero__slide img {
@@ -979,6 +1016,7 @@
     const colorBlocks = colorBlocksRaw.filter(block => block && block.option_value);
     const requireExplicitVariantSelection = section.dataset.requireExplicitVariantSelection === 'true';
     const showInitialMediaPreview = section.dataset.initialMediaPreview === 'true';
+    const enableDaliahComingSoonOverlay = section.dataset.daliahComingSoonOverlay === 'true';
 
     const defaultColor = {{ section.settings.default_color | json }};
     const productHandle = {{ lp_product.handle | json }};
@@ -1007,7 +1045,7 @@
       const compactValue = value.replace(/\s+/g, '');
 
       if (value.includes('black')) return '#000000';
-      if (productHandle === 'naomi-culottes-acid-linen' && value === 'cinnamon') return '#AD753C';
+      if (value === 'cinnamon') return '#AD753C';
 
       const swatchMap = [
         { names: ['dusty lilac', 'soft lilac', 'light lilac', 'lilac', 'lavender'], color: '#C8B4D9' },
@@ -1396,6 +1434,7 @@
 
     function renderInitialSlider() {
       const images = getInitialGalleryImages();
+      updateHeroComingSoonOverlay('');
 
       slider.innerHTML = images.map((src, index) => `
         <div class="kasya-product-hero__slide">
@@ -1424,6 +1463,7 @@
 
     function renderSlider(colorValue) {
       const images = getImagesForColor(colorValue);
+      updateHeroComingSoonOverlay(colorValue);
 
       slider.innerHTML = images.map((src, index) => `
         <div class="kasya-product-hero__slide">
@@ -1448,6 +1488,17 @@
 
       slider.scrollTo({ left: 0, behavior: 'auto' });
       updateCarouselControls();
+    }
+
+    function isDaliahComingSoonColor(colorValue) {
+      if (!enableDaliahComingSoonOverlay) return false;
+
+      const value = normalizeColorName(colorValue);
+      return value === 'cinnamon' || value === 'navy blue';
+    }
+
+    function updateHeroComingSoonOverlay(colorValue) {
+      section.classList.toggle('kasya-product-hero--coming-soon-active', isDaliahComingSoonColor(colorValue));
     }
 
     function getCurrentSlideIndex() {
@@ -1653,6 +1704,7 @@
       const colorState = {
         color: selectedColor,
         displayColor,
+        comingSoon: isDaliahComingSoonColor(selectedColor),
         images: getFitImageMapForColor(selectedColor),
         fabricCloseup: getFabricCloseupForColor(selectedColor),
         featuredImage: fallbackImage
@@ -1676,6 +1728,7 @@
         color: '',
         previewColor,
         displayColor,
+        comingSoon: false,
         images: getFitImageMapForColor(previewColor),
         fabricCloseup: getFabricCloseupForColor(previewColor),
         featuredImage: fallbackImage

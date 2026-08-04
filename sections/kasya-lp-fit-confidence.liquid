@@ -250,10 +250,41 @@
   }
 
   .kasya-fit-confidence__media {
+    position: relative;
     overflow: hidden;
     border-radius: 6px;
     background: var(--kasya-fit-soft);
     aspect-ratio: 3 / 4;
+  }
+
+  .kasya-fit-confidence__media.is-coming-soon::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.18);
+    pointer-events: none;
+  }
+
+  .kasya-fit-confidence__media.is-coming-soon::after {
+    content: "COMING SOON";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    color: #ffffff;
+    font-family: "Helvetica Now Display", Helvetica, Arial, sans-serif;
+    font-size: clamp(18px, 4.5vw, 30px);
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    text-align: center;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.34);
+    text-transform: uppercase;
+    pointer-events: none;
   }
 
   .kasya-fit-confidence__media img {
@@ -385,11 +416,12 @@
     const colorName = section.querySelector('[data-fit-color-name]');
     const shots = ['front', 'side', 'back'];
 
-    function updateShot(shot, src, displayColor, strictColorMedia) {
+    function updateShot(shot, src, displayColor, strictColorMedia, comingSoon) {
       const image = section.querySelector(`[data-fit-image="${shot}"]`);
       const placeholder = section.querySelector(`[data-fit-placeholder="${shot}"]`);
       if (!image) return;
 
+      const media = image.closest('.kasya-fit-confidence__media');
       const nextSrc = src || (strictColorMedia ? '' : image.dataset.defaultSrc) || '';
 
       if (nextSrc) {
@@ -404,11 +436,19 @@
           placeholder.hidden = true;
         }
 
+        if (media) {
+          media.classList.toggle('is-coming-soon', Boolean(comingSoon));
+        }
+
         return;
       }
 
       image.removeAttribute('src');
       image.hidden = true;
+
+      if (media) {
+        media.classList.remove('is-coming-soon');
+      }
 
       if (placeholder) {
         placeholder.hidden = false;
@@ -427,7 +467,12 @@
       }
 
       shots.forEach(shot => {
-        updateShot(shot, images[shot], displayColor, state.strictColorMedia);
+        updateShot(shot, images[shot], displayColor, state.strictColorMedia, state.comingSoon);
+      });
+
+      section.querySelectorAll('.kasya-fit-confidence__media').forEach(media => {
+        const image = media.querySelector('[data-fit-image]');
+        media.classList.toggle('is-coming-soon', Boolean(state.comingSoon && image && !image.hidden && image.getAttribute('src')));
       });
     }
 
