@@ -175,7 +175,6 @@
               ],
               "variants": [
                 {%- for variant in product.variants -%}
-                  {%- assign variant_preview_image = variant.featured_media.preview_image | default: variant.featured_image -%}
                   {
                     "id": {{ variant.id | json }},
                     "available": {{ variant.available | json }},
@@ -183,13 +182,7 @@
                     "price": {{ variant.price | json }},
                     "priceFormatted": {{ variant.price | money | json }},
                     "compareAtPrice": {{ variant.compare_at_price | json }},
-                    "compareAtPriceFormatted": {%- if variant.compare_at_price != blank -%}{{ variant.compare_at_price | money | json }}{%- else -%}null{%- endif -%},
-                    "featuredImage": {
-                      "src": {%- if variant_preview_image != blank -%}{{ variant_preview_image | image_url: width: 1000 | json }}{%- else -%}null{%- endif -%},
-                      "alt": {{ variant_preview_image.alt | default: display_title | json }},
-                      "width": {%- if variant_preview_image != blank -%}{{ variant_preview_image.width | json }}{%- else -%}null{%- endif -%},
-                      "height": {%- if variant_preview_image != blank -%}{{ variant_preview_image.height | json }}{%- else -%}null{%- endif -%}
-                    }
+                    "compareAtPriceFormatted": {%- if variant.compare_at_price != blank -%}{{ variant.compare_at_price | money | json }}{%- else -%}null{%- endif -%}
                   }{% unless forloop.last %},{% endunless %}
                 {%- endfor -%}
               ]

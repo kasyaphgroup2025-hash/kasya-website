@@ -4,7 +4,7 @@
     return;
   }
 
-  const normalize = (value) => String(value || '').trim().toLowerCase();
+  const normalize = (value) => String(value || '').trim().replace(/\s+/g, ' ').toLowerCase();
 
   class Home88ProductGridController {
     constructor(root) {
@@ -28,7 +28,6 @@
       this.selectedVariant = null;
       this.modalPreviewColor = '';
       this.modalFallbackImage = null;
-      this.lastVariantPreviewImage = null;
       this.submitting = false;
 
       const options = { signal: this.controller.signal };
@@ -139,6 +138,7 @@
       if (this.isColorOption(select.dataset.optionName)) {
         const mapping = this.findMapping(select.value);
         if (mapping && this.activeCard) this.setCardColor(this.activeCard, mapping);
+        this.updateModalImage(select.value);
       }
       this.updateSelection();
     };
@@ -215,7 +215,6 @@
       this.selectedVariant = null;
       this.modalPreviewColor = '';
       this.modalFallbackImage = null;
-      this.lastVariantPreviewImage = null;
       this.submitting = false;
       this.titleNode.textContent = product.displayTitle || product.title;
       this.optionsNode.innerHTML = '';
@@ -227,8 +226,8 @@
       this.modalPreviewColor = activeMapping?.optionValue || activeMapping?.label || '';
       const cardImage = card.querySelector('.home-88-products__image');
       this.modalFallbackImage = {
-        src: activeMapping?.src || cardImage?.currentSrc || cardImage?.src || null,
-        alt: activeMapping?.alt || cardImage?.alt || product.displayTitle || product.title
+        src: cardImage?.currentSrc || cardImage?.src || activeMapping?.src || null,
+        alt: cardImage?.alt || activeMapping?.alt || product.displayTitle || product.title
       };
       product.options.forEach((option, optionIndex) => {
         const position = Number(option.position || optionIndex + 1);
@@ -264,7 +263,7 @@
 
       this.imageNode?.removeAttribute('src');
       this.imageNode?.removeAttribute('srcset');
-      this.updateModalImage();
+      this.updateModalImage(this.modalPreviewColor);
       this.renderPrice(product);
       this.modal.hidden = false;
       this.modal.setAttribute('aria-hidden', 'false');
@@ -285,7 +284,6 @@
       this.selectedVariant = null;
       this.modalPreviewColor = '';
       this.modalFallbackImage = null;
-      this.lastVariantPreviewImage = null;
       this.submitting = false;
     }
 
@@ -303,56 +301,15 @@
       return this.getSelects().map((select) => select.value);
     }
 
-    getColorOption() {
-      return this.product?.options.find((option) => this.isColorOption(option.name)) || null;
-    }
-
-    getColorSelect() {
-      return this.getSelects().find((select) => this.isColorOption(select.dataset.optionName)) || null;
-    }
-
-    getVariantImage(variant) {
-      return variant?.featuredImage?.src ? variant.featuredImage : null;
-    }
-
-    findColorPreviewVariant(color) {
-      const colorOption = this.getColorOption();
-      const colorPosition = Number(colorOption?.position || 0) - 1;
-      if (!color || colorPosition < 0) return null;
-
-      return this.product.variants.find((variant) => (
-        variant.available
-        && normalize(variant.options[colorPosition]) === normalize(color)
-        && this.getVariantImage(variant)
-      )) || null;
-    }
-
-    getInitialPreviewColor() {
-      if (this.modalPreviewColor) return this.modalPreviewColor;
-      const colorOption = this.getColorOption();
-      return this.normalizeOptionValues(colorOption?.values)[0] || '';
-    }
-
-    updateModalImage() {
+    updateModalImage(color) {
       if (!this.product || !this.imageNode) return;
 
-      const selectedColor = this.getColorSelect()?.value || '';
-      const previewColor = selectedColor || this.getInitialPreviewColor();
-      const exactVariantImage = this.getVariantImage(this.selectedVariant);
-      const colorVariantImage = this.getVariantImage(this.findColorPreviewVariant(previewColor));
-      const hasVariantImages = this.product.variants.some((variant) => this.getVariantImage(variant));
+      const previewColor = color || this.modalPreviewColor;
+      const mapping = this.findMapping(previewColor);
+      const mappedImage = mapping?.src ? { src: mapping.src, alt: mapping.alt } : null;
+      const image = mappedImage || this.modalFallbackImage || this.product.featuredImage;
 
-      if (exactVariantImage || colorVariantImage) {
-        this.lastVariantPreviewImage = exactVariantImage || colorVariantImage;
-      }
-
-      const image = exactVariantImage
-        || colorVariantImage
-        || this.lastVariantPreviewImage
-        || this.modalFallbackImage
-        || (!hasVariantImages ? this.product.featuredImage : null);
-
-      if (image?.src) this.renderImage(image, previewColor);
+      if (image?.src) this.renderImage(image, mapping?.optionValue || mapping?.label || previewColor);
     }
 
     variantMatches(variant, selections, ignoredIndex = -1) {
@@ -393,7 +350,6 @@
         this.statusNode.textContent = '';
       }
 
-      this.updateModalImage();
       this.renderPrice(this.selectedVariant || this.product);
     }
 
@@ -402,8 +358,6 @@
       if (image?.src) {
         this.imageNode.src = image.src;
         this.imageNode.removeAttribute('srcset');
-        if (image.width) this.imageNode.width = Number(image.width);
-        if (image.height) this.imageNode.height = Number(image.height);
         this.imageNode.hidden = false;
       } else {
         this.imageNode.removeAttribute('src');
