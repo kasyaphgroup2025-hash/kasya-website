@@ -38,7 +38,7 @@
           "settings": {
             "product": "daliah-polo-acid-linen",
             "custom_title": "Daliah Polo",
-            "color_1_image": "shopify://shop_images/PRODUCT_BANNER_6.jpg",
+            "color_1_image": "shopify://shop_images/PRODUCT_BANNER_0c962608-3b74-4250-ae0a-508fda53092f.jpg",
             "color_1_image_alt": "",
             "color_1_label": "Black",
             "color_1_swatch": "#000000",
@@ -62,7 +62,7 @@
         "home_88_product_2": {
           "type": "product",
           "settings": {
-            "product": "ella-box-polo-soft-linen",
+            "product": "kianna-puff-sleeves-blouse-knitted",
             "custom_title": "Kianna Puff Sleeves",
             "color_1_image": "shopify://shop_images/PRODUCT_BANNER_3.jpg",
             "color_1_image_alt": "",
@@ -88,7 +88,7 @@
         "home_88_product_3": {
           "type": "product",
           "settings": {
-            "product": "soft-linen-long-skirts-copy",
+            "product": "mia-palazzo-pants-soft-linen",
             "custom_title": "Mia Palazzo Pants",
             "color_1_image": "shopify://shop_images/PRODUCT_BANNER_9.jpg",
             "color_1_image_alt": "",
@@ -113,7 +113,7 @@
         "home_88_product_4": {
           "type": "product",
           "settings": {
-            "product": "hazel-trouser-viscose-linen",
+            "product": "lea-trouser-woven",
             "custom_title": "Lea Trouser",
             "color_1_image": "shopify://shop_images/PRODUCT_BANNER_8.jpg",
             "color_1_image_alt": "",
@@ -138,7 +138,7 @@
         "home_88_product_5": {
           "type": "product",
           "settings": {
-            "product": "black-claire-soft-linen-dress",
+            "product": "naomi-culottes-acid-linen",
             "custom_title": "Naomi Culottes",
             "color_1_image": "shopify://shop_images/PRODUCT_BANNER_11.jpg",
             "color_1_image_alt": "",
