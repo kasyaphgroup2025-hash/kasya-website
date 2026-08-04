@@ -24,7 +24,7 @@
         "color_option_name": "Color",
         "size_option_name": "Size",
         "show_size_chart": true,
-        "size_helper_text": "Designed with a straight-to-empire silhouette. The upper portion creates a clean shape while the loose bottom tier provides comfortable room around the waist and lower body. Please check the product size chart before placing your order.",
+        "size_helper_text": "Designed with a straight-to-empire silhouette. The upper portion creates a clean shape while the loose bottom tier provides comfortable room around the waist and lower body.",
         "size_chart_trigger_text": "Not sure about your size? View size chart",
         "size_chart_note": "Measurements may vary slightly due to fabric behavior and manual production.",
         "cta_text": "ADD TO CART",
@@ -139,21 +139,41 @@
         "lifestyle_1": {
           "type": "lifestyle_card",
           "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_02_48_21_PM.png",
             "title": "Office Day",
-            "description": "Pair with Lea Trouser for a softly polished office outfit."
+            "description": "Polished enough for work, relaxed enough for long hours."
           }
         },
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
-            "title": "Relaxed Plans",
-            "description": "Pair with Naomi Culottes or Mia Palazzo Pants for an easy balanced look."
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_02_48_31_PM.png",
+            "title": "Errands",
+            "description": "Easy to move in while still looking put-together"
+          }
+        },
+        "lifestyle_card_YgPhKi": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_02_48_39_PM.png",
+            "title": "Family Lunch",
+            "description": "Comfortable, modest, and effortless to style."
+          }
+        },
+        "lifestyle_card_frgabM": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_02_48_44_PM.png",
+            "title": "Gatherings",
+            "description": "Polished comfort for every gathering."
           }
         }
       },
       "block_order": [
         "lifestyle_1",
-        "lifestyle_2"
+        "lifestyle_2",
+        "lifestyle_card_YgPhKi",
+        "lifestyle_card_frgabM"
       ],
       "settings": {
         "heading": "WHERE TO WEAR IT",

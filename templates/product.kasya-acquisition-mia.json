@@ -139,29 +139,33 @@
         "lifestyle_1": {
           "type": "lifestyle_card",
           "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_03_00_09_PM.png",
             "title": "Office Day",
-            "description": "Pair with a structured or tucked-in top for a balanced office outfit."
+            "description": "Polished enough for work, relaxed enough for long hours."
           }
         },
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
-            "title": "Travel and Errands",
-            "description": "The roomy silhouette and adjustable waist support comfortable movement."
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_03_00_19_PM.png",
+            "title": "Errands",
+            "description": "Easy to move in while still looking put-together."
           }
         },
         "lifestyle_card_amB8E4": {
           "type": "lifestyle_card",
           "settings": {
-            "title": "Travel and Errands",
-            "description": "The roomy silhouette and adjustable waist support comfortable movement."
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_03_00_24_PM.png",
+            "title": "Family Lunch",
+            "description": "Comfortable, modest, and effortless to style."
           }
         },
         "lifestyle_card_DibyFR": {
           "type": "lifestyle_card",
           "settings": {
-            "title": "Travel and Errands",
-            "description": "The roomy silhouette and adjustable waist support comfortable movement."
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_03_00_32_PM.png",
+            "title": "Travel",
+            "description": "Relaxed fit that moves with you through a long day."
           }
         }
       },
