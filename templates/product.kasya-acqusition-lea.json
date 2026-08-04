@@ -139,21 +139,41 @@
         "lifestyle_1": {
           "type": "lifestyle_card",
           "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_03_52_31_PM.png",
             "title": "Office Day",
-            "description": "Pair with the Kianna Blouse for a soft but polished work outfit."
+            "description": "Polished enough for work, relaxed enough for long hours."
           }
         },
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
-            "title": "Smart-Casual Plans",
-            "description": "Style with a tucked-in shirt, simple blouse, or fitted everyday top."
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_03_52_38_PM.png",
+            "title": "Errands",
+            "description": "Easy to move in while still looking put-together."
+          }
+        },
+        "lifestyle_card_XwMPEh": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_03_52_47_PM.png",
+            "title": "Family Lunch",
+            "description": "Comfortable, modest, and effortless to style."
+          }
+        },
+        "lifestyle_card_JJMhMP": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_03_52_53_PM.png",
+            "title": "Travel",
+            "description": "Relaxed fit that moves with you through a long day."
           }
         }
       },
       "block_order": [
         "lifestyle_1",
-        "lifestyle_2"
+        "lifestyle_2",
+        "lifestyle_card_XwMPEh",
+        "lifestyle_card_JJMhMP"
       ],
       "settings": {
         "heading": "WHERE TO WEAR IT",
