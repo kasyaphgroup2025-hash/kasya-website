@@ -26,6 +26,9 @@
       this.product = null;
       this.mappings = [];
       this.selectedVariant = null;
+      this.modalPreviewColor = '';
+      this.modalFallbackImage = null;
+      this.lastVariantPreviewImage = null;
       this.submitting = false;
 
       const options = { signal: this.controller.signal };
@@ -210,6 +213,9 @@
       this.product = product;
       this.mappings = this.getMappings(card);
       this.selectedVariant = null;
+      this.modalPreviewColor = '';
+      this.modalFallbackImage = null;
+      this.lastVariantPreviewImage = null;
       this.submitting = false;
       this.titleNode.textContent = product.displayTitle || product.title;
       this.optionsNode.innerHTML = '';
@@ -218,6 +224,12 @@
       this.submitButton.textContent = 'Add to Cart';
 
       const activeMapping = this.getActiveMapping(card);
+      this.modalPreviewColor = activeMapping?.optionValue || activeMapping?.label || '';
+      const cardImage = card.querySelector('.home-88-products__image');
+      this.modalFallbackImage = {
+        src: activeMapping?.src || cardImage?.currentSrc || cardImage?.src || null,
+        alt: activeMapping?.alt || cardImage?.alt || product.displayTitle || product.title
+      };
       product.options.forEach((option, optionIndex) => {
         const position = Number(option.position || optionIndex + 1);
         const field = document.createElement('div');
@@ -250,7 +262,9 @@
         this.optionsNode.appendChild(field);
       });
 
-      this.renderImage(activeMapping?.src || product.featuredImage?.src, activeMapping?.label || activeMapping?.optionValue);
+      this.imageNode?.removeAttribute('src');
+      this.imageNode?.removeAttribute('srcset');
+      this.updateModalImage();
       this.renderPrice(product);
       this.modal.hidden = false;
       this.modal.setAttribute('aria-hidden', 'false');
@@ -269,6 +283,9 @@
       this.product = null;
       this.mappings = [];
       this.selectedVariant = null;
+      this.modalPreviewColor = '';
+      this.modalFallbackImage = null;
+      this.lastVariantPreviewImage = null;
       this.submitting = false;
     }
 
@@ -284,6 +301,58 @@
 
     getSelections() {
       return this.getSelects().map((select) => select.value);
+    }
+
+    getColorOption() {
+      return this.product?.options.find((option) => this.isColorOption(option.name)) || null;
+    }
+
+    getColorSelect() {
+      return this.getSelects().find((select) => this.isColorOption(select.dataset.optionName)) || null;
+    }
+
+    getVariantImage(variant) {
+      return variant?.featuredImage?.src ? variant.featuredImage : null;
+    }
+
+    findColorPreviewVariant(color) {
+      const colorOption = this.getColorOption();
+      const colorPosition = Number(colorOption?.position || 0) - 1;
+      if (!color || colorPosition < 0) return null;
+
+      return this.product.variants.find((variant) => (
+        variant.available
+        && normalize(variant.options[colorPosition]) === normalize(color)
+        && this.getVariantImage(variant)
+      )) || null;
+    }
+
+    getInitialPreviewColor() {
+      if (this.modalPreviewColor) return this.modalPreviewColor;
+      const colorOption = this.getColorOption();
+      return this.normalizeOptionValues(colorOption?.values)[0] || '';
+    }
+
+    updateModalImage() {
+      if (!this.product || !this.imageNode) return;
+
+      const selectedColor = this.getColorSelect()?.value || '';
+      const previewColor = selectedColor || this.getInitialPreviewColor();
+      const exactVariantImage = this.getVariantImage(this.selectedVariant);
+      const colorVariantImage = this.getVariantImage(this.findColorPreviewVariant(previewColor));
+      const hasVariantImages = this.product.variants.some((variant) => this.getVariantImage(variant));
+
+      if (exactVariantImage || colorVariantImage) {
+        this.lastVariantPreviewImage = exactVariantImage || colorVariantImage;
+      }
+
+      const image = exactVariantImage
+        || colorVariantImage
+        || this.lastVariantPreviewImage
+        || this.modalFallbackImage
+        || (!hasVariantImages ? this.product.featuredImage : null);
+
+      if (image?.src) this.renderImage(image, previewColor);
     }
 
     variantMatches(variant, selections, ignoredIndex = -1) {
@@ -324,30 +393,25 @@
         this.statusNode.textContent = '';
       }
 
-      const colorSelect = this.getSelects().find((select) => this.isColorOption(select.dataset.optionName));
-      const color = colorSelect?.value || '';
-      const mapping = this.findMapping(color);
-      const colorPosition = Number(colorSelect?.dataset.optionPosition || 0) - 1;
-      const colorVariant = color && colorPosition >= 0
-        ? this.product.variants.find((variant) => normalize(variant.options[colorPosition]) === normalize(color))
-        : null;
-      const colorImage = mapping?.src || colorVariant?.featuredImage?.src || this.product.featuredImage?.src;
-      const image = this.selectedVariant?.featuredImage?.src || colorImage;
-      this.renderImage(image, color || mapping?.label);
+      this.updateModalImage();
       this.renderPrice(this.selectedVariant || this.product);
     }
 
-    renderImage(src, color) {
+    renderImage(image, color) {
       if (!this.imageNode) return;
-      if (src) {
-        this.imageNode.src = src;
+      if (image?.src) {
+        this.imageNode.src = image.src;
+        this.imageNode.removeAttribute('srcset');
+        if (image.width) this.imageNode.width = Number(image.width);
+        if (image.height) this.imageNode.height = Number(image.height);
         this.imageNode.hidden = false;
       } else {
         this.imageNode.removeAttribute('src');
+        this.imageNode.removeAttribute('srcset');
         this.imageNode.hidden = true;
       }
       const title = this.product?.displayTitle || this.product?.title || 'Product';
-      this.imageNode.alt = color ? `${title} – ${color}` : title;
+      this.imageNode.alt = color ? `${title} | ${color} | Quick Shop` : `${title} | Quick Shop`;
     }
 
     renderPrice(variant) {
