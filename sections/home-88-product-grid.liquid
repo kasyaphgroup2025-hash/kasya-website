@@ -4,7 +4,7 @@
   id="home-88-product-grid"
   class="home-88-products"
   data-section-id="{{ section.id }}"
-  style="--home-88-intro-bg: {{ section.settings.intro_background }}; --home-88-grid-bg: {{ section.settings.grid_background }}; --home-88-intro-top: {{ section.settings.intro_padding_top }}px; --home-88-intro-bottom: {{ section.settings.intro_padding_bottom }}px; --home-88-intro-heading-mobile: {{ section.settings.heading_size_mobile }}px; --home-88-intro-heading-desktop: {{ section.settings.heading_size_desktop }}px; --home-88-intro-copy-mobile: {{ section.settings.description_size_mobile }}px; --home-88-intro-copy-desktop: {{ section.settings.description_size_desktop }}px; --home-88-grid-padding-top: {{ section.settings.product_grid_padding_top }}px; --home-88-grid-padding-bottom: {{ section.settings.product_grid_padding_bottom }}px; --home-88-product-name-mobile: {{ section.settings.product_name_size_mobile }}px; --home-88-product-name-desktop: {{ section.settings.product_name_size_desktop }}px; --home-88-product-price-mobile: {{ section.settings.product_price_size_mobile }}px; --home-88-product-price-desktop: {{ section.settings.product_price_size_desktop }}px;"
+  style="--home-88-intro-bg: {{ section.settings.intro_background }}; --home-88-grid-bg: {{ section.settings.grid_background }}; --home-88-intro-top: {{ section.settings.intro_padding_top }}px; --home-88-intro-bottom: {{ section.settings.intro_padding_bottom }}px; --home-88-intro-heading-mobile: {{ section.settings.heading_size_mobile }}px; --home-88-intro-heading-desktop: {{ section.settings.heading_size_desktop }}px; --home-88-intro-copy-mobile: {{ section.settings.description_size_mobile }}px; --home-88-intro-copy-desktop: {{ section.settings.description_size_desktop }}px; --home-88-grid-padding-top: {{ section.settings.product_grid_padding_top }}px; --home-88-grid-padding-bottom: {{ section.settings.product_grid_padding_bottom }}px; --home-88-product-name-mobile: {{ section.settings.product_name_size_mobile }}px; --home-88-product-name-desktop: {{ section.settings.product_name_size_desktop }}px; --home-88-product-price-mobile: {{ section.settings.product_price_size_mobile }}px; --home-88-product-price-desktop: {{ section.settings.product_price_size_desktop }}px; --home-88-coming-soon-mobile: {{ section.settings.coming_soon_font_size_mobile }}px; --home-88-coming-soon-desktop: {{ section.settings.coming_soon_font_size_desktop }}px;"
 >
   <header class="home-88-products__intro">
     {%- if section.settings.section_heading != blank -%}
@@ -120,6 +120,7 @@
             data-block-id="{{ block.id }}"
             data-product-id="{{ product.id }}"
             aria-haspopup="dialog"
+            aria-disabled="{% if product == blank or product.available == false %}true{% else %}false{% endif %}"
             {% if product == blank or product.available == false %}disabled{% endif %}
           >Quick Shop</button>
         </div>
@@ -245,7 +246,10 @@
     { "type": "range", "id": "product_name_size_mobile", "label": "Mobile product name size", "min": 11, "max": 22, "step": 1, "unit": "px", "default": 13 },
     { "type": "range", "id": "product_name_size_desktop", "label": "Desktop product name size", "min": 14, "max": 32, "step": 1, "unit": "px", "default": 18 },
     { "type": "range", "id": "product_price_size_mobile", "label": "Mobile product price size", "min": 14, "max": 30, "step": 1, "unit": "px", "default": 18 },
-    { "type": "range", "id": "product_price_size_desktop", "label": "Desktop product price size", "min": 16, "max": 36, "step": 1, "unit": "px", "default": 22 }
+    { "type": "range", "id": "product_price_size_desktop", "label": "Desktop product price size", "min": 16, "max": 36, "step": 1, "unit": "px", "default": 22 },
+    { "type": "header", "content": "Coming Soon typography" },
+    { "type": "range", "id": "coming_soon_font_size_mobile", "label": "Coming Soon font size — Mobile", "min": 16, "max": 48, "step": 1, "unit": "px", "default": 28 },
+    { "type": "range", "id": "coming_soon_font_size_desktop", "label": "Coming Soon font size — Desktop", "min": 20, "max": 64, "step": 1, "unit": "px", "default": 36 }
   ],
   "blocks": [
     {

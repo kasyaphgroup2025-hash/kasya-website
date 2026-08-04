@@ -36,6 +36,7 @@
       this.form?.addEventListener('submit', this.onSubmit, options);
       document.addEventListener('keydown', this.onKeyDown, options);
       document.addEventListener('shopify:block:select', this.onBlockSelect, options);
+      this.initializeCards();
     }
 
     destroy() {
@@ -64,6 +65,16 @@
       return this.getMappings(card).find((mapping) => Number(mapping.index) === index) || null;
     }
 
+    initializeCards() {
+      this.root.querySelectorAll('[data-product-card]').forEach((card) => {
+        const swatch = card.querySelector('[data-card-swatch][aria-pressed="true"]');
+        const mapping = this.getActiveMapping(card);
+        if (!mapping) return;
+        this.updateComingSoonOverlay(card, mapping, swatch);
+        this.updateQuickShopAvailability(card, mapping, swatch);
+      });
+    }
+
     normalizeColorValue(value) {
       return String(value || '').trim().replace(/\s+/g, ' ').toLowerCase();
     }
@@ -86,6 +97,25 @@
       card.dataset.comingSoonVisible = String(showOverlay);
     }
 
+    updateQuickShopAvailability(card, mapping, swatch = null) {
+      const trigger = card.querySelector('[data-home-88-quick-shop-trigger]');
+      if (!trigger) return;
+
+      const product = this.parseJson(card, '[data-product-json]');
+      const colorValue = swatch?.dataset.optionValue || mapping?.optionValue || mapping?.label || '';
+      const colorOptionIndex = product?.options?.findIndex((option) => this.isColorOption(option.name)) ?? -1;
+      const colorPosition = colorOptionIndex >= 0
+        ? Number(product.options[colorOptionIndex].position || colorOptionIndex + 1) - 1
+        : -1;
+      const colorAvailable = Boolean(product?.variants?.some((variant) => (
+        variant.available
+        && (colorPosition < 0 || normalize(variant.options[colorPosition]) === normalize(colorValue))
+      )));
+
+      trigger.disabled = !colorAvailable;
+      trigger.setAttribute('aria-disabled', String(!colorAvailable));
+    }
+
     setCardColor(card, mapping, swatch = null) {
       if (!mapping) return;
 
@@ -105,6 +135,7 @@
       }
 
       this.updateComingSoonOverlay(card, mapping, swatch);
+      this.updateQuickShopAvailability(card, mapping, swatch);
     }
 
     onClick = (event) => {
@@ -186,7 +217,7 @@
 
     isColorOption(name) {
       const key = normalize(name);
-      return key.includes('color') || key.includes('colour');
+      return key === 'color' || key === 'colour';
     }
 
     findMapping(value) {
