@@ -480,7 +480,7 @@ body.home-88-header-enabled.home-88-header-solid .section-header .cart-count-bub
   position: relative;
   display: grid;
   place-items: center;
-  width: min(70%, 25rem);
+  width: min(74%, 27rem);
   aspect-ratio: 15 / 4;
   filter: drop-shadow(0 0.1rem 0.18rem rgba(0, 0, 0, 0.26));
 }
@@ -514,7 +514,7 @@ body.home-88-header-enabled.home-88-header-solid .section-header .cart-count-bub
   position: relative;
   z-index: 1;
   font-family: Didot, "Bodoni 72", "Bodoni MT", "Times New Roman", serif;
-  font-size: min(var(--home-88-coming-soon-mobile, 28px), clamp(12px, 3.7vw, 19px));
+  font-size: min(var(--home-88-coming-soon-mobile, 28px), clamp(11px, 3.2vw, 17px));
   font-weight: 400;
   letter-spacing: 0.045em;
   line-height: 1;
@@ -799,11 +799,11 @@ html.home-88-quick-shop-open {
 
 @media screen and (min-width: 750px) {
   #home-88-product-grid .home-88-products__coming-soon-frame {
-    width: min(60%, 27rem);
+    width: min(64%, 29rem);
   }
 
   #home-88-product-grid .home-88-products__coming-soon-text {
-    font-size: min(var(--home-88-coming-soon-desktop, 36px), clamp(12px, 1.2vw, 20px));
+    font-size: min(var(--home-88-coming-soon-desktop, 36px), clamp(11px, 1.05vw, 18px));
   }
 
   #home-88-product-grid .home-88-products__heading {
