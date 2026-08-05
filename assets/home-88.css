@@ -447,7 +447,7 @@ body.home-88-header-enabled.home-88-header-solid .section-header .cart-count-bub
   background: var(--home-88-grid-bg, #d9c5a5);
 }
 
-#home-88-product-grid .home-88-products__card:nth-child(5) {
+#home-88-product-grid .home-88-products__card[data-daliah-product-card="true"] {
   grid-column: 1 / -1;
   justify-self: center;
   width: 50%;
@@ -818,7 +818,7 @@ html.home-88-quick-shop-open {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
-  #home-88-product-grid .home-88-products__card:nth-child(5) {
+  #home-88-product-grid .home-88-products__card[data-daliah-product-card="true"] {
     grid-column: auto;
     justify-self: stretch;
     width: auto;

@@ -163,11 +163,11 @@
         }
       },
       "block_order": [
-        "home_88_product_1",
         "home_88_product_2",
-        "home_88_product_3",
+        "home_88_product_5",
         "home_88_product_4",
-        "home_88_product_5"
+        "home_88_product_3",
+        "home_88_product_1"
       ],
       "settings": {
         "section_heading": "THE INTERLUDE EDIT",

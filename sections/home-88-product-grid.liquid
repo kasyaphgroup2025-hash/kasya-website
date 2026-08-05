@@ -25,16 +25,9 @@
         assign product_url = product.url | default: '#'
         assign initial_image = block.settings.color_1_image | default: product.featured_image
         assign initial_alt = block.settings.color_1_image_alt | default: initial_image.alt | default: display_title
-        assign initial_color_value = block.settings.color_1_option_value | default: block.settings.color_1_label | strip | downcase
         assign is_daliah_product = false
-        if product.handle == 'ella-polo-blouse-soft-linen-new-colors' or product.handle == 'daliah-polo-acid-linen'
+        if product.handle == 'daliah-polo-acid-linen'
           assign is_daliah_product = true
-        endif
-        assign initial_color_coming_soon = false
-        if is_daliah_product
-          if initial_color_value == 'navy blue' or initial_color_value == 'cinnamon'
-            assign initial_color_coming_soon = true
-          endif
         endif
       -%}
 
@@ -61,7 +54,6 @@
               role="status"
               aria-live="polite"
               aria-atomic="true"
-              {% unless initial_color_coming_soon %}hidden{% endunless %}
             >
               <span class="home-88-products__coming-soon-frame">
                 <svg viewBox="0 0 600 160" aria-hidden="true" focusable="false">
@@ -123,17 +115,19 @@
             </div>
           </div>
 
-          <button
-            class="home-88-products__quick-shop"
-            type="button"
-            data-home-88-quick-shop-trigger
-            data-section-id="{{ section.id }}"
-            data-block-id="{{ block.id }}"
-            data-product-id="{{ product.id }}"
-            aria-haspopup="dialog"
-            aria-disabled="{% if product == blank or product.available == false %}true{% else %}false{% endif %}"
-            {% if product == blank or product.available == false %}disabled{% endif %}
-          >Quick Shop</button>
+          {%- unless is_daliah_product -%}
+            <button
+              class="home-88-products__quick-shop"
+              type="button"
+              data-home-88-quick-shop-trigger
+              data-section-id="{{ section.id }}"
+              data-block-id="{{ block.id }}"
+              data-product-id="{{ product.id }}"
+              aria-haspopup="dialog"
+              aria-disabled="{% if product == blank or product.available == false %}true{% else %}false{% endif %}"
+              {% if product == blank or product.available == false %}disabled{% endif %}
+            >Quick Shop</button>
+          {%- endunless -%}
         </div>
 
         <script type="application/json" data-color-mappings>

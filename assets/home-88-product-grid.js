@@ -75,20 +75,11 @@
       });
     }
 
-    normalizeColorValue(value) {
-      return String(value || '').trim().replace(/\s+/g, ' ').toLowerCase();
-    }
-
-    isComingSoonColor(value) {
-      return ['cinnamon', 'navy blue'].includes(this.normalizeColorValue(value));
-    }
-
-    updateComingSoonOverlay(card, mapping, swatch = null) {
+    updateComingSoonOverlay(card) {
       const overlay = card.querySelector('[data-coming-soon-overlay]');
       if (!overlay) return;
 
-      const colorValue = swatch?.dataset.optionValue || mapping.optionValue || mapping.label || '';
-      const showOverlay = this.isComingSoonColor(colorValue);
+      const showOverlay = card.dataset.daliahProductCard === 'true';
       const previousState = card.dataset.comingSoonVisible === 'true';
 
       if (showOverlay === previousState && overlay.hidden === !showOverlay) return;
