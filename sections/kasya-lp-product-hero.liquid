@@ -18,8 +18,13 @@
     assign require_explicit_variant_selection = false
     assign hide_landing_header = false
     assign show_initial_media_preview = false
+    assign is_daliah_acquisition_hero = false
     assign explicit_selection_templates = 'kasya-acquisition-dahlia,kasya-acquisition-ellav2,kasya-acquisition-hazel,kasya-acquisition-inah,kasya-acquisition-mia,kasya-acquisition-kianna,kasya-acquisition-naomi,kasya-acqusition-lea' | split: ','
     assign lp_product_title_downcase = lp_product.title | downcase
+
+    if template.suffix == 'kasya-acquisition-dahlia' and lp_product.handle == 'daliah-polo-acid-linen'
+      assign is_daliah_acquisition_hero = true
+    endif
 
     if template.suffix == 'kasya-acquisition-test' and lp_product.handle == 'wideleg-linen-pants'
       assign require_explicit_variant_selection = true
@@ -45,7 +50,7 @@
   endif
 %}
 
-<section class="kasya-product-hero{% if section.settings.enable_sticky_atc %} kasya-product-hero--sticky-enabled{% endif %}" data-kasya-hero data-section-id="{{ section.id }}"{% if require_explicit_variant_selection %} data-require-explicit-variant-selection="true"{% endif %}{% if show_initial_media_preview %} data-initial-media-preview="true"{% endif %}>
+<section class="kasya-product-hero{% if section.settings.enable_sticky_atc %} kasya-product-hero--sticky-enabled{% endif %}" data-kasya-hero data-section-id="{{ section.id }}"{% if require_explicit_variant_selection %} data-require-explicit-variant-selection="true"{% endif %}{% if show_initial_media_preview %} data-initial-media-preview="true"{% endif %}{% if is_daliah_acquisition_hero %} data-daliah-coming-soon-hero="true"{% endif %}>
   {% if lp_product == blank %}
     <div class="kasya-product-hero__empty">
       <p>Select a product in this section's settings.</p>
@@ -88,6 +93,21 @@
           </div>
         {% endif %}
       </div>
+
+      {% if is_daliah_acquisition_hero %}
+        <div class="kasya-product-hero__coming-soon" data-daliah-coming-soon-overlay role="status" aria-live="polite" aria-atomic="true" hidden>
+          <span class="kasya-product-hero__coming-soon-frame">
+            <svg viewBox="0 0 600 160" aria-hidden="true" focusable="false">
+              <g fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" vector-effect="non-scaling-stroke">
+                <path class="kasya-product-hero__frame-line kasya-product-hero__frame-line--outer" d="M280 22H50L34 38v84l16 16h230M320 22h230l16 16v84l-16 16H320"/>
+                <path class="kasya-product-hero__frame-line kasya-product-hero__frame-line--inner" d="M280 29H55L41 43v74l14 14h225M320 29h225l14 14v74l-14 14H320"/>
+                <path class="kasya-product-hero__frame-ornament" d="m300 14 8 8-8 8-8-8 8-8Zm0 4 4 4-4 4-4-4 4-4ZM300 130l8 8-8 8-8-8 8-8Zm0 4 4 4-4 4-4-4 4-4Z"/>
+              </g>
+            </svg>
+            <span class="kasya-product-hero__coming-soon-text">COMING SOON</span>
+          </span>
+        </div>
+      {% endif %}
 
       <button
         type="button"
@@ -442,6 +462,79 @@
     height: auto;
     aspect-ratio: 4 / 5;
     object-fit: cover;
+  }
+
+  .kasya-product-hero[data-daliah-coming-soon-hero="true"] .kasya-product-hero__coming-soon {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: clamp(12px, 5%, 28px);
+    color: #ffffff;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .kasya-product-hero[data-daliah-coming-soon-hero="true"] .kasya-product-hero__coming-soon[hidden] {
+    display: none;
+  }
+
+  .kasya-product-hero[data-daliah-coming-soon-hero="true"] .kasya-product-hero__coming-soon-frame {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: min(80%, 430px);
+    aspect-ratio: 15 / 4;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.26));
+  }
+
+  .kasya-product-hero[data-daliah-coming-soon-hero="true"] .kasya-product-hero__coming-soon-frame svg {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .kasya-product-hero[data-daliah-coming-soon-hero="true"] .kasya-product-hero__coming-soon-frame path {
+    vector-effect: non-scaling-stroke;
+  }
+
+  .kasya-product-hero[data-daliah-coming-soon-hero="true"] .kasya-product-hero__frame-line--outer {
+    stroke-width: 1.05;
+  }
+
+  .kasya-product-hero[data-daliah-coming-soon-hero="true"] .kasya-product-hero__frame-line--inner {
+    stroke-width: 0.55;
+  }
+
+  .kasya-product-hero[data-daliah-coming-soon-hero="true"] .kasya-product-hero__frame-ornament {
+    stroke-width: 0.7;
+  }
+
+  .kasya-product-hero[data-daliah-coming-soon-hero="true"] .kasya-product-hero__coming-soon-text {
+    position: relative;
+    z-index: 1;
+    color: #ffffff;
+    font-family: Didot, "Bodoni 72", "Bodoni MT", "Times New Roman", serif;
+    font-size: clamp(18px, 5vw, 30px);
+    font-weight: 400;
+    letter-spacing: 0.045em;
+    line-height: 1;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+    white-space: nowrap;
+  }
+
+  @media screen and (min-width: 750px) {
+    .kasya-product-hero[data-daliah-coming-soon-hero="true"] .kasya-product-hero__coming-soon-frame {
+      width: min(65%, 480px);
+    }
+
+    .kasya-product-hero[data-daliah-coming-soon-hero="true"] .kasya-product-hero__coming-soon-text {
+      font-size: clamp(22px, 3vw, 34px);
+    }
   }
 
   .kasya-product-hero__arrow {
@@ -965,6 +1058,7 @@
     const variantsEl = section.querySelector('[data-variants]');
     const productMediaEl = section.querySelector('[data-product-media]');
     const colorBlocksEl = section.querySelector('[data-color-blocks]');
+    const daliahComingSoonOverlay = section.querySelector('[data-daliah-coming-soon-overlay]');
 
     if (!slider || !dots || !variantInput || !optionNamesEl || !variantsEl || !colorBlocksEl) return;
 
@@ -982,6 +1076,7 @@
 
     const defaultColor = {{ section.settings.default_color | json }};
     const productHandle = {{ lp_product.handle | json }};
+    const isDaliahAcquisitionHero = section.dataset.daliahComingSoonHero === 'true';
     const colorOptionName = {{ section.settings.color_option_name | json }};
     const sizeOptionName = {{ section.settings.size_option_name | json }};
     const ctaText = {{ section.settings.cta_text | json }};
@@ -1007,7 +1102,10 @@
       const compactValue = value.replace(/\s+/g, '');
 
       if (value.includes('black')) return '#000000';
-      if (productHandle === 'naomi-culottes-acid-linen' && value === 'cinnamon') return '#AD753C';
+      if (
+        value === 'cinnamon'
+        && (productHandle === 'naomi-culottes-acid-linen' || (isDaliahAcquisitionHero && productHandle === 'daliah-polo-acid-linen'))
+      ) return '#AD753C';
 
       const swatchMap = [
         { names: ['dusty lilac', 'soft lilac', 'light lilac', 'lilac', 'lavender'], color: '#C8B4D9' },
@@ -1064,6 +1162,8 @@
       const colorName = displayName || colorValue;
       const manualIsBlack = ['#000', '#000000'].includes(lower(manualSwatch));
       const nameIsBlack = normalizeColorName(colorName).includes('black');
+
+      if (isDaliahAcquisitionHero && productHandle === 'daliah-polo-acid-linen' && normalizeColorName(colorName) === 'cinnamon') return '#AD753C';
 
       if (manualSwatch && (!manualIsBlack || nameIsBlack)) return manualSwatch;
 
@@ -1568,6 +1668,15 @@
       });
     }
 
+    function updateDaliahComingSoonOverlay() {
+      if (!daliahComingSoonOverlay) return;
+
+      const color = normalizeColorName(selectedColor);
+      const showOverlay = color === 'cinnamon' || color === 'navy blue';
+
+      daliahComingSoonOverlay.hidden = !showOverlay;
+    }
+
     function updateSelectionLabels() {
       const block = getColorBlock(selectedColor);
       const displayColor = String((block && block.display_name) || selectedColor || '');
@@ -1721,6 +1830,7 @@
       selectedColor = colorValue;
 
       renderSlider(selectedColor);
+      updateDaliahComingSoonOverlay();
       renderSizes();
       updateSelectedClasses();
       updateVariantState();
@@ -1760,6 +1870,7 @@
 
     renderColors();
     initializeDefaultSelection();
+    updateDaliahComingSoonOverlay();
     if (selectedColor) {
       selectColor(selectedColor);
     } else {
