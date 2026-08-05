@@ -591,7 +591,8 @@ body.home-88-header-enabled.home-88-header-solid .section-header .cart-count-bub
   white-space: nowrap;
 }
 
-#home-88-product-grid .home-88-products__title a {
+#home-88-product-grid .home-88-products__title a,
+#home-88-product-grid .home-88-products__title-text {
   display: block;
   color: #151515;
   text-decoration: none;

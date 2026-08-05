@@ -32,7 +32,11 @@
       -%}
 
       <article class="home-88-products__card" data-product-card data-block-id="{{ block.id }}"{% if is_daliah_product %} data-daliah-product-card="true"{% endif %} {{ block.shopify_attributes }}>
-        <a class="home-88-products__image-link" href="{{ product_url }}" aria-label="View {{ display_title | escape }}"{% if is_daliah_product %} aria-describedby="Home88ComingSoon-{{ section.id }}-{{ block.id }}"{% endif %}>
+        {%- if is_daliah_product -%}
+          <div class="home-88-products__image-link">
+        {%- else -%}
+          <a class="home-88-products__image-link" href="{{ product_url }}" aria-label="View {{ display_title | escape }}">
+        {%- endif -%}
           {%- if initial_image != blank -%}
             {{ initial_image
               | image_url: width: 1000
@@ -67,7 +71,11 @@
               </span>
             </span>
           {%- endif -%}
-        </a>
+        {%- if is_daliah_product -%}
+          </div>
+        {%- else -%}
+          </a>
+        {%- endif -%}
 
         <div class="home-88-products__details">
           <div class="home-88-products__swatches" role="group" aria-label="Colors for {{ display_title | escape }}">
@@ -101,7 +109,11 @@
 
           <div class="home-88-products__meta">
             <h3 class="home-88-products__title">
-              <a href="{{ product_url }}">{{ display_title | escape }}</a>
+              {%- if is_daliah_product -%}
+                <span class="home-88-products__title-text">{{ display_title | escape }}</span>
+              {%- else -%}
+                <a href="{{ product_url }}">{{ display_title | escape }}</a>
+              {%- endif -%}
             </h3>
             <div class="home-88-products__prices">
               {%- if product != blank -%}
