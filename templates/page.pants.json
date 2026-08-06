@@ -191,6 +191,78 @@
             "lightbox_button_background": "#ffffff"
           }
         },
+        "text_outside_image_NrHKxi": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/lea_gray_front.jpg",
+            "link": "shopify://products/lea-trouser-woven",
+            "text": "Lea Trouser - Woven",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        },
+        "text_outside_image_qLFQtc": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/mia_black_front.jpg",
+            "link": "shopify://products/mia-palazzo-pants-soft-linen",
+            "text": "Mia Palazzo Pants - Soft Linen",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        },
+        "text_outside_image_ydUxzY": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/naomi_navy-blue_front.jpg",
+            "link": "shopify://products/naomi-culottes-acid-linen",
+            "text": "Naomi Culottes - Acid Linen",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        },
         "text_outside_image_4fXgFc": {
           "type": "text-outside-image",
           "disabled": true,
@@ -271,6 +343,9 @@
         "text_outside_image_LTdAG3",
         "text_outside_image_bEx6Bk",
         "text_outside_image_kGz7wD",
+        "text_outside_image_NrHKxi",
+        "text_outside_image_qLFQtc",
+        "text_outside_image_ydUxzY",
         "text_outside_image_4fXgFc",
         "text_outside_image_rDfKEC",
         "text_outside_image_HtzjAN"
