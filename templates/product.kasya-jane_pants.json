@@ -1,0 +1,390 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "kasya_lp_product_hero": {
+      "type": "kasya-lp-product-hero",
+      "settings": {
+        "product": "jane-blouse-premium-ity-1",
+        "show_header": false,
+        "logo_text": "KASYA",
+        "product_label": "KASYA BASICS",
+        "heading": "KIANNA  BLOUSE",
+        "subtitle": "Knitted",
+        "rating_text": "",
+        "description": "Softly structured puff sleeves and a relaxed lower tier for feminine everyday polish.",
+        "default_color": "Berry Blue",
+        "color_option_name": "Color",
+        "size_option_name": "Size",
+        "show_size_chart": true,
+        "size_helper_text": "Designed with a straight-to-empire silhouette. The upper portion creates a clean shape while the loose bottom tier provides comfortable room around the waist and lower body.",
+        "size_chart_trigger_text": "Not sure about your size? View size chart",
+        "size_chart_note": "Measurements may vary slightly due to fabric behavior and manual production.",
+        "cta_text": "ADD TO CART",
+        "enable_sticky_atc": true
+      }
+    },
+    "kasya_lp_fit_confidence": {
+      "type": "kasya-lp-fit-confidence",
+      "blocks": {
+        "fit_note_1": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Straight-to-empire silhouette"
+          }
+        },
+        "fit_note_2": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Relaxed lower tier"
+          }
+        },
+        "fit_note_3": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Softly structured puff sleeves"
+          }
+        },
+        "fit_note_4": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Cuff openings"
+          }
+        },
+        "fit_note_5": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Comfortable waist coverage"
+          }
+        }
+      },
+      "block_order": [
+        "fit_note_1",
+        "fit_note_2",
+        "fit_note_3",
+        "fit_note_4",
+        "fit_note_5"
+      ],
+      "settings": {
+        "heading": "HOW IT FITS",
+        "subheading": "See how the softly structured upper and relaxed lower tier shape the blouse from every angle.",
+        "front_label": "FRONT VIEW",
+        "front_description": "Shows the clean upper shape and relaxed empire-style lower tier.",
+        "side_label": "SIDE VIEW",
+        "side_description": "Shows the gentle puff-sleeve volume and comfortable room around the waist.",
+        "back_label": "BACK VIEW",
+        "back_description": "Shows the relaxed lower coverage and softly structured silhouette.",
+        "model_info": ""
+      }
+    },
+    "kasya_lp_fabric_quality": {
+      "type": "kasya-lp-fabric-quality",
+      "blocks": {
+        "fabric_note_1": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "≈",
+            "title": "Knitted upper",
+            "description": "Gives the upper portion a soft and composed shape."
+          }
+        },
+        "fabric_note_2": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "◯",
+            "title": "Soft Linen tier",
+            "description": "Adds relaxed movement around the waist and lower body."
+          }
+        },
+        "fabric_note_3": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "✱",
+            "title": "Puff-sleeve detail",
+            "description": "Creates gentle volume without making the silhouette feel heavy."
+          }
+        },
+        "fabric_note_4": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "✓",
+            "title": "Easy styling",
+            "description": "Designed to move from office hours to everyday errands."
+          }
+        }
+      },
+      "block_order": [
+        "fabric_note_1",
+        "fabric_note_2",
+        "fabric_note_3",
+        "fabric_note_4"
+      ],
+      "settings": {
+        "heading": "FABRIC & QUALITY",
+        "subheading": "A cotton knitted 1x1 upper combined with a Soft Linen bottom tier for a soft and composed appearance.",
+        "main_note": "The softly structured upper and relaxed lower tier balance feminine shape with everyday comfort.",
+        "show_feature_notes": true
+      }
+    },
+    "kasya_lp_lifestyle": {
+      "type": "kasya-lp-lifestyle",
+      "blocks": {
+        "lifestyle_1": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_02_48_21_PM.png",
+            "title": "Office Day",
+            "description": "Polished enough for work, relaxed enough for long hours."
+          }
+        },
+        "lifestyle_2": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_02_48_31_PM.png",
+            "title": "Errands",
+            "description": "Easy to move in while still looking put-together"
+          }
+        },
+        "lifestyle_card_YgPhKi": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_02_48_39_PM.png",
+            "title": "Family Lunch",
+            "description": "Comfortable, modest, and effortless to style."
+          }
+        },
+        "lifestyle_card_frgabM": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_02_48_44_PM.png",
+            "title": "Gatherings",
+            "description": "Polished comfort for every gathering."
+          }
+        }
+      },
+      "block_order": [
+        "lifestyle_1",
+        "lifestyle_2",
+        "lifestyle_card_YgPhKi",
+        "lifestyle_card_frgabM"
+      ],
+      "settings": {
+        "heading": "WHERE TO WEAR IT",
+        "subheading": "A feminine everyday blouse for office outfits, casual meetings, and polished errands."
+      }
+    },
+    "kasya_lp_reviews": {
+      "type": "kasya-lp-reviews",
+      "blocks": {
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "name": "Angelo B.",
+            "title": "Comfortable",
+            "comment": "Love the pants, super versatile, can pair it with any top.",
+            "date_text": "",
+            "size_text": "Large",
+            "fit_text": "Wideleg Fit"
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "name": "Jojima F.",
+            "title": "Versatile",
+            "comment": "Sobrang comfortable po talaga.",
+            "date_text": "",
+            "size_text": "Medium",
+            "fit_text": "True to size"
+          }
+        },
+        "review_3": {
+          "type": "review",
+          "settings": {
+            "rating": 4,
+            "name": "Mary L.",
+            "title": "Good",
+            "comment": "Experienced some shrinkage, but still loved the product nonetheless.",
+            "date_text": "",
+            "size_text": "XL",
+            "fit_text": "Size smaller"
+          }
+        }
+      },
+      "block_order": [
+        "review_1",
+        "review_2",
+        "review_3"
+      ],
+      "disabled": true,
+      "settings": {
+        "heading": "Reviews",
+        "average_rating_text": "(4.8)",
+        "show_average_stars": true,
+        "background_color": "#fbf8f4",
+        "view_more_text": "View more",
+        "view_more_link": "",
+        "show_view_more": true
+      }
+    },
+    "kasya_lp_reassurance": {
+      "type": "kasya-lp-reassurance",
+      "blocks": {
+        "reassurance_1": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "shipping",
+            "title": "Ships within",
+            "description": "7 business days"
+          }
+        },
+        "reassurance_2": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "payment",
+            "title": "Easy Payment",
+            "description": "COD, GCash, and card payments available."
+          }
+        },
+        "reassurance_3": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "return",
+            "title": "Returns accepted",
+            "description": "for unworn items with tags attached"
+          }
+        },
+        "reassurance_4": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "message",
+            "title": "Need help?",
+            "description": "Message us for sizing assistance"
+          }
+        }
+      },
+      "block_order": [
+        "reassurance_1",
+        "reassurance_2",
+        "reassurance_3",
+        "reassurance_4"
+      ],
+      "settings": {
+        "heading": "Shipping & Return",
+        "subheading": "A quick guide before checkout.",
+        "background_color": "#ffffff",
+        "card_color": "#ffffff"
+      }
+    },
+    "kasya_lp_faq": {
+      "type": "kasya-lp-faq",
+      "blocks": {
+        "faq_1": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fit & body",
+            "question": "What size should I get?",
+            "answer": "The Kianna Puff Sleeves Blouse is available in sizes S to 3XL. Please check the product size chart before ordering.",
+            "open_by_default": true
+          }
+        },
+        "faq_2": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fit & body",
+            "question": "How does the item fit?",
+            "answer": "It has a straight-to-empire silhouette with a clean upper shape and a relaxed lower tier that provides room around the waist and lower body.",
+            "open_by_default": false
+          }
+        },
+        "faq_3": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fabric & feel",
+            "question": "What fabric is used?",
+            "answer": "It combines a cotton knitted 1x1 upper with a Soft Linen bottom tier.",
+            "open_by_default": false
+          }
+        },
+        "faq_4": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fabric & feel",
+            "question": "How should I wash it?",
+            "answer": "Wash with cold water and mild detergent. Avoid bleach, long soaking, wringing, and high-heat drying. Reshape and hang to dry.",
+            "open_by_default": false
+          }
+        },
+        "faq_5": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Logistics",
+            "question": "When will my order ship?",
+            "answer": "Orders ship within 7 business days.",
+            "open_by_default": false
+          }
+        },
+        "faq_6": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Risk reversal",
+            "question": "Can I return it?",
+            "answer": "Returns are accepted for unworn items with tags attached. Please review the store return policy before purchase.",
+            "open_by_default": false
+          }
+        },
+        "faq_7": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Product details",
+            "question": "What design details does it have?",
+            "answer": "It has softly structured puff sleeves, cuff openings, and a relaxed lower tier for comfortable waist coverage.",
+            "open_by_default": false
+          }
+        },
+        "faq_8": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Product options",
+            "question": "What colors and sizes are available?",
+            "answer": "The approved options are Berry Blue, Soft Beige, and Dusty Pink in sizes S to 3XL. Current availability is shown in the selectors above.",
+            "open_by_default": false
+          }
+        }
+      },
+      "block_order": [
+        "faq_1",
+        "faq_2",
+        "faq_3",
+        "faq_4",
+        "faq_5",
+        "faq_6",
+        "faq_7",
+        "faq_8"
+      ],
+      "settings": {
+        "heading": "FREQUENTLY ASKED",
+        "subheading": "",
+        "first_item_open_by_default": true
+      }
+    }
+  },
+  "order": [
+    "kasya_lp_product_hero",
+    "kasya_lp_fit_confidence",
+    "kasya_lp_fabric_quality",
+    "kasya_lp_lifestyle",
+    "kasya_lp_reviews",
+    "kasya_lp_reassurance",
+    "kasya_lp_faq"
+  ]
+}
