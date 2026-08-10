@@ -16,15 +16,15 @@
         "show_header": false,
         "logo_text": "KASYA",
         "product_label": "KASYA BASICS",
-        "heading": "KIANNA  BLOUSE",
-        "subtitle": "Knitted",
+        "heading": "JANE PANTS",
+        "subtitle": "Premium ITY",
         "rating_text": "",
-        "description": "Softly structured puff sleeves and a relaxed lower tier for feminine everyday polish.",
+        "description": "Polished everyday pants in soft, flexible Premium ITY for comfortable movement from workdays to plans after.",
         "default_color": "Berry Blue",
         "color_option_name": "Color",
         "size_option_name": "Size",
         "show_size_chart": true,
-        "size_helper_text": "Designed with a straight-to-empire silhouette. The upper portion creates a clean shape while the loose bottom tier provides comfortable room around the waist and lower body.",
+        "size_helper_text": "Choose your usual size based on the pants size chart. Please check the measurements before ordering for the best fit.",
         "size_chart_trigger_text": "Not sure about your size? View size chart",
         "size_chart_note": "Measurements may vary slightly due to fabric behavior and manual production.",
         "cta_text": "ADD TO CART",
@@ -37,31 +37,31 @@
         "fit_note_1": {
           "type": "fit_note",
           "settings": {
-            "note": "Straight-to-empire silhouette"
+            "note": "Easy movement"
           }
         },
         "fit_note_2": {
           "type": "fit_note",
           "settings": {
-            "note": "Relaxed lower tier"
+            "note": "Comfortable drape"
           }
         },
         "fit_note_3": {
           "type": "fit_note",
           "settings": {
-            "note": "Softly structured puff sleeves"
+            "note": "Polished appearance"
           }
         },
         "fit_note_4": {
           "type": "fit_note",
           "settings": {
-            "note": "Cuff openings"
+            "note": "Flexible Premium ITY"
           }
         },
         "fit_note_5": {
           "type": "fit_note",
           "settings": {
-            "note": "Comfortable waist coverage"
+            "note": "Everyday comfort"
           }
         }
       },
@@ -74,13 +74,13 @@
       ],
       "settings": {
         "heading": "HOW IT FITS",
-        "subheading": "See how the softly structured upper and relaxed lower tier shape the blouse from every angle.",
+        "subheading": "See how the comfortable drape and flexible fabric shape the pants from every angle.",
         "front_label": "FRONT VIEW",
-        "front_description": "Shows the clean upper shape and relaxed empire-style lower tier.",
+        "front_description": "Shows the pants' polished appearance and comfortable drape.",
         "side_label": "SIDE VIEW",
-        "side_description": "Shows the gentle puff-sleeve volume and comfortable room around the waist.",
+        "side_description": "Shows the easy fall and movement-friendly shape from the side.",
         "back_label": "BACK VIEW",
-        "back_description": "Shows the relaxed lower coverage and softly structured silhouette.",
+        "back_description": "Shows the smooth drape and polished shape from behind.",
         "model_info": ""
       }
     },
@@ -91,24 +91,24 @@
           "type": "fabric_note",
           "settings": {
             "icon": "≈",
-            "title": "Knitted upper",
-            "description": "Gives the upper portion a soft and composed shape."
+            "title": "Smooth feel",
+            "description": "Feels soft and comfortable through long days."
           }
         },
         "fabric_note_2": {
           "type": "fabric_note",
           "settings": {
             "icon": "◯",
-            "title": "Soft Linen tier",
-            "description": "Adds relaxed movement around the waist and lower body."
+            "title": "Flexible drape",
+            "description": "Moves comfortably while maintaining an easy polished look."
           }
         },
         "fabric_note_3": {
           "type": "fabric_note",
           "settings": {
             "icon": "✱",
-            "title": "Puff-sleeve detail",
-            "description": "Creates gentle volume without making the silhouette feel heavy."
+            "title": "Easy movement",
+            "description": "Premium ITY provides flexibility for everyday routines."
           }
         },
         "fabric_note_4": {
@@ -116,7 +116,7 @@
           "settings": {
             "icon": "✓",
             "title": "Easy styling",
-            "description": "Designed to move from office hours to everyday errands."
+            "description": "Pairs easily with blouses, polos, knits, and wardrobe staples."
           }
         }
       },
@@ -128,8 +128,8 @@
       ],
       "settings": {
         "heading": "FABRIC & QUALITY",
-        "subheading": "A cotton knitted 1x1 upper combined with a Soft Linen bottom tier for a soft and composed appearance.",
-        "main_note": "The softly structured upper and relaxed lower tier balance feminine shape with everyday comfort.",
+        "subheading": "Premium ITY with a smooth feel and flexible drape for comfortable, movement-friendly wear.",
+        "main_note": "Designed to maintain an easy polished look while staying comfortable through long workdays and everyday routines.",
         "show_feature_notes": true
       }
     },
@@ -141,31 +141,31 @@
           "settings": {
             "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_02_48_21_PM.png",
             "title": "Office Day",
-            "description": "Polished enough for work, relaxed enough for long hours."
+            "description": "Polished pants designed for comfortable movement through the workday."
           }
         },
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
             "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_02_48_31_PM.png",
-            "title": "Errands",
-            "description": "Easy to move in while still looking put-together"
+            "title": "Everyday Errands",
+            "description": "Flexible and easy to wear while keeping a put-together appearance."
           }
         },
         "lifestyle_card_YgPhKi": {
           "type": "lifestyle_card",
           "settings": {
             "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_02_48_39_PM.png",
-            "title": "Family Lunch",
-            "description": "Comfortable, modest, and effortless to style."
+            "title": "Dinner / After Hours",
+            "description": "An easy polished separate for dinner and plans after work."
           }
         },
         "lifestyle_card_frgabM": {
           "type": "lifestyle_card",
           "settings": {
             "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_02_48_44_PM.png",
-            "title": "Gatherings",
-            "description": "Polished comfort for every gathering."
+            "title": "Weekend Plans",
+            "description": "Comfortable pants for relaxed plans and everyday routines."
           }
         }
       },
@@ -177,7 +177,7 @@
       ],
       "settings": {
         "heading": "WHERE TO WEAR IT",
-        "subheading": "A feminine everyday blouse for office outfits, casual meetings, and polished errands."
+        "subheading": "Versatile pants for office days, everyday errands, and dinner after hours."
       }
     },
     "kasya_lp_reviews": {
@@ -293,7 +293,7 @@
           "settings": {
             "category_label": "Fit & body",
             "question": "What size should I get?",
-            "answer": "The Kianna Puff Sleeves Blouse is available in sizes S to 3XL. Please check the product size chart before ordering.",
+            "answer": "Choose your usual pants size. The Jane Pants are available in sizes M to 3XL; please check the product size chart before ordering for the best fit.",
             "open_by_default": true
           }
         },
@@ -302,7 +302,7 @@
           "settings": {
             "category_label": "Fit & body",
             "question": "How does the item fit?",
-            "answer": "It has a straight-to-empire silhouette with a clean upper shape and a relaxed lower tier that provides room around the waist and lower body.",
+            "answer": "The Jane Pants have a comfortable drape and polished appearance, with Premium ITY flexibility for easy movement.",
             "open_by_default": false
           }
         },
@@ -311,7 +311,7 @@
           "settings": {
             "category_label": "Fabric & feel",
             "question": "What fabric is used?",
-            "answer": "It combines a cotton knitted 1x1 upper with a Soft Linen bottom tier.",
+            "answer": "The Jane Pants are made from Premium ITY with a smooth feel and flexible drape.",
             "open_by_default": false
           }
         },
@@ -319,44 +319,44 @@
           "type": "faq",
           "settings": {
             "category_label": "Fabric & feel",
-            "question": "How should I wash it?",
-            "answer": "Wash with cold water and mild detergent. Avoid bleach, long soaking, wringing, and high-heat drying. Reshape and hang to dry.",
+            "question": "Is the fabric comfortable for long wear?",
+            "answer": "Yes. Premium ITY has a soft, flexible feel designed for comfortable movement throughout the day.",
             "open_by_default": false
           }
         },
         "faq_5": {
           "type": "faq",
           "settings": {
-            "category_label": "Logistics",
-            "question": "When will my order ship?",
-            "answer": "Orders ship within 7 business days.",
+            "category_label": "Styling",
+            "question": "Can I style it with other tops?",
+            "answer": "Yes. The Jane Pants are designed as a versatile separate that can be styled with blouses, polos, knits, and other wardrobe staples.",
             "open_by_default": false
           }
         },
         "faq_6": {
           "type": "faq",
           "settings": {
-            "category_label": "Risk reversal",
-            "question": "Can I return it?",
-            "answer": "Returns are accepted for unworn items with tags attached. Please review the store return policy before purchase.",
+            "category_label": "Care",
+            "question": "How should I wash it?",
+            "answer": "Wash gently with mild detergent. Avoid bleach, hot water, and high-heat drying. Hang to dry to help maintain the fabric and shape.",
             "open_by_default": false
           }
         },
         "faq_7": {
           "type": "faq",
           "settings": {
-            "category_label": "Product details",
-            "question": "What design details does it have?",
-            "answer": "It has softly structured puff sleeves, cuff openings, and a relaxed lower tier for comfortable waist coverage.",
+            "category_label": "Shipping",
+            "question": "When will my order ship?",
+            "answer": "Orders ship within 7 business days.",
             "open_by_default": false
           }
         },
         "faq_8": {
           "type": "faq",
           "settings": {
-            "category_label": "Product options",
-            "question": "What colors and sizes are available?",
-            "answer": "The approved options are Berry Blue, Soft Beige, and Dusty Pink in sizes S to 3XL. Current availability is shown in the selectors above.",
+            "category_label": "Returns",
+            "question": "Can I return it?",
+            "answer": "Returns are accepted for unworn items with tags attached. Please review the store return policy before purchase.",
             "open_by_default": false
           }
         }
