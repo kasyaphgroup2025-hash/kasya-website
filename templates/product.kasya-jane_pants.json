@@ -139,33 +139,33 @@
         "lifestyle_1": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_02_48_21_PM.png",
+            "image": "shopify://shop_images/office_jane.png",
             "title": "Office Day",
-            "description": "Polished pants designed for comfortable movement through the workday."
+            "description": "Polished enough for work, easy enough for long hours."
           }
         },
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_02_48_31_PM.png",
-            "title": "Everyday Errands",
-            "description": "Flexible and easy to wear while keeping a put-together appearance."
+            "image": "shopify://shop_images/errands_jane.png",
+            "title": "Errands",
+            "description": "Soft, simple, and easy to move in."
           }
         },
         "lifestyle_card_YgPhKi": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_02_48_39_PM.png",
-            "title": "Dinner / After Hours",
-            "description": "An easy polished separate for dinner and plans after work."
+            "image": "shopify://shop_images/family_lunch.png",
+            "title": "Family Lunch",
+            "description": "Comfortable, modest, and effortlessly put-together."
           }
         },
         "lifestyle_card_frgabM": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_4_2026_02_48_44_PM.png",
-            "title": "Weekend Plans",
-            "description": "Comfortable pants for relaxed plans and everyday routines."
+            "image": "shopify://shop_images/travel_jane.png",
+            "title": "Travel",
+            "description": "A relaxed set for moving through a full day."
           }
         }
       },
