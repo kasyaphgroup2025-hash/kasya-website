@@ -1,0 +1,36 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "forms": {
+      "type": "apps",
+      "blocks": {
+        "8d146c3f-48e6-4c1d-b751-7458e26802f8": {
+          "type": "shopify://apps/forms/blocks/inline/8744a304-fcb1-4347-b211-bb6b4759a76a",
+          "settings": {
+            "form_id": "1115715"
+          }
+        }
+      },
+      "block_order": [
+        "8d146c3f-48e6-4c1d-b751-7458e26802f8"
+      ],
+      "settings": {}
+    },
+    "8dc50e7b-65cc-4313-aecc-d8addf4f79a5": {
+      "type": "main-page",
+      "settings": {}
+    }
+  },
+  "order": [
+    "8dc50e7b-65cc-4313-aecc-d8addf4f79a5",
+    "forms"
+  ]
+}
