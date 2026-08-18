@@ -9,6 +9,10 @@
  */
 {
   "sections": {
+    "order_care": {
+      "type": "order-care-page",
+      "settings": {}
+    },
     "forms": {
       "type": "apps",
       "blocks": {
@@ -22,15 +26,18 @@
       "block_order": [
         "8d146c3f-48e6-4c1d-b751-7458e26802f8"
       ],
-      "settings": {}
+      "settings": {
+        "include_margins": false
+      }
     },
     "8dc50e7b-65cc-4313-aecc-d8addf4f79a5": {
       "type": "main-page",
+      "disabled": true,
       "settings": {}
     }
   },
   "order": [
-    "8dc50e7b-65cc-4313-aecc-d8addf4f79a5",
+    "order_care",
     "forms"
   ]
 }

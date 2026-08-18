@@ -226,7 +226,9 @@
         section 'quick-add-drawer'
       endif
       section 'cookies-banner'
-      section 'email-signup-popup'
+      unless template.name == 'page' and template.suffix == 'Forms Kasya Return Exchange Assistance'
+        section 'email-signup-popup'
+      endunless
     -%}
     
     <ul hidden>
