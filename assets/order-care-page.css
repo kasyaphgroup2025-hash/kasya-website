@@ -132,7 +132,7 @@
 }
 
 .order-care-page-section .order-care__terms {
-  padding: 0 4px 10px;
+  padding: 0 4px;
 }
 
 .order-care-page-section .order-care__eyebrow {
@@ -181,7 +181,9 @@
 /* The Shopify Forms app remains the form owner. These rules only affect its
    wrapper and light-DOM controls when the app exposes them to theme CSS. */
 .order-care-page-section + #shopify-section-forms {
-  padding: 8px 14px 40px;
+  --order-care-navy: #1d2c46;
+  --order-care-border: #dedbd5;
+  padding: 12px 14px 40px;
   background: #ffffff;
 }
 
@@ -191,11 +193,22 @@
   margin: 0 auto;
 }
 
+.order-care-page-section + #shopify-section-forms :where(form) {
+  width: 100%;
+  max-width: 100%;
+}
+
+.order-care-page-section + #shopify-section-forms :where(label) {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
 .order-care-page-section + #shopify-section-forms :where(input:not([type='checkbox']):not([type='radio']):not([type='file']), select, textarea) {
+  box-sizing: border-box;
   width: 100%;
   max-width: 100%;
   min-height: 50px;
-  border-color: var(--order-care-border, #dedbd5);
+  border-color: var(--order-care-border);
   border-radius: 12px;
   font-size: 16px;
 }
@@ -204,10 +217,30 @@
   min-height: 112px;
 }
 
+.order-care-page-section + #shopify-section-forms :where(input[type='checkbox']) {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--order-care-navy);
+}
+
+.order-care-page-section + #shopify-section-forms :where(input[type='file']) {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-height: 48px;
+  font-size: 15px;
+}
+
 .order-care-page-section + #shopify-section-forms :where(button[type='submit'], input[type='submit']) {
+  box-sizing: border-box;
   width: 100%;
   min-height: 54px;
   border-radius: 12px;
+}
+
+.order-care-page-section + #shopify-section-forms :where(input, select, textarea, button):focus-visible {
+  outline: 2px solid var(--order-care-navy);
+  outline-offset: 2px;
 }
 
 @media screen and (max-width: 359px) {
@@ -258,6 +291,6 @@
   }
 
   .order-care-page-section + #shopify-section-forms {
-    padding: 10px 24px 56px;
+    padding: 14px 24px 56px;
   }
 }
