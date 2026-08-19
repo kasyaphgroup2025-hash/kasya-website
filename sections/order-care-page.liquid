@@ -1,5 +1,21 @@
 {{ 'order-care-page.css' | asset_url | stylesheet_tag }}
 
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --order-care-heading-desktop-size: {{ section.settings.heading_size_desktop }}px;
+    --order-care-heading-mobile-size: {{ section.settings.heading_size_mobile }}px;
+    --order-care-description-size: {{ section.settings.description_size }}px;
+    --order-care-small-label-size: {{ section.settings.small_label_size }}px;
+    --order-care-terms-heading-size: {{ section.settings.terms_heading_size }}px;
+    --order-care-terms-text-size: {{ section.settings.terms_text_size }}px;
+    --order-care-shipping-heading-size: {{ section.settings.shipping_heading_size }}px;
+    --order-care-shipping-text-size: {{ section.settings.shipping_text_size }}px;
+    --order-care-messenger-heading-size: {{ section.settings.messenger_heading_size }}px;
+    --order-care-messenger-description-size: {{ section.settings.messenger_description_size }}px;
+    --order-care-messenger-button-size: {{ section.settings.messenger_button_size }}px;
+  }
+{% endstyle %}
+
 <div class="order-care" data-order-care-page>
   <div class="order-care__inner">
     <aside class="order-care__assistance" aria-labelledby="OrderCareAssistance-{{ section.id }}">
@@ -52,7 +68,134 @@
   "name": "Order Care introduction",
   "tag": "section",
   "class": "order-care-page-section",
-  "settings": [],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Main Content"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "min": 28,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Main heading size — Desktop",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 24,
+      "max": 42,
+      "step": 1,
+      "unit": "px",
+      "label": "Main heading size — Mobile",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "min": 13,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Description font size",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "small_label_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Small label font size",
+      "default": 11
+    },
+    {
+      "type": "header",
+      "content": "Terms & Agreement"
+    },
+    {
+      "type": "range",
+      "id": "terms_heading_size",
+      "min": 18,
+      "max": 34,
+      "step": 1,
+      "unit": "px",
+      "label": "Terms heading size",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "terms_text_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Terms text size",
+      "default": 13
+    },
+    {
+      "type": "header",
+      "content": "Return Shipping"
+    },
+    {
+      "type": "range",
+      "id": "shipping_heading_size",
+      "min": 13,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Return shipping heading size",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "shipping_text_size",
+      "min": 11,
+      "max": 19,
+      "step": 1,
+      "unit": "px",
+      "label": "Return shipping text size",
+      "default": 13
+    },
+    {
+      "type": "header",
+      "content": "Messenger"
+    },
+    {
+      "type": "range",
+      "id": "messenger_heading_size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Messenger heading size",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "messenger_description_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Messenger description size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "messenger_button_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Messenger button text size",
+      "default": 12
+    }
+  ],
   "presets": [
     {
       "name": "Order Care introduction"
