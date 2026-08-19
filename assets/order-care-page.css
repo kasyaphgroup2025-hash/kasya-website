@@ -178,6 +178,40 @@
   outline-offset: 2px;
 }
 
+.order-care-page-section .order-care__shipping-notice {
+  margin-top: 12px;
+  padding: 13px 14px;
+  border: 1px solid var(--order-care-border);
+  border-radius: 14px;
+  background: #f3eee6;
+}
+
+.order-care-page-section .order-care__shipping-notice h3,
+.order-care-page-section .order-care__shipping-notice p {
+  margin: 0;
+}
+
+.order-care-page-section .order-care__shipping-notice h3 {
+  color: var(--order-care-ink);
+  font-family: var(--font-heading-family);
+  font-size: 15px;
+  font-style: var(--font-heading-style);
+  font-weight: var(--font-heading-weight-bold, 700);
+  line-height: 1.25;
+}
+
+.order-care-page-section .order-care__shipping-notice p {
+  margin-top: 5px;
+  color: var(--order-care-muted);
+  font-size: 13px;
+  line-height: 1.48;
+}
+
+.order-care-page-section .order-care__shipping-notice strong {
+  color: var(--order-care-ink);
+  font-weight: var(--font-body-weight-bold, 700);
+}
+
 /* The Shopify Forms app remains the form owner. These rules only affect its
    wrapper and light-DOM controls when the app exposes them to theme CSS. */
 .order-care-page-section + #shopify-section-forms {
