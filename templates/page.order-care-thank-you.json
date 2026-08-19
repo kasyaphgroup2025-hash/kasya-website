@@ -16,9 +16,9 @@
         "heading_size_mobile": 24,
         "body_size": 13,
         "important_size": 13,
-        "messenger_heading_size": 15,
-        "messenger_description_size": 12,
-        "messenger_button_size": 12
+        "messenger_heading_size": 13,
+        "messenger_description_size": 10,
+        "messenger_button_size": 11
       }
     }
   },
