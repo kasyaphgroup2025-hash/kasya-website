@@ -11,7 +11,19 @@
   "sections": {
     "order_care": {
       "type": "order-care-page",
-      "settings": {}
+      "settings": {
+        "heading_size_desktop": 40,
+        "heading_size_mobile": 24,
+        "description_size": 13,
+        "small_label_size": 10,
+        "terms_heading_size": 18,
+        "terms_text_size": 12,
+        "shipping_heading_size": 13,
+        "shipping_text_size": 11,
+        "messenger_heading_size": 13,
+        "messenger_description_size": 10,
+        "messenger_button_size": 11
+      }
     },
     "forms": {
       "type": "apps",
