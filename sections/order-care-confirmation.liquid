@@ -1,0 +1,142 @@
+{{ 'order-care-page.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --order-care-confirmation-heading-desktop-size: {{ section.settings.heading_size_desktop }}px;
+    --order-care-confirmation-heading-mobile-size: {{ section.settings.heading_size_mobile }}px;
+    --order-care-confirmation-body-size: {{ section.settings.body_size }}px;
+    --order-care-confirmation-important-size: {{ section.settings.important_size }}px;
+    --order-care-messenger-heading-size: {{ section.settings.messenger_heading_size }}px;
+    --order-care-messenger-description-size: {{ section.settings.messenger_description_size }}px;
+    --order-care-messenger-button-size: {{ section.settings.messenger_button_size }}px;
+  }
+{% endstyle %}
+
+<div class="order-care order-care--confirmation" data-order-care-confirmation>
+  <div class="order-care__inner">
+    <aside class="order-care__assistance" aria-labelledby="OrderCareAssistance-{{ section.id }}">
+      <div class="order-care__assistance-copy">
+        <h2 id="OrderCareAssistance-{{ section.id }}">Need direct assistance?</h2>
+        <p>For direct help with your concern, you may message us on Messenger.</p>
+      </div>
+      <a
+        class="order-care__messenger"
+        href="https://m.me/kasyaphhh"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Message Kasya on Messenger (opens in a new tab)"
+      >
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none">
+          <path d="M12 2.25c-5.52 0-9.75 4.04-9.75 9.3 0 2.75 1.16 5.15 3.06 6.82v3.38l3.14-1.72c1.08.3 2.28.47 3.55.47 5.52 0 9.75-4.04 9.75-9.3S17.52 2.25 12 2.25Z" fill="currentColor"/>
+          <path d="m6.8 14.3 3.25-3.45 2.55 1.9 3.55-3.8-3.25 3.45-2.55-1.9-3.55 3.8Z" fill="#fff"/>
+        </svg>
+        <span>Message Us</span>
+      </a>
+    </aside>
+
+    <section class="order-care__confirmation" aria-labelledby="OrderCareConfirmation-{{ section.id }}">
+      <div class="order-care__success-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="48" height="48" fill="none">
+          <circle cx="24" cy="24" r="21" stroke="currentColor" stroke-width="2"/>
+          <path d="m15 24.5 6 6L34 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1 id="OrderCareConfirmation-{{ section.id }}">We received your request</h1>
+      <p class="order-care__confirmation-body">Thank you. We’ll review your request within 2–3 business days and email you with the next steps.</p>
+      <p class="order-care__confirmation-important">Please wait for our instructions before returning your item.</p>
+    </section>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Order Care confirmation",
+  "tag": "section",
+  "class": "order-care-page-section order-care-confirmation-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Confirmation"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "min": 28,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Confirmation heading size — Desktop",
+      "default": 38
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 24,
+      "max": 42,
+      "step": 1,
+      "unit": "px",
+      "label": "Confirmation heading size — Mobile",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "body_size",
+      "min": 13,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Confirmation body size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "important_size",
+      "min": 13,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Important message size",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Messenger"
+    },
+    {
+      "type": "range",
+      "id": "messenger_heading_size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Messenger heading size",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "messenger_description_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Messenger description size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "messenger_button_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Messenger button text size",
+      "default": 12
+    }
+  ],
+  "presets": [
+    {
+      "name": "Order Care confirmation"
+    }
+  ]
+}
+{% endschema %}

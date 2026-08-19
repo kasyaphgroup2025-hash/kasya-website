@@ -226,7 +226,13 @@
         section 'quick-add-drawer'
       endif
       section 'cookies-banner'
-      unless template.name == 'page' and template.suffix == 'Forms Kasya Return Exchange Assistance'
+      assign hide_order_care_popup = false
+      if template.name == 'page'
+        if template.suffix == 'Forms Kasya Return Exchange Assistance' or template.suffix == 'order-care-thank-you'
+          assign hide_order_care_popup = true
+        endif
+      endif
+      unless hide_order_care_popup
         section 'email-signup-popup'
       endunless
     -%}

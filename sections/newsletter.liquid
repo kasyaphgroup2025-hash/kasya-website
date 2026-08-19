@@ -1,3 +1,13 @@
+{%- liquid
+  assign order_care_template_suffix = template.suffix | downcase
+  assign hide_order_care_newsletter = false
+  if template.name == 'page'
+    if order_care_template_suffix == 'forms kasya return exchange assistance' or order_care_template_suffix == 'order-care-thank-you'
+      assign hide_order_care_newsletter = true
+    endif
+  endif
+-%}
+{%- unless hide_order_care_newsletter -%}
 {{ 'newsletter-section.css' | asset_url | stylesheet_tag }}
 {{ 'component-newsletter.css' | asset_url | stylesheet_tag }}
 {{ 'component-image-with-text.css' | asset_url | stylesheet_tag }}
@@ -200,6 +210,7 @@
     {%- endif -%}  
   </div>  
 </parallax-element>
+{%- endunless -%}
 
 {% schema %}
 {
