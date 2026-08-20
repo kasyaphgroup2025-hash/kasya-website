@@ -77,7 +77,9 @@
           aria-controls="FabricCarePanel-{{ section.id }}"
           data-fabric-care-toggle
         >
-          <span>Fabric and Care</span>
+          {% if section.settings.fabric_care_dropdown_title != blank %}
+            <span>{{ section.settings.fabric_care_dropdown_title | escape }}</span>
+          {% endif %}
           <span class="kasya-product-hero__size-chart-icon" aria-hidden="true">⌄</span>
         </button>
 
@@ -87,19 +89,36 @@
           data-fabric-care-panel
           hidden
         >
-          <h3>Fabric and Care</h3>
-          <p>Made with Soft Linen fabric with a relaxed drape and comfortable feel. Due to the natural behavior of the fabric, slight shrinkage may happen after washing, especially when washed with hot water or dried using high heat.</p>
+          {% if section.settings.fabric_care_heading != blank %}
+            <h3>{{ section.settings.fabric_care_heading | escape }}</h3>
+          {% endif %}
 
-          <h3>Care Instructions</h3>
-          <ul>
-            <li>Wash with cold water.</li>
-            <li>Use mild detergent.</li>
-            <li>Avoid bleach.</li>
-            <li>Do not use high-heat drying.</li>
-            <li>Hang to dry.</li>
-            <li>Use low heat when ironing if needed.</li>
-            <li>Wash separately on first use. Slight color bleeding may occur.</li>
-          </ul>
+          {% if section.settings.fabric_care_description != blank %}
+            <p>{{ section.settings.fabric_care_description | escape | newline_to_br }}</p>
+          {% endif %}
+
+          {% if section.settings.care_instructions_heading != blank %}
+            <h3>{{ section.settings.care_instructions_heading | escape }}</h3>
+          {% endif %}
+
+          {% if section.settings.care_instruction_1 != blank
+            or section.settings.care_instruction_2 != blank
+            or section.settings.care_instruction_3 != blank
+            or section.settings.care_instruction_4 != blank
+            or section.settings.care_instruction_5 != blank
+            or section.settings.care_instruction_6 != blank
+            or section.settings.care_instruction_7 != blank
+          %}
+            <ul>
+              {% for instruction_number in (1..7) %}
+                {% assign instruction_id = 'care_instruction_' | append: instruction_number %}
+                {% assign instruction = section.settings[instruction_id] %}
+                {% if instruction != blank %}
+                  <li>{{ instruction | escape }}</li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          {% endif %}
         </div>
       </div>
     {% endif %}
@@ -441,6 +460,76 @@
       "id": "show_feature_notes",
       "label": "Show feature notes",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "Fabric and Care Dropdown"
+    },
+    {
+      "type": "text",
+      "id": "fabric_care_dropdown_title",
+      "label": "Fabric and care dropdown title",
+      "default": "FABRIC AND CARE"
+    },
+    {
+      "type": "text",
+      "id": "fabric_care_heading",
+      "label": "Fabric heading",
+      "default": "Fabric and Care"
+    },
+    {
+      "type": "textarea",
+      "id": "fabric_care_description",
+      "label": "Fabric description",
+      "default": "Made with Soft Linen fabric with a relaxed drape and comfortable feel. Due to the natural behavior of the fabric, slight shrinkage may happen after washing, especially when washed with hot water or dried using high heat."
+    },
+    {
+      "type": "text",
+      "id": "care_instructions_heading",
+      "label": "Care instructions heading",
+      "default": "Care Instructions"
+    },
+    {
+      "type": "text",
+      "id": "care_instruction_1",
+      "label": "Care instruction 1",
+      "default": "Wash with cold water."
+    },
+    {
+      "type": "text",
+      "id": "care_instruction_2",
+      "label": "Care instruction 2",
+      "default": "Use mild detergent."
+    },
+    {
+      "type": "text",
+      "id": "care_instruction_3",
+      "label": "Care instruction 3",
+      "default": "Avoid bleach."
+    },
+    {
+      "type": "text",
+      "id": "care_instruction_4",
+      "label": "Care instruction 4",
+      "default": "Do not use high-heat drying."
+    },
+    {
+      "type": "text",
+      "id": "care_instruction_5",
+      "label": "Care instruction 5",
+      "default": "Hang to dry."
+    },
+    {
+      "type": "text",
+      "id": "care_instruction_6",
+      "label": "Care instruction 6",
+      "default": "Use low heat when ironing if needed."
+    },
+    {
+      "type": "text",
+      "id": "care_instruction_7",
+      "label": "Care instruction 7",
+      "default": "Wash separately on first use. Slight color bleeding may occur."
     }
   ],
   "blocks": [
