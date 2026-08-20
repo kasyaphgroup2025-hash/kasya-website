@@ -246,6 +246,49 @@
     margin-top: 16px;
   }
 
+  .kasya-lp-fabric-quality .kasya-product-hero__size-chart {
+    border-top: 1px solid var(--kasya-line);
+    border-bottom: 1px solid var(--kasya-line);
+  }
+
+  .kasya-lp-fabric-quality .kasya-product-hero__size-chart-toggle {
+    width: 100%;
+    min-height: 44px;
+    border: 0;
+    background: transparent;
+    color: #111111;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    text-align: left;
+    text-transform: uppercase;
+    appearance: none;
+  }
+
+  .kasya-lp-fabric-quality .kasya-product-hero__size-chart-icon {
+    flex: 0 0 auto;
+    font-size: 18px;
+    line-height: 1;
+    transition: transform 180ms ease;
+  }
+
+  .kasya-lp-fabric-quality
+    .kasya-product-hero__size-chart-toggle[aria-expanded='true']
+    .kasya-product-hero__size-chart-icon {
+    transform: rotate(180deg);
+  }
+
+  .kasya-lp-fabric-quality .kasya-product-hero__size-chart-panel {
+    padding-bottom: 14px;
+  }
+
   .kasya-lp-fabric-quality__care-panel {
     color: #555555;
     font-size: 13px;
@@ -322,6 +365,13 @@
     color: #666666;
     font-size: 11px;
     line-height: 1.32;
+  }
+
+  @media screen and (max-width: 430px) {
+    .kasya-lp-fabric-quality .kasya-product-hero__size-chart-toggle {
+      min-height: 42px;
+      font-size: 13px;
+    }
   }
 
   @media screen and (min-width: 680px) {
