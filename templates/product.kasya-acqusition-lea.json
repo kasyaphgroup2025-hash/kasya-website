@@ -130,7 +130,19 @@
         "heading": "FABRIC & QUALITY",
         "subheading": "Woven fabric with a structured and office-ready appearance.",
         "main_note": "The woven fabric supports a clean straight-cut shape for dependable office and everyday styling.",
-        "show_feature_notes": true
+        "show_feature_notes": true,
+        "fabric_care_dropdown_title": "FABRIC AND CARE",
+        "fabric_care_heading": "Fabric and Care",
+        "fabric_care_description": "Made with woven fabric designed to provide comfortable structure and a polished finish. Gentle care helps maintain its shape and overall appearance.",
+        "care_instructions_heading": "Care Instructions",
+        "care_instruction_1": "Wash gently with cold water.",
+        "care_instruction_2": "Use mild detergent.",
+        "care_instruction_3": "Avoid bleach.",
+        "care_instruction_4": "Do not use high-heat drying.",
+        "care_instruction_5": "Hang to dry.",
+        "care_instruction_6": "Use low heat when ironing if needed.",
+        "care_instruction_7": "",
+        "care_instruction_8": ""
       }
     },
     "kasya_lp_lifestyle": {

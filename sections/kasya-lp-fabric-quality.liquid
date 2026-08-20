@@ -3,13 +3,6 @@
   Compact quality proof section for fabric feel and care notes.
 {% endcomment %}
 
-{% liquid
-  assign show_soft_linen_care = false
-  if template.suffix == 'kasya-acquisition-test' or template.suffix == 'kasya-acquisition-ellav2'
-    assign show_soft_linen_care = true
-  endif
-%}
-
 <section class="kasya-lp-fabric-quality" data-kasya-fabric-quality data-section-id="{{ section.id }}">
   <div class="kasya-lp-fabric-quality__inner">
     <div class="kasya-lp-fabric-quality__header">
@@ -68,60 +61,59 @@
       </p>
     {% endif %}
 
-    {% if show_soft_linen_care %}
-      <div class="kasya-product-hero__size-chart kasya-lp-fabric-quality__care" data-fabric-care>
-        <button
-          type="button"
-          class="kasya-product-hero__size-chart-toggle"
-          aria-expanded="false"
-          aria-controls="FabricCarePanel-{{ section.id }}"
-          data-fabric-care-toggle
-        >
-          {% if section.settings.fabric_care_dropdown_title != blank %}
-            <span>{{ section.settings.fabric_care_dropdown_title | escape }}</span>
-          {% endif %}
-          <span class="kasya-product-hero__size-chart-icon" aria-hidden="true">⌄</span>
-        </button>
+    <div class="kasya-product-hero__size-chart kasya-lp-fabric-quality__care" data-fabric-care>
+      <button
+        type="button"
+        class="kasya-product-hero__size-chart-toggle"
+        aria-expanded="false"
+        aria-controls="FabricCarePanel-{{ section.id }}"
+        data-fabric-care-toggle
+      >
+        {% if section.settings.fabric_care_dropdown_title != blank %}
+          <span>{{ section.settings.fabric_care_dropdown_title | escape }}</span>
+        {% endif %}
+        <span class="kasya-product-hero__size-chart-icon" aria-hidden="true">⌄</span>
+      </button>
 
-        <div
-          id="FabricCarePanel-{{ section.id }}"
-          class="kasya-product-hero__size-chart-panel kasya-lp-fabric-quality__care-panel"
-          data-fabric-care-panel
-          hidden
-        >
-          {% if section.settings.fabric_care_heading != blank %}
-            <h3>{{ section.settings.fabric_care_heading | escape }}</h3>
-          {% endif %}
+      <div
+        id="FabricCarePanel-{{ section.id }}"
+        class="kasya-product-hero__size-chart-panel kasya-lp-fabric-quality__care-panel"
+        data-fabric-care-panel
+        hidden
+      >
+        {% if section.settings.fabric_care_heading != blank %}
+          <h3>{{ section.settings.fabric_care_heading | escape }}</h3>
+        {% endif %}
 
-          {% if section.settings.fabric_care_description != blank %}
-            <p>{{ section.settings.fabric_care_description | escape | newline_to_br }}</p>
-          {% endif %}
+        {% if section.settings.fabric_care_description != blank %}
+          <p>{{ section.settings.fabric_care_description | escape | newline_to_br }}</p>
+        {% endif %}
 
-          {% if section.settings.care_instructions_heading != blank %}
-            <h3>{{ section.settings.care_instructions_heading | escape }}</h3>
-          {% endif %}
+        {% if section.settings.care_instructions_heading != blank %}
+          <h3>{{ section.settings.care_instructions_heading | escape }}</h3>
+        {% endif %}
 
-          {% if section.settings.care_instruction_1 != blank
-            or section.settings.care_instruction_2 != blank
-            or section.settings.care_instruction_3 != blank
-            or section.settings.care_instruction_4 != blank
-            or section.settings.care_instruction_5 != blank
-            or section.settings.care_instruction_6 != blank
-            or section.settings.care_instruction_7 != blank
-          %}
-            <ul>
-              {% for instruction_number in (1..7) %}
-                {% assign instruction_id = 'care_instruction_' | append: instruction_number %}
-                {% assign instruction = section.settings[instruction_id] %}
-                {% if instruction != blank %}
-                  <li>{{ instruction | escape }}</li>
-                {% endif %}
-              {% endfor %}
-            </ul>
-          {% endif %}
-        </div>
+        {% if section.settings.care_instruction_1 != blank
+          or section.settings.care_instruction_2 != blank
+          or section.settings.care_instruction_3 != blank
+          or section.settings.care_instruction_4 != blank
+          or section.settings.care_instruction_5 != blank
+          or section.settings.care_instruction_6 != blank
+          or section.settings.care_instruction_7 != blank
+          or section.settings.care_instruction_8 != blank
+        %}
+          <ul>
+            {% for instruction_number in (1..8) %}
+              {% assign instruction_id = 'care_instruction_' | append: instruction_number %}
+              {% assign instruction = section.settings[instruction_id] %}
+              {% if instruction != blank %}
+                <li>{{ instruction | escape }}</li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        {% endif %}
       </div>
-    {% endif %}
+    </div>
 
     {% if section.settings.show_feature_notes and section.blocks.size > 0 %}
       <div class="kasya-lp-fabric-quality__notes">
@@ -530,6 +522,11 @@
       "id": "care_instruction_7",
       "label": "Care instruction 7",
       "default": "Wash separately on first use. Slight color bleeding may occur."
+    },
+    {
+      "type": "text",
+      "id": "care_instruction_8",
+      "label": "Care instruction 8"
     }
   ],
   "blocks": [

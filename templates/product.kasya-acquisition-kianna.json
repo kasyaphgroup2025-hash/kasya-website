@@ -130,7 +130,19 @@
         "heading": "FABRIC & QUALITY",
         "subheading": "A cotton knitted 1x1 upper combined with a Soft Linen bottom tier for a soft and composed appearance.",
         "main_note": "The softly structured upper and relaxed lower tier balance feminine shape with everyday comfort.",
-        "show_feature_notes": true
+        "show_feature_notes": true,
+        "fabric_care_dropdown_title": "FABRIC AND CARE",
+        "fabric_care_heading": "Fabric and Care",
+        "fabric_care_description": "Made with a combination of soft Cotton Knit and Soft Linen for comfortable stretch, softness, and an easy drape. Gentle washing helps preserve the shape and finish of both fabrics.",
+        "care_instructions_heading": "Care Instructions",
+        "care_instruction_1": "Wash gently with cold water.",
+        "care_instruction_2": "Use mild detergent.",
+        "care_instruction_3": "Avoid bleach.",
+        "care_instruction_4": "Avoid excessive stretching or wringing while wet.",
+        "care_instruction_5": "Do not use high-heat drying.",
+        "care_instruction_6": "Hang or lay flat to dry.",
+        "care_instruction_7": "Use low heat when ironing the linen portion if needed.",
+        "care_instruction_8": "Wash separately on first use. Slight color bleeding may occur."
       }
     },
     "kasya_lp_lifestyle": {

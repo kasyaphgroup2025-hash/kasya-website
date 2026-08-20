@@ -130,7 +130,19 @@
         "heading": "FABRIC & QUALITY",
         "subheading": "Premium ITY with a smooth feel and flexible drape for comfortable, movement-friendly wear.",
         "main_note": "Designed to maintain an easy polished look while staying comfortable through long workdays and everyday routines.",
-        "show_feature_notes": true
+        "show_feature_notes": true,
+        "fabric_care_dropdown_title": "FABRIC AND CARE",
+        "fabric_care_heading": "Fabric and Care",
+        "fabric_care_description": "Made with Premium ITY fabric for a smooth, comfortable feel with flexible movement and an easy-to-wear drape. Gentle care helps preserve its stretch, shape, and finish.",
+        "care_instructions_heading": "Care Instructions",
+        "care_instruction_1": "Wash gently with cold water.",
+        "care_instruction_2": "Use mild detergent.",
+        "care_instruction_3": "Avoid bleach.",
+        "care_instruction_4": "Do not use high-heat drying.",
+        "care_instruction_5": "Hang to dry.",
+        "care_instruction_6": "Use low heat only if ironing is necessary.",
+        "care_instruction_7": "",
+        "care_instruction_8": ""
       }
     },
     "kasya_lp_lifestyle": {

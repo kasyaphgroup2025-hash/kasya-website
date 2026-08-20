@@ -123,7 +123,19 @@
         "heading": "FABRIC & QUALITY",
         "subheading": "Soft linen-feel fabric with a relaxed drape, made for everyday comfort.",
         "main_note": "Designed to feel light, breathable, and comfortable for daily wear while still giving enough structure to look polished.",
-        "show_feature_notes": true
+        "show_feature_notes": true,
+        "fabric_care_dropdown_title": "FABRIC AND CARE",
+        "fabric_care_heading": "Fabric and Care",
+        "fabric_care_description": "Made with Acid Linen fabric designed to provide comfortable structure while maintaining an easy, natural drape. Gentle washing helps preserve its shape, texture, and finish.",
+        "care_instructions_heading": "Care Instructions",
+        "care_instruction_1": "Wash with cold water.",
+        "care_instruction_2": "Use mild detergent.",
+        "care_instruction_3": "Avoid bleach.",
+        "care_instruction_4": "Do not use high-heat drying.",
+        "care_instruction_5": "Hang to dry.",
+        "care_instruction_6": "Use low heat when ironing if needed.",
+        "care_instruction_7": "Wash separately on first use. Slight color bleeding may occur.",
+        "care_instruction_8": ""
       }
     },
     "kasya_lp_lifestyle": {
