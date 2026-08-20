@@ -3,6 +3,13 @@
   Compact quality proof section for fabric feel and care notes.
 {% endcomment %}
 
+{% liquid
+  assign show_soft_linen_care = false
+  if template.suffix == 'kasya-acquisition-test' or template.suffix == 'kasya-acquisition-ellav2'
+    assign show_soft_linen_care = true
+  endif
+%}
+
 <section class="kasya-lp-fabric-quality" data-kasya-fabric-quality data-section-id="{{ section.id }}">
   <div class="kasya-lp-fabric-quality__inner">
     <div class="kasya-lp-fabric-quality__header">
@@ -61,6 +68,42 @@
       </p>
     {% endif %}
 
+    {% if show_soft_linen_care %}
+      <div class="kasya-product-hero__size-chart kasya-lp-fabric-quality__care" data-fabric-care>
+        <button
+          type="button"
+          class="kasya-product-hero__size-chart-toggle"
+          aria-expanded="false"
+          aria-controls="FabricCarePanel-{{ section.id }}"
+          data-fabric-care-toggle
+        >
+          <span>Fabric and Care</span>
+          <span class="kasya-product-hero__size-chart-icon" aria-hidden="true">⌄</span>
+        </button>
+
+        <div
+          id="FabricCarePanel-{{ section.id }}"
+          class="kasya-product-hero__size-chart-panel kasya-lp-fabric-quality__care-panel"
+          data-fabric-care-panel
+          hidden
+        >
+          <h3>Fabric and Care</h3>
+          <p>Made with Soft Linen fabric with a relaxed drape and comfortable feel. Due to the natural behavior of the fabric, slight shrinkage may happen after washing, especially when washed with hot water or dried using high heat.</p>
+
+          <h3>Care Instructions</h3>
+          <ul>
+            <li>Wash with cold water.</li>
+            <li>Use mild detergent.</li>
+            <li>Avoid bleach.</li>
+            <li>Do not use high-heat drying.</li>
+            <li>Hang to dry.</li>
+            <li>Use low heat when ironing if needed.</li>
+            <li>Wash separately on first use. Slight color bleeding may occur.</li>
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+
     {% if section.settings.show_feature_notes and section.blocks.size > 0 %}
       <div class="kasya-lp-fabric-quality__notes">
         {% for block in section.blocks %}
@@ -93,6 +136,7 @@
 
 <style>
   .kasya-lp-fabric-quality {
+    --kasya-line: #eeeeee;
     background: #ffffff;
     color: #111111;
     font-family: inherit;
@@ -187,6 +231,46 @@
     line-height: 1.5;
   }
 
+  .kasya-lp-fabric-quality__care {
+    margin-top: 16px;
+  }
+
+  .kasya-lp-fabric-quality__care-panel {
+    color: #555555;
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+
+  .kasya-lp-fabric-quality__care-panel h3 {
+    margin: 2px 0 0;
+    color: #222222;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.35;
+  }
+
+  .kasya-lp-fabric-quality__care-panel p {
+    margin: 6px 0 0;
+  }
+
+  .kasya-lp-fabric-quality__care-panel h3 + p + h3 {
+    margin-top: 16px;
+  }
+
+  .kasya-lp-fabric-quality__care-panel ul {
+    margin: 7px 0 0;
+    padding-left: 19px;
+  }
+
+  .kasya-lp-fabric-quality__care-panel li {
+    padding-left: 2px;
+  }
+
+  .kasya-lp-fabric-quality__care-panel li + li {
+    margin-top: 4px;
+  }
+
   .kasya-lp-fabric-quality__notes {
     margin-top: 16px;
     display: grid;
@@ -263,6 +347,18 @@
     const placeholder = section.querySelector('[data-fabric-placeholder]');
     const colorLabel = section.querySelector('[data-fabric-color-shown]');
     const colorName = section.querySelector('[data-fabric-color-name]');
+    const careToggle = section.querySelector('[data-fabric-care-toggle]');
+    const carePanel = section.querySelector('[data-fabric-care-panel]');
+
+    if (careToggle && carePanel && careToggle.dataset.fabricCareBound !== 'true') {
+      careToggle.dataset.fabricCareBound = 'true';
+      careToggle.addEventListener('click', () => {
+        const isExpanded = careToggle.getAttribute('aria-expanded') === 'true';
+
+        careToggle.setAttribute('aria-expanded', String(!isExpanded));
+        carePanel.hidden = isExpanded;
+      });
+    }
 
     if (!image) return;
 
