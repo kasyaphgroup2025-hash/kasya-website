@@ -16,6 +16,7 @@
   console.info('[Jane Set Title Link Removal] loaded');
 
   const JANE_ROLES = ['Parent', 'Top', 'Pants'];
+  const JANE_SET_GROUP_SELECTOR = '.jane-set-cart-item, [data-jane-set-id], [data-kasya-aov-cart-jane-set], [data-set-group-id]';
   const PRICE_HIDDEN_CLASS = 'jane-set-component-price-hidden';
   const QUANTITY_BUTTON_HIDDEN_CLASS = 'jane-set-aov-qty-button-hidden';
   let priceCheckTimer = null;
@@ -126,6 +127,7 @@
 
     const navigation = janeProductNavigationFrom(event);
     if (!navigation || !isCartContext(navigation)) return;
+    if (!navigation.closest(JANE_SET_GROUP_SELECTOR)) return;
 
     event.preventDefault();
     event.stopPropagation();
@@ -144,7 +146,9 @@
       ].filter(Boolean);
 
       if (roles.length === 1) {
-        return { element, role: roles[0] };
+        if (element.closest(JANE_SET_GROUP_SELECTOR)) {
+          return { element, role: roles[0] };
+        }
       }
       if (roles.length > 1) return null;
       element = element.parentElement;
