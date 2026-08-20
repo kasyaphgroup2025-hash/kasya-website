@@ -44,6 +44,14 @@
       <h1 id="OrderCareConfirmation-{{ section.id }}">We received your request</h1>
       <p class="order-care__confirmation-body">Thank you. We’ll review your request within 2–3 business days and email you with the next steps.</p>
       <p class="order-care__confirmation-important">Please wait for our instructions before returning your item.</p>
+      {% if section.settings.show_continue_shopping %}
+        <a
+          class="order-care__continue-shopping"
+          href="{{ section.settings.continue_shopping_link | default: routes.root_url | escape }}"
+        >
+          {{ section.settings.continue_shopping_text | default: 'CONTINUE SHOPPING' | escape }}
+        </a>
+      {% endif %}
     </section>
   </div>
 </div>
@@ -97,6 +105,28 @@
       "unit": "px",
       "label": "Important message size",
       "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Continue shopping"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_continue_shopping",
+      "label": "Show continue shopping button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "continue_shopping_text",
+      "label": "Continue shopping button text",
+      "default": "CONTINUE SHOPPING"
+    },
+    {
+      "type": "url",
+      "id": "continue_shopping_link",
+      "label": "Continue shopping link",
+      "info": "Leave blank to link to the store homepage."
     },
     {
       "type": "header",
