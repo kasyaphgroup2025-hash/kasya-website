@@ -258,7 +258,7 @@
             >
               {% if blouse_size_chart_image != blank or pants_size_chart_image != blank %}
                 {% if blouse_size_chart_image != blank %}
-                  <figure class="jane-set-hero__size-chart">
+                  <figure class="jane-set-hero__size-chart" data-jane-size-chart="blouse">
                     <figcaption>Blouse Size Chart</figcaption>
                     {{
                       blouse_size_chart_image
@@ -269,7 +269,7 @@
                 {% endif %}
 
                 {% if pants_size_chart_image != blank %}
-                  <figure class="jane-set-hero__size-chart">
+                  <figure class="jane-set-hero__size-chart" data-jane-size-chart="pants">
                     <figcaption>Pants Size Chart</figcaption>
                     {{
                       pants_size_chart_image
@@ -764,6 +764,10 @@
     display: grid;
     gap: 10px;
     margin: 0;
+  }
+
+  .jane-set-hero__size-chart[hidden] {
+    display: none;
   }
 
   .jane-set-hero__size-chart figcaption {
@@ -1282,6 +1286,10 @@
 
       section.querySelectorAll('[data-jane-price-mode]').forEach(price => {
         price.hidden = price.dataset.janePriceMode !== purchaseMode;
+      });
+
+      section.querySelectorAll('[data-jane-size-chart]').forEach(chart => {
+        chart.hidden = purchaseMode !== 'set' && chart.dataset.janeSizeChart !== purchaseMode;
       });
 
       submitButton.disabled = adding || !available;
