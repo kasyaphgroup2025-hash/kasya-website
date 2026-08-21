@@ -1288,8 +1288,8 @@
         const defaultLabel = purchaseMode === 'set'
           ? 'ADD JANE SET TO CART'
           : purchaseMode === 'blouse'
-            ? `ADD BLOUSE TO CART — ${products.top?.priceText || formatMoney(products.top?.price)}`
-            : `ADD PANTS TO CART — ${products.pants?.priceText || formatMoney(products.pants?.price)}`;
+            ? 'ADD BLOUSE TO CART'
+            : 'ADD PANTS TO CART';
         submitText.textContent = complete && !available ? 'SOLD OUT / UNAVAILABLE' : defaultLabel;
       }
     }
