@@ -1,7 +1,7 @@
 {% comment %}
   Jane Set acquisition hero.
-  The visible parent product supplies page media. The real Jane Blouse and
-  Jane Pants products supply purchasable variants for set and solo modes.
+  The visible parent product supplies page media while two hidden component
+  products supply the color-and-size variants added to cart.
 {% endcomment %}
 
 {% liquid
@@ -13,7 +13,6 @@
   assign blouse_product = section.settings.blouse_product
   assign pants_product = section.settings.pants_product
   assign parent_variant = parent_product.selected_or_first_available_variant
-  assign combined_price = blouse_product.price | plus: pants_product.price
 
   assign blouse_size_chart_image = blank
   assign pants_size_chart_image = blank
@@ -45,9 +44,9 @@
   if parent_product == blank or parent_variant == blank
     assign setup_error = 'Jane Set parent product is not configured.'
   elsif blouse_product == blank
-    assign setup_error = 'Jane Blouse product is not configured.'
+    assign setup_error = 'Jane Set blouse product is not configured.'
   elsif pants_product == blank
-    assign setup_error = 'Jane Pants product is not configured.'
+    assign setup_error = 'Jane Set pants product is not configured.'
   endif
 %}
 
@@ -104,6 +103,9 @@
           {% endif %}
         </div>
 
+        <div class="jane-set-hero__pricing">
+          <strong class="jane-set-hero__set-price">{{ section.settings.set_price_text }}</strong>
+        </div>
       </div>
 
       {% if section.settings.description != blank %}
@@ -114,9 +116,6 @@
         <script type="application/json" data-jane-components>
           {
             "top": {
-              "title": {{ blouse_product.title | json }},
-              "price": {{ blouse_product.price | json }},
-              "priceText": {{ blouse_product.price | money_without_trailing_zeros | json }},
               "optionNames": {{ blouse_product.options | json }},
               "variants": [
                 {% for variant in blouse_product.variants %}
@@ -124,7 +123,6 @@
                     "id": {{ variant.id | json }},
                     "options": {{ variant.options | json }},
                     "available": {{ variant.available | json }},
-                    "price": {{ variant.price | json }},
                     "sku": {{ variant.sku | json }},
                     "inventoryQuantity": {{ variant.inventory_quantity | default: 0 | json }},
                     "inventoryManagement": {{ variant.inventory_management | json }},
@@ -134,9 +132,6 @@
               ]
             },
             "pants": {
-              "title": {{ pants_product.title | json }},
-              "price": {{ pants_product.price | json }},
-              "priceText": {{ pants_product.price | money_without_trailing_zeros | json }},
               "optionNames": {{ pants_product.options | json }},
               "variants": [
                 {% for variant in pants_product.variants %}
@@ -144,7 +139,6 @@
                     "id": {{ variant.id | json }},
                     "options": {{ variant.options | json }},
                     "available": {{ variant.available | json }},
-                    "price": {{ variant.price | json }},
                     "sku": {{ variant.sku | json }},
                     "inventoryQuantity": {{ variant.inventory_quantity | default: 0 | json }},
                     "inventoryManagement": {{ variant.inventory_management | json }},
@@ -156,55 +150,7 @@
           }
         </script>
 
-        <fieldset class="jane-set-hero__purchase-type">
-          <legend>Choose how you'd like to buy</legend>
-          <div class="jane-set-hero__purchase-options" data-jane-purchase-options role="radiogroup" aria-label="Purchase type">
-            <button
-              type="button"
-              class="jane-set-hero__purchase-card is-selected"
-              data-jane-purchase-mode="set"
-              role="radio"
-              aria-checked="true"
-            >
-              <span class="jane-set-hero__purchase-left">
-                <span class="jane-set-hero__purchase-indicator" aria-hidden="true"></span>
-                <span class="jane-set-hero__purchase-copy">
-                  <strong>Jane Set</strong>
-                  <small>Save ₱149</small>
-                </span>
-              </span>
-              <strong>{{ section.settings.set_price_text }}</strong>
-            </button>
-            <button
-              type="button"
-              class="jane-set-hero__purchase-card"
-              data-jane-purchase-mode="blouse"
-              role="radio"
-              aria-checked="false"
-            >
-              <span class="jane-set-hero__purchase-left">
-                <span class="jane-set-hero__purchase-indicator" aria-hidden="true"></span>
-                <span class="jane-set-hero__purchase-copy"><strong>Blouse Only</strong></span>
-              </span>
-              <strong>{{ blouse_product.price | money_without_trailing_zeros }}</strong>
-            </button>
-            <button
-              type="button"
-              class="jane-set-hero__purchase-card"
-              data-jane-purchase-mode="pants"
-              role="radio"
-              aria-checked="false"
-            >
-              <span class="jane-set-hero__purchase-left">
-                <span class="jane-set-hero__purchase-indicator" aria-hidden="true"></span>
-                <span class="jane-set-hero__purchase-copy"><strong>Pants Only</strong></span>
-              </span>
-              <strong>{{ pants_product.price | money_without_trailing_zeros }}</strong>
-            </button>
-          </div>
-        </fieldset>
-
-        <fieldset class="jane-set-hero__group" data-jane-selector-group="color">
+        <fieldset class="jane-set-hero__group">
           <legend>
             Color:
             <span class="jane-set-hero__selection-prompt" data-selection-prompt="color">Please select</span>
@@ -221,15 +167,15 @@
           </div>
         </fieldset>
 
-        <fieldset class="jane-set-hero__group" data-jane-selector-group="top">
+        <fieldset class="jane-set-hero__group">
           <legend>
-            Blouse Size:
+            Top Size:
             <span class="jane-set-hero__selection-prompt" data-selection-prompt="top">Please select</span>
           </legend>
           <div class="jane-set-hero__sizes" data-size-options="top"></div>
         </fieldset>
 
-        <fieldset class="jane-set-hero__group" data-jane-selector-group="pants">
+        <fieldset class="jane-set-hero__group">
           <legend>
             Pants Size:
             <span class="jane-set-hero__selection-prompt" data-selection-prompt="pants">Please select</span>
@@ -258,7 +204,7 @@
             >
               {% if blouse_size_chart_image != blank or pants_size_chart_image != blank %}
                 {% if blouse_size_chart_image != blank %}
-                  <figure class="jane-set-hero__size-chart" data-jane-size-chart="blouse">
+                  <figure class="jane-set-hero__size-chart">
                     <figcaption>Blouse Size Chart</figcaption>
                     {{
                       blouse_size_chart_image
@@ -269,7 +215,7 @@
                 {% endif %}
 
                 {% if pants_size_chart_image != blank %}
-                  <figure class="jane-set-hero__size-chart" data-jane-size-chart="pants">
+                  <figure class="jane-set-hero__size-chart">
                     <figcaption>Pants Size Chart</figcaption>
                     {{
                       pants_size_chart_image
@@ -292,18 +238,8 @@
           </div>
         {% endif %}
 
-        <div class="jane-set-hero__mode-price" data-jane-mode-price>
-          <div data-jane-price-mode="set">
-            <strong>{{ section.settings.set_price_text }}</strong>
-            <s>{{ combined_price | money_without_trailing_zeros }}</s>
-            <span>Save ₱149</span>
-          </div>
-          <strong data-jane-price-mode="blouse" hidden>{{ blouse_product.price | money_without_trailing_zeros }}</strong>
-          <strong data-jane-price-mode="pants" hidden>{{ pants_product.price | money_without_trailing_zeros }}</strong>
-        </div>
-
         <button type="submit" class="jane-set-hero__submit" data-jane-submit disabled>
-          <span data-jane-submit-text>ADD JANE SET TO CART</span>
+          <span data-jane-submit-text>ADD SET TO CART</span>
         </button>
         <p class="jane-set-hero__error" data-jane-error role="alert" aria-live="polite" hidden></p>
       </form>
@@ -321,12 +257,10 @@
           <div>
             <strong data-jane-review-top>Blouse</strong>
             <span data-jane-review-top-sku></span>
-            <strong data-jane-review-top-price></strong>
           </div>
           <div>
             <strong data-jane-review-pants>Pants</strong>
             <span data-jane-review-pants-sku></span>
-            <strong data-jane-review-pants-price></strong>
           </div>
         </div>
 
@@ -346,12 +280,7 @@
           </div>
         </div>
 
-        <div class="jane-set-review__summary">
-          <p>Original Price: <s data-jane-review-original>{{ combined_price | money_without_trailing_zeros }}</s></p>
-          <p>Jane Set Savings: <strong>−₱149</strong></p>
-          <p class="jane-set-review__set-price-label">Set Price:</p>
-          <strong class="jane-set-review__price" data-jane-review-price>{{ section.settings.set_price_text }}</strong>
-        </div>
+        <strong class="jane-set-review__price" data-jane-review-price>{{ section.settings.set_price_text }}</strong>
         <p class="jane-set-review__error" data-jane-review-error role="alert" aria-live="polite" hidden></p>
 
         <button type="button" class="jane-set-review__add" data-jane-review-add>
@@ -549,103 +478,11 @@
     padding-top: 20px;
   }
 
-  .jane-set-hero__purchase-type {
-    min-width: 0;
-    margin: 0 0 26px;
-    border: 0;
-    padding: 0;
-  }
-
-  .jane-set-hero__purchase-type legend {
-    margin-bottom: 13px;
-    padding: 0;
-    font-size: 17px;
-    font-weight: 700;
-  }
-
-  .jane-set-hero__purchase-options {
-    display: grid;
-    gap: 10px;
-  }
-
-  .jane-set-hero__purchase-card {
-    display: flex;
-    width: 100%;
-    min-height: 64px;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    border: 1px solid #d4d4d4;
-    border-radius: 8px;
-    padding: 12px 14px;
-    background: #ffffff;
-    color: var(--jane-text);
-    cursor: pointer;
-    font: inherit;
-    font-size: 16px;
-    text-align: left;
-  }
-
-  .jane-set-hero__purchase-card.is-selected {
-    border-color: var(--jane-accent);
-    background: #fff8f8;
-    box-shadow: inset 0 0 0 1px var(--jane-accent);
-  }
-
-  .jane-set-hero__purchase-card:focus-visible {
-    outline: 2px solid var(--jane-accent);
-    outline-offset: 2px;
-  }
-
-  .jane-set-hero__purchase-copy {
-    display: grid;
-    gap: 3px;
-  }
-
-  .jane-set-hero__purchase-left {
-    display: flex;
-    min-width: 0;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .jane-set-hero__purchase-indicator {
-    position: relative;
-    flex: 0 0 auto;
-    width: 20px;
-    height: 20px;
-    border: 1px solid #9d9d9d;
-    border-radius: 50%;
-    background: #ffffff;
-  }
-
-  .jane-set-hero__purchase-card.is-selected .jane-set-hero__purchase-indicator {
-    border-color: var(--jane-accent);
-  }
-
-  .jane-set-hero__purchase-card.is-selected .jane-set-hero__purchase-indicator::after {
-    position: absolute;
-    inset: 4px;
-    border-radius: 50%;
-    background: var(--jane-accent);
-    content: '';
-  }
-
-  .jane-set-hero__purchase-copy small {
-    color: #b42318;
-    font-size: 12px;
-    font-weight: 700;
-  }
-
   .jane-set-hero__group {
     min-width: 0;
     margin: 0 0 24px;
     border: 0;
     padding: 0;
-  }
-
-  .jane-set-hero__group[hidden] {
-    display: none;
   }
 
   .jane-set-hero__group legend {
@@ -706,7 +543,6 @@
   .jane-set-hero__size.is-unavailable {
     opacity: 0.38;
     text-decoration: line-through;
-    cursor: not-allowed;
   }
 
   .jane-set-hero__size.is-pending {
@@ -766,10 +602,6 @@
     margin: 0;
   }
 
-  .jane-set-hero__size-chart[hidden] {
-    display: none;
-  }
-
   .jane-set-hero__size-chart figcaption {
     font-size: 14px;
     font-weight: 700;
@@ -805,37 +637,6 @@
     font-size: 19px;
     font-weight: 900;
     text-transform: uppercase;
-  }
-
-  .jane-set-hero__mode-price {
-    margin: 0 0 16px;
-  }
-
-  .jane-set-hero__mode-price > div {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 8px 12px;
-  }
-
-  .jane-set-hero__mode-price [data-jane-price-mode][hidden] {
-    display: none;
-  }
-
-  .jane-set-hero__mode-price strong {
-    color: var(--jane-accent);
-    font-size: 26px;
-  }
-
-  .jane-set-hero__mode-price s {
-    color: var(--jane-muted);
-    font-size: 15px;
-  }
-
-  .jane-set-hero__mode-price span {
-    color: #b42318;
-    font-size: 13px;
-    font-weight: 700;
   }
 
   .jane-set-hero__submit:disabled {
@@ -915,43 +716,21 @@
 
   .jane-set-review__components > div {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 4px 12px;
+    gap: 4px;
     padding-bottom: 14px;
     border-bottom: 1px solid var(--jane-line);
   }
 
   .jane-set-review__components span {
-    grid-column: 1 / -1;
     color: var(--jane-muted);
     font-size: 13px;
   }
 
   .jane-set-review__price {
     display: block;
-    margin-top: 8px;
+    margin-top: 22px;
     color: var(--jane-accent);
     font-size: 32px;
-  }
-
-  .jane-set-review__summary {
-    margin-top: 22px;
-  }
-
-  .jane-set-review__summary p {
-    margin: 5px 0 0;
-    color: var(--jane-muted);
-    font-size: 14px;
-  }
-
-  .jane-set-review__summary p strong {
-    color: #b42318;
-  }
-
-  .jane-set-review__summary .jane-set-review__set-price-label {
-    margin-top: 14px;
-    color: var(--jane-text);
-    font-weight: 700;
   }
 
   .jane-set-review__quantity {
@@ -1070,15 +849,6 @@
     .jane-set-hero__set-price {
       font-size: 30px;
     }
-
-    .jane-set-hero__purchase-card {
-      min-height: 62px;
-      font-size: 15px;
-    }
-
-    .jane-set-hero__mode-price strong {
-      font-size: 24px;
-    }
   }
 </style>
 
@@ -1090,10 +860,7 @@
     const form = section.querySelector('[data-jane-set-form]');
     const componentData = section.querySelector('[data-jane-components]');
     const productMediaData = section.querySelector('[data-jane-product-media]');
-    const purchaseOptions = section.querySelector('[data-jane-purchase-options]');
     const colorContainer = section.querySelector('[data-jane-colors]');
-    const topGroup = section.querySelector('[data-jane-selector-group="top"]');
-    const pantsGroup = section.querySelector('[data-jane-selector-group="pants"]');
     const topSizes = section.querySelector('[data-size-options="top"]');
     const pantsSizes = section.querySelector('[data-size-options="pants"]');
     const colorPrompt = section.querySelector('[data-selection-prompt="color"]');
@@ -1106,22 +873,18 @@
     const reviewTitle = section.querySelector('[data-jane-review-title]');
     const reviewTop = section.querySelector('[data-jane-review-top]');
     const reviewTopSku = section.querySelector('[data-jane-review-top-sku]');
-    const reviewTopPrice = section.querySelector('[data-jane-review-top-price]');
     const reviewPants = section.querySelector('[data-jane-review-pants]');
     const reviewPantsSku = section.querySelector('[data-jane-review-pants-sku]');
-    const reviewPantsPrice = section.querySelector('[data-jane-review-pants-price]');
     const reviewAddButton = section.querySelector('[data-jane-review-add]');
     const reviewAddText = section.querySelector('[data-jane-review-add-text]');
     const reviewError = section.querySelector('[data-jane-review-error]');
     const reviewPrice = section.querySelector('[data-jane-review-price]');
-    const reviewOriginal = section.querySelector('[data-jane-review-original]');
     const sizeGuideToggle = section.querySelector('[data-jane-size-guide-toggle]');
     const sizeGuideContent = section.querySelector('[data-jane-size-guide-content]');
 
     if (
       !form ||
       !componentData ||
-      !purchaseOptions ||
       !colorContainer ||
       !topSizes ||
       !pantsSizes ||
@@ -1141,6 +904,20 @@
 
     const products = JSON.parse(componentData.textContent || '{}');
     const productMedia = productMediaData ? JSON.parse(productMediaData.textContent || '[]') : [];
+    const parentProduct = {
+      optionNames: {{ parent_product.options | json }},
+      defaultVariantId: {{ parent_variant.id | json }},
+      variants: [
+        {% for variant in parent_product.variants %}
+          {
+            id: {{ variant.id | json }},
+            options: {{ variant.options | json }},
+            available: {{ variant.available | json }},
+            price: {{ variant.price | json }}
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    };
     const sizes = ['Medium', 'Large', 'XL', '2XL', '3XL'];
     const shotOrder = ['front', 'side', 'back', 'sitting', 'fabric close up'];
     const normalize = value => String(value || '').trim().toLowerCase();
@@ -1148,7 +925,6 @@
     // Media can preview a color without preselecting a purchasable set color.
     let selectedColor = '';
     let previewColor = defaultPreviewColor;
-    let purchaseMode = 'set';
     let selectedTopSize = '';
     let selectedPantsSize = '';
     let selectedSetQuantity = 1;
@@ -1227,20 +1003,43 @@
       ) || null;
     }
 
+    function findParentVariant() {
+      const variants = parentProduct.variants || [];
+      const colorIndex = optionIndex(parentProduct.optionNames, 'Color');
+
+      if (selectedColor) {
+        return variants.find(variant =>
+          (
+            (
+              colorIndex >= 0 &&
+              normalize(variant.options?.[colorIndex]) === normalize(selectedColor)
+            ) ||
+            (
+              colorIndex < 0 &&
+              (variant.options || []).some(option =>
+                normalize(option) === normalize(selectedColor)
+              )
+            )
+          )
+        ) || null;
+      }
+
+      return variants.find(variant => variant.id === parentProduct.defaultVariantId) ||
+        variants.find(variant => variant.available) ||
+        null;
+    }
+
     function selectionState() {
+      const parentVariant = findParentVariant();
       const topVariant = findVariant('top', selectedTopSize);
       const pantsVariant = findVariant('pants', selectedPantsSize);
-      const complete = purchaseMode === 'set'
-        ? Boolean(selectedColor && selectedTopSize && selectedPantsSize)
-        : purchaseMode === 'blouse'
-          ? Boolean(selectedColor && selectedTopSize)
-          : Boolean(selectedColor && selectedPantsSize);
-      const available = purchaseMode === 'set'
-        ? Boolean(complete && topVariant?.available && pantsVariant?.available)
-        : purchaseMode === 'blouse'
-          ? Boolean(complete && topVariant?.available)
-          : Boolean(complete && pantsVariant?.available);
-      return { topVariant, pantsVariant, complete, available };
+      const complete = Boolean(selectedColor && selectedTopSize && selectedPantsSize);
+      const available = Boolean(
+        complete &&
+        topVariant?.available &&
+        pantsVariant?.available
+      );
+      return { parentVariant, topVariant, pantsVariant, complete, available };
     }
 
     function renderSizes(container, role, selectedSize) {
@@ -1270,39 +1069,17 @@
       renderSizes(topSizes, 'top', selectedTopSize);
       renderSizes(pantsSizes, 'pants', selectedPantsSize);
 
-      const { complete, available } = selectionState();
-      const needsTop = purchaseMode === 'set' || purchaseMode === 'blouse';
-      const needsPants = purchaseMode === 'set' || purchaseMode === 'pants';
-      topGroup.hidden = !needsTop;
-      pantsGroup.hidden = !needsPants;
-      topGroup.disabled = !needsTop;
-      pantsGroup.disabled = !needsPants;
-
-      purchaseOptions.querySelectorAll('[data-jane-purchase-mode]').forEach(option => {
-        const selected = option.dataset.janePurchaseMode === purchaseMode;
-        option.classList.toggle('is-selected', selected);
-        option.setAttribute('aria-checked', String(selected));
-      });
-
-      section.querySelectorAll('[data-jane-price-mode]').forEach(price => {
-        price.hidden = price.dataset.janePriceMode !== purchaseMode;
-      });
-
-      section.querySelectorAll('[data-jane-size-chart]').forEach(chart => {
-        chart.hidden = purchaseMode !== 'set' && chart.dataset.janeSizeChart !== purchaseMode;
-      });
-
+      const { parentVariant, complete, available } = selectionState();
       submitButton.disabled = adding || !available;
       colorPrompt.hidden = Boolean(selectedColor);
-      topPrompt.hidden = !needsTop || Boolean(selectedTopSize);
-      pantsPrompt.hidden = !needsPants || Boolean(selectedPantsSize);
+      topPrompt.hidden = Boolean(selectedTopSize);
+      pantsPrompt.hidden = Boolean(selectedPantsSize);
       if (!adding) {
-        const defaultLabel = purchaseMode === 'set'
-          ? 'ADD JANE SET TO CART'
-          : purchaseMode === 'blouse'
-            ? 'ADD BLOUSE TO CART'
-            : 'ADD PANTS TO CART';
-        submitText.textContent = complete && !available ? 'SOLD OUT / UNAVAILABLE' : defaultLabel;
+        if (complete && !parentVariant?.id) {
+          submitText.textContent = 'CONFIGURATION NEEDED';
+        } else {
+          submitText.textContent = complete && !available ? 'SOLD OUT / UNAVAILABLE' : 'ADD SET TO CART';
+        }
       }
     }
 
@@ -1335,19 +1112,15 @@
       );
     }
 
-    function formatMoney(cents) {
-      const total = (Number(cents) || 0) / 100;
+    function formatSetPrice(quantity) {
+      const parentVariant = findParentVariant();
+      const total = ((Number(parentVariant?.price) || 169900) * quantity) / 100;
       return new Intl.NumberFormat('en-PH', {
         style: 'currency',
         currency: 'PHP',
         minimumFractionDigits: 0,
         maximumFractionDigits: 0
       }).format(total);
-    }
-
-    function formatSetPrice(quantity) {
-      const combinedPrice = (Number(products.top?.price) || 84900) + (Number(products.pants?.price) || 99900);
-      return formatMoney(Math.max(0, combinedPrice - 14900) * quantity);
     }
 
     function renderJaneSetQuantityStepper(reset = false) {
@@ -1401,12 +1174,6 @@
       reviewQuantity.max = selectedSetMaximum;
       reviewQuantityMinus.disabled = adding || selectedSetQuantity <= 1;
       reviewQuantityPlus.disabled = adding || selectedSetQuantity >= selectedSetMaximum;
-      const { topVariant, pantsVariant } = selectionState();
-      if (reviewOriginal && topVariant && pantsVariant) {
-        reviewOriginal.textContent = formatMoney(
-          (Number(topVariant.price) + Number(pantsVariant.price)) * selectedSetQuantity
-        );
-      }
       reviewPrice.textContent = formatSetPrice(selectedSetQuantity);
     }
 
@@ -1420,11 +1187,8 @@
       reviewTitle.textContent = `${selectedColor} Jane Set`;
       reviewTop.textContent = `${selectedColor} Blouse: ${selectedTopSize}`;
       reviewTopSku.textContent = `SKU: ${topVariant.sku || 'Not available'}`;
-      reviewTopPrice.textContent = formatMoney(topVariant.price);
       reviewPants.textContent = `${selectedColor} Pants: ${selectedPantsSize}`;
       reviewPantsSku.textContent = `SKU: ${pantsVariant.sku || 'Not available'}`;
-      reviewPantsPrice.textContent = formatMoney(pantsVariant.price);
-      reviewOriginal.textContent = formatMoney((Number(topVariant.price) + Number(pantsVariant.price)) * selectedSetQuantity);
       review.hidden = false;
       document.body.style.overflow = 'hidden';
       reviewAddButton.focus();
@@ -1436,15 +1200,6 @@
       document.body.style.removeProperty('overflow');
       submitButton.focus();
     }
-
-    purchaseOptions.addEventListener('click', event => {
-      const option = event.target.closest('[data-jane-purchase-mode]');
-      if (!option || adding) return;
-
-      purchaseMode = option.dataset.janePurchaseMode;
-      clearError();
-      updateControls();
-    });
 
     colorContainer.addEventListener('click', event => {
       const button = event.target.closest('[data-color]');
@@ -1482,86 +1237,22 @@
       updateControls();
     });
 
-    async function addSoloVariant(role, variant) {
-      if (adding || !variant?.id || !variant.available) return;
-
-      adding = true;
-      clearError();
-      submitButton.disabled = true;
-      submitText.textContent = 'ADDING...';
-
-      try {
-        const response = await fetch('/cart/add.js', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            sections: ['cart-icon-bubble'],
-            sections_url: window.location.pathname,
-            items: [{ id: variant.id, quantity: 1 }]
-          })
-        });
-
-        if (!response.ok) {
-          const error = await response.json().catch(() => ({}));
-          throw new Error(error.description || error.message || `Unable to add the Jane ${role} to cart.`);
-        }
-
-        const cartResponse = await response.json();
-        const cartStateResponse = await fetch('/cart.js', { headers: { 'Accept': 'application/json' } });
-        const cartState = cartStateResponse.ok ? await cartStateResponse.json() : null;
-        const cartIcon = document.getElementById('cart-icon-bubble');
-        const cartIconHtml = cartResponse?.sections?.['cart-icon-bubble'];
-
-        if (cartIcon && cartIconHtml) {
-          const parsedHtml = new DOMParser().parseFromString(cartIconHtml, 'text/html');
-          const updatedCartIcon = parsedHtml.getElementById('cart-icon-bubble');
-          if (updatedCartIcon) cartIcon.innerHTML = updatedCartIcon.innerHTML;
-        }
-
-        document.dispatchEvent(new CustomEvent('afterCartChanged', {
-          detail: { source: `jane-${role}-only`, cartData: cartState }
-        }));
-
-        let cartWasOpened = false;
-        if (window.KasyaAovCart && typeof window.KasyaAovCart.open === 'function') {
-          window.KasyaAovCart.open();
-          cartWasOpened = true;
-        }
-
-        if (!cartWasOpened && cartIcon) {
-          cartIcon.click();
-          cartWasOpened = true;
-        }
-
-        if (!cartWasOpened) window.location.assign('/cart');
-      } catch (error) {
-        showError(error.message || 'Unable to add this item to cart. Please try again.');
-      } finally {
-        adding = false;
-        updateControls();
-      }
-    }
-
     form.addEventListener('submit', event => {
       event.preventDefault();
       if (adding) return;
 
-      const { topVariant, pantsVariant, complete, available } = selectionState();
+      const { parentVariant, topVariant, pantsVariant, complete, available } = selectionState();
       if (!selectedColor) {
         showError('Please select a color.');
         return;
       }
+      if (!parentVariant?.id) {
+        showError('Jane Set parent color variant is not configured.');
+        updateControls();
+        return;
+      }
       if (!complete) {
-        showError(
-          purchaseMode === 'set'
-            ? 'Please select a blouse size and pants size.'
-            : purchaseMode === 'blouse'
-              ? 'Please select a blouse size.'
-              : 'Please select a pants size.'
-        );
+        showError('Please select a top size and pants size.');
         return;
       }
       if (!available) {
@@ -1571,19 +1262,17 @@
       }
 
       clearError();
-      if (purchaseMode === 'set') {
-        openReview(topVariant, pantsVariant);
-      } else if (purchaseMode === 'blouse') {
-        addSoloVariant('blouse', topVariant);
-      } else {
-        addSoloVariant('pants', pantsVariant);
-      }
+      openReview(topVariant, pantsVariant);
     });
 
     async function addReviewedSet() {
       if (adding) return;
 
-      const { topVariant, pantsVariant, complete, available } = selectionState();
+      const { parentVariant, topVariant, pantsVariant, complete, available } = selectionState();
+      if (!parentVariant?.id) {
+        showError('Jane Set parent color variant is not configured.');
+        return;
+      }
       if (!complete || !available) {
         showError('This set is no longer available. Close this review and update your selection.');
         return;
@@ -1722,6 +1411,15 @@
             sections_url: window.location.pathname,
             items: [
               {
+                id: parentVariant.id,
+                quantity: selectedSetQuantity,
+                properties: {
+                  ...sharedProperties,
+                  _set_role: 'Parent',
+                  _inventory_components: 'Blouse + Pants'
+                }
+              },
+              {
                 id: topVariant.id,
                 quantity: selectedSetQuantity,
                 properties: {
@@ -1758,8 +1456,8 @@
         const setItems = getSetItems(verifiedCart);
         const roles = setItems.map(item => item.properties?._set_role);
         const completeSet =
-          setItems.length === 2 &&
-          ['Top', 'Pants'].every(role => roles.filter(value => value === role).length === 1) &&
+          setItems.length === 3 &&
+          ['Parent', 'Top', 'Pants'].every(role => roles.filter(value => value === role).length === 1) &&
           setItems.every(item => item.quantity === selectedSetQuantity);
 
         if (!completeSet) {
@@ -1961,12 +1659,12 @@
     {
       "type": "product",
       "id": "blouse_product",
-      "label": "Jane Blouse product"
+      "label": "Jane Blouse component product"
     },
     {
       "type": "product",
       "id": "pants_product",
-      "label": "Jane Pants product"
+      "label": "Jane Pants component product"
     },
     {
       "type": "select",
@@ -2000,7 +1698,7 @@
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "JANE"
+      "default": "JANE COORDINATES SET"
     },
     {
       "type": "text",
