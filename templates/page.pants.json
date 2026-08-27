@@ -218,7 +218,7 @@
         "text_outside_image_qLFQtc": {
           "type": "text-outside-image",
           "settings": {
-            "image": "shopify://shop_images/mia_black_front.jpg",
+            "image": "shopify://shop_images/mia_light-gray_front.jpg",
             "link": "shopify://products/mia-palazzo-pants-soft-linen",
             "text": "Mia Palazzo Pants - Soft Linen",
             "text_style": "caption-with-letter-spacing",
@@ -242,7 +242,7 @@
         "text_outside_image_ydUxzY": {
           "type": "text-outside-image",
           "settings": {
-            "image": "shopify://shop_images/naomi_navy-blue_front.jpg",
+            "image": "shopify://shop_images/naomi_cinnamon_front.jpg",
             "link": "shopify://products/naomi-culottes-acid-linen",
             "text": "Naomi Culottes - Acid Linen",
             "text_style": "caption-with-letter-spacing",
