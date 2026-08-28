@@ -1458,39 +1458,48 @@
 
     renderSummary(cart) {
       const visualItemCount = this.getDisplayItems(cart).length;
-      const itemLabel = `${visualItemCount} item${visualItemCount === 1 ? '' : 's'}`;
       const count = this.querySelector(selectors.count);
-      const footerCount = this.querySelector(selectors.footerCount);
-      const subtotal = this.getCartDisplaySubtotal(cart);
 
       if (count) count.textContent = `(${visualItemCount})`;
-      if (footerCount) footerCount.textContent = itemLabel;
-      this.renderSubtotal(subtotal);
+      this.renderSubtotal(cart);
     }
 
-    renderSubtotal(subtotal) {
+    renderSubtotal(cart) {
       const subtotalWrap = this.querySelector(selectors.subtotalWrap);
+      const itemCount = Number(cart?.item_count) || 0;
+      const itemLabel = `${itemCount} item${itemCount === 1 ? '' : 's'}`;
+      const finalSubtotal = Number.isFinite(cart?.total_price)
+        ? cart.total_price
+        : Number(cart?.items_subtotal_price) || 0;
+      let originalSubtotal = Number.isFinite(cart?.original_total_price)
+        ? cart.original_total_price
+        : (cart?.items || []).reduce((sum, item) => sum + (Number(item.original_line_price) || Number(item.final_line_price) || 0), 0);
+      const reportedDiscount = Math.max(Number(cart?.total_discount) || 0, 0);
+
+      if (reportedDiscount > originalSubtotal - finalSubtotal) {
+        originalSubtotal = finalSubtotal + reportedDiscount;
+      }
+
+      const discount = Math.max(originalSubtotal - finalSubtotal, reportedDiscount, 0);
 
       if (!subtotalWrap) {
         const subtotalElement = this.querySelector(selectors.subtotal);
-        if (subtotalElement) subtotalElement.textContent = formatMoney(subtotal);
+        if (subtotalElement) subtotalElement.textContent = formatMoney(finalSubtotal);
         return;
       }
 
-      if (subtotal >= offers.discountCents) {
-        const finalSubtotal = Math.max(subtotal - offers.previewDiscountCents, 0);
-
+      if (discount > 0) {
         subtotalWrap.innerHTML = `
           <div class="kasya-aov-cart__subtotal-row">
-            <span>Subtotal</span>
-            <strong class="kasya-aov-cart__subtotal-amount">${formatMoney(subtotal)}</strong>
+            <span>Original Subtotal</span>
+            <strong class="kasya-aov-cart__subtotal-amount">${formatMoney(originalSubtotal)}</strong>
           </div>
           <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--savings">
-            <span>Save ₱450</span>
-            <strong>-${formatMoney(offers.previewDiscountCents)}</strong>
+            <span>Discount</span>
+            <strong>− ${formatMoney(discount)}</strong>
           </div>
           <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--final">
-            <span>Final</span>
+            <span>Subtotal (${itemLabel})</span>
             <strong class="kasya-aov-cart__subtotal-amount" data-kasya-aov-cart-subtotal>${formatMoney(finalSubtotal)}</strong>
           </div>
         `;
@@ -1499,16 +1508,24 @@
 
       subtotalWrap.innerHTML = `
         <div class="kasya-aov-cart__subtotal-row">
-          <span>Subtotal (<span data-kasya-aov-cart-footer-count></span>)</span>
-          <strong class="kasya-aov-cart__subtotal-amount" data-kasya-aov-cart-subtotal>${formatMoney(subtotal)}</strong>
+          <span>Subtotal (<span data-kasya-aov-cart-footer-count>${itemLabel}</span>)</span>
+          <strong class="kasya-aov-cart__subtotal-amount" data-kasya-aov-cart-subtotal>${formatMoney(finalSubtotal)}</strong>
         </div>
       `;
+    }
 
-      const footerCount = this.querySelector(selectors.footerCount);
-      if (footerCount && this.cart) {
-        const visualItemCount = this.getDisplayItems(this.cart).length;
-        footerCount.textContent = `${visualItemCount} item${visualItemCount === 1 ? '' : 's'}`;
+    renderLinePrice(originalLinePrice, finalLinePrice) {
+      const finalPrice = Math.max(Number(finalLinePrice) || 0, 0);
+      const originalPrice = Math.max(Number(originalLinePrice) || finalPrice, 0);
+
+      if (originalPrice > finalPrice) {
+        return `
+          <s class="kasya-aov-cart__item-price-original">${formatMoney(originalPrice)}</s>
+          <span class="kasya-aov-cart__item-price-final">${formatMoney(finalPrice)}</span>
+        `;
       }
+
+      return `<span class="kasya-aov-cart__item-price-final">${formatMoney(finalPrice)}</span>`;
     }
 
     renderOfferProgress(cart) {
@@ -1624,7 +1641,7 @@
                 <span class="kasya-aov-cart__quantity-value" data-kasya-aov-cart-quantity>${item.quantity}</span>
                 <button type="button" class="kasya-aov-cart__quantity-button" data-kasya-aov-cart-increase data-line="${line}" data-key="${this.escapeHtml(item.key)}" data-line-key="${this.escapeHtml(item.key)}" aria-label="Increase quantity for ${this.escapeHtml(item.product_title)}">+</button>
               </div>
-              <div class="kasya-aov-cart__item-price">${formatMoney(item.final_line_price)}</div>
+              <div class="kasya-aov-cart__item-price">${this.renderLinePrice(item.original_line_price, item.final_line_price)}</div>
             </div>
           </div>
         </article>
@@ -1646,7 +1663,10 @@
         return `<p class="kasya-aov-cart__item-variant">${this.escapeHtml(label)}${variant ? `: ${this.escapeHtml(variant)}` : ''}${this.escapeHtml(sku)}</p>`;
       }).join('');
       const quantity = this.getJaneSetQuantity(set);
-      const price = this.getJaneSetDisplayPrice(set);
+      const originalPrice = (set.items || []).reduce((sum, item) => {
+        return sum + (Number(item.original_line_price) || Number(item.final_line_price) || 0);
+      }, 0);
+      const finalPrice = this.getJaneSetActualPrice(set);
       const keys = (set.items || []).map((item) => item.key).filter(Boolean).join(',');
       const setColor = this.getJaneSetColor(set);
 
@@ -1670,7 +1690,7 @@
               <div class="kasya-aov-cart__quantity kasya-aov-cart__quantity--locked" aria-label="Jane Set quantity">
                 <span class="kasya-aov-cart__quantity-value">${quantity}</span>
               </div>
-              <div class="kasya-aov-cart__item-price">${formatMoney(price)}</div>
+              <div class="kasya-aov-cart__item-price">${this.renderLinePrice(originalPrice, finalPrice)}</div>
             </div>
           </div>
         </article>

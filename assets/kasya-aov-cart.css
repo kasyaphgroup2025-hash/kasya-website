@@ -458,16 +458,23 @@
 }
 
 .kasya-aov-cart__item-price {
+  align-items: flex-end;
   color: #D71920;
+  display: flex;
+  flex-direction: column;
   font-size: 13px;
   font-weight: 700;
+  gap: 1px;
   text-align: right;
 }
 
-.kasya-aov-cart__item-price s {
+.kasya-aov-cart__item-price-original {
   color: var(--kasya-aov-cart-muted);
-  display: block;
   font-weight: 400;
+}
+
+.kasya-aov-cart__item-price-final {
+  color: #D71920;
 }
 
 .kasya-aov-cart__recommendations {
