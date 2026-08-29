@@ -1092,7 +1092,6 @@
     const sizeChartHideText = 'Hide size chart';
     const fallbackImage = {% if lp_product.featured_image != blank %}{{ lp_product.featured_image | image_url: width: 1400 | json }}{% else %}null{% endif %};
     const lpShotOrder = ['front', 'side', 'back', 'sitting', 'fabric close up'];
-    const galleryShotOrder = expectedMediaRole ? ['front', 'side', 'back'] : lpShotOrder;
 
     const lower = value => String(value || '').trim().toLowerCase();
 
@@ -1216,10 +1215,13 @@
       };
     }
 
-    function getMediaRolePriority(role) {
+    function getMediaRolePriority(role, shot) {
       const normalizedRole = lower(role);
 
       if (!expectedMediaRole) return normalizedRole ? 1 : 0;
+      if (shot === 'sitting' || shot === 'fabric close up') {
+        return normalizedRole ? Number.POSITIVE_INFINITY : 0;
+      }
       if (normalizedRole === expectedMediaRole) return 0;
       if (!normalizedRole) return 1;
       if (normalizedRole === 'set') return 2;
@@ -1254,7 +1256,7 @@
       productMedia.forEach(item => {
         const parsed = parseProductMediaAlt(item.alt);
         if (!parsed || !item.src) return;
-        const rolePriority = getMediaRolePriority(parsed.role);
+        const rolePriority = getMediaRolePriority(parsed.role, parsed.shot);
         if (!uniqueColorNames.includes(lower(parsed.color))) return;
         if (!allowedShots.has(parsed.shot) || !Number.isFinite(rolePriority)) return;
         if (images[parsed.shot] && priorities[parsed.shot] <= rolePriority) return;
@@ -1275,7 +1277,7 @@
     function mediaMatchesExpectedRole(item) {
       const parsed = parseProductMediaAlt(item && item.alt);
 
-      return !parsed || Number.isFinite(getMediaRolePriority(parsed.role));
+      return !parsed || Number.isFinite(getMediaRolePriority(parsed.role, parsed.shot));
     }
 
     function getManualFitImageMapForBlock(block) {
@@ -1463,7 +1465,7 @@
 
     function getImagesForColor(colorValue) {
       const block = getColorBlock(colorValue);
-      const productMediaImages = getProductMediaImagesForColor(colorValue, block, galleryShotOrder);
+      const productMediaImages = getProductMediaImagesForColor(colorValue, block);
 
       if (productMediaImages.length > 0) return productMediaImages;
 
