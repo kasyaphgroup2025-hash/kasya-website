@@ -81,6 +81,29 @@
             {% if jane_media_count > 0 %},{% endif %}
             {% assign jane_media_count = jane_media_count | plus: 1 %}
             {
+              "sourceRole": "set",
+              "alt": {{ media.alt | json }},
+              "src": {{ media.preview_image | image_url: width: 1400 | json }}
+            }
+          {% endif %}
+        {% endfor %}
+        {% for media in blouse_product.media %}
+          {% if media.media_type == 'image' and media.preview_image != blank %}
+            {% if jane_media_count > 0 %},{% endif %}
+            {% assign jane_media_count = jane_media_count | plus: 1 %}
+            {
+              "sourceRole": "blouse",
+              "alt": {{ media.alt | json }},
+              "src": {{ media.preview_image | image_url: width: 1400 | json }}
+            }
+          {% endif %}
+        {% endfor %}
+        {% for media in pants_product.media %}
+          {% if media.media_type == 'image' and media.preview_image != blank %}
+            {% if jane_media_count > 0 %},{% endif %}
+            {% assign jane_media_count = jane_media_count | plus: 1 %}
+            {
+              "sourceRole": "pants",
               "alt": {{ media.alt | json }},
               "src": {{ media.preview_image | image_url: width: 1400 | json }}
             }
@@ -1165,34 +1188,67 @@
 
     function parseProductMediaAlt(altText) {
       const parts = String(altText || '').split('|').map(part => part.trim());
-      if (parts.length !== 3 || normalize(parts[0]) !== 'lp') return null;
+      if (![3, 4].includes(parts.length) || normalize(parts[0]) !== 'lp') return null;
 
       return {
-        color: normalize(parts[1]),
-        shot: normalizeShotName(parts[2])
+        role: parts.length === 4 ? normalize(parts[1]) : '',
+        color: normalize(parts.length === 4 ? parts[2] : parts[1]),
+        shot: normalizeShotName(parts.length === 4 ? parts[3] : parts[2])
       };
     }
 
-    function getProductMediaShotMapForColor(color) {
+    function getPurchaseModeRole(mode = purchaseMode) {
+      return ['blouse', 'pants'].includes(mode) ? mode : 'set';
+    }
+
+    function getMediaPriority(item, parsed, role, shot) {
+      const sourceRole = normalize(item.sourceRole);
+
+      if (shot === 'sitting' || shot === 'fabric close up') {
+        if (!parsed.role && sourceRole === 'set') return 0;
+        if (!parsed.role) return 1;
+        return Number.POSITIVE_INFINITY;
+      }
+
+      if (parsed.role === role && sourceRole === role) return 0;
+      if (parsed.role === role) return 1;
+      if (parsed.role === 'set' && sourceRole === 'set') return 2;
+      if (parsed.role === 'set') return 3;
+      if (!parsed.role && sourceRole === role) return 4;
+      if (!parsed.role && sourceRole === 'set') return 5;
+
+      return Number.POSITIVE_INFINITY;
+    }
+
+    function getProductMediaShotMapForColor(color, mode = purchaseMode) {
       const imageMap = {};
+      const priorities = {};
       const normalizedColor = normalize(color);
+      const role = getPurchaseModeRole(mode);
 
       productMedia.forEach(item => {
         const parsed = parseProductMediaAlt(item.alt);
         if (!parsed || !item.src || parsed.color !== normalizedColor) return;
-        if (!shotOrder.includes(parsed.shot) || imageMap[parsed.shot]) return;
+        if (!shotOrder.includes(parsed.shot)) return;
+        const priority = getMediaPriority(item, parsed, role, parsed.shot);
+        if (!Number.isFinite(priority)) return;
+        if (imageMap[parsed.shot] && priorities[parsed.shot] <= priority) return;
         imageMap[parsed.shot] = item.src;
+        priorities[parsed.shot] = priority;
       });
 
       return imageMap;
     }
 
-    function getProductMediaImagesForColor(color) {
-      const imageMap = getProductMediaShotMapForColor(color);
-      return shotOrder.map(shot => ({
-        shot,
-        src: imageMap[shot]
-      })).filter(image => image.src);
+    function getProductMediaImagesForColor(color, mode = purchaseMode) {
+      const imageMap = getProductMediaShotMapForColor(color, mode);
+      const seenSources = new Set();
+
+      return shotOrder.map(shot => ({ shot, src: imageMap[shot] })).filter(image => {
+        if (!image.src || seenSources.has(image.src)) return false;
+        seenSources.add(image.src);
+        return true;
+      });
     }
 
     function optionIndex(optionNames, name) {
@@ -1443,6 +1499,8 @@
 
       purchaseMode = option.dataset.janePurchaseMode;
       clearError();
+      renderGalleryForColor(previewColor);
+      announceMediaColor(previewColor);
       updateControls();
     });
 
@@ -1608,10 +1666,10 @@
       updateReviewQuantity(selectedSetQuantity);
 
       const setId = `jane-set-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-      const selectedMedia = getProductMediaShotMapForColor(selectedColor);
+      const selectedMedia = getProductMediaShotMapForColor(selectedColor, 'set');
       const parentImage =
         selectedMedia.front ||
-        getProductMediaImagesForColor(selectedColor)[0]?.src ||
+        getProductMediaImagesForColor(selectedColor, 'set')[0]?.src ||
         '';
       const sharedProperties = {
         _set_id: setId,
