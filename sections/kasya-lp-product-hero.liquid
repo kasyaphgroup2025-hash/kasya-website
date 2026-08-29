@@ -19,8 +19,15 @@
     assign hide_landing_header = false
     assign show_initial_media_preview = false
     assign is_daliah_acquisition_hero = false
+    assign expected_media_role = ''
     assign explicit_selection_templates = 'kasya-acquisition-dahlia,kasya-acquisition-ellav2,kasya-acquisition-hazel,kasya-acquisition-inah,kasya-acquisition-mia,kasya-acquisition-kianna,kasya-acquisition-naomi,kasya-acqusition-lea,kasya-jane_blouse,kasya-jane_pants' | split: ','
     assign lp_product_title_downcase = lp_product.title | downcase
+
+    if template.suffix == 'kasya-jane_blouse' or lp_product.handle == 'jane-blouse-premium-ity-1'
+      assign expected_media_role = 'blouse'
+    elsif template.suffix == 'kasya-jane_pants' or lp_product.handle == 'jane-pants-premium-ity-1'
+      assign expected_media_role = 'pants'
+    endif
 
     if template.suffix == 'kasya-acquisition-dahlia' and lp_product.handle == 'daliah-polo-acid-linen'
       assign is_daliah_acquisition_hero = true
@@ -50,7 +57,7 @@
   endif
 %}
 
-<section class="kasya-product-hero{% if section.settings.enable_sticky_atc %} kasya-product-hero--sticky-enabled{% endif %}" data-kasya-hero data-section-id="{{ section.id }}"{% if require_explicit_variant_selection %} data-require-explicit-variant-selection="true"{% endif %}{% if show_initial_media_preview %} data-initial-media-preview="true"{% endif %}{% if is_daliah_acquisition_hero %} data-daliah-coming-soon-hero="true"{% endif %}>
+<section class="kasya-product-hero{% if section.settings.enable_sticky_atc %} kasya-product-hero--sticky-enabled{% endif %}" data-kasya-hero data-section-id="{{ section.id }}"{% if require_explicit_variant_selection %} data-require-explicit-variant-selection="true"{% endif %}{% if show_initial_media_preview %} data-initial-media-preview="true"{% endif %}{% if is_daliah_acquisition_hero %} data-daliah-coming-soon-hero="true"{% endif %}{% if expected_media_role != blank %} data-expected-media-role="{{ expected_media_role }}"{% endif %}>
   {% if lp_product == blank %}
     <div class="kasya-product-hero__empty">
       <p>Select a product in this section's settings.</p>
@@ -1071,6 +1078,7 @@
     const productMedia = productMediaEl ? JSON.parse(productMediaEl.textContent || '[]') : [];
     const colorBlocksRaw = JSON.parse(colorBlocksEl.textContent || '[]');
     const colorBlocks = colorBlocksRaw.filter(block => block && block.option_value);
+    const expectedMediaRole = String(section.dataset.expectedMediaRole || '').trim().toLowerCase();
     const requireExplicitVariantSelection = section.dataset.requireExplicitVariantSelection === 'true';
     const showInitialMediaPreview = section.dataset.initialMediaPreview === 'true';
 
@@ -1084,6 +1092,7 @@
     const sizeChartHideText = 'Hide size chart';
     const fallbackImage = {% if lp_product.featured_image != blank %}{{ lp_product.featured_image | image_url: width: 1400 | json }}{% else %}null{% endif %};
     const lpShotOrder = ['front', 'side', 'back', 'sitting', 'fabric close up'];
+    const galleryShotOrder = expectedMediaRole ? ['front', 'side', 'back'] : lpShotOrder;
 
     const lower = value => String(value || '').trim().toLowerCase();
 
@@ -1198,12 +1207,24 @@
 
     function parseProductMediaAlt(altText) {
       const parts = String(altText || '').split('|').map(part => part.trim());
-      if (parts.length !== 3 || lower(parts[0]) !== 'lp') return null;
+      if (![3, 4].includes(parts.length) || lower(parts[0]) !== 'lp') return null;
 
       return {
-        color: parts[1],
-        shot: normalizeMediaShotName(parts[2])
+        role: parts.length === 4 ? lower(parts[1]) : '',
+        color: parts.length === 4 ? parts[2] : parts[1],
+        shot: normalizeMediaShotName(parts.length === 4 ? parts[3] : parts[2])
       };
+    }
+
+    function getMediaRolePriority(role) {
+      const normalizedRole = lower(role);
+
+      if (!expectedMediaRole) return normalizedRole ? 1 : 0;
+      if (normalizedRole === expectedMediaRole) return 0;
+      if (!normalizedRole) return 1;
+      if (normalizedRole === 'set') return 2;
+
+      return Number.POSITIVE_INFINITY;
     }
 
     function normalizeMediaShotName(value) {
@@ -1228,14 +1249,18 @@
       const uniqueColorNames = [...new Set(colorNames)];
       const allowedShots = new Set(shotOrder);
       const images = {};
+      const priorities = {};
 
       productMedia.forEach(item => {
         const parsed = parseProductMediaAlt(item.alt);
         if (!parsed || !item.src) return;
+        const rolePriority = getMediaRolePriority(parsed.role);
         if (!uniqueColorNames.includes(lower(parsed.color))) return;
-        if (!allowedShots.has(parsed.shot) || images[parsed.shot]) return;
+        if (!allowedShots.has(parsed.shot) || !Number.isFinite(rolePriority)) return;
+        if (images[parsed.shot] && priorities[parsed.shot] <= rolePriority) return;
 
         images[parsed.shot] = item.src;
+        priorities[parsed.shot] = rolePriority;
       });
 
       return images;
@@ -1245,6 +1270,12 @@
       const imageMap = getProductMediaShotMapForColor(colorValue, block, shotOrder);
 
       return shotOrder.map(shot => imageMap[shot]).filter(Boolean);
+    }
+
+    function mediaMatchesExpectedRole(item) {
+      const parsed = parseProductMediaAlt(item && item.alt);
+
+      return !parsed || Number.isFinite(getMediaRolePriority(parsed.role));
     }
 
     function getManualFitImageMapForBlock(block) {
@@ -1276,7 +1307,10 @@
       fitShotOrder.forEach(shot => {
         const matchedMedia = productMedia.find(item => {
           const mediaText = `${item.alt || ''} ${item.src || ''}`;
-          return item.src && mediaTextMatchesColor(mediaText, colorValue, block) && mediaTextHasShotCue(mediaText, shot);
+          return item.src &&
+            mediaMatchesExpectedRole(item) &&
+            mediaTextMatchesColor(mediaText, colorValue, block) &&
+            mediaTextHasShotCue(mediaText, shot);
         });
 
         if (matchedMedia) images[shot] = matchedMedia.src;
@@ -1343,7 +1377,10 @@
 
       const matchedMedia = productMedia.find(item => {
         const mediaText = `${item.alt || ''} ${item.src || ''}`;
-        return item.src && mediaTextMatchesColor(mediaText, colorValue, block) && mediaTextHasFabricCue(mediaText);
+        return item.src &&
+          mediaMatchesExpectedRole(item) &&
+          mediaTextMatchesColor(mediaText, colorValue, block) &&
+          mediaTextHasFabricCue(mediaText);
       });
 
       if (matchedMedia) return matchedMedia.src;
@@ -1426,7 +1463,7 @@
 
     function getImagesForColor(colorValue) {
       const block = getColorBlock(colorValue);
-      const productMediaImages = getProductMediaImagesForColor(colorValue, block);
+      const productMediaImages = getProductMediaImagesForColor(colorValue, block, galleryShotOrder);
 
       if (productMediaImages.length > 0) return productMediaImages;
 
