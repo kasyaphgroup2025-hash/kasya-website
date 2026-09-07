@@ -152,24 +152,24 @@
           "type": "lifestyle_card",
           "settings": {
             "image": "shopify://shop_images/14_caa1262e-0d9b-4323-94c9-810f031b22ce.jpg",
-            "title": "Office Day",
-            "description": "Polished enough for work, easy enough for long hours."
+            "title": "Casual Meetups",
+            "description": "Easy enough for a relaxed catch-up, polished enough to feel considered."
           }
         },
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
             "image": "shopify://shop_images/15_a3874607-f8cf-45e9-8dff-dc95235d2fc1.jpg",
-            "title": "Errands",
-            "description": "Soft, simple, and easy to move in."
+            "title": "Church Day",
+            "description": "A modest, polished pairing that feels effortless for Sunday plans."
           }
         },
         "lifestyle_card_YgPhKi": {
           "type": "lifestyle_card",
           "settings": {
             "image": "shopify://shop_images/18_73d1660f-dca9-4d30-bdd3-f8c7c43dcca0.jpg",
-            "title": "Family Lunch",
-            "description": "Comfortable, modest, and effortlessly put-together."
+            "title": "Afternoon Get-togheter",
+            "description": "An effortless pairing for relaxed social plans."
           }
         }
       },
