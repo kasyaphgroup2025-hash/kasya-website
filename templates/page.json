@@ -49,8 +49,7 @@
         "text_outside_image_Ye6pUr": {
           "type": "text-outside-image",
           "settings": {
-            "image": "shopify://shop_images/Jane_Taupe_Front.jpg",
-            "link": "shopify://products/jane-set-premium-ity",
+            "link": "",
             "text": "Jane Set - Premium ITY",
             "text_style": "caption-with-letter-spacing",
             "text_size": "medium",
