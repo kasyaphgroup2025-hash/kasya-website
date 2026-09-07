@@ -153,16 +153,16 @@
           "type": "lifestyle_card",
           "settings": {
             "image": "shopify://shop_images/19_eab90210-7b03-4903-a984-24b76ea1eac3.jpg",
-            "title": "Coffe Runs & Errands",
-            "description": "A relaxed base you can dress up with a few simple details."
+            "title": "Family Gatherings",
+            "description": "Comfortable for longer hours while still looking neat and put together."
           }
         },
         "lifestyle_4": {
           "type": "lifestyle_card",
           "settings": {
             "image": "shopify://shop_images/17_85197eed-7a25-4ad7-8c49-eadc1241b74d.jpg",
-            "title": "Travel",
-            "description": "A relaxed set for moving through a full day."
+            "title": "Coffe Runs & Errands",
+            "description": "A relaxed base you can dress up with a few simple details."
           }
         }
       },
