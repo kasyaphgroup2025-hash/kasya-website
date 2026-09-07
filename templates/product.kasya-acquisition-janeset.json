@@ -136,31 +136,31 @@
         "lifestyle_1": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/office_jane.png",
-            "title": "Office Day",
-            "description": "Polished enough for work, easy enough for long hours."
+            "image": "shopify://shop_images/14_caa1262e-0d9b-4323-94c9-810f031b22ce.jpg",
+            "title": "Casual Meetups",
+            "description": "Easy enough for a relaxed catch-up, polished enough to feel considered."
           }
         },
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/errands_jane.png",
-            "title": "Errands",
-            "description": "Soft, simple, and easy to move in."
+            "image": "shopify://shop_images/15_a3874607-f8cf-45e9-8dff-dc95235d2fc1.jpg",
+            "title": "Church Day",
+            "description": "A modest, polished pairing that feels effortless for Sunday plans."
           }
         },
         "lifestyle_3": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/family_lunch.png",
-            "title": "Family Lunch",
-            "description": "Comfortable, modest, and effortlessly put-together."
+            "image": "shopify://shop_images/19_eab90210-7b03-4903-a984-24b76ea1eac3.jpg",
+            "title": "Coffe Runs & Errands",
+            "description": "A relaxed base you can dress up with a few simple details."
           }
         },
         "lifestyle_4": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/TRAVELLL.png",
+            "image": "shopify://shop_images/17_85197eed-7a25-4ad7-8c49-eadc1241b74d.jpg",
             "title": "Travel",
             "description": "A relaxed set for moving through a full day."
           }
