@@ -41,6 +41,34 @@
     endif
   endfor
 
+  if blouse_size_chart_image == blank
+    for media in blouse_product.media
+      if media.media_type == 'image' and media.preview_image != blank
+        assign media_alt_parts = media.alt | default: '' | split: '|'
+        assign media_alt_prefix = media_alt_parts[0] | strip | downcase
+        assign media_alt_type = media_alt_parts[1] | strip | downcase
+        if media_alt_parts.size == 2 and media_alt_prefix == 'lp' and media_alt_type == 'size chart'
+          assign blouse_size_chart_image = media.preview_image
+          break
+        endif
+      endif
+    endfor
+  endif
+
+  if pants_size_chart_image == blank
+    for media in pants_product.media
+      if media.media_type == 'image' and media.preview_image != blank
+        assign media_alt_parts = media.alt | default: '' | split: '|'
+        assign media_alt_prefix = media_alt_parts[0] | strip | downcase
+        assign media_alt_type = media_alt_parts[1] | strip | downcase
+        if media_alt_parts.size == 2 and media_alt_prefix == 'lp' and media_alt_type == 'size chart'
+          assign pants_size_chart_image = media.preview_image
+          break
+        endif
+      endif
+    endfor
+  endif
+
   assign setup_error = blank
   if parent_product == blank or parent_variant == blank
     assign setup_error = 'Jane Set parent product is not configured.'
@@ -1200,13 +1228,20 @@
         .trim();
     }
 
+    function normalizeMediaColor(value) {
+      return normalize(value)
+        .replace(/[-_]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
     function parseProductMediaAlt(altText) {
       const parts = String(altText || '').split('|').map(part => part.trim());
       if (![3, 4].includes(parts.length) || normalize(parts[0]) !== 'lp') return null;
 
       return {
         role: parts.length === 4 ? normalize(parts[1]) : '',
-        color: normalize(parts.length === 4 ? parts[2] : parts[1]),
+        color: normalizeMediaColor(parts.length === 4 ? parts[2] : parts[1]),
         shot: normalizeShotName(parts.length === 4 ? parts[3] : parts[2])
       };
     }
@@ -1219,7 +1254,7 @@
       const sourceRole = normalize(item.sourceRole);
 
       if (shot === 'sitting' || shot === 'fabric close up') {
-        if (!parsed.role && sourceRole === 'set') return 0;
+        if (!parsed.role && sourceRole === role) return 0;
         if (!parsed.role) return 1;
         return Number.POSITIVE_INFINITY;
       }
@@ -1234,10 +1269,10 @@
       return Number.POSITIVE_INFINITY;
     }
 
-    function getProductMediaShotMapForColor(color, mode = purchaseMode) {
+    function buildProductMediaShotMap(color, mode) {
       const imageMap = {};
       const priorities = {};
-      const normalizedColor = normalize(color);
+      const normalizedColor = normalizeMediaColor(color);
       const role = getPurchaseModeRole(mode);
 
       productMedia.forEach(item => {
@@ -1249,6 +1284,24 @@
         if (imageMap[parsed.shot] && priorities[parsed.shot] <= priority) return;
         imageMap[parsed.shot] = item.src;
         priorities[parsed.shot] = priority;
+      });
+
+      return imageMap;
+    }
+
+    function getProductMediaShotMapForColor(color, mode = purchaseMode) {
+      const imageMap = {};
+      const galleryMode = mode || 'set';
+      const fallbackColor = galleryMode === 'set'
+        ? `${defaultPreviewColor}-${defaultPreviewColor}`
+        : defaultPreviewColor;
+      const colorCandidates = [...new Set([color, fallbackColor].filter(Boolean).map(normalizeMediaColor))];
+
+      colorCandidates.forEach(candidateColor => {
+        const candidateMap = buildProductMediaShotMap(candidateColor, galleryMode);
+        shotOrder.forEach(shot => {
+          if (!imageMap[shot] && candidateMap[shot]) imageMap[shot] = candidateMap[shot];
+        });
       });
 
       return imageMap;
@@ -1575,8 +1628,9 @@
     function getGalleryPreviewColor() {
       if (purchaseMode === 'blouse') return selectedTopColor || previewColor;
       if (purchaseMode === 'pants') return selectedPantsColor || previewColor;
-      if (purchaseMode === 'set') return selectedTopColor || previewColor;
-      return previewColor;
+      const topColor = selectedTopColor || defaultPreviewColor;
+      const pantsColor = selectedPantsColor || defaultPreviewColor;
+      return `${topColor}-${pantsColor}`;
     }
 
     function updateGalleryPreview() {
@@ -1762,7 +1816,7 @@
       updateReviewQuantity(selectedSetQuantity);
 
       const setId = `jane-set-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-      const setMediaColor = selectedTopColor || previewColor;
+      const setMediaColor = `${selectedTopColor}-${selectedPantsColor}`;
       const selectedMedia = getProductMediaShotMapForColor(setMediaColor, 'set');
       const parentImage =
         selectedMedia.front ||
@@ -2103,8 +2157,7 @@
       previous.addEventListener('click', () => move(-1));
       next.addEventListener('click', () => move(1));
       slides.addEventListener('scroll', () => window.requestAnimationFrame(updateDots));
-      renderGalleryForColor(previewColor);
-      announceMediaColor(previewColor);
+      updateGalleryPreview();
     }
 
     updateControls();
