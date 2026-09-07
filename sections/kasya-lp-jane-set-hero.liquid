@@ -1639,11 +1639,23 @@
       announceMediaColor(galleryColor);
     }
 
+    function resetPurchaseSelections() {
+      selectedTopColor = '';
+      selectedTopSize = '';
+      selectedPantsColor = '';
+      selectedPantsSize = '';
+      previewColor = defaultPreviewColor;
+    }
+
     purchaseOptions.addEventListener('click', event => {
       const option = event.target.closest('[data-jane-purchase-mode]');
       if (!option || adding) return;
 
-      purchaseMode = option.dataset.janePurchaseMode;
+      const nextPurchaseMode = option.dataset.janePurchaseMode;
+      if (nextPurchaseMode === purchaseMode) return;
+
+      purchaseMode = nextPurchaseMode;
+      resetPurchaseSelections();
       clearError();
       updateGalleryPreview();
       updateControls();
