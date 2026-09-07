@@ -151,7 +151,7 @@
         "lifestyle_1": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/office_jane.png",
+            "image": "shopify://shop_images/14_caa1262e-0d9b-4323-94c9-810f031b22ce.jpg",
             "title": "Office Day",
             "description": "Polished enough for work, easy enough for long hours."
           }
@@ -159,7 +159,7 @@
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/errands_jane.png",
+            "image": "shopify://shop_images/15_a3874607-f8cf-45e9-8dff-dc95235d2fc1.jpg",
             "title": "Errands",
             "description": "Soft, simple, and easy to move in."
           }
@@ -167,25 +167,16 @@
         "lifestyle_card_YgPhKi": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "shopify://shop_images/family_lunch.png",
+            "image": "shopify://shop_images/18_73d1660f-dca9-4d30-bdd3-f8c7c43dcca0.jpg",
             "title": "Family Lunch",
             "description": "Comfortable, modest, and effortlessly put-together."
-          }
-        },
-        "lifestyle_card_frgabM": {
-          "type": "lifestyle_card",
-          "settings": {
-            "image": "shopify://shop_images/travel_jane.png",
-            "title": "Travel",
-            "description": "A relaxed set for moving through a full day."
           }
         }
       },
       "block_order": [
         "lifestyle_1",
         "lifestyle_2",
-        "lifestyle_card_YgPhKi",
-        "lifestyle_card_frgabM"
+        "lifestyle_card_YgPhKi"
       ],
       "settings": {
         "heading": "WHERE TO WEAR IT",
