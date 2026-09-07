@@ -13,8 +13,8 @@
       "type": "kasya-lp-jane-set-hero",
       "settings": {
         "product": "",
-        "blouse_product": "jane-blouse-premium-ity-1",
-        "pants_product": "jane-pants-premium-ity-1",
+        "blouse_product": "jane-blouse-premium-ity",
+        "pants_product": "jane-pants-premium-ity",
         "default_media_preview_color": "Black",
         "set_price_text": "₱1,699",
         "product_label": "KASYA SETS",
