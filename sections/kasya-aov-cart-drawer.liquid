@@ -154,25 +154,18 @@
 
       <form action="{{ routes.cart_url }}" method="post" class="kasya-aov-cart__checkout-form">
         <div class="kasya-aov-cart__subtotal" data-kasya-aov-cart-subtotal-wrap>
-          {%- if cart.total_discount > 0 -%}
-            <div class="kasya-aov-cart__subtotal-row">
-              <span>Original Subtotal</span>
-              <strong class="kasya-aov-cart__subtotal-amount">{{ cart.original_total_price | money }}</strong>
-            </div>
-            <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--savings">
-              <span>Discount</span>
-              <strong>− {{ cart.total_discount | money }}</strong>
-            </div>
-            <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--final">
-              <span>Subtotal ({{ cart.item_count }} item{% unless cart.item_count == 1 %}s{% endunless %})</span>
-              <strong class="kasya-aov-cart__subtotal-amount" data-kasya-aov-cart-subtotal>{{ cart.total_price | money }}</strong>
-            </div>
-          {%- else -%}
-            <div class="kasya-aov-cart__subtotal-row">
-              <span>Subtotal (<span data-kasya-aov-cart-footer-count>{{ cart.item_count }} item{% unless cart.item_count == 1 %}s{% endunless %}</span>)</span>
-              <strong class="kasya-aov-cart__subtotal-amount" data-kasya-aov-cart-subtotal>{{ cart.total_price | money }}</strong>
-            </div>
-          {%- endif -%}
+          <div class="kasya-aov-cart__subtotal-row">
+            <span>Subtotal</span>
+            <strong class="kasya-aov-cart__subtotal-amount">{{ cart.original_total_price | money }}</strong>
+          </div>
+          <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--savings">
+            <span>Discount</span>
+            <strong>− {{ cart.total_discount | money }}</strong>
+          </div>
+          <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--final">
+            <span>Final Total</span>
+            <strong class="kasya-aov-cart__subtotal-amount" data-kasya-aov-cart-subtotal>{{ cart.total_price | money }}</strong>
+          </div>
         </div>
         <p class="kasya-aov-cart__checkout-note">Shipping calculated at checkout.</p>
         <button type="submit" name="checkout" class="kasya-aov-cart__checkout">

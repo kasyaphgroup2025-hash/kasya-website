@@ -486,11 +486,6 @@
   text-transform: uppercase;
 }
 
-.kasya-aov-cart__subtotal-row--total-savings {
-  color: #D71920;
-  font-weight: 700;
-}
-
 .kasya-aov-cart__recommendations {
   background: var(--kasya-aov-cart-cream);
   border: 1px solid var(--kasya-aov-cart-line);
