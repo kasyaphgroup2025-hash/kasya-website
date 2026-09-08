@@ -263,6 +263,30 @@
             "lightbox_button_background": "#ffffff"
           }
         },
+        "text_outside_image_LrHB8B": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/Jane_Black_22.jpg",
+            "link": "shopify://products/jane-pants-premium-ity",
+            "text": "Jane Pants - Premium ITY",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        },
         "text_outside_image_4fXgFc": {
           "type": "text-outside-image",
           "disabled": true,
@@ -346,6 +370,7 @@
         "text_outside_image_NrHKxi",
         "text_outside_image_qLFQtc",
         "text_outside_image_ydUxzY",
+        "text_outside_image_LrHB8B",
         "text_outside_image_4fXgFc",
         "text_outside_image_rDfKEC",
         "text_outside_image_HtzjAN"
