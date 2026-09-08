@@ -477,6 +477,20 @@
   color: #D71920;
 }
 
+.kasya-aov-cart__item-price-saving {
+  color: var(--kasya-aov-cart-muted);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.kasya-aov-cart__subtotal-row--total-savings {
+  color: #D71920;
+  font-weight: 700;
+}
+
 .kasya-aov-cart__recommendations {
   background: var(--kasya-aov-cart-cream);
   border: 1px solid var(--kasya-aov-cart-line);

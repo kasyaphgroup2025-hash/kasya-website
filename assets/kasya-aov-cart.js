@@ -127,6 +127,88 @@
 
   const formatMoneyClean = (cents) => formatMoney(cents).replace(/\.00\b/, '');
 
+  const janeSetPricing = {
+    savingsPerSetCents: 14900
+  };
+
+  function getLineDiscountAllocations(item) {
+    const allocations = item?.line_level_discount_allocations || item?.discount_allocations;
+    return Array.isArray(allocations) ? allocations : [];
+  }
+
+  function getDiscountAllocationAmount(allocation) {
+    return Math.max(Number(allocation?.amount) || 0, 0);
+  }
+
+  function isJaneSetDiscountAllocation(allocation) {
+    const application = allocation?.discount_application || allocation?.discountApplication || {};
+    const label = normalizeText([
+      application.title,
+      application.description,
+      application.key,
+      allocation?.title
+    ].filter(Boolean).join(' '));
+
+    return label.includes('jane') && label.includes('set');
+  }
+
+  function getLineDiscountAmount(item) {
+    return Math.max(
+      (Number(item?.original_line_price) || Number(item?.final_line_price) || 0) -
+      (Number(item?.final_line_price) || 0),
+      0
+    );
+  }
+
+  function getJaneAllocationAmount(item) {
+    return getLineDiscountAllocations(item)
+      .filter(isJaneSetDiscountAllocation)
+      .reduce((sum, allocation) => sum + getDiscountAllocationAmount(allocation), 0);
+  }
+
+  function getJaneSetPairQuantity(set) {
+    const topQuantity = Math.max(Number(set?.top?.quantity) || 0, 0);
+    const pantsQuantity = Math.max(Number(set?.pants?.quantity) || 0, 0);
+    return Math.min(topQuantity, pantsQuantity);
+  }
+
+  function getJaneDiscountPresentation(cart, displayItems) {
+    const sets = (displayItems || []).filter((entry) => entry.type === 'jane-set');
+    const pairCount = sets.reduce((sum, set) => sum + getJaneSetPairQuantity(set), 0);
+    const maximumJaneSavings = pairCount * janeSetPricing.savingsPerSetCents;
+    const items = cart?.items || [];
+    const namedJaneSavings = items.reduce((sum, item) => sum + getJaneAllocationAmount(item), 0);
+    const totalLineSavings = items.reduce((sum, item) => sum + getLineDiscountAmount(item), 0);
+    const canUseUnlabelledJaneFallback = namedJaneSavings === 0 &&
+      maximumJaneSavings > 0 &&
+      totalLineSavings > 0 &&
+      totalLineSavings <= maximumJaneSavings &&
+      totalLineSavings % janeSetPricing.savingsPerSetCents === 0;
+    const janeSavings = Math.min(
+      namedJaneSavings || (canUseUnlabelledJaneFallback ? totalLineSavings : 0),
+      maximumJaneSavings
+    );
+    const setSavings = new Map();
+    let savingsRemaining = janeSavings;
+
+    sets.forEach((set) => {
+      const capacity = getJaneSetPairQuantity(set) * janeSetPricing.savingsPerSetCents;
+      const savings = Math.min(capacity, savingsRemaining);
+      setSavings.set(set.setId, savings);
+      savingsRemaining -= savings;
+    });
+
+    return {
+      janeSavings,
+      pairCount,
+      setSavings,
+      lineJaneSavings: new Map(items.map((item) => [
+        item.key,
+        canUseUnlabelledJaneFallback ? getLineDiscountAmount(item) : getJaneAllocationAmount(item)
+      ]))
+    };
+  }
+
   const parseMoneyToCents = (value) => {
     const normalized = String(value || '').replace(/[^0-9.]/g, '');
     const amount = Number.parseFloat(normalized);
@@ -1457,14 +1539,15 @@
     }
 
     renderSummary(cart) {
-      const visualItemCount = this.getDisplayItems(cart).length;
+      const displayItems = this.getDisplayItems(cart);
+      const visualItemCount = displayItems.length;
       const count = this.querySelector(selectors.count);
 
       if (count) count.textContent = `(${visualItemCount})`;
-      this.renderSubtotal(cart);
+      this.renderSubtotal(cart, getJaneDiscountPresentation(cart, displayItems));
     }
 
-    renderSubtotal(cart) {
+    renderSubtotal(cart, discountPresentation) {
       const subtotalWrap = this.querySelector(selectors.subtotalWrap);
       const itemCount = Number(cart?.item_count) || 0;
       const itemLabel = `${itemCount} item${itemCount === 1 ? '' : 's'}`;
@@ -1481,6 +1564,9 @@
       }
 
       const discount = Math.max(originalSubtotal - finalSubtotal, reportedDiscount, 0);
+      const janeSavings = Math.min(discountPresentation?.janeSavings || 0, discount);
+      const orderDiscount = Math.max(discount - janeSavings, 0);
+      const subtotalAfterJane = Math.max(originalSubtotal - janeSavings, 0);
 
       if (!subtotalWrap) {
         const subtotalElement = this.querySelector(selectors.subtotal);
@@ -1494,13 +1580,29 @@
             <span>Original Subtotal</span>
             <strong class="kasya-aov-cart__subtotal-amount">${formatMoney(originalSubtotal)}</strong>
           </div>
-          <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--savings">
-            <span>Discount</span>
-            <strong>− ${formatMoney(discount)}</strong>
-          </div>
+          ${janeSavings > 0 ? `
+            <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--savings">
+              <span>Jane Set savings</span>
+              <strong>− ${formatMoney(janeSavings)}</strong>
+            </div>
+            <div class="kasya-aov-cart__subtotal-row">
+              <span>Subtotal after Jane Set</span>
+              <strong class="kasya-aov-cart__subtotal-amount">${formatMoney(subtotalAfterJane)}</strong>
+            </div>
+          ` : ''}
+          ${orderDiscount > 0 ? `
+            <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--savings">
+              <span>Order discount</span>
+              <strong>− ${formatMoney(orderDiscount)}</strong>
+            </div>
+          ` : ''}
           <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--final">
-            <span>Subtotal (${itemLabel})</span>
+            <span>Final subtotal (${itemLabel})</span>
             <strong class="kasya-aov-cart__subtotal-amount" data-kasya-aov-cart-subtotal>${formatMoney(finalSubtotal)}</strong>
+          </div>
+          <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--total-savings">
+            <span>Total savings</span>
+            <strong>− ${formatMoney(discount)}</strong>
           </div>
         `;
         return;
@@ -1514,7 +1616,7 @@
       `;
     }
 
-    renderLinePrice(originalLinePrice, finalLinePrice) {
+    renderLinePrice(originalLinePrice, finalLinePrice, savingsLabel = '') {
       const finalPrice = Math.max(Number(finalLinePrice) || 0, 0);
       const originalPrice = Math.max(Number(originalLinePrice) || finalPrice, 0);
 
@@ -1522,6 +1624,7 @@
         return `
           <s class="kasya-aov-cart__item-price-original">${formatMoney(originalPrice)}</s>
           <span class="kasya-aov-cart__item-price-final">${formatMoney(finalPrice)}</span>
+          ${savingsLabel ? `<span class="kasya-aov-cart__item-price-saving">${this.escapeHtml(savingsLabel)}</span>` : ''}
         `;
       }
 
@@ -1596,16 +1699,19 @@
         return;
       }
 
-      container.innerHTML = this.getDisplayItems(cart).map((item) => {
+      const displayItems = this.getDisplayItems(cart);
+      const discountPresentation = getJaneDiscountPresentation(cart, displayItems);
+
+      container.innerHTML = displayItems.map((item) => {
         if (item.type === 'jane-set') {
-          return this.renderJaneSetItem(item);
+          return this.renderJaneSetItem(item, discountPresentation);
         }
 
-        return this.renderItem(item.item, item.line);
+        return this.renderItem(item.item, item.line, discountPresentation);
       }).join('');
     }
 
-    renderItem(item, line) {
+    renderItem(item, line, discountPresentation) {
       const imageMarkup = item.image
         ? `<img src="${item.image}" alt="${this.escapeHtml(item.product_title)}" loading="lazy" width="110" height="132" class="kasya-aov-cart__item-image">`
         : '<span class="kasya-aov-cart__item-image kasya-aov-cart__item-image--placeholder"></span>';
@@ -1619,6 +1725,12 @@
       const lowStockMarkup = lowStockCount
         ? `<p class="kasya-aov-cart__item-low-stock">${lowStockCount} only left</p>`
         : '';
+
+      const janeAllocation = discountPresentation?.lineJaneSavings.get(item.key) || 0;
+      const presentationFinalPrice = Math.min(
+        Number(item.original_line_price) || Number(item.final_line_price) || 0,
+        (Number(item.final_line_price) || 0) + janeAllocation
+      );
 
       return `
         <article class="kasya-aov-cart__item" data-kasya-aov-cart-item data-line="${line}" data-key="${this.escapeHtml(item.key)}">
@@ -1641,14 +1753,14 @@
                 <span class="kasya-aov-cart__quantity-value" data-kasya-aov-cart-quantity>${item.quantity}</span>
                 <button type="button" class="kasya-aov-cart__quantity-button" data-kasya-aov-cart-increase data-line="${line}" data-key="${this.escapeHtml(item.key)}" data-line-key="${this.escapeHtml(item.key)}" aria-label="Increase quantity for ${this.escapeHtml(item.product_title)}">+</button>
               </div>
-              <div class="kasya-aov-cart__item-price">${this.renderLinePrice(item.original_line_price, item.final_line_price)}</div>
+              <div class="kasya-aov-cart__item-price">${this.renderLinePrice(item.original_line_price, presentationFinalPrice)}</div>
             </div>
           </div>
         </article>
       `;
     }
 
-    renderJaneSetItem(set) {
+    renderJaneSetItem(set, discountPresentation) {
       const image = set.parent?.properties?._set_parent_image || set.parent?.image || set.top?.properties?._set_parent_image || set.top?.image || set.pants?.image;
       const imageMarkup = image
         ? `<img src="${image}" alt="Jane Set" loading="lazy" width="110" height="132" class="kasya-aov-cart__item-image">`
@@ -1666,7 +1778,16 @@
       const originalPrice = (set.items || []).reduce((sum, item) => {
         return sum + (Number(item.original_line_price) || Number(item.final_line_price) || 0);
       }, 0);
-      const finalPrice = this.getJaneSetActualPrice(set);
+      const actualFinalPrice = this.getJaneSetActualPrice(set);
+      const actualJaneSavings = (set.items || []).reduce((sum, item) => {
+        return sum + (discountPresentation?.lineJaneSavings.get(item.key) || 0);
+      }, 0);
+      const nonJaneSavings = Math.max(originalPrice - actualFinalPrice - actualJaneSavings, 0);
+      const janeSavings = discountPresentation?.setSavings.get(set.setId) || 0;
+      const finalPrice = Math.max(originalPrice - nonJaneSavings - janeSavings, 0);
+      const savingsLabel = janeSavings > 0
+        ? `JANE SET SAVINGS ${formatMoneyClean(janeSavings)}`
+        : '';
       const keys = (set.items || []).map((item) => item.key).filter(Boolean).join(',');
       const setColor = this.getJaneSetColor(set);
 
@@ -1690,7 +1811,7 @@
               <div class="kasya-aov-cart__quantity kasya-aov-cart__quantity--locked" aria-label="Jane Set quantity">
                 <span class="kasya-aov-cart__quantity-value">${quantity}</span>
               </div>
-              <div class="kasya-aov-cart__item-price">${this.renderLinePrice(originalPrice, finalPrice)}</div>
+              <div class="kasya-aov-cart__item-price">${this.renderLinePrice(originalPrice, finalPrice, savingsLabel)}</div>
             </div>
           </div>
         </article>
