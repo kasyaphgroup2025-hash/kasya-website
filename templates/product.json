@@ -1,1 +1,288 @@
-{"sections":{"main":{"type":"main-product","blocks":{"title_MBAjXg":{"type":"title","settings":{"show_vendor_link":true,"title_size":"h2"}},"price_NjcLtW":{"type":"price","settings":{"variant_price":false}},"aov_ai_bundle_mix_match_offer_inline_TpqcwW":{"type":"shopify:\/\/apps\/aov-ai-bundle\/blocks\/mix-match-offer-inline\/0335d423-143c-4ad7-b224-99a1db74a9ee","settings":{}},"custom_liquid_4PFXDf":{"type":"custom_liquid","name":"SIZE CHART","settings":{"custom_liquid":"{%- assign sc_image = product.metafields.custom.size_chart_image -%}\n{%- if sc_image != blank -%}\n  <style>\n    .ks-sizeguide-btn {\n      display:inline-flex; align-items:center; gap:8px;\n      padding:10px 14px; border:1px solid #111; border-radius:999px;\n      background:#fff; color:#111; font-weight:600; cursor:pointer;\n      transition:transform .12s ease, background .12s ease, color .12s ease;\n    }\n    .ks-sizeguide-btn:hover { transform:translateY(-1px); }\n\n    .ks-sc-backdrop {\n      position:fixed; inset:0; background:rgba(0,0,0,.5);\n      display:none; align-items:center; justify-content:center; z-index:9999;\n    }\n    .ks-sc-backdrop.ks-open { display:flex; }\n\n    .ks-sc-modal {\n      width:min(900px, 92vw); max-height:90vh; overflow:auto;\n      background:#fff; border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.25);\n      position:relative; padding:20px;\n    }\n    .ks-sc-close {\n      position:absolute; top:10px; right:10px;\n      width:32px; height:32px; border:none; background:#fff;\n      border-radius:50%; font-size:20px; cursor:pointer;\n    }\n    .ks-sc-content img {\n      width:100%; height:auto; border-radius:10px;\n    }\n  <\/style>\n\n  <button type=\"button\" class=\"ks-sizeguide-btn\" data-sc-open>\n    <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 5h16v2H4V5zm0 6h16v2H4v-2zm0 6h10v2H4v-2z\" fill=\"currentColor\"\/><\/svg>\n    Size Guide\n  <\/button>\n\n  <div class=\"ks-sc-backdrop\" data-sc-backdrop>\n    <div class=\"ks-sc-modal\">\n      <button type=\"button\" class=\"ks-sc-close\" data-sc-close>&times;<\/button>\n      <div class=\"ks-sc-content\">\n        <img src=\"{{ sc_image | image_url }}\" alt=\"{{ product.title }} Size Chart\">\n      <\/div>\n    <\/div>\n  <\/div>\n\n  <script>\n    (function(){\n      var openBtn = document.querySelector('[data-sc-open]');\n      var backdrop = document.querySelector('[data-sc-backdrop]');\n      var closeBtn = document.querySelector('[data-sc-close]');\n      if(!openBtn || !backdrop) return;\n      openBtn.addEventListener('click', ()=>{backdrop.classList.add('ks-open');document.body.style.overflow='hidden';});\n      closeBtn.addEventListener('click', ()=>{backdrop.classList.remove('ks-open');document.body.style.overflow='';});\n      backdrop.addEventListener('click', e=>{if(e.target===backdrop){backdrop.classList.remove('ks-open');document.body.style.overflow='';}});\n    })();\n  <\/script>\n{%- endif -%}"}},"sale_box_gfjmfm":{"type":"sale_box","settings":{"show_free_shipping_bar":true,"enable_compare":true,"picker_type":"button","enable_color_swatches":true,"color_swatches_style":"variant","size_chart_enable":false,"size_chart_option":"size","size_chart_link_label":"Size chart","size_chart_text":"","size_chart_page":"","size_chart_same_row_size_option":false,"quantity_selector_enable":true,"show_dynamic_checkout":true,"show_gift_card_recipient":false}},"share_gPWDME":{"type":"share","disabled":true,"settings":{"share_label":"Share","enable_floating_layout":false,"share_on_facebook":true,"share_on_twitter":true,"share_on_pinterest":true,"share_on_email":true,"share_link":true}},"complementary_fG8qbT":{"type":"complementary","settings":{"block_heading":"Pairs well with","make_collapsible_row":true,"icon":"sale","product_list_limit":5,"total_enable":true,"total_label":"Total:","button_enable":true,"button_label":"Add items to cart","image_ratio":"square"}},"description_zzBhiV":{"type":"description","settings":{"truncate_description":0,"read_more_button":"Read more"}},"custom_liquid_DKJkLd":{"type":"custom_liquid","name":"PROD DETAILS","settings":{"custom_liquid":"{%- assign details_mf = product.metafields.kasya.details -%}\n{%- assign size_fit_mf = product.metafields.kasya.size_fit -%}\n{%- assign care_mf = product.metafields.kasya.care -%}\n{%- assign style_tips_mf = product.metafields.kasya.style_tips -%}\n{%- assign ship_returns_mf = product.metafields.kasya.shipping_returns -%}\n\n{%- if details_mf != blank or size_fit_mf != blank or care_mf != blank or style_tips_mf != blank or ship_returns_mf != blank -%}\n\n<style>\n\/* ========= OA PREMIUM ACCORDION ========= *\/\n.kasya-acc{\n  margin-top:34px;\n  border-top:1px solid rgba(0,0,0,.14);\n}\n\n\/* Item *\/\n.kasya-acc__item{\n  border-bottom:1px solid rgba(0,0,0,.14);\n  padding:8px 0;\n  position: relative;\n  transition: background .35s ease, box-shadow .35s ease;\n}\n\n\/* Open state highlight *\/\n.kasya-acc__item[open]{\n  background: rgba(0,0,0,.02);\n  box-shadow: inset 0 0 0 9999px rgba(0,0,0,.012);\n}\n\n\/* Left accent bar when open *\/\n.kasya-acc__item[open]::before{\n  content:\"\";\n  position:absolute;\n  left:0;\n  top:10px;\n  bottom:10px;\n  width:3px;\n  background: rgba(0,0,0,.55);\n  border-radius: 3px;\n  opacity:.75;\n}\n\n\/* Title row *\/\n.kasya-acc__item summary{\n  list-style:none;\n  cursor:pointer;\n  padding:26px 0;              \/* ⬅️ mas airy *\/\n  display:flex;\n  align-items:center;\n  justify-content:space-between;\n  gap:16px;\n  font-weight:800;\n  font-size:1.42rem;           \/* ⬅️ HEADER MAS MALAKI *\/\n  letter-spacing:.2px;\n  transition: transform .25s ease, opacity .25s ease;\n  user-select:none;\n  -webkit-user-select:none;\n}\n\n.kasya-acc__item summary:hover{\n  transform: translateX(8px);\n  opacity:.92;\n}\n\n.kasya-acc__item summary::-webkit-details-marker{ display:none; }\n\n\/* Icon *\/\n.kasya-acc__icon{\n  width:28px;\n  height:28px;\n  flex:0 0 28px;\n  position:relative;\n  transform-origin:center;\n  transition: transform .35s cubic-bezier(.2,.9,.2,1);\n}\n\n.kasya-acc__icon:before,\n.kasya-acc__icon:after{\n  content:\"\";\n  position:absolute;\n  left:0;\n  right:0;\n  top:50%;\n  height:2.4px;                \/* ⬅️ thicker *\/\n  background:currentColor;\n  transform:translateY(-50%);\n  opacity:.9;\n}\n\n.kasya-acc__icon:after{\n  transform:translateY(-50%) rotate(90deg);\n  transition: transform .35s cubic-bezier(.2,.9,.2,1);\n}\n\n\/* Open icon: pop + rotate + tiny bounce *\/\ndetails[open] .kasya-acc__icon{\n  transform: rotate(180deg) scale(1.18);\n}\n\ndetails[open] .kasya-acc__icon:after{\n  transform:translateY(-50%) rotate(0deg);\n}\n\n\/* Content: BIG + animated *\/\n.kasya-acc__content{\n  overflow:hidden;\n  max-height:0;\n  opacity:0;\n  transform: translateY(-18px) scale(.985);\n  transition: max-height .55s cubic-bezier(.2,.9,.2,1),\n              opacity .35s ease,\n              transform .45s ease;\n  padding: 0;\n  font-size:1.22rem;           \/* ⬅️ DESCRIPTION MAS MALAKI *\/\n  line-height:1.95;            \/* ⬅️ airy *\/\n  color: rgba(0,0,0,.88);\n}\n\n\/* Open *\/\ndetails[open] .kasya-acc__content{\n  max-height: 1600px;\n  opacity:1;\n  transform: translateY(0) scale(1);\n  padding: 0 0 28px 0;\n}\n\n\/* Text spacing *\/\n.kasya-acc__content p{ margin:0 0 16px 0; }\n.kasya-acc__content p:last-child{ margin-bottom:0; }\n.kasya-acc__content ul,\n.kasya-acc__content ol{ margin:14px 0 0 24px; }\n.kasya-acc__content li{ margin:10px 0; }\n\n\/* Optional: subtle \"glow\" on open (not too neon) *\/\n.kasya-acc__item[open]{\n  box-shadow: 0 10px 30px rgba(0,0,0,.06);\n  border-radius: 10px;\n  padding-left: 12px;\n  padding-right: 12px;\n}\n\n\/* Reduce motion accessibility *\/\n@media (prefers-reduced-motion: reduce){\n  .kasya-acc__item,\n  .kasya-acc__item summary,\n  .kasya-acc__icon,\n  .kasya-acc__icon:after,\n  .kasya-acc__content{\n    transition:none !important;\n  }\n}\n<\/style>\n\n<div class=\"kasya-acc\" aria-label=\"Product information\">\n\n  {%- if details_mf != blank -%}\n    <details class=\"kasya-acc__item\">\n      <summary>\n        <span>Product Details<\/span>\n        <span class=\"kasya-acc__icon\" aria-hidden=\"true\"><\/span>\n      <\/summary>\n      <div class=\"kasya-acc__content\">\n        {{ details_mf | metafield_tag }}\n      <\/div>\n    <\/details>\n  {%- endif -%}\n\n  {%- if size_fit_mf != blank -%}\n    <details class=\"kasya-acc__item\">\n      <summary>\n        <span>Size &amp; Fit<\/span>\n        <span class=\"kasya-acc__icon\" aria-hidden=\"true\"><\/span>\n      <\/summary>\n      <div class=\"kasya-acc__content\">\n        {{ size_fit_mf | metafield_tag }}\n      <\/div>\n    <\/details>\n  {%- endif -%}\n\n  {%- if care_mf != blank -%}\n    <details class=\"kasya-acc__item\">\n      <summary>\n        <span>Care Instructions<\/span>\n        <span class=\"kasya-acc__icon\" aria-hidden=\"true\"><\/span>\n      <\/summary>\n      <div class=\"kasya-acc__content\">\n        {{ care_mf | metafield_tag }}\n      <\/div>\n    <\/details>\n  {%- endif -%}\n\n  {%- if style_tips_mf != blank -%}\n    <details class=\"kasya-acc__item\">\n      <summary>\n        <span>Style Tips<\/span>\n        <span class=\"kasya-acc__icon\" aria-hidden=\"true\"><\/span>\n      <\/summary>\n      <div class=\"kasya-acc__content\">\n        {{ style_tips_mf | metafield_tag }}\n      <\/div>\n    <\/details>\n  {%- endif -%}\n\n  {%- if ship_returns_mf != blank -%}\n    <details class=\"kasya-acc__item\">\n      <summary>\n        <span>Shipping &amp; Returns<\/span>\n        <span class=\"kasya-acc__icon\" aria-hidden=\"true\"><\/span>\n      <\/summary>\n      <div class=\"kasya-acc__content\">\n        {{ ship_returns_mf | metafield_tag }}\n      <\/div>\n    <\/details>\n  {%- endif -%}\n\n<\/div>\n\n<script>\n\/* ONE OPEN AT A TIME *\/\n(function(){\n  var items = document.querySelectorAll('.kasya-acc__item');\n  items.forEach(function(item){\n    item.addEventListener('toggle', function(){\n      if (item.open){\n        items.forEach(function(other){\n          if (other !== item) other.removeAttribute('open');\n        });\n      }\n    });\n  });\n})();\n<\/script>\n\n{%- endif -%}"}},"aov_ai_bundle_offer_inline_Nad3fp":{"type":"shopify:\/\/apps\/aov-ai-bundle\/blocks\/offer-inline\/0335d423-143c-4ad7-b224-99a1db74a9ee","disabled":true,"settings":{}},"aov_ai_bundle_offer_fixed_9RaYxp":{"type":"shopify:\/\/apps\/aov-ai-bundle\/blocks\/offer-fixed\/0335d423-143c-4ad7-b224-99a1db74a9ee","disabled":true,"settings":{}},"aov_ai_bundle_offer_volume_bLARnV":{"type":"shopify:\/\/apps\/aov-ai-bundle\/blocks\/offer-volume\/0335d423-143c-4ad7-b224-99a1db74a9ee","disabled":true,"settings":{}}},"block_order":["title_MBAjXg","price_NjcLtW","aov_ai_bundle_mix_match_offer_inline_TpqcwW","custom_liquid_4PFXDf","sale_box_gfjmfm","share_gPWDME","complementary_fG8qbT","description_zzBhiV","custom_liquid_DKJkLd","aov_ai_bundle_offer_inline_Nad3fp","aov_ai_bundle_offer_fixed_9RaYxp","aov_ai_bundle_offer_volume_bLARnV"],"custom_css":[],"settings":{"section_width":"page-width","use_background_input":true,"enable_sticky_info":true,"enable_sticky_cart":true,"sticky_cart":"on_scroll_up","show_next_prev_products":true,"auto_scroll_up_mobile":false,"inherit_color_scheme":true,"color_scheme":"","gap_desktop":5,"gap_mobile":10,"default_image":"variant_image","media_position":"left","gallery_layout":"stacked","thumbnail_position":"left","media_size":"medium","image_ratio":"adapt","image_fit":true,"disable_images_lightbox":false,"mobile_thumbnails":"show","hide_variants":false,"enable_video_looping":false,"show_custom_badges_on":"all","custom_badges_position":"right","padding_top":0,"padding_bottom":40}},"1761185161a5575836":{"type":"apps","blocks":{"aov_ai_bundle_offer_bundle_builder_9hQXQ3":{"type":"shopify:\/\/apps\/aov-ai-bundle\/blocks\/offer-bundle-builder\/0335d423-143c-4ad7-b224-99a1db74a9ee","disabled":true,"settings":{}}},"block_order":["aov_ai_bundle_offer_bundle_builder_9hQXQ3"],"settings":{"include_margins":true}},"product-recommendations":{"type":"product-recommendations","settings":{"title":"You May Also Like","subtitle":"","heading_size":"h1","products_to_show":10,"columns_desktop":4,"full_width":false,"enable_desktop_slider":true,"color_scheme":"background-1","image_ratio":"portrait","show_secondary_image":true,"show_vendor":true,"show_rating":true,"enable_quick_add":true,"enable_compare":true,"enable_quick_view":true,"show_color_swatches":true,"color_swatches_style":"custom","inherit_card_color_scheme":true,"card_color_scheme":"","columns_tablet":"3","columns_mobile":"2","swipe_on_mobile":true,"padding_top":72,"padding_bottom":40}},"17701733055b705540":{"type":"_blocks","settings":{"title":"Product information","subtitle":"","heading_size":"h1","section_width":"grid","content_direction_desktop":"column","horizontal_alignment_desktop":"flex-start","vertical_alignment_desktop":"center","horizontal_alignment_flex_direction_column_desktop":"flex-start","gap_desktop":12,"content_direction_mobile":"column","horizontal_alignment_mobile":"left","vertical_alignment_mobile":"center","horizontal_alignment_flex_direction_column_mobile":"start","gap_mobile":12,"enable_section_box_layout":false,"color_scheme":"","padding_top":36,"padding_bottom":36}},"42ea5b86-e5b3-44b9-8a28-410eec1590ed":{"type":"recently-viewed-products","disabled":true,"settings":{"title":"Recently viewed","subtitle":"","heading_size":"h2","full_width":false,"color_scheme":"","padding_top":40,"padding_bottom":52}},"featured_collection_qHm9HN":{"type":"featured-collection","name":"t:names.product_list_carousel","settings":{"title":"Save More with Bundles","subtitle":"","collection":"bundle-collections","heading_size":"h1","products_to_show":36,"columns_desktop":4,"full_width":false,"show_view_all":true,"enable_desktop_slider":true,"enable_section_box_layout":false,"color_scheme":"","image_position_desktop":"left","image_size":"large","image_height":"adapt_product_list","image_height_mobile":"34","banner_link":"","hide_banner_mobile":false,"image_ratio":"adapt","show_secondary_image":true,"show_vendor":false,"show_rating":false,"enable_quick_add":true,"enable_compare":true,"enable_quick_view":true,"show_color_swatches":true,"color_swatches_style":"custom","inherit_card_color_scheme":true,"card_color_scheme":"","columns_tablet":"3","columns_mobile":"1","swipe_on_mobile":true,"padding_top":36,"padding_bottom":36}}},"order":["main","1761185161a5575836","product-recommendations","17701733055b705540","42ea5b86-e5b3-44b9-8a28-410eec1590ed","featured_collection_qHm9HN"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title_MBAjXg": {
+          "type": "title",
+          "settings": {
+            "show_vendor_link": true,
+            "title_size": "h2"
+          }
+        },
+        "price_NjcLtW": {
+          "type": "price",
+          "settings": {
+            "variant_price": false
+          }
+        },
+        "aov_ai_bundle_mix_match_offer_inline_TpqcwW": {
+          "type": "shopify://apps/aov-ai-bundle/blocks/mix-match-offer-inline/0335d423-143c-4ad7-b224-99a1db74a9ee",
+          "settings": {}
+        },
+        "custom_liquid_4PFXDf": {
+          "type": "custom_liquid",
+          "name": "SIZE CHART",
+          "settings": {
+            "custom_liquid": "{%- assign sc_image = product.metafields.custom.size_chart_image -%}\n{%- if sc_image != blank -%}\n  <style>\n    .ks-sizeguide-btn {\n      display:inline-flex; align-items:center; gap:8px;\n      padding:10px 14px; border:1px solid #111; border-radius:999px;\n      background:#fff; color:#111; font-weight:600; cursor:pointer;\n      transition:transform .12s ease, background .12s ease, color .12s ease;\n    }\n    .ks-sizeguide-btn:hover { transform:translateY(-1px); }\n\n    .ks-sc-backdrop {\n      position:fixed; inset:0; background:rgba(0,0,0,.5);\n      display:none; align-items:center; justify-content:center; z-index:9999;\n    }\n    .ks-sc-backdrop.ks-open { display:flex; }\n\n    .ks-sc-modal {\n      width:min(900px, 92vw); max-height:90vh; overflow:auto;\n      background:#fff; border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.25);\n      position:relative; padding:20px;\n    }\n    .ks-sc-close {\n      position:absolute; top:10px; right:10px;\n      width:32px; height:32px; border:none; background:#fff;\n      border-radius:50%; font-size:20px; cursor:pointer;\n    }\n    .ks-sc-content img {\n      width:100%; height:auto; border-radius:10px;\n    }\n  </style>\n\n  <button type=\"button\" class=\"ks-sizeguide-btn\" data-sc-open>\n    <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 5h16v2H4V5zm0 6h16v2H4v-2zm0 6h10v2H4v-2z\" fill=\"currentColor\"/></svg>\n    Size Guide\n  </button>\n\n  <div class=\"ks-sc-backdrop\" data-sc-backdrop>\n    <div class=\"ks-sc-modal\">\n      <button type=\"button\" class=\"ks-sc-close\" data-sc-close>&times;</button>\n      <div class=\"ks-sc-content\">\n        <img src=\"{{ sc_image | image_url }}\" alt=\"{{ product.title }} Size Chart\">\n      </div>\n    </div>\n  </div>\n\n  <script>\n    (function(){\n      var openBtn = document.querySelector('[data-sc-open]');\n      var backdrop = document.querySelector('[data-sc-backdrop]');\n      var closeBtn = document.querySelector('[data-sc-close]');\n      if(!openBtn || !backdrop) return;\n      openBtn.addEventListener('click', ()=>{backdrop.classList.add('ks-open');document.body.style.overflow='hidden';});\n      closeBtn.addEventListener('click', ()=>{backdrop.classList.remove('ks-open');document.body.style.overflow='';});\n      backdrop.addEventListener('click', e=>{if(e.target===backdrop){backdrop.classList.remove('ks-open');document.body.style.overflow='';}});\n    })();\n  </script>\n{%- endif -%}"
+          }
+        },
+        "sale_box_gfjmfm": {
+          "type": "sale_box",
+          "settings": {
+            "show_free_shipping_bar": true,
+            "enable_compare": true,
+            "picker_type": "button",
+            "enable_color_swatches": true,
+            "color_swatches_style": "variant",
+            "size_chart_enable": false,
+            "size_chart_option": "size",
+            "size_chart_link_label": "Size chart",
+            "size_chart_text": "",
+            "size_chart_page": "",
+            "size_chart_same_row_size_option": false,
+            "quantity_selector_enable": true,
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": false
+          }
+        },
+        "share_gPWDME": {
+          "type": "share",
+          "disabled": true,
+          "settings": {
+            "share_label": "Share",
+            "enable_floating_layout": false,
+            "share_on_facebook": true,
+            "share_on_twitter": true,
+            "share_on_pinterest": true,
+            "share_on_email": true,
+            "share_link": true
+          }
+        },
+        "complementary_fG8qbT": {
+          "type": "complementary",
+          "settings": {
+            "block_heading": "Pairs well with",
+            "make_collapsible_row": true,
+            "icon": "sale",
+            "product_list_limit": 5,
+            "total_enable": true,
+            "total_label": "Total:",
+            "button_enable": true,
+            "button_label": "Add items to cart",
+            "image_ratio": "square"
+          }
+        },
+        "description_zzBhiV": {
+          "type": "description",
+          "settings": {
+            "truncate_description": 0,
+            "read_more_button": "Read more"
+          }
+        },
+        "custom_liquid_DKJkLd": {
+          "type": "custom_liquid",
+          "name": "PROD DETAILS",
+          "settings": {
+            "custom_liquid": "{%- assign details_mf = product.metafields.kasya.details -%}\n{%- assign size_fit_mf = product.metafields.kasya.size_fit -%}\n{%- assign care_mf = product.metafields.kasya.care -%}\n{%- assign style_tips_mf = product.metafields.kasya.style_tips -%}\n{%- assign ship_returns_mf = product.metafields.kasya.shipping_returns -%}\n\n{%- if details_mf != blank or size_fit_mf != blank or care_mf != blank or style_tips_mf != blank or ship_returns_mf != blank -%}\n\n<style>\n/* ========= OA PREMIUM ACCORDION ========= */\n.kasya-acc{\n  margin-top:34px;\n  border-top:1px solid rgba(0,0,0,.14);\n}\n\n/* Item */\n.kasya-acc__item{\n  border-bottom:1px solid rgba(0,0,0,.14);\n  padding:8px 0;\n  position: relative;\n  transition: background .35s ease, box-shadow .35s ease;\n}\n\n/* Open state highlight */\n.kasya-acc__item[open]{\n  background: rgba(0,0,0,.02);\n  box-shadow: inset 0 0 0 9999px rgba(0,0,0,.012);\n}\n\n/* Left accent bar when open */\n.kasya-acc__item[open]::before{\n  content:\"\";\n  position:absolute;\n  left:0;\n  top:10px;\n  bottom:10px;\n  width:3px;\n  background: rgba(0,0,0,.55);\n  border-radius: 3px;\n  opacity:.75;\n}\n\n/* Title row */\n.kasya-acc__item summary{\n  list-style:none;\n  cursor:pointer;\n  padding:26px 0;              /* ⬅️ mas airy */\n  display:flex;\n  align-items:center;\n  justify-content:space-between;\n  gap:16px;\n  font-weight:800;\n  font-size:1.42rem;           /* ⬅️ HEADER MAS MALAKI */\n  letter-spacing:.2px;\n  transition: transform .25s ease, opacity .25s ease;\n  user-select:none;\n  -webkit-user-select:none;\n}\n\n.kasya-acc__item summary:hover{\n  transform: translateX(8px);\n  opacity:.92;\n}\n\n.kasya-acc__item summary::-webkit-details-marker{ display:none; }\n\n/* Icon */\n.kasya-acc__icon{\n  width:28px;\n  height:28px;\n  flex:0 0 28px;\n  position:relative;\n  transform-origin:center;\n  transition: transform .35s cubic-bezier(.2,.9,.2,1);\n}\n\n.kasya-acc__icon:before,\n.kasya-acc__icon:after{\n  content:\"\";\n  position:absolute;\n  left:0;\n  right:0;\n  top:50%;\n  height:2.4px;                /* ⬅️ thicker */\n  background:currentColor;\n  transform:translateY(-50%);\n  opacity:.9;\n}\n\n.kasya-acc__icon:after{\n  transform:translateY(-50%) rotate(90deg);\n  transition: transform .35s cubic-bezier(.2,.9,.2,1);\n}\n\n/* Open icon: pop + rotate + tiny bounce */\ndetails[open] .kasya-acc__icon{\n  transform: rotate(180deg) scale(1.18);\n}\n\ndetails[open] .kasya-acc__icon:after{\n  transform:translateY(-50%) rotate(0deg);\n}\n\n/* Content: BIG + animated */\n.kasya-acc__content{\n  overflow:hidden;\n  max-height:0;\n  opacity:0;\n  transform: translateY(-18px) scale(.985);\n  transition: max-height .55s cubic-bezier(.2,.9,.2,1),\n              opacity .35s ease,\n              transform .45s ease;\n  padding: 0;\n  font-size:1.22rem;           /* ⬅️ DESCRIPTION MAS MALAKI */\n  line-height:1.95;            /* ⬅️ airy */\n  color: rgba(0,0,0,.88);\n}\n\n/* Open */\ndetails[open] .kasya-acc__content{\n  max-height: 1600px;\n  opacity:1;\n  transform: translateY(0) scale(1);\n  padding: 0 0 28px 0;\n}\n\n/* Text spacing */\n.kasya-acc__content p{ margin:0 0 16px 0; }\n.kasya-acc__content p:last-child{ margin-bottom:0; }\n.kasya-acc__content ul,\n.kasya-acc__content ol{ margin:14px 0 0 24px; }\n.kasya-acc__content li{ margin:10px 0; }\n\n/* Optional: subtle \"glow\" on open (not too neon) */\n.kasya-acc__item[open]{\n  box-shadow: 0 10px 30px rgba(0,0,0,.06);\n  border-radius: 10px;\n  padding-left: 12px;\n  padding-right: 12px;\n}\n\n/* Reduce motion accessibility */\n@media (prefers-reduced-motion: reduce){\n  .kasya-acc__item,\n  .kasya-acc__item summary,\n  .kasya-acc__icon,\n  .kasya-acc__icon:after,\n  .kasya-acc__content{\n    transition:none !important;\n  }\n}\n</style>\n\n<div class=\"kasya-acc\" aria-label=\"Product information\">\n\n  {%- if details_mf != blank -%}\n    <details class=\"kasya-acc__item\">\n      <summary>\n        <span>Product Details</span>\n        <span class=\"kasya-acc__icon\" aria-hidden=\"true\"></span>\n      </summary>\n      <div class=\"kasya-acc__content\">\n        {{ details_mf | metafield_tag }}\n      </div>\n    </details>\n  {%- endif -%}\n\n  {%- if size_fit_mf != blank -%}\n    <details class=\"kasya-acc__item\">\n      <summary>\n        <span>Size &amp; Fit</span>\n        <span class=\"kasya-acc__icon\" aria-hidden=\"true\"></span>\n      </summary>\n      <div class=\"kasya-acc__content\">\n        {{ size_fit_mf | metafield_tag }}\n      </div>\n    </details>\n  {%- endif -%}\n\n  {%- if care_mf != blank -%}\n    <details class=\"kasya-acc__item\">\n      <summary>\n        <span>Care Instructions</span>\n        <span class=\"kasya-acc__icon\" aria-hidden=\"true\"></span>\n      </summary>\n      <div class=\"kasya-acc__content\">\n        {{ care_mf | metafield_tag }}\n      </div>\n    </details>\n  {%- endif -%}\n\n  {%- if style_tips_mf != blank -%}\n    <details class=\"kasya-acc__item\">\n      <summary>\n        <span>Style Tips</span>\n        <span class=\"kasya-acc__icon\" aria-hidden=\"true\"></span>\n      </summary>\n      <div class=\"kasya-acc__content\">\n        {{ style_tips_mf | metafield_tag }}\n      </div>\n    </details>\n  {%- endif -%}\n\n  {%- if ship_returns_mf != blank -%}\n    <details class=\"kasya-acc__item\">\n      <summary>\n        <span>Shipping &amp; Returns</span>\n        <span class=\"kasya-acc__icon\" aria-hidden=\"true\"></span>\n      </summary>\n      <div class=\"kasya-acc__content\">\n        {{ ship_returns_mf | metafield_tag }}\n      </div>\n    </details>\n  {%- endif -%}\n\n</div>\n\n<script>\n/* ONE OPEN AT A TIME */\n(function(){\n  var items = document.querySelectorAll('.kasya-acc__item');\n  items.forEach(function(item){\n    item.addEventListener('toggle', function(){\n      if (item.open){\n        items.forEach(function(other){\n          if (other !== item) other.removeAttribute('open');\n        });\n      }\n    });\n  });\n})();\n</script>\n\n{%- endif -%}"
+          }
+        },
+        "aov_ai_bundle_offer_inline_Nad3fp": {
+          "type": "shopify://apps/aov-ai-bundle/blocks/offer-inline/0335d423-143c-4ad7-b224-99a1db74a9ee",
+          "disabled": true,
+          "settings": {}
+        },
+        "aov_ai_bundle_offer_fixed_9RaYxp": {
+          "type": "shopify://apps/aov-ai-bundle/blocks/offer-fixed/0335d423-143c-4ad7-b224-99a1db74a9ee",
+          "disabled": true,
+          "settings": {}
+        },
+        "aov_ai_bundle_offer_volume_bLARnV": {
+          "type": "shopify://apps/aov-ai-bundle/blocks/offer-volume/0335d423-143c-4ad7-b224-99a1db74a9ee",
+          "disabled": true,
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "title_MBAjXg",
+        "price_NjcLtW",
+        "aov_ai_bundle_mix_match_offer_inline_TpqcwW",
+        "custom_liquid_4PFXDf",
+        "sale_box_gfjmfm",
+        "share_gPWDME",
+        "complementary_fG8qbT",
+        "description_zzBhiV",
+        "custom_liquid_DKJkLd",
+        "aov_ai_bundle_offer_inline_Nad3fp",
+        "aov_ai_bundle_offer_fixed_9RaYxp",
+        "aov_ai_bundle_offer_volume_bLARnV"
+      ],
+      "custom_css": [],
+      "settings": {
+        "section_width": "page-width",
+        "use_background_input": true,
+        "enable_sticky_info": true,
+        "enable_sticky_cart": true,
+        "sticky_cart": "on_scroll_up",
+        "show_next_prev_products": true,
+        "auto_scroll_up_mobile": false,
+        "inherit_color_scheme": true,
+        "color_scheme": "",
+        "gap_desktop": 5,
+        "gap_mobile": 10,
+        "default_image": "variant_image",
+        "media_position": "left",
+        "gallery_layout": "thumbnail_slider_vertical",
+        "thumbnail_position": "left",
+        "media_size": "medium",
+        "image_ratio": "adapt",
+        "image_fit": true,
+        "disable_images_lightbox": false,
+        "mobile_thumbnails": "show",
+        "hide_variants": false,
+        "enable_video_looping": false,
+        "show_custom_badges_on": "all",
+        "custom_badges_position": "right",
+        "padding_top": 0,
+        "padding_bottom": 40
+      }
+    },
+    "1761185161a5575836": {
+      "type": "apps",
+      "blocks": {
+        "aov_ai_bundle_offer_bundle_builder_9hQXQ3": {
+          "type": "shopify://apps/aov-ai-bundle/blocks/offer-bundle-builder/0335d423-143c-4ad7-b224-99a1db74a9ee",
+          "disabled": true,
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "aov_ai_bundle_offer_bundle_builder_9hQXQ3"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "product-recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "title": "You May Also Like",
+        "subtitle": "",
+        "heading_size": "h1",
+        "products_to_show": 10,
+        "columns_desktop": 4,
+        "full_width": false,
+        "enable_desktop_slider": true,
+        "color_scheme": "background-1",
+        "image_ratio": "portrait",
+        "show_secondary_image": true,
+        "show_vendor": true,
+        "show_rating": true,
+        "enable_quick_add": true,
+        "enable_compare": true,
+        "enable_quick_view": true,
+        "show_color_swatches": true,
+        "color_swatches_style": "custom",
+        "inherit_card_color_scheme": true,
+        "card_color_scheme": "",
+        "columns_tablet": "3",
+        "columns_mobile": "2",
+        "swipe_on_mobile": true,
+        "padding_top": 72,
+        "padding_bottom": 40
+      }
+    },
+    "17701733055b705540": {
+      "type": "_blocks",
+      "settings": {
+        "title": "Product information",
+        "subtitle": "",
+        "heading_size": "h1",
+        "section_width": "grid",
+        "content_direction_desktop": "column",
+        "horizontal_alignment_desktop": "flex-start",
+        "vertical_alignment_desktop": "center",
+        "horizontal_alignment_flex_direction_column_desktop": "flex-start",
+        "gap_desktop": 12,
+        "content_direction_mobile": "column",
+        "horizontal_alignment_mobile": "left",
+        "vertical_alignment_mobile": "center",
+        "horizontal_alignment_flex_direction_column_mobile": "start",
+        "gap_mobile": 12,
+        "enable_section_box_layout": false,
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "42ea5b86-e5b3-44b9-8a28-410eec1590ed": {
+      "type": "recently-viewed-products",
+      "disabled": true,
+      "settings": {
+        "title": "Recently viewed",
+        "subtitle": "",
+        "heading_size": "h2",
+        "full_width": false,
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "featured_collection_qHm9HN": {
+      "type": "featured-collection",
+      "name": "t:names.product_list_carousel",
+      "settings": {
+        "title": "Save More with Bundles",
+        "subtitle": "",
+        "collection": "bundle-collections",
+        "heading_size": "h1",
+        "products_to_show": 36,
+        "columns_desktop": 4,
+        "full_width": false,
+        "show_view_all": true,
+        "enable_desktop_slider": true,
+        "enable_section_box_layout": false,
+        "color_scheme": "",
+        "image_position_desktop": "left",
+        "image_size": "large",
+        "image_height": "adapt_product_list",
+        "image_height_mobile": "34",
+        "banner_link": "",
+        "hide_banner_mobile": false,
+        "image_ratio": "adapt",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "enable_quick_add": true,
+        "enable_compare": true,
+        "enable_quick_view": true,
+        "show_color_swatches": true,
+        "color_swatches_style": "custom",
+        "inherit_card_color_scheme": true,
+        "card_color_scheme": "",
+        "columns_tablet": "3",
+        "columns_mobile": "1",
+        "swipe_on_mobile": true,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "1761185161a5575836",
+    "product-recommendations",
+    "17701733055b705540",
+    "42ea5b86-e5b3-44b9-8a28-410eec1590ed",
+    "featured_collection_qHm9HN"
+  ]
+}
