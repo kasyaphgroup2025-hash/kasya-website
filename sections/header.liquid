@@ -40,6 +40,16 @@
   else
     assign header_wrap_tag = 'div'
   endif
+  assign has_announcement_messages = false
+  if section.settings.enable_announcement_bar
+    if section.settings.announcement_text_1 != blank
+      assign has_announcement_messages = true
+    elsif section.settings.announcement_text_2 != blank
+      assign has_announcement_messages = true
+    elsif section.settings.announcement_text_3 != blank
+      assign has_announcement_messages = true
+    endif
+  endif
 -%}
 
 <{{ header_wrap_tag }}
@@ -49,7 +59,45 @@
   {% endif %}
   data-sticky-type="{{ section.settings.sticky_header }}"
 >
-  {%- if store_information_blocks.size > 0 or has_localization or section.settings.enable_social_links -%}
+  {%- if has_announcement_messages -%}
+    {%- assign announcement_has_active_message = false -%}
+    <script src="{{ 'kasya-announcement-bar.js' | asset_url }}" defer="defer"></script>
+    <div class="header-top header-announcement color-{{ section.settings.top_color_scheme }} isolate gradient">
+      <kasya-announcement-bar
+        class="header-announcement__rotator page-width"
+        data-interval="{{ section.settings.announcement_rotation_speed | times: 1000 }}"
+        role="region"
+        aria-label="Promotional announcements"
+      >
+        {%- if section.settings.announcement_text_1 != blank -%}
+          <p
+            class="header-announcement__message margin0{% unless announcement_has_active_message %} is-active{% endunless %}"
+            data-announcement-message
+          >
+            {{ section.settings.announcement_text_1 | escape }}
+          </p>
+          {%- assign announcement_has_active_message = true -%}
+        {%- endif -%}
+        {%- if section.settings.announcement_text_2 != blank -%}
+          <p
+            class="header-announcement__message margin0{% unless announcement_has_active_message %} is-active{% endunless %}"
+            data-announcement-message
+          >
+            {{ section.settings.announcement_text_2 | escape }}
+          </p>
+          {%- assign announcement_has_active_message = true -%}
+        {%- endif -%}
+        {%- if section.settings.announcement_text_3 != blank -%}
+          <p
+            class="header-announcement__message margin0{% unless announcement_has_active_message %} is-active{% endunless %}"
+            data-announcement-message
+          >
+            {{ section.settings.announcement_text_3 | escape }}
+          </p>
+        {%- endif -%}
+      </kasya-announcement-bar>
+    </div>
+  {%- elsif store_information_blocks.size > 0 or has_localization or section.settings.enable_social_links -%}
     <div class="header-top color-{{ section.settings.top_color_scheme }} isolate gradient{% unless has_top_on_mobile %} small-hide medium-hide{% endunless %}">
       <div class="page-width">
         <div class="header-top__content flex flex-wrap w100 justify-space-between align-center">
@@ -1063,6 +1111,44 @@
       "default": "inverse",
       "label": "t:sections.header.settings.top_color_scheme.label",
       "info": "t:sections.header.settings.top_color_scheme.info"
+    },
+    {
+      "type": "header",
+      "content": "Announcement bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_announcement_bar",
+      "default": true,
+      "label": "Show announcement bar"
+    },
+    {
+      "type": "text",
+      "id": "announcement_text_1",
+      "default": "Subscribe to our email list and get 10% off your first order",
+      "label": "Announcement 1"
+    },
+    {
+      "type": "text",
+      "id": "announcement_text_2",
+      "default": "Enjoy free shipping on orders of ₱2,000 and up",
+      "label": "Announcement 2"
+    },
+    {
+      "type": "text",
+      "id": "announcement_text_3",
+      "default": "Get ₱450 off plus free shipping on orders of ₱3,000 and up",
+      "label": "Announcement 3"
+    },
+    {
+      "type": "range",
+      "id": "announcement_rotation_speed",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 5,
+      "label": "Time between announcements"
     },
     {
       "type": "image_picker",
