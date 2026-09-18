@@ -1,0 +1,94 @@
+{
+  "sections": {
+    "main": {
+      "type": "kasya-information-page",
+      "blocks": {
+        "returns": {
+          "type": "content",
+          "settings": {
+            "heading": "Returns",
+            "content": "<p>Kasya wants the process to be clear when there is an issue with your order. Submit your concern through the existing Return My Order page and wait for approval and instructions before sending an item back.</p><p>Submitting a request does not automatically guarantee approval of a return, exchange, refund, or voucher.</p>"
+          }
+        },
+        "size_exchange_notice": {
+          "type": "notice",
+          "settings": {
+            "heading": "Size exchanges",
+            "content": "<p><strong>For size exchanges, the customer will shoulder the courier or shipping fee.</strong></p><p>Size-exchange requests are reviewed before approval and remain subject to replacement availability. Please wait for instructions before returning your item.</p>"
+          }
+        },
+        "damaged_incorrect": {
+          "type": "content",
+          "settings": {
+            "heading": "Damaged or incorrect items",
+            "content": "<p>If an item arrives damaged, incorrect, or incomplete, submit a concern with accurate order details and supporting photos when requested. Kasya will review the information and communicate the appropriate next steps.</p>"
+          }
+        },
+        "refunds": {
+          "type": "content",
+          "settings": {
+            "heading": "Refunds",
+            "content": "<p>Refund eligibility, method, and timing are confirmed after the concern has been reviewed. No item should be returned without prior approval and instructions from Kasya.</p>"
+          }
+        },
+        "non_returnable": {
+          "type": "content",
+          "settings": {
+            "heading": "Eligibility and non-returnable conditions",
+            "content": "<p>Return or exchange eligibility may vary by item and concern. Please contact Kasya before sending any item back. Kasya will confirm whether the request is eligible and provide the appropriate instructions.</p>"
+          }
+        },
+        "request": {
+          "type": "content",
+          "settings": {
+            "heading": "How to request a return or exchange",
+            "content": "<p>Use Kasya’s Return My Order page and provide your email address, order details, concern, and genuine supporting proof when needed. Kasya may contact you if more information is required.</p><p>Please wait for approval and return instructions before arranging a shipment.</p>"
+          }
+        },
+        "courier_fees": {
+          "type": "content",
+          "settings": {
+            "heading": "Courier and shipping fees",
+            "content": "<p>Customers shoulder the courier or shipping fee for size exchanges. For other approved concerns, the applicable shipping arrangement will be explained during the review.</p>"
+          }
+        },
+        "processing": {
+          "type": "content",
+          "settings": {
+            "heading": "Processing expectations",
+            "content": "<p>Kasya’s current Order Care confirmation advises that requests are reviewed within 2–3 business days. You will receive the next steps using the email address provided with your request.</p>"
+          }
+        },
+        "contact": {
+          "type": "contact",
+          "settings": {
+            "heading": "Contact information",
+            "content": "<p>If you need help before submitting a request, visit Kasya’s Contact Details page.</p>",
+            "button_label": "Contact Kasya",
+            "contact_page": ""
+          }
+        }
+      },
+      "block_order": [
+        "returns",
+        "size_exchange_notice",
+        "damaged_incorrect",
+        "refunds",
+        "non_returnable",
+        "request",
+        "courier_fees",
+        "processing",
+        "contact"
+      ],
+      "settings": {
+        "eyebrow": "Customer care",
+        "title": "Return & Refund Policy",
+        "introduction": "<p>We want you to have a clear process when there is an issue with your order. The information below explains how to start a request and what to expect while it is reviewed.</p>",
+        "color_scheme": "background-1",
+        "padding_top": 64,
+        "padding_bottom": 80
+      }
+    }
+  },
+  "order": ["main"]
+}

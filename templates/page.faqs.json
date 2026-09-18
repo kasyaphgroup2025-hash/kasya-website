@@ -1,0 +1,188 @@
+{
+  "sections": {
+    "main": {
+      "type": "kasya-information-page",
+      "blocks": {
+        "ordering_category": {
+          "type": "category",
+          "settings": {
+            "heading": "Ordering",
+            "description": ""
+          }
+        },
+        "ordering_place": {
+          "type": "faq",
+          "settings": {
+            "question": "How do I place an order?",
+            "answer": "<p>Choose your preferred item, color, and size, then add it to your cart. Review your cart and proceed through checkout to enter your delivery and payment details.</p>"
+          }
+        },
+        "ordering_success": {
+          "type": "faq",
+          "settings": {
+            "question": "How do I know if my order was successfully placed?",
+            "answer": "<p>After checkout, you should see an order confirmation and receive a confirmation message at the contact information provided. If you do not receive one, check your spam folder and contact us with the details used at checkout.</p>"
+          }
+        },
+        "ordering_change": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I change or cancel my order?",
+            "answer": "<p>Contact Kasya as soon as possible with your order details. Changes or cancellations cannot be guaranteed once an order is already being processed or has been handed to the courier.</p>"
+          }
+        },
+        "sizing_category": {
+          "type": "category",
+          "settings": {
+            "heading": "Sizing",
+            "description": ""
+          }
+        },
+        "sizing_choose": {
+          "type": "faq",
+          "settings": {
+            "question": "How do I choose my size?",
+            "answer": "<p>Check the measurements and fit information on the product page and compare them with your own measurements. If you are between sizes or need more guidance, contact Kasya before placing your order.</p>"
+          }
+        },
+        "sizing_chart": {
+          "type": "faq",
+          "settings": {
+            "question": "Where can I find the size chart?",
+            "answer": "<p>When a size chart is available, you can open it from the product page near the size options. Sizing may vary by style, so always review the information for the specific piece you are ordering.</p>"
+          }
+        },
+        "sizing_fit": {
+          "type": "faq",
+          "settings": {
+            "question": "What if the size I ordered does not fit?",
+            "answer": "<p>You may submit a size-exchange request through Kasya’s Return My Order page. Requests are reviewed before approval and depend on item availability. For size exchanges, the customer shoulders the courier or shipping fee.</p>"
+          }
+        },
+        "shipping_category": {
+          "type": "category",
+          "settings": {
+            "heading": "Shipping",
+            "description": ""
+          }
+        },
+        "shipping_track": {
+          "type": "faq",
+          "settings": {
+            "question": "How do I track my order?",
+            "answer": "<p>Tracking information is provided after your order has been prepared for delivery. Use the tracking details in your order update to follow the shipment on the courier’s tracking page.</p>"
+          }
+        },
+        "shipping_delivery": {
+          "type": "faq",
+          "settings": {
+            "question": "How long does delivery take?",
+            "answer": "<p>Delivery timing depends on your location, the courier, and current order volume. Any available estimate will be communicated during order processing or with your shipping update.</p>"
+          }
+        },
+        "shipping_delayed": {
+          "type": "faq",
+          "settings": {
+            "question": "What should I do if my order has not moved or arrived?",
+            "answer": "<p>Courier scans can sometimes take time to update. If tracking has not changed or your order has not arrived, contact Kasya with your order number and tracking details so the concern can be reviewed.</p>"
+          }
+        },
+        "returns_category": {
+          "type": "category",
+          "settings": {
+            "heading": "Returns & Exchanges",
+            "description": ""
+          }
+        },
+        "returns_size": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I exchange an item for another size?",
+            "answer": "<p>You may request a size exchange through the Return My Order page. Please wait for approval and instructions before sending an item back. Approval and replacement availability are not automatic.</p>"
+          }
+        },
+        "returns_fee": {
+          "type": "faq",
+          "settings": {
+            "question": "Who shoulders the courier fee for size exchanges?",
+            "answer": "<p>For size exchanges, the customer will shoulder the courier or shipping fee.</p>"
+          }
+        },
+        "returns_eligible": {
+          "type": "faq",
+          "settings": {
+            "question": "What items are eligible for return or exchange?",
+            "answer": "<p>Eligibility is reviewed based on the order concern and the information provided. Submit your request before returning anything, and Kasya will confirm whether the item is eligible and provide the next steps.</p>"
+          }
+        },
+        "returns_request": {
+          "type": "faq",
+          "settings": {
+            "question": "How do I request a return or exchange?",
+            "answer": "<p>Use Kasya’s existing Return My Order page and provide accurate order details, your concern, and supporting photos when requested. Do not send the item back until you receive approval and return instructions.</p>"
+          }
+        },
+        "products_category": {
+          "type": "category",
+          "settings": {
+            "heading": "Products",
+            "description": ""
+          }
+        },
+        "products_care": {
+          "type": "faq",
+          "settings": {
+            "question": "How do I care for my Kasya pieces?",
+            "answer": "<p>Follow the care instructions shown on the product page or garment label. Because fabrics and finishes differ, use the instructions provided for the specific piece.</p>"
+          }
+        },
+        "products_color": {
+          "type": "faq",
+          "settings": {
+            "question": "Will colors look exactly the same as they do online?",
+            "answer": "<p>Kasya aims to represent colors accurately, but appearance may vary slightly because of lighting, photography, and differences between screens.</p>"
+          }
+        },
+        "products_restock": {
+          "type": "faq",
+          "settings": {
+            "question": "How can I know when an item or size is restocked?",
+            "answer": "<p>Check the product page and Kasya’s official updates for current availability. You may also subscribe to Kasya emails for product and restock announcements.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "ordering_category",
+        "ordering_place",
+        "ordering_success",
+        "ordering_change",
+        "sizing_category",
+        "sizing_choose",
+        "sizing_chart",
+        "sizing_fit",
+        "shipping_category",
+        "shipping_track",
+        "shipping_delivery",
+        "shipping_delayed",
+        "returns_category",
+        "returns_size",
+        "returns_fee",
+        "returns_eligible",
+        "returns_request",
+        "products_category",
+        "products_care",
+        "products_color",
+        "products_restock"
+      ],
+      "settings": {
+        "eyebrow": "Help center",
+        "title": "FAQs",
+        "introduction": "<p>Find quick answers about ordering, sizing, shipping, returns, and shopping with Kasya.</p>",
+        "color_scheme": "background-1",
+        "padding_top": 64,
+        "padding_bottom": 80
+      }
+    }
+  },
+  "order": ["main"]
+}

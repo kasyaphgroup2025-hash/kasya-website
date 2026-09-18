@@ -1,0 +1,86 @@
+{
+  "sections": {
+    "main": {
+      "type": "kasya-information-page",
+      "blocks": {
+        "processing": {
+          "type": "content",
+          "settings": {
+            "heading": "Order processing",
+            "content": "<p>Orders are prepared before they are handed to the courier. Current processing information can be communicated during checkout, in an order confirmation, or through a direct order update from Kasya.</p>"
+          }
+        },
+        "metro_manila": {
+          "type": "content",
+          "settings": {
+            "heading": "Metro Manila delivery",
+            "content": "<p>Delivery timing depends on the courier, destination, and current order volume. Any available estimate will be communicated with your order or shipping update.</p>"
+          }
+        },
+        "provincial": {
+          "type": "content",
+          "settings": {
+            "heading": "Provincial delivery",
+            "content": "<p>Provincial delivery timing varies by destination and courier coverage. Any available estimate will be communicated with your order or shipping update.</p>"
+          }
+        },
+        "shipping_fees": {
+          "type": "content",
+          "settings": {
+            "heading": "Shipping fees",
+            "content": "<p>Shipping fees may vary by order and destination. The applicable amount will be shown during checkout or communicated with your order.</p>"
+          }
+        },
+        "free_shipping": {
+          "type": "notice",
+          "settings": {
+            "heading": "Free shipping",
+            "content": "<p><strong>Enjoy free shipping on orders of ₱2,000 and up.</strong></p><p>This is a current promotional offer and may be updated separately from Kasya’s permanent shipping policy.</p>"
+          }
+        },
+        "tracking": {
+          "type": "content",
+          "settings": {
+            "heading": "Order tracking",
+            "content": "<p>Tracking information is provided after an order has been prepared for delivery. Use the tracking details in your order update to follow the shipment on the courier’s tracking page.</p>"
+          }
+        },
+        "delays": {
+          "type": "content",
+          "settings": {
+            "heading": "Delivery delays",
+            "content": "<p>Courier delays, weather disruptions, high-volume sale periods, and failed delivery attempts may affect delivery timing. Tracking scans can also take time to update. If you need help, contact Kasya with your order number and tracking details.</p>"
+          }
+        },
+        "contact": {
+          "type": "contact",
+          "settings": {
+            "heading": "Need help?",
+            "content": "<p>For questions about an order or delivery, visit Kasya’s Contact Details page and include your order number when available.</p>",
+            "button_label": "Contact Kasya",
+            "contact_page": ""
+          }
+        }
+      },
+      "block_order": [
+        "processing",
+        "metro_manila",
+        "provincial",
+        "shipping_fees",
+        "free_shipping",
+        "tracking",
+        "delays",
+        "contact"
+      ],
+      "settings": {
+        "eyebrow": "Delivery guide",
+        "title": "Shipping Information",
+        "introduction": "<p>Find information about order processing, delivery, shipping fees, tracking, and possible delays.</p>",
+        "color_scheme": "background-1",
+        "padding_top": 64,
+        "padding_bottom": 80
+      }
+    }
+  },
+  "order": ["main"]
+}

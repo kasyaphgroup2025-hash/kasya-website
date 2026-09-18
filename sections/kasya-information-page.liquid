@@ -1,0 +1,263 @@
+{{ 'kasya-information-page.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --kasya-info-padding-top: {{ section.settings.padding_top }}px;
+    --kasya-info-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --kasya-info-padding-top-mobile: {{ section.settings.padding_top | times: 0.7 | round }}px;
+    --kasya-info-padding-bottom-mobile: {{ section.settings.padding_bottom | times: 0.7 | round }}px;
+  }
+{%- endstyle -%}
+
+<div class="kasya-information-page color-{{ section.settings.color_scheme }} gradient">
+  <div class="kasya-information-page__inner page-width">
+    <header class="kasya-information-page__header">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="kasya-information-page__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h1>{{ section.settings.title | default: page.title | escape }}</h1>
+      {%- if section.settings.introduction != blank -%}
+        <div class="kasya-information-page__introduction rte">
+          {{ section.settings.introduction }}
+        </div>
+      {%- endif -%}
+    </header>
+
+    <div class="kasya-information-page__content">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'category' -%}
+            {%- if block.settings.heading != blank -%}
+              <div class="kasya-information-page__category" {{ block.shopify_attributes }}>
+                <h2>{{ block.settings.heading | escape }}</h2>
+                {%- if block.settings.description != blank -%}
+                  <div class="kasya-information-page__category-description rte">
+                    {{ block.settings.description }}
+                  </div>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+          {%- when 'faq' -%}
+            {%- if block.settings.question != blank and block.settings.answer != blank -%}
+              <details class="kasya-information-page__faq" {{ block.shopify_attributes }}>
+                <summary>
+                  <span>{{ block.settings.question | escape }}</span>
+                  <span class="kasya-information-page__faq-icon" aria-hidden="true"></span>
+                </summary>
+                <div class="kasya-information-page__faq-answer rte">
+                  {{ block.settings.answer }}
+                </div>
+              </details>
+            {%- endif -%}
+
+          {%- when 'content' -%}
+            {%- if block.settings.heading != blank or block.settings.content != blank -%}
+              <section class="kasya-information-page__section" {{ block.shopify_attributes }}>
+                {%- if block.settings.heading != blank -%}
+                  <h2>{{ block.settings.heading | escape }}</h2>
+                {%- endif -%}
+                {%- if block.settings.content != blank -%}
+                  <div class="kasya-information-page__body rte">
+                    {{ block.settings.content }}
+                  </div>
+                {%- endif -%}
+              </section>
+            {%- endif -%}
+
+          {%- when 'notice' -%}
+            {%- if block.settings.heading != blank or block.settings.content != blank -%}
+              <aside class="kasya-information-page__notice" {{ block.shopify_attributes }}>
+                {%- if block.settings.heading != blank -%}
+                  <h2>{{ block.settings.heading | escape }}</h2>
+                {%- endif -%}
+                {%- if block.settings.content != blank -%}
+                  <div class="kasya-information-page__body rte">
+                    {{ block.settings.content }}
+                  </div>
+                {%- endif -%}
+              </aside>
+            {%- endif -%}
+
+          {%- when 'contact' -%}
+            <aside class="kasya-information-page__contact" {{ block.shopify_attributes }}>
+              <div>
+                {%- if block.settings.heading != blank -%}
+                  <h2>{{ block.settings.heading | escape }}</h2>
+                {%- endif -%}
+                {%- if block.settings.content != blank -%}
+                  <div class="kasya-information-page__body rte">
+                    {{ block.settings.content }}
+                  </div>
+                {%- endif -%}
+              </div>
+              {%- if block.settings.button_label != blank and block.settings.contact_page != blank -%}
+                <a class="button button--primary" href="{{ block.settings.contact_page.url }}">
+                  {{ block.settings.button_label | escape }}
+                </a>
+              {%- endif -%}
+            </aside>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Kasya information page",
+  "tag": "section",
+  "class": "section kasya-information-page-section",
+  "max_blocks": 50,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Page heading",
+      "info": "If blank, the Shopify page title is used."
+    },
+    {
+      "type": "richtext",
+      "id": "introduction",
+      "label": "Introduction"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "background-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 24,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 24,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "FAQ category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Category"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Optional description"
+        }
+      ]
+    },
+    {
+      "type": "faq",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Add your answer here.</p>"
+        }
+      ]
+    },
+    {
+      "type": "content",
+      "name": "Content section",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Section heading"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content",
+          "default": "<p>Add your content here.</p>"
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "name": "Important notice",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Important"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content",
+          "default": "<p>Add an important notice here.</p>"
+        }
+      ]
+    },
+    {
+      "type": "contact",
+      "name": "Contact callout",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Need help?"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Contact us"
+        },
+        {
+          "type": "page",
+          "id": "contact_page",
+          "label": "Contact page"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Kasya information page"
+    }
+  ]
+}
+{% endschema %}
