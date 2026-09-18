@@ -17,14 +17,14 @@
 
   {%-liquid
     if section.settings.mobile_logo_position == 'center'
-      render 'header-account', class: 'small-hide medium-hide', position: 'end'
+      render 'header-account', class: 'small-hide medium-hide header__desktop-account', position: 'end'
     else
-      render 'header-account', position: 'end'
+      render 'header-account', class: 'header__desktop-account', position: 'end'
     endif
   -%}
 
   {%- if settings.enable_product_compare -%}
-    <modal-opener data-modal="#Compare-Modal" class="small-hide">
+    <modal-opener data-modal="#Compare-Modal" class="small-hide header__desktop-compare">
       <button class="header__icon header__icon--compare link flex justify-center align-center por unstyled-button header__button-icon" aria-label="{{ 'templates.compare.header_icon' | t | escape }}">
         {%- render 'compare-icon-bubble' -%}
       </button>

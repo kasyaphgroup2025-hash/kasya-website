@@ -269,6 +269,126 @@
         padding-bottom: 1rem;      
       {%- endcase -%}
     }
+
+    .header.header--kasya-desktop {
+      --header-template-areas: 'heading heading' 'navigation icons';
+      --header-template-columns: minmax(0, 1fr) auto;
+      position: relative;
+      width: 100%;
+      padding-top: 2.2rem;
+      padding-bottom: 1.2rem;
+      background: #ffffff !important;
+      color: #111111;
+    }
+
+    .header--kasya-desktop .header__inner {
+      align-items: center;
+      row-gap: 1.8rem;
+    }
+
+    .header--kasya-desktop .header__heading {
+      z-index: 3;
+      width: 100%;
+      justify-content: center;
+      justify-self: center;
+    }
+
+    .header--kasya-desktop .header__heading-link {
+      justify-content: center;
+      margin: 0;
+    }
+
+    .header--kasya-desktop .header__heading-logo {
+      filter: none !important;
+    }
+
+    .header--kasya-desktop .header__inline-menu {
+      align-self: center;
+      justify-self: start;
+      margin: 0;
+    }
+
+    .header--kasya-desktop .header__inline-menu nav {
+      margin: 0;
+    }
+
+    .header--kasya-desktop .header__inline-menu .list-menu--inline {
+      gap: clamp(1.8rem, 2.25vw, 3.6rem);
+    }
+
+    .header--kasya-desktop .header__inline-menu .header__menu-item--top,
+    .header--kasya-desktop .header__inline-menu summary.header__menu-item--top {
+      min-height: 4.4rem;
+      padding-block: 1rem;
+      color: #111111;
+      font-family: var(--font-body-family);
+      font-size: 1.2rem;
+      font-style: var(--font-body-style);
+      font-weight: 500;
+      letter-spacing: 0.09em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .header--kasya-desktop .header__icons {
+      grid-column: auto;
+      width: auto;
+      justify-content: flex-end;
+      justify-self: end;
+      column-gap: 0.8rem;
+      color: #111111;
+    }
+
+    .header--kasya-desktop .header__desktop-account,
+    .header--kasya-desktop .header__desktop-compare {
+      display: none !important;
+    }
+
+    .header--kasya-desktop .header__icon {
+      --color-foreground: 17, 17, 17;
+      --color-link: 17, 17, 17;
+      color: #111111;
+    }
+
+    .header--kasya-desktop .header__icon--search {
+      width: 4rem;
+      height: 4rem;
+    }
+
+    .header--kasya-desktop .header__icon--cart {
+      min-height: 4.4rem;
+      margin-inline-start: 0;
+    }
+
+    .header--kasya-desktop .header__cart-inner {
+      gap: 1rem;
+    }
+
+    .header--kasya-desktop .header__cart-total {
+      min-width: 6.8rem;
+      align-items: flex-start;
+      row-gap: 0.4rem;
+    }
+
+    .header--kasya-desktop .header__cart-total__label {
+      color: rgba(17, 17, 17, 0.62);
+      font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .header--kasya-desktop .header__cart-total__price {
+      color: #111111;
+      font-size: 1.25rem;
+      font-weight: 500;
+    }
+
+    .header--kasya-desktop .header__count-bubble {
+      background: #111111;
+      color: #ffffff;
+    }
+
     {%- if section.settings.logo_position == 'top-left' -%}
       .header__inner {
         row-gap: 1.5rem;

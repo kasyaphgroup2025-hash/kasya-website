@@ -1494,48 +1494,9 @@ back-to-top .icon {
 
 .button--truncate-text:hover > * {
   opacity: 1;
-}/* Transparent header homepage */
-.template-index .header-wrapper {
-  position: absolute !important;
-  width: 100%;
-  background: transparent !important;
-  border-bottom: none !important;
-  box-shadow: none !important;
-  z-index: 20;
 }
 
-.template-index .header {
-  background: transparent !important;
-}/* === HOMEPAGE: Transparent/Clear Header Overlay === */
-.template-index #shopify-section-header,
-.template-index .shopify-section-group-header-group,
-.template-index .header-section,
-.template-index .site-header,
-.template-index header {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  z-index: 999;
-}
-
-/* remove white background + border/shadow */
-.template-index #shopify-section-header,
-.template-index .shopify-section-group-header-group,
-.template-index .header-section,
-.template-index .site-header,
-.template-index header,
-.template-index .header,
-.template-index .header-wrapper,
-.template-index .header__inner {
-  background: transparent !important;
-  box-shadow: none !important;
-  border: none !important;
-}/* Pull first section up behind the header */
-.template-index main > .shopify-section:first-child {
-  margin-top: -90px; /* adjust: -70 to -120 */
-  /* Product card badge (top-left pill) */
+/* Product card badge (top-left pill) */
 .product-card__badge {
   position: absolute;
   top: 14px;

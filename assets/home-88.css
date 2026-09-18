@@ -236,6 +236,54 @@ body.home-88-header-enabled.home-88-header-solid .section-header .cart-count-bub
   color: #fff !important;
 }
 
+body.home-88-header-enabled .section-header {
+  position: relative !important;
+  inset: auto !important;
+  background: #ffffff !important;
+  box-shadow: none;
+  transform: none !important;
+}
+
+body.home-88-header-enabled .section-header .header-wrapper,
+body.home-88-header-enabled .section-header .header {
+  position: relative !important;
+  inset: auto !important;
+  background: #ffffff !important;
+  color: #111111 !important;
+  box-shadow: none;
+}
+
+body.home-88-header-enabled .section-header .header__inner::before {
+  background: #ffffff !important;
+  opacity: 1 !important;
+}
+
+body.home-88-header-enabled .section-header .header__icon,
+body.home-88-header-enabled .section-header .header__heading-link,
+body.home-88-header-enabled .section-header .header__menu-item {
+  --color-foreground: 17, 17, 17;
+  --color-link: 17, 17, 17;
+  color: #111111 !important;
+}
+
+body.home-88-header-enabled .section-header svg,
+body.home-88-header-enabled .section-header svg path,
+body.home-88-header-enabled .section-header svg circle,
+body.home-88-header-enabled .section-header svg line,
+body.home-88-header-enabled .section-header svg polyline {
+  color: #111111 !important;
+  stroke: currentColor;
+}
+
+body.home-88-header-enabled .section-header .header__heading-logo {
+  filter: none !important;
+}
+
+body.home-88-header-enabled .section-header .cart-count-bubble {
+  background: #111111 !important;
+  color: #ffffff !important;
+}
+
 @media screen and (max-width: 749px) {
   body.home-88-header-enabled .section-header .header {
     display: block !important;
