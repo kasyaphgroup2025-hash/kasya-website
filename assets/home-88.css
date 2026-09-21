@@ -295,6 +295,7 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
 
   body.home-88-header-enabled .section-header .header-wrapper {
     position: relative !important;
+    min-height: 0 !important;
     background: transparent !important;
   }
 
