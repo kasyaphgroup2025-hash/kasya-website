@@ -780,7 +780,7 @@
   color: var(--kasya-aov-cart-muted);
   display: flex;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 400;
   gap: 6px;
   line-height: 1.35;
   margin: 5px 0 12px;
@@ -823,7 +823,7 @@
   display: flex;
   flex-wrap: wrap;
   font-size: clamp(9px, 2.6vw, 10px);
-  font-weight: 400;
+  font-weight: 700;
   gap: 5px 12px;
   justify-content: center;
   line-height: 1.25;
