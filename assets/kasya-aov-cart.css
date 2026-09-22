@@ -773,12 +773,12 @@
 }
 
 .kasya-aov-cart__checkout-note {
-  align-items: flex-start;
+  align-items: center;
   color: var(--kasya-aov-cart-muted);
   display: flex;
   font-size: 12px;
   font-weight: 400;
-  gap: 6px;
+  justify-content: center;
   line-height: 1.35;
   margin: 16px 0 12px;
   min-width: 0;
@@ -787,7 +787,6 @@
 .kasya-aov-cart__checkout-note-icon {
   flex: 0 0 16px;
   height: 16px;
-  margin-top: 1px;
   width: 16px;
 }
 
@@ -799,14 +798,19 @@
 .kasya-aov-cart__checkout-note-text {
   display: grid;
   gap: 1px;
+  justify-items: center;
+  text-align: center;
 }
 
 .kasya-aov-cart__checkout-note-text > span {
   display: block;
 }
 
-.kasya-aov-cart__checkout-note-text strong {
-  font-weight: 600;
+.kasya-aov-cart__checkout-note-text > .kasya-aov-cart__checkout-note-line {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+  justify-content: center;
 }
 
 .kasya-aov-cart__checkout {
