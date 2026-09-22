@@ -776,7 +776,7 @@
 
 .kasya-aov-cart__checkout-note {
   align-items: flex-start;
-  color: var(--kasya-aov-cart-ink);
+  color: var(--kasya-aov-cart-muted);
   display: flex;
   font-size: 12px;
   font-weight: 700;
@@ -818,7 +818,7 @@
 
 .kasya-aov-cart__assurances {
   align-items: center;
-  color: var(--kasya-aov-cart-ink);
+  color: var(--kasya-aov-cart-muted);
   display: flex;
   flex-wrap: wrap;
   font-size: clamp(9px, 2.6vw, 10px);
