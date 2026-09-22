@@ -775,9 +775,26 @@
 }
 
 .kasya-aov-cart__checkout-note {
+  align-items: flex-start;
   color: var(--kasya-aov-cart-muted);
+  display: flex;
   font-size: 12px;
+  gap: 6px;
+  line-height: 1.35;
   margin: 5px 0 12px;
+  min-width: 0;
+}
+
+.kasya-aov-cart__checkout-note-icon {
+  flex: 0 0 16px;
+  height: 16px;
+  margin-top: 1px;
+  width: 16px;
+}
+
+.kasya-aov-cart__checkout-note span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .kasya-aov-cart__checkout {
@@ -796,6 +813,26 @@
   min-height: 48px;
   padding: 0 18px;
   width: 100%;
+}
+
+.kasya-aov-cart__assurances {
+  align-items: center;
+  color: var(--kasya-aov-cart-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: clamp(9px, 2.6vw, 10px);
+  gap: 5px 12px;
+  justify-content: center;
+  line-height: 1.25;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.kasya-aov-cart__assurance {
+  align-items: center;
+  display: inline-flex;
+  gap: 3px;
+  white-space: nowrap;
 }
 
 .kasya-aov-cart--loading .kasya-aov-cart__drawer {

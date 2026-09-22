@@ -167,11 +167,21 @@
             <strong class="kasya-aov-cart__subtotal-amount" data-kasya-aov-cart-subtotal>{{ cart.total_price | money }}</strong>
           </div>
         </div>
-        <p class="kasya-aov-cart__checkout-note">Shipping calculated at checkout.</p>
+        <p class="kasya-aov-cart__checkout-note">
+          <svg class="kasya-aov-cart__checkout-note-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M3 6.75h11v10H3zM14 10.25h3.5l3.5 3.5v3h-7zM7 19.25a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM18 19.25a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Shipping: ₱55–₱99 depende sa location • FREE over ₱1,499 • COD available</span>
+        </p>
         <button type="submit" name="checkout" class="kasya-aov-cart__checkout">
           <span>PROCEED TO CHECKOUT</span>
           <span aria-hidden="true">→</span>
         </button>
+        <div class="kasya-aov-cart__assurances" role="list" aria-label="Checkout assurances">
+          <span class="kasya-aov-cart__assurance" role="listitem"><span aria-hidden="true">✓</span> COD Nationwide</span>
+          <span class="kasya-aov-cart__assurance" role="listitem"><span aria-hidden="true">✓</span> Easy Size Exchange</span>
+          <span class="kasya-aov-cart__assurance" role="listitem"><span aria-hidden="true">✓</span> Ships in 24h</span>
+        </div>
       </form>
     </footer>
   </aside>
