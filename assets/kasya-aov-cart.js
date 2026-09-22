@@ -1620,16 +1620,14 @@
       }
 
       subtotalWrap.innerHTML = `
-        <div class="kasya-aov-cart__subtotal-row">
+        ${discount > 0 ? `
+          <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--savings">
+            <span>Discount</span>
+            <strong>− ${formatMoney(discount)}</strong>
+          </div>
+        ` : ''}
+        <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--payable">
           <span>Subtotal</span>
-          <strong class="kasya-aov-cart__subtotal-amount">${formatMoney(originalSubtotal)}</strong>
-        </div>
-        <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--savings">
-          <span>Discount</span>
-          <strong>− ${formatMoney(discount)}</strong>
-        </div>
-        <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--final">
-          <span>Final Total</span>
           <strong class="kasya-aov-cart__subtotal-amount" data-kasya-aov-cart-subtotal>${formatMoney(finalSubtotal)}</strong>
         </div>
       `;

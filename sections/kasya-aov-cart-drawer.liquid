@@ -154,16 +154,14 @@
 
       <form action="{{ routes.cart_url }}" method="post" class="kasya-aov-cart__checkout-form">
         <div class="kasya-aov-cart__subtotal" data-kasya-aov-cart-subtotal-wrap>
-          <div class="kasya-aov-cart__subtotal-row">
+          {%- if cart.total_discount > 0 -%}
+            <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--savings">
+              <span>Discount</span>
+              <strong>− {{ cart.total_discount | money }}</strong>
+            </div>
+          {%- endif -%}
+          <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--payable">
             <span>Subtotal</span>
-            <strong class="kasya-aov-cart__subtotal-amount">{{ cart.original_total_price | money }}</strong>
-          </div>
-          <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--savings">
-            <span>Discount</span>
-            <strong>− {{ cart.total_discount | money }}</strong>
-          </div>
-          <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--final">
-            <span>Final Total</span>
             <strong class="kasya-aov-cart__subtotal-amount" data-kasya-aov-cart-subtotal>{{ cart.total_price | money }}</strong>
           </div>
         </div>
