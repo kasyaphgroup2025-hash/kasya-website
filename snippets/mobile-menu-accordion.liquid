@@ -1,0 +1,120 @@
+<mobile-menu-accordion class="mobile-menu-accordion">
+  <ul class="mobile-menu-accordion__list list-unstyled" role="list">
+    {%- for link in links -%}
+      {%- liquid
+        assign link_index = ':' | append: link.title | append: '=' | downcase
+        assign panel_id = 'MobileMenuPanel-' | append: section.id | append: '-' | append: forloop.index
+      -%}
+      <li class="mobile-menu-accordion__item mobile-menu-accordion__item--level-1">
+        <div class="mobile-menu-accordion__row">
+          <a
+            href="{{ link.url }}"
+            class="mobile-menu-accordion__link mobile-menu-accordion__link--level-1 link link--text{% if link.current or link.child_active %} menu-drawer__menu-item--active{% endif %}{% if badges_str contains link_index %} por{% endif %}"
+            {% if link.current %}aria-current="page"{% endif %}
+          >
+            {{- link.title -}}
+            {%- if badges_str contains link_index -%}
+              {%- assign blocks_index = badges_str | split: link_index | last | split: ';' | first -%}
+              {%- render 'header-menu-badge', blocks_index: blocks_index, is_in_drawer: true -%}
+            {%- endif -%}
+          </a>
+          {%- if link.links != blank -%}
+            <button
+              type="button"
+              class="mobile-menu-accordion__toggle no-control-menu"
+              aria-expanded="false"
+              aria-controls="{{ panel_id }}"
+              data-mobile-menu-toggle
+              data-menu-level="1"
+            >
+              <span class="visually-hidden">{{ link.title }} submenu</span>
+              <span class="mobile-menu-accordion__symbol" aria-hidden="true"></span>
+            </button>
+          {%- endif -%}
+        </div>
+
+        {%- if link.links != blank -%}
+          <div id="{{ panel_id }}" class="mobile-menu-accordion__panel" aria-hidden="true" inert>
+            <div class="mobile-menu-accordion__panel-inner">
+              <ul class="mobile-menu-accordion__sublist list-unstyled" role="list">
+                {%- if link.url and show_go_to_link -%}
+                  <li class="mobile-menu-accordion__subitem">
+                    <a href="{{ link.url }}" class="mobile-menu-accordion__link mobile-menu-accordion__link--level-2 link link--text">
+                      {{- 'sections.header.go_to_link' | t: title: link.title -}}
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- for childlink in link.links -%}
+                  {%- liquid
+                    assign child_index = ':' | append: childlink.title | append: '=' | downcase
+                    assign child_panel_id = panel_id | append: '-' | append: forloop.index
+                  -%}
+                  <li class="mobile-menu-accordion__subitem">
+                    <div class="mobile-menu-accordion__row mobile-menu-accordion__row--nested">
+                      <a
+                        href="{{ childlink.url }}"
+                        class="mobile-menu-accordion__link mobile-menu-accordion__link--level-2 link link--text{% if childlink.current or childlink.child_active %} menu-drawer__menu-item--active{% endif %}{% if badges_str contains child_index %} por{% endif %}"
+                        {% if childlink.current %}aria-current="page"{% endif %}
+                      >
+                        {{- childlink.title -}}
+                        {%- if badges_str contains child_index -%}
+                          {%- assign blocks_index = badges_str | split: child_index | last | split: ';' | first -%}
+                          {%- render 'header-menu-badge', blocks_index: blocks_index, is_in_drawer: true, parent_item: link -%}
+                        {%- endif -%}
+                      </a>
+                      {%- if childlink.links != blank -%}
+                        <button
+                          type="button"
+                          class="mobile-menu-accordion__toggle mobile-menu-accordion__toggle--nested no-control-menu"
+                          aria-expanded="false"
+                          aria-controls="{{ child_panel_id }}"
+                          data-mobile-menu-toggle
+                          data-menu-level="2"
+                        >
+                          <span class="visually-hidden">{{ childlink.title }} submenu</span>
+                          <span class="mobile-menu-accordion__symbol" aria-hidden="true"></span>
+                        </button>
+                      {%- endif -%}
+                    </div>
+
+                    {%- if childlink.links != blank -%}
+                      <div id="{{ child_panel_id }}" class="mobile-menu-accordion__panel" aria-hidden="true" inert>
+                        <div class="mobile-menu-accordion__panel-inner">
+                          <ul class="mobile-menu-accordion__sublist mobile-menu-accordion__sublist--level-3 list-unstyled" role="list">
+                            {%- if childlink.url and show_go_to_link -%}
+                              <li class="mobile-menu-accordion__subitem">
+                                <a href="{{ childlink.url }}" class="mobile-menu-accordion__link mobile-menu-accordion__link--level-3 link link--text">
+                                  {{- 'sections.header.go_to_link' | t: title: childlink.title -}}
+                                </a>
+                              </li>
+                            {%- endif -%}
+                            {%- for grandchildlink in childlink.links -%}
+                              {%- assign grandchild_index = ':' | append: grandchildlink.title | append: '=' | downcase -%}
+                              <li class="mobile-menu-accordion__subitem">
+                                <a
+                                  href="{{ grandchildlink.url }}"
+                                  class="mobile-menu-accordion__link mobile-menu-accordion__link--level-3 link link--text{% if grandchildlink.current %} menu-drawer__menu-item--active{% endif %}{% if badges_str contains grandchild_index %} por{% endif %}"
+                                  {% if grandchildlink.current %}aria-current="page"{% endif %}
+                                >
+                                  {{- grandchildlink.title -}}
+                                  {%- if badges_str contains grandchild_index -%}
+                                    {%- assign blocks_index = badges_str | split: grandchild_index | last | split: ';' | first -%}
+                                    {%- render 'header-menu-badge', blocks_index: blocks_index, is_in_drawer: true, parent_item: childlink -%}
+                                  {%- endif -%}
+                                </a>
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                        </div>
+                      </div>
+                    {%- endif -%}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          </div>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+</mobile-menu-accordion>
