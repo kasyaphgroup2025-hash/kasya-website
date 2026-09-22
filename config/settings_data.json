@@ -706,10 +706,10 @@
         "type": "kasya-aov-cart-drawer",
         "settings": {
           "aov_payment_gcash_logo": "shopify://shop_images/gcash.png",
-          "aov_payment_rcbc_logo": "shopify://shop_images/RCBC.png",
-          "aov_payment_chinabank_logo": "shopify://shop_images/chinabank.png",
-          "aov_payment_bpi_logo": "shopify://shop_images/BPI.png",
-          "aov_payment_unionbank_logo": "shopify://shop_images/UB.webp",
+          "aov_payment_rcbc_logo": "shopify://shop_images/Maya-Pepe-Torres-Dan-Matutina-Jonty-Cruz-Kanto.com_.ph3_-1024x1024.webp",
+          "aov_payment_chinabank_logo": "shopify://shop_images/Mastercard-Logo.wine.png",
+          "aov_payment_bpi_logo": "shopify://shop_images/Visa_Inc.-Logo.wine.png",
+          "aov_payment_unionbank_logo": "shopify://shop_images/ChatGPT_Image_Sep_22_2026_11_00_36_AM.png",
           "aov_new_to_kasya_products": [
             "wideleg-linen-pants",
             "soft-linen-long-skirts-copy",
