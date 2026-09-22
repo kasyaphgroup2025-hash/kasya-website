@@ -757,7 +757,7 @@
 }
 
 .kasya-aov-cart__subtotal-row--savings {
-  color: var(--kasya-aov-cart-green);
+  color: var(--kasya-aov-cart-muted);
   font-size: 13px;
 }
 
@@ -772,6 +772,7 @@
 
 .kasya-aov-cart__subtotal-row--final .kasya-aov-cart__subtotal-amount {
   color: #D71920;
+  font-size: 18px;
 }
 
 .kasya-aov-cart__checkout-note {
@@ -822,7 +823,7 @@
   display: flex;
   flex-wrap: wrap;
   font-size: clamp(9px, 2.6vw, 10px);
-  font-weight: 700;
+  font-weight: 400;
   gap: 5px 12px;
   justify-content: center;
   line-height: 1.25;
