@@ -1091,7 +1091,7 @@
     const sizeChartTriggerText = {{ section.settings.size_chart_trigger_text | json }};
     const sizeChartHideText = 'Hide size chart';
     const fallbackImage = {% if lp_product.featured_image != blank %}{{ lp_product.featured_image | image_url: width: 1400 | json }}{% else %}null{% endif %};
-    const lpShotOrder = ['front', 'side', 'back', 'sitting', 'fabric close up'];
+    const lpShotOrder = ['front', 'side', 'back', 'sitting', 'detail 1', 'detail 2', 'detail 3', 'fabric close up'];
 
     const lower = value => String(value || '').trim().toLowerCase();
 
@@ -1206,7 +1206,15 @@
 
     function parseProductMediaAlt(altText) {
       const parts = String(altText || '').split('|').map(part => part.trim());
-      if (![3, 4].includes(parts.length) || lower(parts[0]) !== 'lp') return null;
+      if (![2, 3, 4].includes(parts.length) || lower(parts[0]) !== 'lp') return null;
+
+      if (parts.length === 2) {
+        return {
+          role: '',
+          color: '',
+          shot: normalizeMediaShotName(parts[1])
+        };
+      }
 
       return {
         role: parts.length === 4 ? lower(parts[1]) : '',
@@ -1220,7 +1228,8 @@
 
       if (!expectedMediaRole) return normalizedRole ? 1 : 0;
       if (shot === 'sitting' || shot === 'fabric close up') {
-        return normalizedRole ? Number.POSITIVE_INFINITY : 0;
+        if (normalizedRole === expectedMediaRole) return 0;
+        return normalizedRole ? Number.POSITIVE_INFINITY : 1;
       }
       if (normalizedRole === expectedMediaRole) return 0;
       if (!normalizedRole) return 1;
@@ -1233,6 +1242,11 @@
       const shot = normalizeColorName(value);
       const compactShot = shot.replace(/[^a-z0-9]/g, '');
 
+      if (compactShot === 'detail1') return 'detail 1';
+      if (compactShot === 'detail2') return 'detail 2';
+      if (compactShot === 'detail3') return 'detail 3';
+      if (compactShot === 'fabriccloseup') return 'fabric close up';
+
       if (showInitialMediaPreview && compactShot.includes('front')) return 'front';
       if (showInitialMediaPreview && compactShot.includes('side')) return 'side';
       if (showInitialMediaPreview && compactShot.includes('back')) return 'back';
@@ -1242,6 +1256,21 @@
       }
 
       return shot;
+    }
+
+    function getMediaShotFromText(value) {
+      const compact = compactMediaName(value);
+
+      if (compact.includes('detail1')) return 'detail 1';
+      if (compact.includes('detail2')) return 'detail 2';
+      if (compact.includes('detail3')) return 'detail 3';
+      if (compact.includes('fabriccloseup')) return 'fabric close up';
+      if (compact.includes('sitting')) return 'sitting';
+      if (compact.includes('front')) return 'front';
+      if (compact.includes('side')) return 'side';
+      if (compact.includes('back')) return 'back';
+
+      return '';
     }
 
     function getProductMediaShotMapForColor(colorValue, block, shotOrder = lpShotOrder) {
@@ -1254,10 +1283,18 @@
       const priorities = {};
 
       productMedia.forEach(item => {
-        const parsed = parseProductMediaAlt(item.alt);
+        const mediaText = `${item.alt || ''} ${item.src || ''}`;
+        const parsed = parseProductMediaAlt(item.alt) || {
+          role: '',
+          color: '',
+          shot: getMediaShotFromText(mediaText)
+        };
         if (!parsed || !item.src) return;
         const rolePriority = getMediaRolePriority(parsed.role, parsed.shot);
-        if (!uniqueColorNames.includes(lower(parsed.color))) return;
+        const matchesColor = parsed.color
+          ? uniqueColorNames.includes(lower(parsed.color))
+          : mediaTextMatchesColor(mediaText, colorValue, block);
+        if (!matchesColor) return;
         if (!allowedShots.has(parsed.shot) || !Number.isFinite(rolePriority)) return;
         if (images[parsed.shot] && priorities[parsed.shot] <= rolePriority) return;
 
@@ -1270,8 +1307,13 @@
 
     function getProductMediaImagesForColor(colorValue, block, shotOrder = lpShotOrder) {
       const imageMap = getProductMediaShotMapForColor(colorValue, block, shotOrder);
+      const seenSources = new Set();
 
-      return shotOrder.map(shot => imageMap[shot]).filter(Boolean);
+      return shotOrder.map(shot => imageMap[shot]).filter(source => {
+        if (!source || seenSources.has(source)) return false;
+        seenSources.add(source);
+        return true;
+      });
     }
 
     function mediaMatchesExpectedRole(item) {
