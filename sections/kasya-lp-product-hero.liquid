@@ -1212,14 +1212,16 @@
         return {
           role: '',
           color: '',
-          shot: normalizeMediaShotName(parts[1])
+          shot: normalizeMediaShotName(parts[1]),
+          scope: 'product'
         };
       }
 
       return {
         role: parts.length === 4 ? lower(parts[1]) : '',
         color: parts.length === 4 ? parts[2] : parts[1],
-        shot: normalizeMediaShotName(parts.length === 4 ? parts[3] : parts[2])
+        shot: normalizeMediaShotName(parts.length === 4 ? parts[3] : parts[2]),
+        scope: 'color'
       };
     }
 
@@ -1273,6 +1275,23 @@
       return '';
     }
 
+    function isProductDetailShot(shot) {
+      return shot === 'detail 1' || shot === 'detail 2' || shot === 'detail 3';
+    }
+
+    function mediaTextMatchesAnyProductColor(value) {
+      const text = compactMediaName(value);
+      const variantColors = getAvailableColorsFromVariants();
+      const blockColors = colorBlocks.reduce((colors, colorBlock) => {
+        if (colorBlock.option_value) colors.push(colorBlock.option_value);
+        if (colorBlock.display_name) colors.push(colorBlock.display_name);
+        return colors;
+      }, []);
+      const colorNames = [...new Set([...variantColors, ...blockColors].filter(Boolean).map(compactMediaName))];
+
+      return colorNames.some(colorName => colorName && text.includes(colorName));
+    }
+
     function getProductMediaShotMapForColor(colorValue, block, shotOrder = lpShotOrder) {
       const colorNames = [colorValue, block && block.option_value, block && block.display_name]
         .filter(Boolean)
@@ -1284,16 +1303,24 @@
 
       productMedia.forEach(item => {
         const mediaText = `${item.alt || ''} ${item.src || ''}`;
-        const parsed = parseProductMediaAlt(item.alt) || {
+        const parsedAlt = parseProductMediaAlt(item.alt);
+        const parsed = parsedAlt || {
           role: '',
           color: '',
-          shot: getMediaShotFromText(mediaText)
+          shot: getMediaShotFromText(mediaText),
+          scope: 'filename'
         };
         if (!parsed || !item.src) return;
         const rolePriority = getMediaRolePriority(parsed.role, parsed.shot);
-        const matchesColor = parsed.color
-          ? uniqueColorNames.includes(lower(parsed.color))
-          : mediaTextMatchesColor(mediaText, colorValue, block);
+        const isSharedProductDetail = isProductDetailShot(parsed.shot) && (
+          parsed.scope === 'product' ||
+          (parsed.scope === 'filename' && !mediaTextMatchesAnyProductColor(item.src))
+        );
+        const matchesColor = isProductDetailShot(parsed.shot)
+          ? isSharedProductDetail
+          : parsed.color
+            ? uniqueColorNames.includes(lower(parsed.color))
+            : mediaTextMatchesColor(mediaText, colorValue, block);
         if (!matchesColor) return;
         if (!allowedShots.has(parsed.shot) || !Number.isFinite(rolePriority)) return;
         if (images[parsed.shot] && priorities[parsed.shot] <= rolePriority) return;
