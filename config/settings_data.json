@@ -706,10 +706,10 @@
         "type": "kasya-aov-cart-drawer",
         "settings": {
           "aov_payment_gcash_logo": "shopify://shop_images/gcash.png",
-          "aov_payment_rcbc_logo": "shopify://shop_images/RCBC.png",
-          "aov_payment_chinabank_logo": "shopify://shop_images/chinabank.png",
-          "aov_payment_bpi_logo": "shopify://shop_images/BPI.png",
-          "aov_payment_unionbank_logo": "shopify://shop_images/UB.webp",
+          "aov_payment_rcbc_logo": "shopify://shop_images/ChatGPT_Image_Sep_22_2026_11_37_55_AM.png",
+          "aov_payment_chinabank_logo": "shopify://shop_images/ChatGPT_Image_Sep_22_2026_11_36_19_AM.png",
+          "aov_payment_bpi_logo": "shopify://shop_images/ChatGPT_Image_Sep_22_2026_11_36_37_AM.png",
+          "aov_payment_unionbank_logo": "shopify://shop_images/ChatGPT_Image_Sep_22_2026_11_36_09_AM.png",
           "aov_new_to_kasya_products": [
             "wideleg-linen-pants",
             "soft-linen-long-skirts-copy",

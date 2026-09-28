@@ -24,7 +24,7 @@
   const reservation = {
     duration: 180,
     storageKey: 'kasyaAovCartReservation',
-    endedText: 'Your reservation has ended. Please proceed before items sell out.',
+    endedText: 'Reservation ended. Please checkout before items sell out.',
     emptyText: 'Add an item to start your reservation timer.'
   };
 
@@ -1620,16 +1620,14 @@
       }
 
       subtotalWrap.innerHTML = `
-        <div class="kasya-aov-cart__subtotal-row">
+        ${discount > 0 ? `
+          <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--savings">
+            <span>Discount</span>
+            <strong>− ${formatMoney(discount)}</strong>
+          </div>
+        ` : ''}
+        <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--payable">
           <span>Subtotal</span>
-          <strong class="kasya-aov-cart__subtotal-amount">${formatMoney(originalSubtotal)}</strong>
-        </div>
-        <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--savings">
-          <span>Discount</span>
-          <strong>− ${formatMoney(discount)}</strong>
-        </div>
-        <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--final">
-          <span>Final Total</span>
           <strong class="kasya-aov-cart__subtotal-amount" data-kasya-aov-cart-subtotal>${formatMoney(finalSubtotal)}</strong>
         </div>
       `;
@@ -1658,11 +1656,11 @@
 
       if (copy) {
         if (subtotal < offers.freeShippingCents) {
-          copy.textContent = `You are ${formatMoneyClean(offers.freeShippingCents - subtotal)} away from getting FREE SHIPPING`;
+          copy.textContent = `${formatMoneyClean(offers.freeShippingCents - subtotal)} away from FREE SHIPPING`;
         } else if (subtotal < offers.discountCents) {
-          copy.textContent = `You unlocked FREE SHIPPING — ${formatMoneyClean(offers.discountCents - subtotal)} away from ₱450 OFF`;
+          copy.textContent = `FREE SHIPPING unlocked — ${formatMoneyClean(offers.discountCents - subtotal)} away from ₱450 OFF`;
         } else {
-          copy.textContent = 'You unlocked FREE SHIPPING and ₱450 OFF';
+          copy.textContent = 'FREE SHIPPING + ₱450 OFF unlocked';
         }
       }
 

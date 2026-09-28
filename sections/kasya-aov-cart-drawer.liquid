@@ -46,7 +46,7 @@
 
     <section class="kasya-aov-cart__shipping" aria-label="Free shipping progress">
       <p class="kasya-aov-cart__shipping-copy" data-kasya-aov-cart-progress-copy>
-        You are ₱2,000 away from getting FREE SHIPPING
+        ₱2,000 away from FREE SHIPPING
       </p>
       <div class="kasya-aov-cart__shipping-track-wrap">
         <div class="kasya-aov-cart__shipping-track" aria-hidden="true">
@@ -154,24 +154,37 @@
 
       <form action="{{ routes.cart_url }}" method="post" class="kasya-aov-cart__checkout-form">
         <div class="kasya-aov-cart__subtotal" data-kasya-aov-cart-subtotal-wrap>
-          <div class="kasya-aov-cart__subtotal-row">
+          {%- if cart.total_discount > 0 -%}
+            <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--savings">
+              <span>Discount</span>
+              <strong>− {{ cart.total_discount | money }}</strong>
+            </div>
+          {%- endif -%}
+          <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--payable">
             <span>Subtotal</span>
-            <strong class="kasya-aov-cart__subtotal-amount">{{ cart.original_total_price | money }}</strong>
-          </div>
-          <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--savings">
-            <span>Discount</span>
-            <strong>− {{ cart.total_discount | money }}</strong>
-          </div>
-          <div class="kasya-aov-cart__subtotal-row kasya-aov-cart__subtotal-row--final">
-            <span>Final Total</span>
             <strong class="kasya-aov-cart__subtotal-amount" data-kasya-aov-cart-subtotal>{{ cart.total_price | money }}</strong>
           </div>
         </div>
-        <p class="kasya-aov-cart__checkout-note">Shipping calculated at checkout.</p>
+        <p class="kasya-aov-cart__checkout-note">
+          <span class="kasya-aov-cart__checkout-note-text">
+            <span class="kasya-aov-cart__checkout-note-line">
+              <svg class="kasya-aov-cart__checkout-note-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M3 6.75h11v10H3zM14 10.25h3.5l3.5 3.5v3h-7zM7 19.25a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM18 19.25a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Shipping: ₱55–₱99 depending on location</span>
+            </span>
+            <span>Free shipping on orders ₱2,000+</span>
+          </span>
+        </p>
         <button type="submit" name="checkout" class="kasya-aov-cart__checkout">
           <span>PROCEED TO CHECKOUT</span>
           <span aria-hidden="true">→</span>
         </button>
+        <div class="kasya-aov-cart__assurances" role="list" aria-label="Checkout assurances">
+          <span class="kasya-aov-cart__assurance" role="listitem"><span aria-hidden="true">✓</span> COD Nationwide</span>
+          <span class="kasya-aov-cart__assurance" role="listitem"><span aria-hidden="true">✓</span> Easy Size Exchange</span>
+          <span class="kasya-aov-cart__assurance" role="listitem"><span aria-hidden="true">✓</span> Ships in 24h</span>
+        </div>
       </form>
     </footer>
   </aside>
