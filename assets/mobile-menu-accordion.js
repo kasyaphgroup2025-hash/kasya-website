@@ -18,7 +18,11 @@ if (!customElements.get('mobile-menu-accordion')) {
 
         if (opening && toggle.dataset.menuLevel === '1') {
           this.toggles
-            .filter((item) => item !== toggle && item.dataset.menuLevel === '1')
+            .filter(
+              (item) =>
+                item.dataset.menuLevel === '1' &&
+                item.getAttribute('aria-controls') !== toggle.getAttribute('aria-controls')
+            )
             .forEach((item) => this.setExpanded(item, false));
         }
 
@@ -29,7 +33,9 @@ if (!customElements.get('mobile-menu-accordion')) {
         const panel = this.querySelector(`#${CSS.escape(toggle.getAttribute('aria-controls'))}`);
         if (!panel) return;
 
-        toggle.setAttribute('aria-expanded', String(expanded));
+        this.toggles
+          .filter((item) => item.getAttribute('aria-controls') === toggle.getAttribute('aria-controls'))
+          .forEach((item) => item.setAttribute('aria-expanded', String(expanded)));
         panel.classList.toggle('is-open', expanded);
         panel.setAttribute('aria-hidden', String(!expanded));
         panel.toggleAttribute('inert', !expanded);

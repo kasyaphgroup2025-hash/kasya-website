@@ -272,6 +272,7 @@ details[open].menu-opening > .menu-drawer__submenu {
 
   .mobile-menu-accordion__list,
   .mobile-menu-accordion__sublist {
+    background: #ffffff;
     margin: 0;
     padding: 0;
   }
@@ -283,6 +284,7 @@ details[open].menu-opening > .menu-drawer__submenu {
   .mobile-menu-accordion__row {
     display: flex;
     align-items: stretch;
+    background: #ffffff;
     min-height: 5.8rem;
   }
 
@@ -291,12 +293,34 @@ details[open].menu-opening > .menu-drawer__submenu {
   }
 
   .mobile-menu-accordion__link {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    color: rgb(var(--color-foreground));
     display: flex;
     flex: 1 1 auto;
+    font-family: inherit;
     align-items: center;
     min-width: 0;
     padding: 1.4rem 1.6rem;
+    text-align: start;
     text-decoration: none;
+  }
+
+  .mobile-menu-accordion__label-toggle {
+    cursor: pointer;
+  }
+
+  .mobile-menu-accordion .menu-drawer__menu-item--active,
+  .mobile-menu-accordion .menu-drawer__menu-item--active:hover,
+  .mobile-menu-accordion .mobile-menu-accordion__link:hover,
+  .mobile-menu-accordion .mobile-menu-accordion__link:focus {
+    background: transparent;
+  }
+
+  .mobile-menu-accordion .menu-drawer__menu-item--active::before {
+    content: none;
+    display: none;
   }
 
   .mobile-menu-accordion__link--level-1 {
@@ -386,11 +410,11 @@ details[open].menu-opening > .menu-drawer__submenu {
   }
 
   .mobile-menu-accordion__panel > .mobile-menu-accordion__panel-inner {
-    background: rgba(var(--color-foreground), 0.025);
+    background: #ffffff;
   }
 
   .mobile-menu-accordion__panel .mobile-menu-accordion__panel > .mobile-menu-accordion__panel-inner {
-    background: rgba(var(--color-foreground), 0.018);
+    background: #ffffff;
   }
 
   .mobile-menu-accordion__link:focus-visible,

@@ -7,18 +7,21 @@
       -%}
       <li class="mobile-menu-accordion__item mobile-menu-accordion__item--level-1">
         <div class="mobile-menu-accordion__row">
-          <a
-            href="{{ link.url }}"
-            class="mobile-menu-accordion__link mobile-menu-accordion__link--level-1 link link--text{% if link.current or link.child_active %} menu-drawer__menu-item--active{% endif %}{% if badges_str contains link_index %} por{% endif %}"
-            {% if link.current %}aria-current="page"{% endif %}
-          >
-            {{- link.title -}}
-            {%- if badges_str contains link_index -%}
-              {%- assign blocks_index = badges_str | split: link_index | last | split: ';' | first -%}
-              {%- render 'header-menu-badge', blocks_index: blocks_index, is_in_drawer: true -%}
-            {%- endif -%}
-          </a>
           {%- if link.links != blank -%}
+            <button
+              type="button"
+              class="mobile-menu-accordion__link mobile-menu-accordion__link--level-1 mobile-menu-accordion__label-toggle no-control-menu{% if link.current or link.child_active %} menu-drawer__menu-item--active{% endif %}{% if badges_str contains link_index %} por{% endif %}"
+              aria-expanded="false"
+              aria-controls="{{ panel_id }}"
+              data-mobile-menu-toggle
+              data-menu-level="1"
+            >
+              {{- link.title -}}
+              {%- if badges_str contains link_index -%}
+                {%- assign blocks_index = badges_str | split: link_index | last | split: ';' | first -%}
+                {%- render 'header-menu-badge', blocks_index: blocks_index, is_in_drawer: true -%}
+              {%- endif -%}
+            </button>
             <button
               type="button"
               class="mobile-menu-accordion__toggle no-control-menu"
@@ -30,6 +33,18 @@
               <span class="visually-hidden">{{ link.title }} submenu</span>
               <span class="mobile-menu-accordion__symbol" aria-hidden="true"></span>
             </button>
+          {%- else -%}
+            <a
+              href="{{ link.url }}"
+              class="mobile-menu-accordion__link mobile-menu-accordion__link--level-1 link link--text{% if link.current %} menu-drawer__menu-item--active{% endif %}{% if badges_str contains link_index %} por{% endif %}"
+              {% if link.current %}aria-current="page"{% endif %}
+            >
+              {{- link.title -}}
+              {%- if badges_str contains link_index -%}
+                {%- assign blocks_index = badges_str | split: link_index | last | split: ';' | first -%}
+                {%- render 'header-menu-badge', blocks_index: blocks_index, is_in_drawer: true -%}
+              {%- endif -%}
+            </a>
           {%- endif -%}
         </div>
 
@@ -51,18 +66,21 @@
                   -%}
                   <li class="mobile-menu-accordion__subitem">
                     <div class="mobile-menu-accordion__row mobile-menu-accordion__row--nested">
-                      <a
-                        href="{{ childlink.url }}"
-                        class="mobile-menu-accordion__link mobile-menu-accordion__link--level-2 link link--text{% if childlink.current or childlink.child_active %} menu-drawer__menu-item--active{% endif %}{% if badges_str contains child_index %} por{% endif %}"
-                        {% if childlink.current %}aria-current="page"{% endif %}
-                      >
-                        {{- childlink.title -}}
-                        {%- if badges_str contains child_index -%}
-                          {%- assign blocks_index = badges_str | split: child_index | last | split: ';' | first -%}
-                          {%- render 'header-menu-badge', blocks_index: blocks_index, is_in_drawer: true, parent_item: link -%}
-                        {%- endif -%}
-                      </a>
                       {%- if childlink.links != blank -%}
+                        <button
+                          type="button"
+                          class="mobile-menu-accordion__link mobile-menu-accordion__link--level-2 mobile-menu-accordion__label-toggle no-control-menu{% if childlink.current or childlink.child_active %} menu-drawer__menu-item--active{% endif %}{% if badges_str contains child_index %} por{% endif %}"
+                          aria-expanded="false"
+                          aria-controls="{{ child_panel_id }}"
+                          data-mobile-menu-toggle
+                          data-menu-level="2"
+                        >
+                          {{- childlink.title -}}
+                          {%- if badges_str contains child_index -%}
+                            {%- assign blocks_index = badges_str | split: child_index | last | split: ';' | first -%}
+                            {%- render 'header-menu-badge', blocks_index: blocks_index, is_in_drawer: true, parent_item: link -%}
+                          {%- endif -%}
+                        </button>
                         <button
                           type="button"
                           class="mobile-menu-accordion__toggle mobile-menu-accordion__toggle--nested no-control-menu"
@@ -74,6 +92,18 @@
                           <span class="visually-hidden">{{ childlink.title }} submenu</span>
                           <span class="mobile-menu-accordion__symbol" aria-hidden="true"></span>
                         </button>
+                      {%- else -%}
+                        <a
+                          href="{{ childlink.url }}"
+                          class="mobile-menu-accordion__link mobile-menu-accordion__link--level-2 link link--text{% if childlink.current %} menu-drawer__menu-item--active{% endif %}{% if badges_str contains child_index %} por{% endif %}"
+                          {% if childlink.current %}aria-current="page"{% endif %}
+                        >
+                          {{- childlink.title -}}
+                          {%- if badges_str contains child_index -%}
+                            {%- assign blocks_index = badges_str | split: child_index | last | split: ';' | first -%}
+                            {%- render 'header-menu-badge', blocks_index: blocks_index, is_in_drawer: true, parent_item: link -%}
+                          {%- endif -%}
+                        </a>
                       {%- endif -%}
                     </div>
 
