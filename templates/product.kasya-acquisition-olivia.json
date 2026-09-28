@@ -12,10 +12,10 @@
     "kasya_lp_product_hero": {
       "type": "kasya-lp-product-hero",
       "settings": {
-        "product": "",
+        "product": "olivia-skirt",
         "show_header": false,
         "logo_text": "KASYA",
-        "product_label": "KASYA 10.10",
+        "product_label": "KASYA basics",
         "heading": "",
         "subtitle": "Acid Linen",
         "rating_text": "",
@@ -151,7 +151,6 @@
         "lifestyle_1": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "Office Day",
             "description": "A clean A-line shape that feels comfortable through long workdays."
           }
@@ -159,7 +158,6 @@
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "Errands",
             "description": "Easy movement and useful pockets for days on the go."
           }
@@ -167,7 +165,6 @@
         "lifestyle_3": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "Church & Family Days",
             "description": "A polished, comfortable option for time with family."
           }
@@ -175,7 +172,6 @@
         "lifestyle_4": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "Style It With Reese",
             "description": "Pair with the Reese Polo for an easy 10.10 outfit."
           }
