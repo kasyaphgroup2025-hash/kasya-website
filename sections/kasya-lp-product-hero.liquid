@@ -20,7 +20,7 @@
     assign show_initial_media_preview = false
     assign is_daliah_acquisition_hero = false
     assign expected_media_role = ''
-    assign explicit_selection_templates = 'kasya-acquisition-dahlia,kasya-acquisition-ellav2,kasya-acquisition-hazel,kasya-acquisition-inah,kasya-acquisition-mia,kasya-acquisition-kianna,kasya-acquisition-naomi,kasya-acqusition-lea,kasya-jane_blouse,kasya-jane_pants' | split: ','
+    assign explicit_selection_templates = 'kasya-acquisition-dahlia,kasya-acquisition-ellav2,kasya-acquisition-hazel,kasya-acquisition-inah,kasya-acquisition-mia,kasya-acquisition-kianna,kasya-acquisition-naomi,kasya-acquisition-olivia,kasya-acquisition-paisley,kasya-acquisition-reese,kasya-acquisition-sofia,kasya-acquisition-quinn,kasya-acqusition-lea,kasya-jane_blouse,kasya-jane_pants' | split: ','
     assign lp_product_title_downcase = lp_product.title | downcase
 
     if template.suffix == 'kasya-jane_blouse' or lp_product.handle == 'jane-blouse-premium-ity-1'
@@ -1091,7 +1091,7 @@
     const sizeChartTriggerText = {{ section.settings.size_chart_trigger_text | json }};
     const sizeChartHideText = 'Hide size chart';
     const fallbackImage = {% if lp_product.featured_image != blank %}{{ lp_product.featured_image | image_url: width: 1400 | json }}{% else %}null{% endif %};
-    const lpShotOrder = ['front', 'side', 'back', 'sitting', 'fabric close up'];
+    const lpShotOrder = ['front', 'side', 'back', 'sitting', 'detail 1', 'detail 2', 'detail 3', 'fabric close up'];
 
     const lower = value => String(value || '').trim().toLowerCase();
 
@@ -1206,12 +1206,22 @@
 
     function parseProductMediaAlt(altText) {
       const parts = String(altText || '').split('|').map(part => part.trim());
-      if (![3, 4].includes(parts.length) || lower(parts[0]) !== 'lp') return null;
+      if (![2, 3, 4].includes(parts.length) || lower(parts[0]) !== 'lp') return null;
+
+      if (parts.length === 2) {
+        return {
+          role: '',
+          color: '',
+          shot: normalizeMediaShotName(parts[1]),
+          scope: 'product'
+        };
+      }
 
       return {
         role: parts.length === 4 ? lower(parts[1]) : '',
         color: parts.length === 4 ? parts[2] : parts[1],
-        shot: normalizeMediaShotName(parts.length === 4 ? parts[3] : parts[2])
+        shot: normalizeMediaShotName(parts.length === 4 ? parts[3] : parts[2]),
+        scope: 'color'
       };
     }
 
@@ -1220,7 +1230,8 @@
 
       if (!expectedMediaRole) return normalizedRole ? 1 : 0;
       if (shot === 'sitting' || shot === 'fabric close up') {
-        return normalizedRole ? Number.POSITIVE_INFINITY : 0;
+        if (normalizedRole === expectedMediaRole) return 0;
+        return normalizedRole ? Number.POSITIVE_INFINITY : 1;
       }
       if (normalizedRole === expectedMediaRole) return 0;
       if (!normalizedRole) return 1;
@@ -1233,6 +1244,11 @@
       const shot = normalizeColorName(value);
       const compactShot = shot.replace(/[^a-z0-9]/g, '');
 
+      if (compactShot === 'detail1') return 'detail 1';
+      if (compactShot === 'detail2') return 'detail 2';
+      if (compactShot === 'detail3') return 'detail 3';
+      if (compactShot === 'fabriccloseup') return 'fabric close up';
+
       if (showInitialMediaPreview && compactShot.includes('front')) return 'front';
       if (showInitialMediaPreview && compactShot.includes('side')) return 'side';
       if (showInitialMediaPreview && compactShot.includes('back')) return 'back';
@@ -1242,6 +1258,38 @@
       }
 
       return shot;
+    }
+
+    function getMediaShotFromText(value) {
+      const compact = compactMediaName(value);
+
+      if (compact.includes('detail1')) return 'detail 1';
+      if (compact.includes('detail2')) return 'detail 2';
+      if (compact.includes('detail3')) return 'detail 3';
+      if (compact.includes('fabriccloseup')) return 'fabric close up';
+      if (compact.includes('sitting')) return 'sitting';
+      if (compact.includes('front')) return 'front';
+      if (compact.includes('side')) return 'side';
+      if (compact.includes('back')) return 'back';
+
+      return '';
+    }
+
+    function isProductDetailShot(shot) {
+      return shot === 'detail 1' || shot === 'detail 2' || shot === 'detail 3';
+    }
+
+    function mediaTextMatchesAnyProductColor(value) {
+      const text = compactMediaName(value);
+      const variantColors = getAvailableColorsFromVariants();
+      const blockColors = colorBlocks.reduce((colors, colorBlock) => {
+        if (colorBlock.option_value) colors.push(colorBlock.option_value);
+        if (colorBlock.display_name) colors.push(colorBlock.display_name);
+        return colors;
+      }, []);
+      const colorNames = [...new Set([...variantColors, ...blockColors].filter(Boolean).map(compactMediaName))];
+
+      return colorNames.some(colorName => colorName && text.includes(colorName));
     }
 
     function getProductMediaShotMapForColor(colorValue, block, shotOrder = lpShotOrder) {
@@ -1254,10 +1302,26 @@
       const priorities = {};
 
       productMedia.forEach(item => {
-        const parsed = parseProductMediaAlt(item.alt);
+        const mediaText = `${item.alt || ''} ${item.src || ''}`;
+        const parsedAlt = parseProductMediaAlt(item.alt);
+        const parsed = parsedAlt || {
+          role: '',
+          color: '',
+          shot: getMediaShotFromText(mediaText),
+          scope: 'filename'
+        };
         if (!parsed || !item.src) return;
         const rolePriority = getMediaRolePriority(parsed.role, parsed.shot);
-        if (!uniqueColorNames.includes(lower(parsed.color))) return;
+        const isSharedProductDetail = isProductDetailShot(parsed.shot) && (
+          parsed.scope === 'product' ||
+          (parsed.scope === 'filename' && !mediaTextMatchesAnyProductColor(item.src))
+        );
+        const matchesColor = isProductDetailShot(parsed.shot)
+          ? isSharedProductDetail
+          : parsed.color
+            ? uniqueColorNames.includes(lower(parsed.color))
+            : mediaTextMatchesColor(mediaText, colorValue, block);
+        if (!matchesColor) return;
         if (!allowedShots.has(parsed.shot) || !Number.isFinite(rolePriority)) return;
         if (images[parsed.shot] && priorities[parsed.shot] <= rolePriority) return;
 
@@ -1270,8 +1334,13 @@
 
     function getProductMediaImagesForColor(colorValue, block, shotOrder = lpShotOrder) {
       const imageMap = getProductMediaShotMapForColor(colorValue, block, shotOrder);
+      const seenSources = new Set();
 
-      return shotOrder.map(shot => imageMap[shot]).filter(Boolean);
+      return shotOrder.map(shot => imageMap[shot]).filter(source => {
+        if (!source || seenSources.has(source)) return false;
+        seenSources.add(source);
+        return true;
+      });
     }
 
     function mediaMatchesExpectedRole(item) {

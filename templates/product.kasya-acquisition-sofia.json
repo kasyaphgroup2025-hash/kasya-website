@@ -1,0 +1,402 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "kasya_lp_product_hero": {
+      "type": "kasya-lp-product-hero",
+      "settings": {
+        "product": "",
+        "show_header": false,
+        "logo_text": "KASYA",
+        "product_label": "KASYA 10.10",
+        "heading": "",
+        "subtitle": "ITY",
+        "rating_text": "",
+        "description": "One-piece ease with room to move.",
+        "default_color": "Black",
+        "color_option_name": "Color",
+        "size_option_name": "Size",
+        "show_size_chart": true,
+        "size_helper_text": "Available in sizes S to 3XL. Use the product size chart and current measurements to choose your preferred relaxed fit.",
+        "size_chart_trigger_text": "Not sure about your size? View size chart",
+        "size_chart_note": "Measurements may vary slightly due to fabric behavior and manual production.",
+        "cta_text": "ADD TO CART",
+        "enable_sticky_atc": true
+      }
+    },
+    "kasya_lp_fit_confidence": {
+      "type": "kasya-lp-fit-confidence",
+      "blocks": {
+        "fit_note_1": {
+          "type": "fit_note",
+          "settings": {
+            "note": "A-line silhouette"
+          }
+        },
+        "fit_note_2": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Relaxed fit"
+          }
+        },
+        "fit_note_3": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Stretch-based fabric"
+          }
+        },
+        "fit_note_4": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Easy drape"
+          }
+        },
+        "fit_note_5": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Side pockets"
+          }
+        }
+      },
+      "block_order": [
+        "fit_note_1",
+        "fit_note_2",
+        "fit_note_3",
+        "fit_note_4",
+        "fit_note_5"
+      ],
+      "settings": {
+        "heading": "HOW IT FITS",
+        "subheading": "An easy A-line dress with a relaxed fit and stretch-based fabric for comfortable daily movement.",
+        "front_label": "FRONT VIEW",
+        "front_description": "Shows the clean A-line silhouette and easy one-piece shape.",
+        "side_label": "SIDE VIEW",
+        "side_description": "Shows the relaxed drape and room for comfortable movement.",
+        "back_label": "BACK VIEW",
+        "back_description": "Shows the simple back line and everyday coverage.",
+        "model_info": ""
+      }
+    },
+    "kasya_lp_fabric_quality": {
+      "type": "kasya-lp-fabric-quality",
+      "blocks": {
+        "fabric_note_1": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "≈",
+            "title": "Stretch comfort",
+            "description": "Moves comfortably through workdays, errands, and travel."
+          }
+        },
+        "fabric_note_2": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "◯",
+            "title": "Easy drape",
+            "description": "Falls naturally in a relaxed A-line silhouette."
+          }
+        },
+        "fabric_note_3": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "✱",
+            "title": "One-piece ease",
+            "description": "Creates a complete outfit with less styling effort."
+          }
+        },
+        "fabric_note_4": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "✓",
+            "title": "Practical pockets",
+            "description": "Side pockets make daily wear more useful."
+          }
+        }
+      },
+      "block_order": [
+        "fabric_note_1",
+        "fabric_note_2",
+        "fabric_note_3",
+        "fabric_note_4"
+      ],
+      "settings": {
+        "heading": "FABRIC & QUALITY",
+        "subheading": "Stretch-based ITY with an easy drape for comfortable, low-effort dressing.",
+        "main_note": "One piece. Less deciding. Sofia keeps the silhouette polished while making everyday dressing simpler.",
+        "show_feature_notes": true,
+        "fabric_care_dropdown_title": "FABRIC AND CARE",
+        "fabric_care_heading": "Fabric and Care",
+        "fabric_care_description": "Made with stretch-based ITY that offers an easy drape and comfortable movement. Gentle care helps preserve the fabric's shape and finish.",
+        "care_instructions_heading": "Care Instructions",
+        "care_instruction_1": "Wash gently with cold water.",
+        "care_instruction_2": "Use mild detergent.",
+        "care_instruction_3": "Avoid bleach.",
+        "care_instruction_4": "Avoid excessive stretching or wringing while wet.",
+        "care_instruction_5": "Do not use high-heat drying.",
+        "care_instruction_6": "Hang or lay flat to dry.",
+        "care_instruction_7": "Use low heat when ironing if needed.",
+        "care_instruction_8": "Wash separately on first use. Slight color bleeding may occur."
+      }
+    },
+    "kasya_lp_lifestyle": {
+      "type": "kasya-lp-lifestyle",
+      "blocks": {
+        "lifestyle_1": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "",
+            "title": "Office Day",
+            "description": "A polished one-piece outfit that keeps morning decisions simple."
+          }
+        },
+        "lifestyle_2": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "",
+            "title": "Errands & Family Days",
+            "description": "Relaxed movement and side pockets for everyday plans."
+          }
+        },
+        "lifestyle_3": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "",
+            "title": "Church & Casual Occasions",
+            "description": "An easy A-line shape for comfortably polished dressing."
+          }
+        },
+        "lifestyle_4": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "",
+            "title": "Style It With Quinn",
+            "description": "Add the Quinn Shawl when you want another layer or a changed-up look."
+          }
+        }
+      },
+      "block_order": [
+        "lifestyle_1",
+        "lifestyle_2",
+        "lifestyle_3",
+        "lifestyle_4"
+      ],
+      "settings": {
+        "heading": "WHERE TO WEAR IT",
+        "subheading": "An easy one-piece option for office days, errands, church, family time, and travel."
+      }
+    },
+    "kasya_lp_reviews": {
+      "type": "kasya-lp-reviews",
+      "blocks": {
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "name": "",
+            "title": "",
+            "comment": "",
+            "date_text": "",
+            "size_text": "",
+            "fit_text": ""
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "name": "",
+            "title": "",
+            "comment": "",
+            "date_text": "",
+            "size_text": "",
+            "fit_text": ""
+          }
+        },
+        "review_3": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "name": "",
+            "title": "",
+            "comment": "",
+            "date_text": "",
+            "size_text": "",
+            "fit_text": ""
+          }
+        }
+      },
+      "block_order": [
+        "review_1",
+        "review_2",
+        "review_3"
+      ],
+      "disabled": true,
+      "settings": {
+        "heading": "Reviews",
+        "average_rating_text": "",
+        "show_average_stars": true,
+        "background_color": "#fbf8f4",
+        "view_more_text": "View more",
+        "view_more_link": "",
+        "show_view_more": true
+      }
+    },
+    "kasya_lp_reassurance": {
+      "type": "kasya-lp-reassurance",
+      "blocks": {
+        "reassurance_1": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "shipping",
+            "title": "Ships within",
+            "description": "7 business days"
+          }
+        },
+        "reassurance_2": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "payment",
+            "title": "Easy Payment",
+            "description": "COD, GCash, and card payments available."
+          }
+        },
+        "reassurance_3": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "return",
+            "title": "Returns accepted",
+            "description": "for unworn items with tags attached"
+          }
+        },
+        "reassurance_4": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "message",
+            "title": "Need help?",
+            "description": "Message us for sizing assistance"
+          }
+        }
+      },
+      "block_order": [
+        "reassurance_1",
+        "reassurance_2",
+        "reassurance_3",
+        "reassurance_4"
+      ],
+      "settings": {
+        "heading": "Shipping & Return",
+        "subheading": "A quick guide before checkout.",
+        "background_color": "#ffffff",
+        "card_color": "#ffffff"
+      }
+    },
+    "kasya_lp_faq": {
+      "type": "kasya-lp-faq",
+      "blocks": {
+        "faq_1": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fit & sizing",
+            "question": "What size should I get?",
+            "answer": "The Sofia Dress is offered in sizes S to 3XL. Please use the product size chart and current measurements before ordering.",
+            "open_by_default": true
+          }
+        },
+        "faq_2": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fit & sizing",
+            "question": "How does it fit?",
+            "answer": "Sofia has a relaxed A-line silhouette with room for comfortable everyday movement.",
+            "open_by_default": false
+          }
+        },
+        "faq_3": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fabric & feel",
+            "question": "What fabric is used?",
+            "answer": "The Sofia Dress is made from stretch-based ITY with an easy drape.",
+            "open_by_default": false
+          }
+        },
+        "faq_4": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fabric & care",
+            "question": "How should I wash it?",
+            "answer": "Wash gently in cold water with mild detergent. Avoid bleach and high-heat drying, then hang to dry.",
+            "open_by_default": false
+          }
+        },
+        "faq_5": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Product details",
+            "question": "Does it have pockets?",
+            "answer": "Yes. Sofia includes side pockets for practical daily wear.",
+            "open_by_default": false
+          }
+        },
+        "faq_6": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Styling",
+            "question": "Where can I wear it?",
+            "answer": "It works for office days, errands, casual occasions, family days, church, and travel.",
+            "open_by_default": false
+          }
+        },
+        "faq_7": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Styling",
+            "question": "What can I pair it with?",
+            "answer": "Wear it on its own or add the Quinn Shawl as an easy finishing layer.",
+            "open_by_default": false
+          }
+        },
+        "faq_8": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Product options",
+            "question": "What colors and sizes are available?",
+            "answer": "Sofia is offered in Black and Taupe, in sizes S to 3XL. Current availability is shown in the selectors above.",
+            "open_by_default": false
+          }
+        }
+      },
+      "block_order": [
+        "faq_1",
+        "faq_2",
+        "faq_3",
+        "faq_4",
+        "faq_5",
+        "faq_6",
+        "faq_7",
+        "faq_8"
+      ],
+      "settings": {
+        "heading": "FREQUENTLY ASKED",
+        "subheading": "",
+        "first_item_open_by_default": true
+      }
+    }
+  },
+  "order": [
+    "kasya_lp_product_hero",
+    "kasya_lp_fit_confidence",
+    "kasya_lp_fabric_quality",
+    "kasya_lp_lifestyle",
+    "kasya_lp_reviews",
+    "kasya_lp_reassurance",
+    "kasya_lp_faq"
+  ]
+}

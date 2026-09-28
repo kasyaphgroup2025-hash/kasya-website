@@ -32,6 +32,12 @@
         {% for block in section.blocks %}
           {% liquid
             assign lifestyle_image = block.settings.image
+            if lifestyle_image == blank and product != blank
+              assign lifestyle_media = product.media[forloop.index0]
+              if lifestyle_media.preview_image != blank
+                assign lifestyle_image = lifestyle_media.preview_image
+              endif
+            endif
             assign image_alt = block.settings.title | default: section.settings.heading
           %}
 

@@ -1,0 +1,402 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "kasya_lp_product_hero": {
+      "type": "kasya-lp-product-hero",
+      "settings": {
+        "product": "",
+        "show_header": false,
+        "logo_text": "KASYA",
+        "product_label": "KASYA 10.10",
+        "heading": "",
+        "subtitle": "Acid Linen",
+        "rating_text": "",
+        "description": "Wide-leg movement with an easier waist.",
+        "default_color": "Black",
+        "color_option_name": "Color",
+        "size_option_name": "Size",
+        "show_size_chart": true,
+        "size_helper_text": "Available in sizes M to 3XL. Use the product size chart and current measurements to choose your preferred fit.",
+        "size_chart_trigger_text": "Not sure about your size? View size chart",
+        "size_chart_note": "Measurements may vary slightly due to fabric behavior and manual production.",
+        "cta_text": "ADD TO CART",
+        "enable_sticky_atc": true
+      }
+    },
+    "kasya_lp_fit_confidence": {
+      "type": "kasya-lp-fit-confidence",
+      "blocks": {
+        "fit_note_1": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Wide-leg silhouette"
+          }
+        },
+        "fit_note_2": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Front pleats"
+          }
+        },
+        "fit_note_3": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Back garter"
+          }
+        },
+        "fit_note_4": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Side pockets"
+          }
+        },
+        "fit_note_5": {
+          "type": "fit_note",
+          "settings": {
+            "note": "Designed for comfortable movement"
+          }
+        }
+      },
+      "block_order": [
+        "fit_note_1",
+        "fit_note_2",
+        "fit_note_3",
+        "fit_note_4",
+        "fit_note_5"
+      ],
+      "settings": {
+        "heading": "HOW IT FITS",
+        "subheading": "Volume without the stiffness, with front pleats for shape and a back garter for waist comfort.",
+        "front_label": "FRONT VIEW",
+        "front_description": "Shows the front pleats and structured wide-leg shape.",
+        "side_label": "SIDE VIEW",
+        "side_description": "Shows the flowing leg line and practical side pockets.",
+        "back_label": "BACK VIEW",
+        "back_description": "Shows the back garter that keeps the waist comfortable.",
+        "model_info": ""
+      }
+    },
+    "kasya_lp_fabric_quality": {
+      "type": "kasya-lp-fabric-quality",
+      "blocks": {
+        "fabric_note_1": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "≈",
+            "title": "Breathable feel",
+            "description": "Comfortable enough for long days and everyday movement."
+          }
+        },
+        "fabric_note_2": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "◯",
+            "title": "Wide-leg drape",
+            "description": "Creates expressive volume without a stiff feel."
+          }
+        },
+        "fabric_note_3": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "✱",
+            "title": "Pleated structure",
+            "description": "Front pleats give the silhouette a polished shape."
+          }
+        },
+        "fabric_note_4": {
+          "type": "fabric_note",
+          "settings": {
+            "icon": "✓",
+            "title": "Easier waist",
+            "description": "A back garter adds comfort for sitting, walking, and travel."
+          }
+        }
+      },
+      "block_order": [
+        "fabric_note_1",
+        "fabric_note_2",
+        "fabric_note_3",
+        "fabric_note_4"
+      ],
+      "settings": {
+        "heading": "FABRIC & QUALITY",
+        "subheading": "Breathable Acid Linen with enough structure for a confident wide-leg silhouette.",
+        "main_note": "The pleated shape gives an outfit definition, while the fabric and back garter keep movement easy.",
+        "show_feature_notes": true,
+        "fabric_care_dropdown_title": "FABRIC AND CARE",
+        "fabric_care_heading": "Fabric and Care",
+        "fabric_care_description": "Made with breathable Acid Linen that balances everyday structure with a natural drape. Gentle washing helps preserve its texture and finish.",
+        "care_instructions_heading": "Care Instructions",
+        "care_instruction_1": "Wash gently with cold water.",
+        "care_instruction_2": "Use mild detergent.",
+        "care_instruction_3": "Avoid bleach.",
+        "care_instruction_4": "Avoid excessive stretching or wringing while wet.",
+        "care_instruction_5": "Do not use high-heat drying.",
+        "care_instruction_6": "Hang or lay flat to dry.",
+        "care_instruction_7": "Use low heat when ironing if needed.",
+        "care_instruction_8": "Wash separately on first use. Slight color bleeding may occur."
+      }
+    },
+    "kasya_lp_lifestyle": {
+      "type": "kasya-lp-lifestyle",
+      "blocks": {
+        "lifestyle_1": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "",
+            "title": "Office & Meetings",
+            "description": "Structured pleats make everyday work outfits feel polished."
+          }
+        },
+        "lifestyle_2": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "",
+            "title": "Lunch & Errands",
+            "description": "Wide-leg movement keeps busy days comfortable."
+          }
+        },
+        "lifestyle_3": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "",
+            "title": "Travel",
+            "description": "An easier waist and roomy silhouette support long days out."
+          }
+        },
+        "lifestyle_4": {
+          "type": "lifestyle_card",
+          "settings": {
+            "image": "",
+            "title": "Style It With Reese",
+            "description": "Pair with the Reese Polo for a complete 10.10 look."
+          }
+        }
+      },
+      "block_order": [
+        "lifestyle_1",
+        "lifestyle_2",
+        "lifestyle_3",
+        "lifestyle_4"
+      ],
+      "settings": {
+        "heading": "WHERE TO WEAR IT",
+        "subheading": "A statement everyday bottom for office hours, meetings, errands, lunch, and travel."
+      }
+    },
+    "kasya_lp_reviews": {
+      "type": "kasya-lp-reviews",
+      "blocks": {
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "name": "",
+            "title": "",
+            "comment": "",
+            "date_text": "",
+            "size_text": "",
+            "fit_text": ""
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "name": "",
+            "title": "",
+            "comment": "",
+            "date_text": "",
+            "size_text": "",
+            "fit_text": ""
+          }
+        },
+        "review_3": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "name": "",
+            "title": "",
+            "comment": "",
+            "date_text": "",
+            "size_text": "",
+            "fit_text": ""
+          }
+        }
+      },
+      "block_order": [
+        "review_1",
+        "review_2",
+        "review_3"
+      ],
+      "disabled": true,
+      "settings": {
+        "heading": "Reviews",
+        "average_rating_text": "",
+        "show_average_stars": true,
+        "background_color": "#fbf8f4",
+        "view_more_text": "View more",
+        "view_more_link": "",
+        "show_view_more": true
+      }
+    },
+    "kasya_lp_reassurance": {
+      "type": "kasya-lp-reassurance",
+      "blocks": {
+        "reassurance_1": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "shipping",
+            "title": "Ships within",
+            "description": "7 business days"
+          }
+        },
+        "reassurance_2": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "payment",
+            "title": "Easy Payment",
+            "description": "COD, GCash, and card payments available."
+          }
+        },
+        "reassurance_3": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "return",
+            "title": "Returns accepted",
+            "description": "for unworn items with tags attached"
+          }
+        },
+        "reassurance_4": {
+          "type": "reassurance_item",
+          "settings": {
+            "icon": "message",
+            "title": "Need help?",
+            "description": "Message us for sizing assistance"
+          }
+        }
+      },
+      "block_order": [
+        "reassurance_1",
+        "reassurance_2",
+        "reassurance_3",
+        "reassurance_4"
+      ],
+      "settings": {
+        "heading": "Shipping & Return",
+        "subheading": "A quick guide before checkout.",
+        "background_color": "#ffffff",
+        "card_color": "#ffffff"
+      }
+    },
+    "kasya_lp_faq": {
+      "type": "kasya-lp-faq",
+      "blocks": {
+        "faq_1": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fit & sizing",
+            "question": "What size should I get?",
+            "answer": "Paisley Pleated Pants are offered in sizes M to 3XL. Please use the product size chart and current measurements before ordering.",
+            "open_by_default": true
+          }
+        },
+        "faq_2": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fit & sizing",
+            "question": "How does the waist fit?",
+            "answer": "The front is structured with pleats, while the back garter gives the waist a more comfortable, forgiving feel.",
+            "open_by_default": false
+          }
+        },
+        "faq_3": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fabric & feel",
+            "question": "What fabric is used?",
+            "answer": "Paisley is made from breathable Acid Linen with an easy structured drape.",
+            "open_by_default": false
+          }
+        },
+        "faq_4": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Fabric & care",
+            "question": "How should I wash it?",
+            "answer": "Wash gently in cold water with mild detergent. Avoid bleach and high-heat drying, then hang to dry.",
+            "open_by_default": false
+          }
+        },
+        "faq_5": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Product details",
+            "question": "Does it have pockets?",
+            "answer": "Yes. Paisley includes side pockets for practical everyday use.",
+            "open_by_default": false
+          }
+        },
+        "faq_6": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Styling",
+            "question": "Where can I wear it?",
+            "answer": "It works for the office, meetings, errands, lunch, travel, and everyday rotation.",
+            "open_by_default": false
+          }
+        },
+        "faq_7": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Styling",
+            "question": "What can I pair it with?",
+            "answer": "Pair it with the Reese Polo for a coordinated 10.10 outfit or style it with an existing Kasya top.",
+            "open_by_default": false
+          }
+        },
+        "faq_8": {
+          "type": "faq",
+          "settings": {
+            "category_label": "Product options",
+            "question": "What colors and sizes are available?",
+            "answer": "Paisley is offered in Black and Oat, in sizes M to 3XL. Current availability is shown in the selectors above.",
+            "open_by_default": false
+          }
+        }
+      },
+      "block_order": [
+        "faq_1",
+        "faq_2",
+        "faq_3",
+        "faq_4",
+        "faq_5",
+        "faq_6",
+        "faq_7",
+        "faq_8"
+      ],
+      "settings": {
+        "heading": "FREQUENTLY ASKED",
+        "subheading": "",
+        "first_item_open_by_default": true
+      }
+    }
+  },
+  "order": [
+    "kasya_lp_product_hero",
+    "kasya_lp_fit_confidence",
+    "kasya_lp_fabric_quality",
+    "kasya_lp_lifestyle",
+    "kasya_lp_reviews",
+    "kasya_lp_reassurance",
+    "kasya_lp_faq"
+  ]
+}
