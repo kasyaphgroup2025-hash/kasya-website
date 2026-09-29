@@ -464,38 +464,69 @@
                       </div>
                     {%- endif -%}
 
-                    {%- if menu_labels.size > 0 -%}
-                      <div class="menu-drawer__menu-labels flex justify-center align-center menu-drawer__block">
-                        <ul class="menu-drawer__menu-labels__list list-unstyled flex margin0 flex-wrap">
-                          {%- for label in menu_labels -%}
-                            <li class="menu-drawer__menu-labels__item{% unless label.settings.link != blank %} flex align-center color-foreground menu-drawer__menu-labels__item-gap{% endunless %}">
-                              {%- if label.settings.link != blank -%}
-                                <a
-                                  href="{{ label.settings.link }}"
-                                  class="link align-center flex menu-drawer__menu-labels__item-gap"
-                                >
-                              {%- endif -%}
-                              {%- render 'icon-picker',
-                                icon: label.settings.icon,
-                                icon_width: 16,
-                                add_classes: 'light'
-                              -%}
-                              <span class="text-small">{{ label.settings.title }}</span>
-                              {%- if label.settings.link != blank -%}
-                                </a>
-                              {%- endif -%}
-                            </li>
-                          {%- endfor -%}
+                    {%- capture mobile_utility_links -%}
+                      {%- for label in menu_labels -%}
+                        {%- assign mobile_label_title = label.settings.title | downcase -%}
+                        {%- unless mobile_label_title contains 'follow' -%}
+                          <li class="menu-drawer__utility-item">
+                            {%- if label.settings.link != blank -%}
+                              <a href="{{ label.settings.link }}" class="menu-drawer__utility-link link link--text">
+                                {{- label.settings.title -}}
+                              </a>
+                            {%- else -%}
+                              <span class="menu-drawer__utility-link">{{ label.settings.title }}</span>
+                            {%- endif -%}
+                          </li>
+                        {%- endunless -%}
+                      {%- endfor -%}
+                    {%- endcapture -%}
+                    {%- if mobile_utility_links != blank -%}
+                      <nav class="menu-drawer__utility-section menu-drawer__block" aria-label="Utility links">
+                        <ul class="menu-drawer__utility-list list-unstyled margin0">
+                          {{- mobile_utility_links -}}
                         </ul>
-                      </div>
+                      </nav>
                     {%- endif -%}
 
-                    <div class="menu-drawer__utility-links menu-drawer__block menu-drawer__background">
-                      {%- render 'social-media-icons',
-                        add_classes: 'list list-social--in-drawer',
-                        has_link_bkg: true
-                      -%}
-                    </div>
+                    {%- if section.settings.enable_social_links -%}
+                      {%- if settings.social_facebook_link != blank or settings.social_tiktok_link != blank -%}
+                        <div class="menu-drawer__social-section menu-drawer__block">
+                          <p class="menu-drawer__social-heading">Connect with Kasya</p>
+                          <ul class="menu-drawer__social-list list-unstyled margin0" role="list">
+                            {%- if settings.social_facebook_link != blank -%}
+                              <li>
+                                <a
+                                  href="{{ settings.social_facebook_link }}"
+                                  class="menu-drawer__social-link link link--text"
+                                  target="_blank"
+                                  rel="noopener"
+                                  aria-label="Facebook (opens in a new tab)"
+                                  data-no-instant
+                                >
+                                  {%- render 'icon-facebook', icon_width: 18 -%}
+                                  <span>Facebook</span>
+                                </a>
+                              </li>
+                            {%- endif -%}
+                            {%- if settings.social_tiktok_link != blank -%}
+                              <li>
+                                <a
+                                  href="{{ settings.social_tiktok_link }}"
+                                  class="menu-drawer__social-link link link--text"
+                                  target="_blank"
+                                  rel="noopener"
+                                  aria-label="TikTok (opens in a new tab)"
+                                  data-no-instant
+                                >
+                                  {%- render 'icon-tiktok', icon_width: 18 -%}
+                                  <span>TikTok</span>
+                                </a>
+                              </li>
+                            {%- endif -%}
+                          </ul>
+                        </div>
+                      {%- endif -%}
+                    {%- endif -%}
 
                     {%- if has_localization and section.settings.show_country_language_selector_drawer_mobile -%}
                       {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
@@ -1076,6 +1107,12 @@
       ],
       "default": "center",
       "label": "t:sections.header.settings.mobile_logo_position.label"
+    },
+    {
+      "type": "font_picker",
+      "id": "mobile_drawer_font",
+      "default": "manrope_n4",
+      "label": "Mobile drawer font"
     },
     {
       "type": "checkbox",

@@ -4,6 +4,15 @@
 <noscript>{{ 'component-mega-menu.css' | asset_url | stylesheet_tag }}</noscript>
 <noscript>{{ 'component-search.css' | asset_url | stylesheet_tag }}</noscript>
 
+{%- liquid
+  assign mobile_drawer_font = section.settings.mobile_drawer_font
+  assign mobile_drawer_font_medium = mobile_drawer_font | font_modify: 'weight', '500'
+  echo mobile_drawer_font | font_face: font_display: 'swap'
+  if mobile_drawer_font_medium and mobile_drawer_font_medium != mobile_drawer_font
+    echo mobile_drawer_font_medium | font_face: font_display: 'swap'
+  endif
+-%}
+
 {%- if has_localization -%}
   <script src="{{ 'localization-form.js' | asset_url }}" defer="defer"></script> 
 {%- endif -%}
@@ -13,6 +22,10 @@
   endif
 -%}
 <style>
+  .menu-drawer {
+    --mobile-drawer-font-family: {{ mobile_drawer_font.family }}, {{ mobile_drawer_font.fallback_families }};
+  }
+
   .header-top {
     --disclosure-direction: 0.5rem;
     border-bottom: 1px solid rgb(var(--color-foreground), 0.05);
