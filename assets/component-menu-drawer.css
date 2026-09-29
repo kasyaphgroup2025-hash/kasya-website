@@ -481,14 +481,14 @@ details[open].menu-opening > .menu-drawer__submenu {
 
   .menu-drawer__utility-icon,
   .menu-drawer__utility-chevron {
-    display: flex;
+    display: block;
     flex: 0 0 auto;
-    align-items: center;
-    justify-content: center;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
   }
 
-  .menu-drawer__utility-icon,
-  .menu-drawer__utility-icon .icon {
+  .menu-drawer__utility-icon {
     width: 2.4rem;
     height: 2.4rem;
   }
@@ -498,16 +498,9 @@ details[open].menu-opening > .menu-drawer__submenu {
     min-width: 0;
   }
 
-  .menu-drawer__utility-chevron,
-  .menu-drawer__utility-chevron .icon {
+  .menu-drawer__utility-chevron {
     width: 1.6rem;
     height: 1.6rem;
-  }
-
-  .menu-drawer__utility-link .icon {
-    display: block;
-    max-width: 100%;
-    max-height: 100%;
   }
 
   .menu-drawer__social-heading {
@@ -522,7 +515,7 @@ details[open].menu-opening > .menu-drawer__submenu {
 
   .menu-drawer__social-list {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     width: 100%;
     gap: 0;
   }
@@ -552,14 +545,15 @@ details[open].menu-opening > .menu-drawer__submenu {
     outline-offset: 0.2rem;
   }
 
-  .menu-drawer__social-link .icon {
+  .menu-drawer__social-icon {
     display: block;
     width: 3.2rem;
     height: 3.2rem;
     max-width: 3.2rem;
     max-height: 3.2rem;
     flex: 0 0 3.2rem;
-    color: currentColor;
+    object-fit: contain;
+    overflow: hidden;
   }
 
   .menu-drawer__social-label {

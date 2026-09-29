@@ -3,6 +3,7 @@
     {%- for link in links -%}
       {%- liquid
         assign link_index = ':' | append: link.title | append: '=' | downcase
+        assign link_handle = link.title | handleize
         assign panel_id = 'MobileMenuPanel-' | append: section.id | append: '-' | append: forloop.index
       -%}
       <li class="mobile-menu-accordion__item mobile-menu-accordion__item--level-1">
@@ -52,7 +53,7 @@
           <div id="{{ panel_id }}" class="mobile-menu-accordion__panel" aria-hidden="true" inert>
             <div class="mobile-menu-accordion__panel-inner">
               <ul class="mobile-menu-accordion__sublist list-unstyled" role="list">
-                {%- if link.url and show_go_to_link -%}
+                {%- if link.url and show_go_to_link and link_handle != 'shop' -%}
                   <li class="mobile-menu-accordion__subitem">
                     <a href="{{ link.url }}" class="mobile-menu-accordion__link mobile-menu-accordion__link--level-2 link link--text">
                       {{- 'sections.header.go_to_link' | t: title: link.title -}}

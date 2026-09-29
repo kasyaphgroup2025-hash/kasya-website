@@ -471,19 +471,31 @@
                           <li class="menu-drawer__utility-item">
                             {%- if label.settings.link != blank -%}
                               <a href="{{ label.settings.link }}" class="menu-drawer__utility-link link link--text">
-                                <span class="menu-drawer__utility-icon">
-                                  {%- render 'icon-picker', icon: label.settings.icon, icon_width: 24 -%}
-                                </span>
+                                <img
+                                  src="{{ 'kasya-icon-track-order.svg' | asset_url }}"
+                                  class="menu-drawer__utility-icon"
+                                  width="24"
+                                  height="24"
+                                  alt=""
+                                >
                                 <span class="menu-drawer__utility-label">{{- label.settings.title -}}</span>
-                                <span class="menu-drawer__utility-chevron">
-                                  {%- render 'icon-picker', icon: 'chevron_right', icon_width: 16 -%}
-                                </span>
+                                <img
+                                  src="{{ 'kasya-icon-chevron-right.svg' | asset_url }}"
+                                  class="menu-drawer__utility-chevron"
+                                  width="16"
+                                  height="16"
+                                  alt=""
+                                >
                               </a>
                             {%- else -%}
                               <span class="menu-drawer__utility-link">
-                                <span class="menu-drawer__utility-icon">
-                                  {%- render 'icon-picker', icon: label.settings.icon, icon_width: 24 -%}
-                                </span>
+                                <img
+                                  src="{{ 'kasya-icon-track-order.svg' | asset_url }}"
+                                  class="menu-drawer__utility-icon"
+                                  width="24"
+                                  height="24"
+                                  alt=""
+                                >
                                 <span class="menu-drawer__utility-label">{{ label.settings.title }}</span>
                               </span>
                             {%- endif -%}
@@ -513,7 +525,13 @@
                                 aria-label="Visit Kasya on Facebook"
                                 data-no-instant
                               >
-                                {%- render 'icon-facebook', icon_width: 32 -%}
+                                <img
+                                  src="{{ 'kasya-social-facebook.svg' | asset_url }}"
+                                  class="menu-drawer__social-icon"
+                                  width="32"
+                                  height="32"
+                                  alt=""
+                                >
                                 <span class="menu-drawer__social-label">Facebook</span>
                               </a>
                             </li>
@@ -528,7 +546,13 @@
                                 aria-label="Visit Kasya on TikTok"
                                 data-no-instant
                               >
-                                {%- render 'icon-tiktok', icon_width: 32 -%}
+                                <img
+                                  src="{{ 'kasya-social-tiktok.svg' | asset_url }}"
+                                  class="menu-drawer__social-icon"
+                                  width="32"
+                                  height="32"
+                                  alt=""
+                                >
                                 <span class="menu-drawer__social-label">TikTok</span>
                               </a>
                             </li>
@@ -542,7 +566,13 @@
                               aria-label="Contact Kasya on Viber"
                               data-no-instant
                             >
-                              {%- render 'icon-viber', icon_width: 32 -%}
+                              <img
+                                src="{{ 'kasya-social-viber.svg' | asset_url }}"
+                                class="menu-drawer__social-icon"
+                                width="32"
+                                height="32"
+                                alt=""
+                              >
                               <span class="menu-drawer__social-label">Viber</span>
                             </a>
                           </li>
