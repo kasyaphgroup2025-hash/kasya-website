@@ -38,7 +38,7 @@
     --next-collection-product-price-desktop: {{ section.settings.product_price_size_desktop | default: 20 }}px;
   "
 >
-  {%- if section.settings.section_heading != blank -%}
+  {%- if section.settings.show_section_heading and section.settings.section_heading != blank -%}
     <h2 class="home-next-collection__heading">{{ section.settings.section_heading | escape }}</h2>
   {%- endif -%}
 
@@ -159,7 +159,8 @@
   "tag": "section",
   "class": "section-home-next-collection",
   "settings": [
-    { "type": "text", "id": "section_heading", "label": "Section heading", "info": "Optional heading displayed above the banner." },
+    { "type": "checkbox", "id": "show_section_heading", "label": "Show section heading", "default": true },
+    { "type": "text", "id": "section_heading", "label": "Section heading", "default": "OTHER COLLECTION" },
     { "type": "header", "content": "Collection banner" },
     { "type": "collection", "id": "banner_collection", "label": "Banner destination collection" },
     { "type": "image_picker", "id": "desktop_banner_image", "label": "Desktop banner image" },
