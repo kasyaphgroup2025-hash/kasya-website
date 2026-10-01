@@ -344,17 +344,14 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
 @media screen and (max-width: 359px) {
   .home-88-hero__inner {
     padding-right: 1.6rem;
+    padding-bottom: max(2.8rem, env(safe-area-inset-bottom));
     padding-left: 1.6rem;
   }
 
-  .home-88-hero__description {
-    font-size: 1.2rem;
-  }
-
   .home-88-hero__button {
-    padding-right: 0.8rem;
-    padding-left: 0.8rem;
-    font-size: 1.2rem;
+    padding-right: 2rem;
+    padding-left: 2rem;
+    font-size: 1.1rem;
   }
 }
 
@@ -369,62 +366,19 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
     object-position: var(--home-88-desktop-position, center center);
   }
 
-  .home-88-hero__media::after {
-    background: linear-gradient(90deg, transparent 28%, rgba(13, 13, 12, 0.12) 48%, rgba(13, 13, 12, 0.72) 100%);
-  }
-
   .home-88-hero__inner {
-    align-items: center;
-    justify-content: flex-end;
-    padding: 10rem clamp(4rem, 7vw, 10rem) 6rem;
-  }
-
-  .home-88-hero__content {
-    width: min(46%, 48rem);
-    margin-right: clamp(0rem, 2vw, 3rem);
-  }
-
-  .home-88-hero__headline {
-    font-size: var(--home-88-headline-desktop-size, 52px);
-  }
-
-  .home-88-hero__collection {
-    margin-top: clamp(2.6rem, 3vw, 4rem);
-    font-size: clamp(1.3rem, 1.4vw, 1.8rem);
-  }
-
-  .home-88-hero__description {
-    max-width: 42rem;
-    margin-top: 1.6rem;
-    font-size: clamp(1.4rem, 1.4vw, 1.75rem);
-    line-height: 1.42;
-  }
-
-  .home-88-hero__actions {
-    grid-template-columns: minmax(20rem, 35rem);
-    width: fit-content;
-    max-width: 100%;
-    margin-top: clamp(2.4rem, 3vw, 3.6rem);
+    padding: 0 clamp(4rem, 7vw, 10rem) clamp(4rem, 5vw, 6rem);
   }
 
   .home-88-hero__button:hover {
-    background: #fff;
-    color: #171714;
-  }
-}
-
-@media screen and (min-width: 1200px) {
-  .home-88-hero__content {
-    width: min(42%, 50rem);
-  }
-
-  .home-88-hero__actions {
-    grid-template-columns: minmax(24rem, 36rem);
+    background: #2a2a2a;
+    color: #fff;
   }
 
   .home-88-hero__button {
-    min-height: 5.6rem;
-    font-size: 1.65rem;
+    min-height: 4.2rem;
+    padding: 1rem 2.8rem;
+    font-size: 1.2rem;
   }
 }
 
