@@ -32,6 +32,10 @@
     --next-collection-mobile-position: {{ section.settings.mobile_image_position }};
     --next-collection-desktop-position: {{ section.settings.desktop_image_position }};
     --next-collection-desktop-columns: {{ section.settings.desktop_products_per_view }};
+    --next-collection-product-name-mobile: {{ section.settings.product_name_size_mobile | default: 16 }}px;
+    --next-collection-product-name-desktop: {{ section.settings.product_name_size_desktop | default: 18 }}px;
+    --next-collection-product-price-mobile: {{ section.settings.product_price_size_mobile | default: 18 }}px;
+    --next-collection-product-price-desktop: {{ section.settings.product_price_size_desktop | default: 20 }}px;
   "
 >
   {%- if section.settings.section_heading != blank -%}
@@ -100,7 +104,7 @@
         role="list"
         aria-label="{{ product_collection.title | escape }} products"
       >
-        {%- for card_product in product_collection.products limit: section.settings.products_to_show -%}
+        {%- for card_product in product_collection.products -%}
           <li class="home-next-collection__item" data-product-carousel-item>
             {%- render 'card-product',
               card_product: card_product,
@@ -108,9 +112,7 @@
               show_secondary_image: false,
               show_vendor: false,
               show_rating: false,
-              show_quick_add: true,
-              force_quick_add_drawer: true,
-              quick_add_label: 'Quick Shop',
+              show_quick_add: false,
               enable_compare: false,
               show_quick_view: false,
               section_id: section.id,
@@ -206,8 +208,12 @@
     },
     { "type": "header", "content": "Product carousel" },
     { "type": "collection", "id": "product_collection", "label": "Product collection", "info": "Falls back to the banner collection when left blank." },
-    { "type": "range", "id": "products_to_show", "label": "Maximum products", "min": 4, "max": 10, "step": 2, "default": 8 },
     { "type": "range", "id": "desktop_products_per_view", "label": "Desktop products per view", "min": 3, "max": 5, "step": 1, "default": 4 },
+    { "type": "header", "content": "Product typography" },
+    { "type": "range", "id": "product_name_size_mobile", "label": "Product name size - mobile", "min": 12, "max": 24, "step": 1, "unit": "px", "default": 16 },
+    { "type": "range", "id": "product_name_size_desktop", "label": "Product name size - desktop", "min": 12, "max": 30, "step": 1, "unit": "px", "default": 18 },
+    { "type": "range", "id": "product_price_size_mobile", "label": "Product price size - mobile", "min": 12, "max": 24, "step": 1, "unit": "px", "default": 18 },
+    { "type": "range", "id": "product_price_size_desktop", "label": "Product price size - desktop", "min": 12, "max": 30, "step": 1, "unit": "px", "default": 20 },
     { "type": "header", "content": "Colors" },
     { "type": "color", "id": "background_color", "label": "Background", "default": "#ffffff" },
     { "type": "color", "id": "text_color", "label": "Text", "default": "#171714" }

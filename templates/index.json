@@ -337,8 +337,11 @@
         "mobile_image_position": "center center",
         "desktop_image_position": "center center",
         "product_collection": "rhythm",
-        "products_to_show": 8,
         "desktop_products_per_view": 4,
+        "product_name_size_mobile": 16,
+        "product_name_size_desktop": 18,
+        "product_price_size_mobile": 18,
+        "product_price_size_desktop": 20,
         "background_color": "#ffffff",
         "text_color": "#171714"
       }
