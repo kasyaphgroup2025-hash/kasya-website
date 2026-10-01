@@ -195,16 +195,8 @@
         "home_88_look_3": {
           "type": "look",
           "settings": {
-            "look_title": "LOOK 1",
-            "look_description": "",
-            "thumbnail_image": "shopify://shop_images/Shop_The_Look.jpg",
-            "thumbnail_alt": "Shop the Look 1",
             "front_image": "shopify://shop_images/Shop_The_Look_d454b52b-d070-4d11-8efb-c9b4e26fad1e.jpg",
             "front_image_alt": "Shop the Look image 1",
-            "side_image": "shopify://shop_images/Shop_The_Look_2_f641df05-d962-493a-b7de-97201c1849da.jpg",
-            "side_image_alt": "Shop the Look image 2",
-            "back_image": "shopify://shop_images/Shop_The_Look_3_bea40cc0-f639-4edd-afd3-7069b6b91593.jpg",
-            "back_image_alt": "Shop the Look image 3",
             "mobile_image_position": "center center",
             "desktop_image_position": "center center",
             "product_1": "kianna-puff-sleeves-blouse-knitted",
@@ -218,71 +210,13 @@
             "product_2_image_alt": "Second product flatlay",
             "product_2_button_label": "See Fit & Colors"
           }
-        },
-        "home_88_look_1": {
-          "type": "look",
-          "settings": {
-            "look_title": "LOOK 2",
-            "look_description": "",
-            "thumbnail_image": "shopify://shop_images/Shop_The_Look_3.jpg",
-            "thumbnail_alt": "Shop the Look 2",
-            "front_image": "shopify://shop_images/Shop_The_Look_af67b7f0-230c-4da2-8101-31154cd94d7d.jpg",
-            "front_image_alt": "Shop the Look image 4",
-            "side_image": "shopify://shop_images/Shop_The_Look_10.jpg",
-            "side_image_alt": "Shop the Look image 5",
-            "back_image": "shopify://shop_images/Shop_The_Look_11.jpg",
-            "back_image_alt": "Shop the Look image 6",
-            "mobile_image_position": "center center",
-            "desktop_image_position": "center center",
-            "product_1": "",
-            "product_1_title": "Daliah Polo",
-            "product_1_image": "shopify://shop_images/22_ad9484f4-7b64-4229-8b68-e9e9ce38cfcf.jpg",
-            "product_1_image_alt": "Daliah Polo flatlay",
-            "product_1_button_label": "See Fit & Colors",
-            "product_2": "mia-palazzo-pants-soft-linen",
-            "product_2_title": "Mia Palazzo",
-            "product_2_image": "shopify://shop_images/30_1f42af26-6599-4140-ab48-d2b96184cc00.jpg",
-            "product_2_image_alt": "Mia Palazzo Pants flatlay",
-            "product_2_button_label": "See Fit & Colors"
-          }
-        },
-        "home_88_look_2": {
-          "type": "look",
-          "settings": {
-            "look_title": "LOOK 3",
-            "look_description": "",
-            "thumbnail_image": "shopify://shop_images/Shop_The_Look_2.jpg",
-            "thumbnail_alt": "Shop the Look 3",
-            "front_image": "shopify://shop_images/Shop_The_Look_2.jpg",
-            "front_image_alt": "Shop the Look image 7",
-            "side_image": "shopify://shop_images/Shop_The_Look_6.jpg",
-            "side_image_alt": "Shop the Look image 8",
-            "back_image": "shopify://shop_images/Shop_The_Look_7.jpg",
-            "back_image_alt": "Shop the Look image 9",
-            "mobile_image_position": "center center",
-            "desktop_image_position": "center center",
-            "product_1": "",
-            "product_1_title": "Daliah Polo",
-            "product_1_image": "shopify://shop_images/43.jpg",
-            "product_1_image_alt": "First product flatlay",
-            "product_1_button_label": "See Fit & Colors",
-            "product_2": "lea-trouser-woven",
-            "product_2_title": "Lea Trouser",
-            "product_2_image": "shopify://shop_images/36_3de66da9-6385-4ba1-a480-ec117ea9082f.jpg",
-            "product_2_image_alt": "Second product flatlay",
-            "product_2_button_label": "See Fit & Colors"
-          }
         }
       },
       "block_order": [
-        "home_88_look_3",
-        "home_88_look_1",
-        "home_88_look_2"
+        "home_88_look_3"
       ],
       "settings": {
         "heading": "SHOP THE LOOK",
-        "subtitle": "",
-        "thumbnail_helper_text": "",
         "background_color": "#ffffff",
         "text_color": "#171714",
         "padding_top_mobile": 32,
@@ -291,25 +225,10 @@
         "padding_bottom_desktop": 48,
         "heading_size_mobile": 22,
         "heading_size_desktop": 28,
-        "subtitle_size_mobile": 13,
-        "subtitle_size_desktop": 20,
-        "label_size_mobile": 9,
-        "label_size_desktop": 17,
-        "look_title_size_mobile": 15,
-        "look_title_size_desktop": 35,
-        "description_size_mobile": 10,
-        "description_size_desktop": 19,
-        "thumbnail_helper_size_mobile": 14,
-        "thumbnail_helper_size_desktop": 23,
-        "thumbnail_title_size_mobile": 11,
-        "thumbnail_title_size_desktop": 19,
         "product_title_size_mobile": 13,
         "product_title_size_desktop": 15,
         "product_button_size_mobile": 10,
-        "product_button_size_desktop": 12,
-        "flatlay_gap": 4,
-        "active_thumbnail_scale": 104,
-        "thumbnail_gap": 10
+        "product_button_size_desktop": 12
       }
     },
     "home_88_collection_story": {

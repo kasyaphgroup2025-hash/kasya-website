@@ -14,10 +14,6 @@
   box-sizing: border-box;
 }
 
-.home-88-outfit [hidden] {
-  display: none !important;
-}
-
 .home-88-outfit__inner {
   width: min(100%, 122rem);
   margin: 0 auto;
@@ -45,117 +41,12 @@
   background: #ece8e1;
 }
 
-.home-88-outfit__track {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  overscroll-behavior-x: contain;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  touch-action: pan-x pan-y;
-}
-
-.home-88-outfit__track::-webkit-scrollbar {
-  display: none;
-}
-
-.home-88-outfit__track:focus-visible {
-  outline: 0.2rem solid #111;
-  outline-offset: -0.3rem;
-}
-
-.home-88-outfit__slide {
-  flex: 0 0 100%;
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-}
-
 .home-88-outfit__image {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: var(--slide-position-mobile, center center);
-}
-
-.home-88-outfit__arrow {
-  position: absolute;
-  top: 50%;
-  z-index: 3;
-  display: grid;
-  place-items: center;
-  width: 3.6rem;
-  height: 3.6rem;
-  padding: 0;
-  border: 0.1rem solid rgba(17, 17, 17, 0.16);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.88);
-  color: #111;
-  cursor: pointer;
-  transform: translateY(-50%);
-  transition: background-color 160ms ease, opacity 160ms ease;
-}
-
-.home-88-outfit__arrow--previous {
-  left: 1rem;
-}
-
-.home-88-outfit__arrow--next {
-  right: 1rem;
-}
-
-.home-88-outfit__arrow svg {
-  width: 1.9rem;
-  height: 1.9rem;
-}
-
-.home-88-outfit__arrow:hover {
-  background: #fff;
-}
-
-.home-88-outfit__arrow:focus-visible {
-  outline: 0.2rem solid #111;
-  outline-offset: 0.2rem;
-}
-
-.home-88-outfit__dots {
-  position: absolute;
-  bottom: 12.2rem;
-  left: 50%;
-  z-index: 3;
-  display: flex;
-  justify-content: center;
-  gap: 0.55rem;
-  padding: 0.5rem 0.7rem;
-  border-radius: 2rem;
-  background: rgba(255, 255, 255, 0.78);
-  transform: translateX(-50%);
-}
-
-.home-88-outfit__dot {
-  width: 0.65rem;
-  height: 0.65rem;
-  padding: 0;
-  border: 0.1rem solid #111;
-  border-radius: 50%;
-  background: transparent;
-  color: #111;
-  cursor: pointer;
-}
-
-.home-88-outfit__dot.is-active {
-  background: #111;
-}
-
-.home-88-outfit__dot:focus-visible {
-  outline: 0.2rem solid #fff;
-  outline-offset: 0.2rem;
+  object-position: var(--image-position-mobile, center center);
 }
 
 .home-88-outfit__tray {
@@ -173,7 +64,7 @@
   border-radius: 0.8rem;
   background: rgba(255, 255, 255, 0.96);
   color: #171714;
-  box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.16);
+  box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.14);
   backdrop-filter: blur(0.4rem);
 }
 
@@ -233,6 +124,12 @@
   text-decoration: none;
 }
 
+.home-88-outfit__product-image-link:focus-visible,
+.home-88-outfit__product-title:focus-visible {
+  outline: 0.2rem solid #171714;
+  outline-offset: 0.2rem;
+}
+
 .home-88-outfit__quick-add {
   display: block;
   align-self: start;
@@ -270,11 +167,6 @@
 .home-88-outfit__product-button:focus-visible {
   outline: 0.2rem solid #171714;
   outline-offset: 0.2rem;
-}
-
-.home-88-outfit__product-button[disabled] {
-  cursor: not-allowed;
-  opacity: 0.5;
 }
 
 .home-88-outfit__product-button .loading-overlay__spinner {
@@ -319,10 +211,6 @@
     width: 4.2rem;
     height: 5.6rem;
   }
-
-  .home-88-outfit__dots {
-    bottom: 11.4rem;
-  }
 }
 
 @media screen and (min-width: 750px) {
@@ -346,20 +234,7 @@
   }
 
   .home-88-outfit__image {
-    object-position: var(--slide-position-desktop, center center);
-  }
-
-  .home-88-outfit__arrow {
-    width: 4.2rem;
-    height: 4.2rem;
-  }
-
-  .home-88-outfit__arrow--previous {
-    left: 1.8rem;
-  }
-
-  .home-88-outfit__arrow--next {
-    right: 1.8rem;
+    object-position: var(--image-position-desktop, center center);
   }
 
   .home-88-outfit__tray {
@@ -392,18 +267,9 @@
     padding: 0.65rem 1.2rem;
     font-size: var(--outfit-button-desktop);
   }
-
-  .home-88-outfit__dots {
-    bottom: 12.8rem;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-88-outfit__track {
-    scroll-behavior: auto;
-  }
-
-  .home-88-outfit__arrow,
   .home-88-outfit__product-button {
     transition: none;
   }
