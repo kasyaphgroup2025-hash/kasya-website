@@ -1,22 +1,17 @@
 {{ 'home-88-outfit-considered.css' | asset_url | stylesheet_tag }}
 
-{%- liquid
-  assign shop_look = section.blocks.first
-  assign lifestyle_image = shop_look.settings.front_image
-  assign lifestyle_alt = shop_look.settings.front_image_alt | default: section.settings.heading
-  assign product_count = 0
-
-  for product_index in (1..2)
-    assign product_key = 'product_' | append: product_index
-    if shop_look.settings[product_key] != blank
-      assign product_count = product_count | plus: 1
-    endif
-  endfor
--%}
+{%- assign look_count = 0 -%}
+{%- for block in section.blocks limit: 4 -%}
+  {%- if block.settings.front_image != blank -%}
+    {%- assign look_count = look_count | plus: 1 -%}
+  {%- endif -%}
+{%- endfor -%}
 
 <section
   id="home-88-shop-the-look"
   class="home-88-outfit"
+  data-home-88-outfit
+  data-section-id="{{ section.id }}"
   style="
     --outfit-bg: {{ section.settings.background_color }};
     --outfit-text: {{ section.settings.text_color }};
@@ -37,71 +32,109 @@
       <h2 class="home-88-outfit__heading">{{ section.settings.heading | escape }}</h2>
     {%- endif -%}
 
-    {%- if shop_look != blank and lifestyle_image != blank -%}
-      <div
-        class="home-88-outfit__stage"
-        style="--image-position-mobile: {{ shop_look.settings.mobile_image_position }}; --image-position-desktop: {{ shop_look.settings.desktop_image_position }};"
-        {{ shop_look.shopify_attributes }}
-      >
-        {{- lifestyle_image
-          | image_url: width: 1800
-          | image_tag:
-            class: 'home-88-outfit__image',
-            widths: '480, 720, 960, 1200, 1500, 1800',
-            sizes: '(min-width: 750px) min(1120px, calc(100vw - 96px)), calc(100vw - 24px)',
-            loading: 'lazy',
-            alt: lifestyle_alt
-        -}}
+    {%- if look_count > 0 -%}
+      <div class="home-88-outfit__stage" data-carousel>
+        <div class="home-88-outfit__track" data-carousel-track tabindex="0" aria-label="Shop the Look gallery">
+          {%- assign look_index = 0 -%}
+          {%- for block in section.blocks limit: 4 -%}
+            {%- if block.settings.front_image != blank -%}
+              {%- liquid
+                assign lifestyle_image = block.settings.front_image
+                assign lifestyle_alt = block.settings.front_image_alt | default: section.settings.heading
+                assign product_count = 0
 
-        <div class="home-88-outfit__tray" data-product-count="{{ product_count }}">
-          {%- for product_index in (1..2) -%}
-            {%- liquid
-              assign product_key = 'product_' | append: product_index
-              assign title_key = product_key | append: '_title'
-              assign image_key = product_key | append: '_image'
-              assign alt_key = product_key | append: '_image_alt'
-              assign button_key = product_key | append: '_button_label'
-              assign look_product = shop_look.settings[product_key]
-              assign product_title = shop_look.settings[title_key] | default: look_product.title
-              assign product_image = shop_look.settings[image_key] | default: look_product.featured_image
-              assign product_alt = shop_look.settings[alt_key] | default: product_image.alt | default: product_title
-              assign button_label = shop_look.settings[button_key] | default: 'See Fit & Colors'
-            -%}
+                for product_index in (1..2)
+                  assign product_key = 'product_' | append: product_index
+                  if block.settings[product_key] != blank
+                    assign product_count = product_count | plus: 1
+                  endif
+                endfor
+              -%}
 
-            {%- if look_product != blank -%}
-              <article class="home-88-outfit__product">
-                <a class="home-88-outfit__product-image-link" href="{{ look_product.url }}" aria-label="View {{ product_title | escape }}">
-                  {%- if product_image != blank -%}
-                    {{- product_image
-                      | image_url: width: 240
-                      | image_tag:
-                        class: 'home-88-outfit__product-image',
-                        widths: '96, 144, 192, 240',
-                        sizes: '(min-width: 750px) 64px, 48px',
-                        loading: 'lazy',
-                        alt: product_alt
-                    -}}
-                  {%- endif -%}
-                </a>
+              <div
+                class="home-88-outfit__slide"
+                data-carousel-slide
+                data-block-id="{{ block.id }}"
+                aria-hidden="{% if look_index == 0 %}false{% else %}true{% endif %}"
+                {% if look_index > 0 %}inert{% endif %}
+                style="--image-position-mobile: {{ block.settings.mobile_image_position }}; --image-position-desktop: {{ block.settings.desktop_image_position }};"
+                {{ block.shopify_attributes }}
+              >
+                {{- lifestyle_image
+                  | image_url: width: 2400
+                  | image_tag:
+                    class: 'home-88-outfit__image',
+                    widths: '480, 720, 960, 1200, 1500, 1800, 2100, 2400',
+                    sizes: '100vw',
+                    loading: 'lazy',
+                    alt: lifestyle_alt
+                -}}
 
-                <a class="home-88-outfit__product-title" href="{{ look_product.url }}">{{ product_title | escape }}</a>
+                <div class="home-88-outfit__tray" data-product-count="{{ product_count }}">
+                  {%- for product_index in (1..2) -%}
+                    {%- liquid
+                      assign product_key = 'product_' | append: product_index
+                      assign title_key = product_key | append: '_title'
+                      assign image_key = product_key | append: '_image'
+                      assign alt_key = product_key | append: '_image_alt'
+                      assign button_key = product_key | append: '_button_label'
+                      assign look_product = block.settings[product_key]
+                      assign product_title = block.settings[title_key] | default: look_product.title
+                      assign product_image = block.settings[image_key] | default: look_product.featured_image
+                      assign product_alt = block.settings[alt_key] | default: product_image.alt | default: product_title
+                      assign button_label = block.settings[button_key] | default: 'See Fit & Colors'
+                    -%}
 
-                <quick-add-drawer-opener class="home-88-outfit__quick-add">
-                  <button
-                    class="home-88-outfit__product-button"
-                    type="button"
-                    data-product-url="{{ look_product.url }}"
-                    aria-haspopup="dialog"
-                    aria-label="{{ button_label | escape }} for {{ product_title | escape }}"
-                  >
-                    <span>{{ button_label | escape }}</span>
-                    <span class="loading-overlay__spinner hidden">{% render 'icon-cart-loading' %}</span>
-                  </button>
-                </quick-add-drawer-opener>
-              </article>
+                    {%- if look_product != blank -%}
+                      <article class="home-88-outfit__product">
+                        <a class="home-88-outfit__product-image-link" href="{{ look_product.url }}" aria-label="View {{ product_title | escape }}">
+                          {%- if product_image != blank -%}
+                            {{- product_image
+                              | image_url: width: 240
+                              | image_tag:
+                                class: 'home-88-outfit__product-image',
+                                widths: '80, 120, 160, 200, 240',
+                                sizes: '(min-width: 750px) 52px, 40px',
+                                loading: 'lazy',
+                                alt: product_alt
+                            -}}
+                          {%- endif -%}
+                        </a>
+
+                        <a class="home-88-outfit__product-title" href="{{ look_product.url }}">{{ product_title | escape }}</a>
+
+                        <quick-add-drawer-opener class="home-88-outfit__quick-add">
+                          <button
+                            class="home-88-outfit__product-button"
+                            type="button"
+                            data-product-url="{{ look_product.url }}"
+                            aria-haspopup="dialog"
+                            aria-label="{{ button_label | escape }} for {{ product_title | escape }}"
+                          >
+                            <span>{{ button_label | escape }}</span>
+                            <span class="loading-overlay__spinner hidden">{% render 'icon-cart-loading' %}</span>
+                          </button>
+                        </quick-add-drawer-opener>
+                      </article>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </div>
+              </div>
+
+              {%- assign look_index = look_index | plus: 1 -%}
             {%- endif -%}
           {%- endfor -%}
         </div>
+
+        {%- if look_count > 1 -%}
+          <button class="home-88-outfit__arrow home-88-outfit__arrow--previous" type="button" data-carousel-previous aria-label="Previous Shop the Look">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/></svg>
+          </button>
+          <button class="home-88-outfit__arrow home-88-outfit__arrow--next" type="button" data-carousel-next aria-label="Next Shop the Look">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/></svg>
+          </button>
+          <p class="home-88-outfit__status" data-carousel-status aria-live="polite">Look 1 of {{ look_count }}</p>
+        {%- endif -%}
       </div>
     {%- else -%}
       <div class="home-88-outfit__empty">
@@ -111,12 +144,14 @@
   </div>
 </section>
 
+<script src="{{ 'home-88-outfit-considered.js' | asset_url }}" defer="defer"></script>
+
 {% schema %}
 {
   "name": "Home 10.10 Shop the Look",
   "tag": "section",
   "class": "section-home-88-outfit-considered",
-  "max_blocks": 1,
+  "max_blocks": 4,
   "settings": [
     { "type": "text", "id": "heading", "label": "Heading", "default": "SHOP THE LOOK" },
     { "type": "color", "id": "background_color", "label": "Background color", "default": "#ffffff" },
@@ -162,7 +197,12 @@
   "presets": [
     {
       "name": "Home 10.10 Shop the Look",
-      "blocks": [{ "type": "look" }]
+      "blocks": [
+        { "type": "look" },
+        { "type": "look" },
+        { "type": "look" },
+        { "type": "look" }
+      ]
     }
   ]
 }
