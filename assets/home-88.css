@@ -393,6 +393,7 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
 
 /* 8.8 collection introduction and Quick Shop */
 #home-88-product-grid {
+  --home-88-card-detail-gap: 1.1rem;
   display: block;
   width: 100%;
   overflow-x: clip;
@@ -424,11 +425,6 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
   font-size: var(--home-88-intro-copy-mobile, 16px);
   font-weight: 400;
   line-height: 1.35;
-}
-
-#home-88-product-grid .home-88-products__transition {
-  height: 0.8rem;
-  background: #cdb48d;
 }
 
 #home-88-product-grid .home-88-products__grid {
@@ -556,7 +552,7 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
   flex-wrap: wrap;
   gap: 0.7rem;
   min-height: 2.4rem;
-  margin-bottom: 0.6rem;
+  margin-bottom: var(--home-88-card-detail-gap);
 }
 
 #home-88-product-grid .home-88-products__swatch {
@@ -584,7 +580,7 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
   min-width: 0;
   margin: 0;
   font-family: inherit;
-  font-size: clamp(14px, 4.6vw, var(--home-88-product-price-mobile, 18px));
+  font-size: var(--home-88-product-name-mobile, 16px);
   font-weight: 500;
   letter-spacing: -0.01em;
   line-height: 1.2;
@@ -606,10 +602,10 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
   justify-content: flex-start;
   gap: 0.3rem 0.7rem;
   min-height: 1.2em;
-  margin-top: 0.6rem;
-  margin-bottom: 1rem;
+  margin-top: var(--home-88-card-detail-gap);
+  margin-bottom: 1.6rem;
   color: #151515;
-  font-size: clamp(14px, 4.6vw, var(--home-88-product-price-mobile, 18px));
+  font-size: var(--home-88-product-price-mobile, 18px);
   line-height: 1.2;
   text-align: left;
 }
@@ -833,7 +829,6 @@ html.home-88-quick-shop-open {
 
   #home-88-product-grid .home-88-products__grid {
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    padding-top: calc(var(--home-88-grid-padding-top, 8px) + 0.4rem);
   }
 
   #home-88-product-grid .home-88-products__card[data-daliah-product-card="true"] {
@@ -847,11 +842,11 @@ html.home-88-quick-shop-open {
   }
 
   #home-88-product-grid .home-88-products__title {
-    font-size: clamp(14px, 1.8vw, var(--home-88-product-price-desktop, 22px));
+    font-size: var(--home-88-product-name-desktop, 17px);
   }
 
   #home-88-product-grid .home-88-products__prices {
-    font-size: clamp(14px, 1.8vw, var(--home-88-product-price-desktop, 22px));
+    font-size: var(--home-88-product-price-desktop, 19px);
   }
 }
 

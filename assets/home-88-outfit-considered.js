@@ -10,15 +10,15 @@
       this.sectionId = root.dataset.sectionId;
       this.abortController = new AbortController();
       this.track = root.querySelector('[data-carousel-track]');
-      this.title = root.querySelector('[data-look-title]');
-      this.description = root.querySelector('[data-look-description]');
-      this.triggers = Array.from(root.querySelectorAll('[data-look-trigger]'));
+      this.slides = Array.from(root.querySelectorAll('[data-carousel-slide]'));
       this.dots = Array.from(root.querySelectorAll('[data-carousel-dot]'));
-      this.images = Array.from(root.querySelectorAll('[data-carousel-image]'));
+      this.previousButton = root.querySelector('[data-carousel-previous]');
+      this.nextButton = root.querySelector('[data-carousel-next]');
+      this.productTray = root.querySelector('[data-product-tray]');
       this.productSlots = Array.from(root.querySelectorAll('[data-product-slot]'));
       this.looks = this.readLooks();
-      this.activeLook = 0;
       this.activeSlide = 0;
+      this.activeLook = -1;
       this.scrollFrame = null;
 
       const options = { signal: this.abortController.signal };
@@ -26,8 +26,8 @@
       root.addEventListener('keydown', this.onKeyDown, options);
       this.track?.addEventListener('scroll', this.onScroll, { ...options, passive: true });
       document.addEventListener('shopify:block:select', this.onBlockSelect, options);
-      document.addEventListener('shopify:block:deselect', this.onBlockDeselect, options);
-      this.activateLook(0, { focus: false });
+
+      if (this.slides.length) this.activateSlide(0, false);
     }
 
     destroy() {
@@ -46,10 +46,15 @@
     }
 
     onClick = (event) => {
-      const trigger = event.target.closest('[data-look-trigger]');
-      if (trigger && this.root.contains(trigger)) {
+      if (event.target.closest('[data-carousel-previous]')) {
         event.preventDefault();
-        this.activateLook(Number(trigger.dataset.lookTrigger), { focus: true });
+        this.goBy(-1);
+        return;
+      }
+
+      if (event.target.closest('[data-carousel-next]')) {
+        event.preventDefault();
+        this.goBy(1);
         return;
       }
 
@@ -61,16 +66,11 @@
     };
 
     onKeyDown = (event) => {
-      const trigger = event.target.closest('[data-look-trigger]');
-      if (!trigger || !this.root.contains(trigger)) return;
+      if (!this.track || event.target !== this.track) return;
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
 
-      if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
-        event.preventDefault();
-        const current = Number(trigger.dataset.lookTrigger);
-        const direction = event.key === 'ArrowRight' ? 1 : -1;
-        const next = (current + direction + this.triggers.length) % this.triggers.length;
-        this.activateLook(next, { focus: true });
-      }
+      event.preventDefault();
+      this.goBy(event.key === 'ArrowRight' ? 1 : -1);
     };
 
     onScroll = () => {
@@ -78,88 +78,101 @@
       this.scrollFrame = requestAnimationFrame(() => {
         if (!this.track?.clientWidth) return;
         const index = Math.round(this.track.scrollLeft / this.track.clientWidth);
-        this.setActiveDot(index);
+        this.activateSlide(index, false);
       });
     };
 
     onBlockSelect = (event) => {
-      const index = this.looks.findIndex((look) => look?.blockId === event.detail?.blockId);
-      if (index >= 0) this.activateLook(index, { focus: false });
+      const index = this.slides.findIndex((slide) => slide.dataset.blockId === event.detail?.blockId);
+      if (index >= 0) this.goToSlide(index, false);
     };
 
-    onBlockDeselect = () => {};
-
-    activateLook(index, { focus = false } = {}) {
-      const look = this.looks[index];
-      const trigger = this.triggers[index];
-      if (!look || !trigger) return;
-
-      this.activeLook = index;
-      this.title.textContent = look.title || '';
-      this.description.textContent = look.description || '';
-      this.root.style.setProperty('--active-position-mobile', look.positionMobile || 'center center');
-      this.root.style.setProperty('--active-position-desktop', look.positionDesktop || 'center center');
-
-      this.images.forEach((image, imageIndex) => this.updateImage(image, look.images?.[imageIndex]));
-      this.productSlots.forEach((slot, productIndex) => this.updateProduct(slot, look.products?.[productIndex]));
-      this.triggers.forEach((item, triggerIndex) => {
-        const active = triggerIndex === index;
-        item.classList.toggle('is-active', active);
-        item.setAttribute('aria-selected', String(active));
-        item.tabIndex = active ? 0 : -1;
-      });
-
-      this.goToSlide(0, false);
-      if (focus) trigger.focus({ preventScroll: true });
-    }
-
-    updateImage(image, data) {
-      if (!image) return;
-      if (data?.src) {
-        image.src = data.src;
-        image.alt = data.alt || '';
-        image.hidden = false;
-      } else {
-        image.removeAttribute('src');
-        image.alt = data?.alt || '';
-        image.hidden = true;
-      }
-    }
-
-    updateProduct(slot, product) {
-      if (!slot) return;
-      const image = slot.querySelector('[data-product-image]');
-      const title = slot.querySelector('[data-product-title]');
-      const button = slot.querySelector('[data-product-button]');
-      this.updateImage(image, product?.image);
-      title.textContent = product?.title || '';
-      button.textContent = product?.buttonLabel || 'See Color & Fit';
-
-      slot.querySelectorAll('[data-product-link]').forEach((link) => {
-        if (product?.url) {
-          link.href = product.url;
-          link.removeAttribute('aria-disabled');
-        } else {
-          link.removeAttribute('href');
-          link.setAttribute('aria-disabled', 'true');
-        }
-      });
+    goBy(direction) {
+      if (!this.slides.length) return;
+      const next = (this.activeSlide + direction + this.slides.length) % this.slides.length;
+      this.goToSlide(next, true);
     }
 
     goToSlide(index, smooth) {
-      if (!this.track) return;
-      this.activeSlide = Math.max(0, Math.min(index, this.dots.length - 1));
-      this.track.scrollTo({ left: this.track.clientWidth * this.activeSlide, behavior: smooth ? 'smooth' : 'auto' });
-      this.setActiveDot(this.activeSlide);
+      if (!this.track || !this.slides.length) return;
+      const next = Math.max(0, Math.min(index, this.slides.length - 1));
+      this.track.scrollTo({
+        left: this.track.clientWidth * next,
+        behavior: smooth && !window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'smooth' : 'auto'
+      });
+      this.activateSlide(next, false);
     }
 
-    setActiveDot(index) {
-      this.activeSlide = Math.max(0, Math.min(index, this.dots.length - 1));
+    activateSlide(index, announce) {
+      if (!this.slides.length) return;
+      this.activeSlide = Math.max(0, Math.min(index, this.slides.length - 1));
+
+      this.slides.forEach((slide, slideIndex) => {
+        slide.setAttribute('aria-hidden', String(slideIndex !== this.activeSlide));
+      });
+
       this.dots.forEach((dot, dotIndex) => {
         const active = dotIndex === this.activeSlide;
         dot.classList.toggle('is-active', active);
         dot.setAttribute('aria-current', String(active));
       });
+
+      const lookIndex = Number(this.slides[this.activeSlide]?.dataset.lookIndex || 0);
+      if (lookIndex !== this.activeLook) this.activateLook(lookIndex, announce);
+    }
+
+    activateLook(index, announce) {
+      const look = this.looks[index];
+      if (!look) return;
+
+      this.activeLook = index;
+      let productCount = 0;
+      this.productSlots.forEach((slot, productIndex) => {
+        if (this.updateProduct(slot, look.products?.[productIndex])) productCount += 1;
+      });
+
+      if (this.productTray) {
+        this.productTray.dataset.productCount = String(productCount);
+        this.productTray.setAttribute('aria-live', announce ? 'polite' : 'off');
+      }
+    }
+
+    updateProduct(slot, product) {
+      if (!slot) return false;
+      const valid = Boolean(product?.url);
+      slot.hidden = !valid;
+      if (!valid) return false;
+
+      const image = slot.querySelector('[data-product-image]');
+      const title = slot.querySelector('[data-product-title]');
+      const button = slot.querySelector('[data-product-button]');
+
+      if (image) {
+        if (product.image?.src) {
+          image.src = product.image.src;
+          image.alt = product.image.alt || product.title || '';
+          image.hidden = false;
+        } else {
+          image.removeAttribute('src');
+          image.alt = product.title || '';
+          image.hidden = true;
+        }
+      }
+
+      if (title) title.textContent = product.title || '';
+      slot.querySelectorAll('[data-product-link]').forEach((link) => {
+        link.href = product.url;
+        link.removeAttribute('aria-disabled');
+      });
+
+      if (button) {
+        button.dataset.productUrl = product.url;
+        button.disabled = false;
+        button.removeAttribute('aria-disabled');
+        button.setAttribute('aria-label', `See fit and colors for ${product.title || 'this product'}`);
+      }
+
+      return true;
     }
   }
 
