@@ -11,6 +11,8 @@
     - section_id: {String} The ID of the section that contains this card.
     - show_color_swatches: {Boolean} Show/hide the color option.
     - color_swatches_style: {String} The format of the color swatches. Values are "variant" and "custom". Default is "custom" (optional)
+    - quick_add_label: {String} Optional custom label for the quick-add button.
+    - force_quick_add_drawer: {Boolean} Open the existing Quick Shop drawer even for single-variant products. Default: false (optional)
     - placeholder_image: {String} The placeholder image to use when no product exists. Default: 'product-apparel-2' (optional)
 
     Usage:
@@ -28,6 +30,10 @@
       endif
     endif
     assign columns_desktop_number = columns_desktop | default: 4
+    assign quick_add_button_label = quick_add_label
+    if quick_add_button_label == blank
+      assign quick_add_button_label = 'products.product.add_to_cart' | t
+    endif
   -%}
   {%- capture sizes -%}
     (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 130 | divided_by: columns_desktop_number }}px, (min-width: 990px) calc((100vw - 130px) / {{ columns_desktop_number }}), (min-width: 750px) calc((100vw - 120px) / {{ columns_tablet | default: 3 }}), calc((100vw - 35px) / {{ columns_mobile | default: 2 }})
@@ -260,7 +266,7 @@
               -%}
               {%- if card_product.available -%}
                 {%- assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id -%}
-                {%- if card_product.variants.size == 1 -%}
+                {%- if card_product.variants.size == 1 and force_quick_add_drawer != true -%}
                   <product-form class="quick-button quick-button--add{% unless enable_compare %} flex-grow-1{% endunless %}">
                     {%- form 'product', card_product, id: product_form_id, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
                       <input type="hidden" name="id" value="{{ card_product.selected_or_first_available_variant.id }}" disabled>
@@ -270,19 +276,19 @@
                         name="add"
                         class="quick-add__submit button cart-submit-button button--medium{% unless enable_compare %} w100{% endunless %}"
                         aria-haspopup="dialog"
-                        aria-label="{{ "products.product.add_to_cart" | t | escape }}"
+                        aria-label="{{ quick_add_button_label | escape }}"
                         aria-live="polite"
                         data-sold-out-message="false"
                       >
                         {%- unless settings.cart_button_text == 'visible' -%}
                           {%- if enable_compare or full_on_mobile != true -%}
-                            <span class="{{ cart_text_classes }}">{{ "products.product.add_to_cart" | t }}</span>
+                            <span class="{{ cart_text_classes }}">{{ quick_add_button_label }}</span>
                             {%- render 'icon-cart-in-card', add_classes: cart_icon_classes -%}
                           {%- else -%}
-                            <span>{{ "products.product.add_to_cart" | t }}</span>
+                            <span>{{ quick_add_button_label }}</span>
                           {%- endif -%}
                         {%- else -%}  
-                          <span>{{ "products.product.add_to_cart" | t }}</span>  
+                          <span>{{ quick_add_button_label }}</span>
                         {%- endunless -%}
                         <div class="loading-overlay__spinner hidden">
                           {%- render 'icon-cart-loading' -%}
@@ -298,18 +304,18 @@
                       name="add"
                       class="quick-add__submit button cart-submit-button button--medium{% unless enable_compare %} w100{% endunless %}"
                       aria-haspopup="dialog"
-                      aria-label="{{ "products.product.add_to_cart" | t | escape }}"
+                      aria-label="{{ quick_add_button_label | escape }}"
                       data-product-url="{{ card_product.url }}"
                     >
                       {%- unless settings.cart_button_text == 'visible' -%}
                         {%- if enable_compare or full_on_mobile != true -%}
-                          <span class="{{ cart_text_classes }}">{{ "products.product.add_to_cart" | t }}</span>
+                          <span class="{{ cart_text_classes }}">{{ quick_add_button_label }}</span>
                           {%- render 'icon-cart-in-card', add_classes: cart_icon_classes -%}
                         {%- else -%}
-                          <span>{{ "products.product.add_to_cart" | t }}</span>
+                          <span>{{ quick_add_button_label }}</span>
                         {%- endif -%}
                       {%- else -%}  
-                        <span>{{ "products.product.add_to_cart" | t }}</span>  
+                        <span>{{ quick_add_button_label }}</span>
                       {%- endunless -%}
                       <div class="loading-overlay__spinner hidden">
                         {%- render 'icon-cart-loading' -%}
@@ -324,20 +330,20 @@
                     name="add"
                     class="quick-add__submit button button--medium{% unless enable_compare %} w100{% endunless %}"
                     aria-haspopup="dialog"
-                    aria-label="{{ "products.product.add_to_cart" | t | escape }}"
+                    aria-label="{{ quick_add_button_label | escape }}"
                     aria-live="polite"
                     data-sold-out-message="true"
                     disabled
                   >
                     {%- unless settings.cart_button_text == 'visible' -%}
                       {%- if enable_compare or full_on_mobile != true -%}
-                        <span class="{{ cart_text_classes }}">{{ "products.product.add_to_cart" | t }}</span>
+                        <span class="{{ cart_text_classes }}">{{ quick_add_button_label }}</span>
                         {%- render 'icon-cart-in-card', add_classes: cart_icon_classes -%}
                       {%- else -%}
-                        <span>{{ "products.product.add_to_cart" | t }}</span>
+                        <span>{{ quick_add_button_label }}</span>
                       {%- endif -%}
                     {%- else -%}  
-                      <span>{{ "products.product.add_to_cart" | t }}</span>  
+                      <span>{{ quick_add_button_label }}</span>
                     {%- endunless -%}
                   </button>
                 </div>  

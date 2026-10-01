@@ -321,110 +321,26 @@
         "line_height_desktop": 135
       }
     },
-    "home_88_fabrics": {
-      "type": "home-88-fabrics",
-      "blocks": {
-        "home_88_fabric_1": {
-          "type": "fabric",
-          "settings": {
-            "title": "Acid Linen",
-            "description": "Light, breathable and crisp.",
-            "icon_alt": "",
-            "background_color": "#d8bf9f",
-            "text_color": "#171714"
-          }
-        },
-        "home_88_fabric_2": {
-          "type": "fabric",
-          "settings": {
-            "title": "Soft Linen",
-            "description": "Soft to the touch with natural drape.",
-            "icon_alt": "",
-            "background_color": "#a8ad8b",
-            "text_color": "#171714"
-          }
-        },
-        "home_88_fabric_3": {
-          "type": "fabric",
-          "settings": {
-            "title": "Knitted",
-            "description": "Flexible comfort that moves with you.",
-            "icon_alt": "",
-            "background_color": "#172437",
-            "text_color": "#ffffff"
-          }
-        },
-        "home_88_fabric_4": {
-          "type": "fabric",
-          "settings": {
-            "title": "Woven",
-            "description": "Structured, durable and made to last.",
-            "icon_alt": "",
-            "background_color": "#d8d7d2",
-            "text_color": "#171714"
-          }
-        }
-      },
-      "block_order": [
-        "home_88_fabric_1",
-        "home_88_fabric_2",
-        "home_88_fabric_3",
-        "home_88_fabric_4"
-      ],
+    "home_next_collection": {
+      "type": "home-next-collection",
       "settings": {
-        "heading": "DIFFERENT FABRICS FOR DIFFERENT KINDS OF EASE",
-        "background_color": "#ffffff",
-        "text_color": "#171714",
-        "padding_top_mobile": 32,
-        "padding_bottom_mobile": 32,
-        "padding_top_desktop": 52,
-        "padding_bottom_desktop": 52,
-        "card_gap": 8,
-        "card_padding": 4,
-        "icon_size": 30,
-        "heading_size_mobile": 14,
-        "heading_size_desktop": 29,
-        "title_size_mobile": 10,
-        "title_size_desktop": 17,
-        "description_size_mobile": 8,
-        "description_size_desktop": 13,
-        "description_line_height_mobile": 120,
-        "description_line_height_desktop": 125
-      }
-    },
-    "home_88_rhythm_collection": {
-      "type": "home-88-rhythm-collection",
-      "settings": {
+        "section_heading": "",
+        "banner_collection": "rhythm",
         "desktop_banner_image": "shopify://shop_images/15_e09ba580-a550-4b23-aeef-d9b02fcebd74.jpg",
         "mobile_banner_image": "shopify://shop_images/15_82f5a39a-c244-46ca-8f0d-a1e9aa37a5c3.jpg",
-        "left_image_alt": "Rhythm Collection editorial background",
+        "banner_image_alt": "Rhythm Collection campaign",
+        "show_banner_text": true,
+        "banner_text": "RHYTHM COLLECTION",
+        "banner_text_position": "center",
+        "banner_text_color": "#ffffff",
+        "overlay_opacity": 15,
         "mobile_image_position": "center center",
         "desktop_image_position": "center center",
-        "overlay_opacity": 40,
-        "heading": "CONTINUE THE RHYTHM",
-        "description": "The Rhythm Collection is designed for everyday ease. More pieces in the same calm, polished spirit, made to mix, match, and move with you.",
-        "button_label": "Explore the Rhythm Collection",
-        "rhythm_collection": "rhythm",
-        "custom_url": "",
-        "text_color": "#ffffff",
-        "button_background": "#172437",
-        "button_text_color": "#ffffff",
-        "button_border_color": "#ffffff",
-        "divider_color": "#ffffff",
-        "section_height_mobile": 290,
-        "section_height_desktop": 410,
-        "left_width_mobile": 56,
-        "left_width_desktop": 48,
-        "content_padding_mobile": 18,
-        "content_padding_desktop": 48,
-        "heading_size_mobile": 20,
-        "heading_size_desktop": 38,
-        "description_size_mobile": 12,
-        "description_size_desktop": 19,
-        "button_size_mobile": 11,
-        "button_size_desktop": 14,
-        "description_line_height_mobile": 120,
-        "description_line_height_desktop": 140
+        "product_collection": "rhythm",
+        "products_to_show": 8,
+        "desktop_products_per_view": 4,
+        "background_color": "#ffffff",
+        "text_color": "#171714"
       }
     },
     "home_hero_photo": {
@@ -697,8 +613,7 @@
     "home_88_product_grid",
     "home_88_outfit_considered",
     "home_88_collection_story",
-    "home_88_fabrics",
-    "home_88_rhythm_collection",
+    "home_next_collection",
     "home_hero_photo",
     "home_rhythm_article",
     "home_quick_shop_grid",

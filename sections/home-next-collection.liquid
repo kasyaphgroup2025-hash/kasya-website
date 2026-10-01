@@ -1,0 +1,221 @@
+{{ 'home-next-collection.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="{{ 'component-card-product-colors.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript>{{ 'component-card-product-colors.css' | asset_url | stylesheet_tag }}</noscript>
+
+{%- liquid
+  assign product_collection = section.settings.product_collection
+  if product_collection == blank
+    assign product_collection = section.settings.banner_collection
+  endif
+
+  assign banner_collection = section.settings.banner_collection
+  if banner_collection == blank
+    assign banner_collection = product_collection
+  endif
+
+  assign banner_url = banner_collection.url
+  assign desktop_banner = section.settings.desktop_banner_image | default: banner_collection.image
+  assign mobile_banner = section.settings.mobile_banner_image | default: desktop_banner
+  assign banner_alt = section.settings.banner_image_alt | default: banner_collection.title | default: section.settings.banner_text
+-%}
+
+<section
+  id="HomeNextCollection-{{ section.id }}"
+  class="home-next-collection"
+  data-home-next-collection
+  data-section-id="{{ section.id }}"
+  style="
+    --next-collection-background: {{ section.settings.background_color }};
+    --next-collection-text: {{ section.settings.text_color }};
+    --next-collection-banner-text: {{ section.settings.banner_text_color }};
+    --next-collection-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --next-collection-mobile-position: {{ section.settings.mobile_image_position }};
+    --next-collection-desktop-position: {{ section.settings.desktop_image_position }};
+    --next-collection-desktop-columns: {{ section.settings.desktop_products_per_view }};
+  "
+>
+  {%- if section.settings.section_heading != blank -%}
+    <h2 class="home-next-collection__heading">{{ section.settings.section_heading | escape }}</h2>
+  {%- endif -%}
+
+  {%- capture banner_content -%}
+    <div class="home-next-collection__banner-media">
+      {%- if desktop_banner != blank -%}
+        <picture>
+          {%- if mobile_banner != blank -%}
+            <source
+              media="(max-width: 749px)"
+              srcset="
+                {{ mobile_banner | image_url: width: 375 }} 375w,
+                {{ mobile_banner | image_url: width: 550 }} 550w,
+                {{ mobile_banner | image_url: width: 750 }} 750w,
+                {{ mobile_banner | image_url: width: 900 }} 900w
+              "
+              sizes="100vw"
+            >
+          {%- endif -%}
+          {{- desktop_banner
+            | image_url: width: 2400
+            | image_tag:
+              class: 'home-next-collection__banner-image',
+              widths: '750, 990, 1200, 1500, 1800, 2100, 2400',
+              sizes: '100vw',
+              loading: 'lazy',
+              alt: banner_alt
+          -}}
+        </picture>
+      {%- else -%}
+        {{- 'lifestyle-2' | placeholder_svg_tag: 'home-next-collection__banner-placeholder' -}}
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_banner_text and section.settings.banner_text != blank -%}
+      <span class="home-next-collection__banner-shade" aria-hidden="true"></span>
+      <span class="home-next-collection__banner-text home-next-collection__banner-text--{{ section.settings.banner_text_position }}">
+        {{- section.settings.banner_text | escape -}}
+      </span>
+    {%- endif -%}
+  {%- endcapture -%}
+
+  {%- if banner_url != blank -%}
+    <a class="home-next-collection__banner" href="{{ banner_url }}" aria-label="View {{ banner_collection.title | default: section.settings.banner_text | escape }}">
+      {{- banner_content -}}
+    </a>
+  {%- else -%}
+    <div class="home-next-collection__banner">
+      {{- banner_content -}}
+    </div>
+  {%- endif -%}
+
+  {%- if product_collection != blank and product_collection.products_count > 0 -%}
+    <div
+      class="home-next-collection__carousel"
+      data-product-carousel
+      data-desktop-columns="{{ section.settings.desktop_products_per_view }}"
+    >
+      <ul
+        id="HomeNextCollectionTrack-{{ section.id }}"
+        class="home-next-collection__track"
+        data-product-carousel-track
+        role="list"
+        aria-label="{{ product_collection.title | escape }} products"
+      >
+        {%- for card_product in product_collection.products limit: section.settings.products_to_show -%}
+          <li class="home-next-collection__item" data-product-carousel-item>
+            {%- render 'card-product',
+              card_product: card_product,
+              media_aspect_ratio: 'portrait',
+              show_secondary_image: false,
+              show_vendor: false,
+              show_rating: false,
+              show_quick_add: true,
+              force_quick_add_drawer: true,
+              quick_add_label: 'Quick Shop',
+              enable_compare: false,
+              show_quick_view: false,
+              section_id: section.id,
+              show_color_swatches: true,
+              color_swatches_style: 'custom',
+              full_on_mobile: true,
+              allow_effect: false,
+              columns_desktop: section.settings.desktop_products_per_view,
+              columns_mobile: 2
+            -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      <button
+        class="home-next-collection__arrow home-next-collection__arrow--previous"
+        type="button"
+        data-product-carousel-previous
+        aria-controls="HomeNextCollectionTrack-{{ section.id }}"
+        aria-label="Previous products"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/></svg>
+      </button>
+      <button
+        class="home-next-collection__arrow home-next-collection__arrow--next"
+        type="button"
+        data-product-carousel-next
+        aria-controls="HomeNextCollectionTrack-{{ section.id }}"
+        aria-label="Next products"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/></svg>
+      </button>
+    </div>
+  {%- elsif request.design_mode -%}
+    <p class="home-next-collection__editor-note">Select a product collection to populate this carousel.</p>
+  {%- endif -%}
+</section>
+
+<script src="{{ 'home-next-collection.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "Home next collection",
+  "tag": "section",
+  "class": "section-home-next-collection",
+  "settings": [
+    { "type": "text", "id": "section_heading", "label": "Section heading", "info": "Optional heading displayed above the banner." },
+    { "type": "header", "content": "Collection banner" },
+    { "type": "collection", "id": "banner_collection", "label": "Banner destination collection" },
+    { "type": "image_picker", "id": "desktop_banner_image", "label": "Desktop banner image" },
+    { "type": "image_picker", "id": "mobile_banner_image", "label": "Mobile banner image (optional)" },
+    { "type": "text", "id": "banner_image_alt", "label": "Banner image alt text" },
+    { "type": "checkbox", "id": "show_banner_text", "label": "Show banner text", "default": true },
+    { "type": "text", "id": "banner_text", "label": "Banner text", "default": "RHYTHM COLLECTION" },
+    {
+      "type": "select",
+      "id": "banner_text_position",
+      "label": "Banner text position",
+      "default": "center",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "bottom", "label": "Bottom" }
+      ]
+    },
+    { "type": "color", "id": "banner_text_color", "label": "Banner text color", "default": "#ffffff" },
+    { "type": "range", "id": "overlay_opacity", "label": "Image shade", "min": 0, "max": 50, "step": 5, "unit": "%", "default": 15 },
+    {
+      "type": "select",
+      "id": "mobile_image_position",
+      "label": "Mobile image position",
+      "default": "center center",
+      "options": [
+        { "value": "left center", "label": "Left" },
+        { "value": "center center", "label": "Center" },
+        { "value": "right center", "label": "Right" },
+        { "value": "center top", "label": "Top" },
+        { "value": "center bottom", "label": "Bottom" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "desktop_image_position",
+      "label": "Desktop image position",
+      "default": "center center",
+      "options": [
+        { "value": "left center", "label": "Left" },
+        { "value": "center center", "label": "Center" },
+        { "value": "right center", "label": "Right" },
+        { "value": "center top", "label": "Top" },
+        { "value": "center bottom", "label": "Bottom" }
+      ]
+    },
+    { "type": "header", "content": "Product carousel" },
+    { "type": "collection", "id": "product_collection", "label": "Product collection", "info": "Falls back to the banner collection when left blank." },
+    { "type": "range", "id": "products_to_show", "label": "Maximum products", "min": 4, "max": 10, "step": 2, "default": 8 },
+    { "type": "range", "id": "desktop_products_per_view", "label": "Desktop products per view", "min": 3, "max": 5, "step": 1, "default": 4 },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#171714" }
+  ],
+  "presets": [
+    {
+      "name": "Home next collection"
+    }
+  ]
+}
+{% endschema %}
