@@ -13,7 +13,10 @@
     assign banner_collection = product_collection
   endif
 
-  assign banner_url = banner_collection.url
+  assign banner_url = section.settings.banner_link
+  if banner_url == blank
+    assign banner_url = banner_collection.url
+  endif
   assign desktop_banner = section.settings.desktop_banner_image | default: banner_collection.image
   assign mobile_banner = section.settings.mobile_banner_image | default: desktop_banner
   assign banner_alt = section.settings.banner_image_alt | default: banner_collection.title | default: section.settings.banner_text
@@ -163,6 +166,7 @@
     { "type": "text", "id": "section_heading", "label": "Section heading", "default": "OTHER COLLECTION" },
     { "type": "header", "content": "Collection banner" },
     { "type": "collection", "id": "banner_collection", "label": "Banner destination collection" },
+    { "type": "url", "id": "banner_link", "label": "Banner link (optional)", "info": "Defaults to the banner collection when left blank." },
     { "type": "image_picker", "id": "desktop_banner_image", "label": "Desktop banner image" },
     { "type": "image_picker", "id": "mobile_banner_image", "label": "Mobile banner image (optional)" },
     { "type": "text", "id": "banner_image_alt", "label": "Banner image alt text" },
@@ -221,7 +225,31 @@
   ],
   "presets": [
     {
-      "name": "Home next collection"
+      "name": "Best Sellers carousel",
+      "settings": {
+        "show_section_heading": true,
+        "section_heading": "BEST SELLERS",
+        "show_banner_text": true,
+        "banner_text": "BEST SELLERS"
+      }
+    },
+    {
+      "name": "Interlude Edit carousel",
+      "settings": {
+        "show_section_heading": true,
+        "section_heading": "OTHER COLLECTION",
+        "show_banner_text": true,
+        "banner_text": "INTERLUDE EDIT"
+      }
+    },
+    {
+      "name": "Back to Rhythm carousel",
+      "settings": {
+        "show_section_heading": false,
+        "section_heading": "OTHER COLLECTION",
+        "show_banner_text": true,
+        "banner_text": "RHYTHM COLLECTION"
+      }
     }
   ]
 }

@@ -15,6 +15,14 @@
   box-sizing: border-box;
 }
 
+.section-home-next-collection:has(+ .section-home-next-collection) .home-next-collection {
+  padding-bottom: 3.2rem;
+}
+
+.section-home-next-collection + .section-home-next-collection .home-next-collection {
+  padding-top: 2.4rem;
+}
+
 .home-next-collection__heading {
   margin: 0;
   padding: 0 1.6rem 1.6rem;
@@ -223,6 +231,14 @@
   .home-next-collection {
     padding-top: 4rem;
     padding-bottom: 5.6rem;
+  }
+
+  .section-home-next-collection:has(+ .section-home-next-collection) .home-next-collection {
+    padding-bottom: 3.2rem;
+  }
+
+  .section-home-next-collection + .section-home-next-collection .home-next-collection {
+    padding-top: 3.2rem;
   }
 
   .home-next-collection__heading {

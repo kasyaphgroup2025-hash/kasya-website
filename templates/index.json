@@ -321,12 +321,67 @@
         "line_height_desktop": 135
       }
     },
-    "home_next_collection": {
+    "home_best_sellers_collection": {
+      "type": "home-next-collection",
+      "settings": {
+        "show_section_heading": true,
+        "section_heading": "BEST SELLERS",
+        "banner_collection": "best-sellers",
+        "banner_link": "shopify://collections/best-sellers",
+        "desktop_banner_image": "",
+        "mobile_banner_image": "",
+        "banner_image_alt": "Best Sellers collection",
+        "show_banner_text": true,
+        "banner_text": "BEST SELLERS",
+        "banner_text_position": "center",
+        "banner_text_color": "#ffffff",
+        "overlay_opacity": 15,
+        "mobile_image_position": "center center",
+        "desktop_image_position": "center center",
+        "product_collection": "best-sellers",
+        "desktop_products_per_view": 4,
+        "product_name_size_mobile": 12,
+        "product_name_size_desktop": 18,
+        "product_price_size_mobile": 15,
+        "product_price_size_desktop": 20,
+        "background_color": "#ffffff",
+        "text_color": "#171714"
+      }
+    },
+    "home_interlude_collection": {
       "type": "home-next-collection",
       "settings": {
         "show_section_heading": true,
         "section_heading": "OTHER COLLECTION",
+        "banner_collection": "interlude-edit",
+        "banner_link": "shopify://collections/interlude-edit",
+        "desktop_banner_image": "",
+        "mobile_banner_image": "",
+        "banner_image_alt": "Interlude Edit collection",
+        "show_banner_text": true,
+        "banner_text": "INTERLUDE EDIT",
+        "banner_text_position": "center",
+        "banner_text_color": "#ffffff",
+        "overlay_opacity": 15,
+        "mobile_image_position": "center center",
+        "desktop_image_position": "center center",
+        "product_collection": "interlude-edit",
+        "desktop_products_per_view": 4,
+        "product_name_size_mobile": 12,
+        "product_name_size_desktop": 18,
+        "product_price_size_mobile": 15,
+        "product_price_size_desktop": 20,
+        "background_color": "#ffffff",
+        "text_color": "#171714"
+      }
+    },
+    "home_next_collection": {
+      "type": "home-next-collection",
+      "settings": {
+        "show_section_heading": false,
+        "section_heading": "OTHER COLLECTION",
         "banner_collection": "rhythm",
+        "banner_link": "shopify://collections/rhythm",
         "desktop_banner_image": "shopify://shop_images/15_e09ba580-a550-4b23-aeef-d9b02fcebd74.jpg",
         "mobile_banner_image": "shopify://shop_images/15_82f5a39a-c244-46ca-8f0d-a1e9aa37a5c3.jpg",
         "banner_image_alt": "Rhythm Collection campaign",
@@ -617,6 +672,8 @@
     "home_88_product_grid",
     "home_88_outfit_considered",
     "home_88_collection_story",
+    "home_best_sellers_collection",
+    "home_interlude_collection",
     "home_next_collection",
     "home_hero_photo",
     "home_rhythm_article",
