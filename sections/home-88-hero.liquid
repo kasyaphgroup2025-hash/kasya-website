@@ -4,16 +4,14 @@
   assign mobile_image = section.settings.mobile_image | default: section.settings.desktop_image
   assign desktop_image = section.settings.desktop_image | default: section.settings.mobile_image
   assign image_alt = section.settings.image_alt | escape
-  assign primary_button_link = section.settings.primary_button_link | default: '#home-88-product-grid'
   assign secondary_button_link = section.settings.secondary_button_link | default: '#home-88-shop-the-look'
 -%}
 
 <section
   id="Home88Hero-{{ section.id }}"
   class="home-88-hero"
-  aria-labelledby="Home88HeroHeading-{{ section.id }}"
   data-home-88-hero
-  style="--home-88-mobile-position: {{ section.settings.mobile_image_position }}; --home-88-desktop-position: {{ section.settings.desktop_image_position }}; --home-88-headline-mobile-size: {{ section.settings.headline_size_mobile }}px; --home-88-headline-desktop-size: {{ section.settings.headline_size_desktop }}px; --home-88-headline-line-height: {{ section.settings.headline_line_height }}%; --home-88-headline-max-width: {{ section.settings.headline_max_width }}px;"
+  style="--home-88-mobile-position: {{ section.settings.mobile_image_position }}; --home-88-desktop-position: {{ section.settings.desktop_image_position }};"
 >
   <div class="home-88-hero__media">
     {%- if mobile_image != blank -%}
@@ -47,41 +45,13 @@
     {%- endif -%}
   </div>
 
-  <div class="home-88-hero__inner">
-    <div class="home-88-hero__content">
-      {%- if section.settings.headline != blank -%}
-        {%- assign headline_lines = section.settings.headline | escape | newline_to_br | split: '<br />' -%}
-        <h1 id="Home88HeroHeading-{{ section.id }}" class="home-88-hero__headline">
-          {%- for line in headline_lines -%}
-            <span>{{ line | strip }}</span>
-          {%- endfor -%}
-        </h1>
-      {%- endif -%}
-
-      {%- if section.settings.collection_name != blank -%}
-        <p class="home-88-hero__collection">{{ section.settings.collection_name | escape }}</p>
-      {%- endif -%}
-
-      {%- if section.settings.description != blank -%}
-        <p class="home-88-hero__description">{{ section.settings.description | escape }}</p>
-      {%- endif -%}
-
-      {%- if section.settings.primary_button_label != blank or section.settings.secondary_button_label != blank -%}
-        <div class="home-88-hero__actions">
-          {%- if section.settings.primary_button_label != blank -%}
-            <a class="home-88-hero__button home-88-hero__button--primary" href="{{ primary_button_link | escape }}">
-              {{ section.settings.primary_button_label | escape }}
-            </a>
-          {%- endif -%}
-          {%- if section.settings.secondary_button_label != blank -%}
-            <a class="home-88-hero__button home-88-hero__button--secondary" href="{{ secondary_button_link | escape }}">
-              {{ section.settings.secondary_button_label | escape }}
-            </a>
-          {%- endif -%}
-        </div>
-      {%- endif -%}
+  {%- if section.settings.secondary_button_label != blank -%}
+    <div class="home-88-hero__inner">
+      <a class="home-88-hero__button home-88-hero__button--secondary" href="{{ secondary_button_link | escape }}">
+        {{ section.settings.secondary_button_label | escape | upcase }}
+      </a>
     </div>
-  </div>
+  {%- endif -%}
 </section>
 
 <script>
