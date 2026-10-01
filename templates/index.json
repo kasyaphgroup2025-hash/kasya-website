@@ -195,28 +195,89 @@
         "home_88_look_3": {
           "type": "look",
           "settings": {
-            "front_image": "shopify://shop_images/Shop_The_Look_d454b52b-d070-4d11-8efb-c9b4e26fad1e.jpg",
-            "front_image_alt": "Shop the Look image 1",
+            "front_image": "shopify://shop_images/ChatGPT_Image_Jun_3_2026_03_38_12_PM.png",
+            "front_image_alt": "Morning Loop look",
             "mobile_image_position": "center center",
             "desktop_image_position": "center center",
             "product_1": "inah-blouse-viscose-linen",
-            "product_1_title": "Kianna Blouse",
-            "product_1_image": "shopify://shop_images/6.6_MOBILE_CRO_1.jpg",
-            "product_1_image_alt": "First product flatlay",
+            "product_1_title": "Inah Blouse",
+            "product_1_image": "shopify://shop_images/INAH_-_CREAM_2.jpg",
+            "product_1_image_alt": "Inah Blouse flat lay",
             "product_1_button_label": "See Fit & Colors",
             "product_2": "demi-barrel-pants-acid-linen",
-            "product_2_title": "Lea Trouser",
-            "product_2_image": "shopify://shop_images/33_4da6ac84-5ce0-4fe0-bda5-c8e16bdbad55.jpg",
-            "product_2_image_alt": "Second product flatlay",
+            "product_2_title": "Demi Barrel Pants",
+            "product_2_image": "shopify://shop_images/16_b7865bcd-9c41-423d-88ee-e9d5abf48f04.jpg",
+            "product_2_image_alt": "Demi Barrel Pants flat lay",
+            "product_2_button_label": "See Fit & Colors"
+          }
+        },
+        "home_1010_look_2": {
+          "type": "look",
+          "settings": {
+            "front_image": "shopify://shop_images/ChatGPT_Image_Jun_3_2026_06_22_29_PM.png",
+            "front_image_alt": "Afternoon Pause look",
+            "mobile_image_position": "center center",
+            "desktop_image_position": "center center",
+            "product_1": "inah-blouse-viscose-linen",
+            "product_1_title": "Inah Blouse",
+            "product_1_image": "shopify://shop_images/INAH_-_CREAM_2.jpg",
+            "product_1_image_alt": "Inah Blouse flat lay",
+            "product_1_button_label": "See Fit & Colors",
+            "product_2": "hazel-trouser-viscose-linen",
+            "product_2_title": "Hazel Trouser",
+            "product_2_image": "shopify://shop_images/17_5e666964-1a0e-4c33-952e-34a5ffcddbb1.jpg",
+            "product_2_image_alt": "Hazel Trouser flat lay",
+            "product_2_button_label": "See Fit & Colors"
+          }
+        },
+        "home_1010_look_3": {
+          "type": "look",
+          "settings": {
+            "front_image": "shopify://shop_images/ChatGPT_Image_Jun_3_2026_06_33_03_PM.png",
+            "front_image_alt": "After Hours look",
+            "mobile_image_position": "center center",
+            "desktop_image_position": "center center",
+            "product_1": "daliah-polo-acid-linen",
+            "product_1_title": "Daliah Polo",
+            "product_1_image": "shopify://shop_images/24_0c267d7a-adb4-478b-a4f0-eb9ded018ef9.jpg",
+            "product_1_image_alt": "Daliah Polo flat lay",
+            "product_1_button_label": "See Fit & Colors",
+            "product_2": "demi-barrel-pants-acid-linen",
+            "product_2_title": "Demi Barrel Pants",
+            "product_2_image": "shopify://shop_images/14_3b206207-52b0-4a91-a3d0-40e13c086759.jpg",
+            "product_2_image_alt": "Demi Barrel Pants flat lay",
+            "product_2_button_label": "See Fit & Colors"
+          }
+        },
+        "home_1010_look_4": {
+          "type": "look",
+          "settings": {
+            "front_image": "shopify://shop_images/ChatGPT_Image_Jun_3_2026_06_38_35_PM.png",
+            "front_image_alt": "Weekend Ease look",
+            "mobile_image_position": "center center",
+            "desktop_image_position": "center center",
+            "product_1": "daliah-polo-acid-linen",
+            "product_1_title": "Daliah Polo",
+            "product_1_image": "shopify://shop_images/22_ad9484f4-7b64-4229-8b68-e9e9ce38cfcf.jpg",
+            "product_1_image_alt": "Daliah Polo flat lay",
+            "product_1_button_label": "See Fit & Colors",
+            "product_2": "demi-barrel-pants-acid-linen",
+            "product_2_title": "Demi Barrel Pants",
+            "product_2_image": "shopify://shop_images/16_b7865bcd-9c41-423d-88ee-e9d5abf48f04.jpg",
+            "product_2_image_alt": "Demi Barrel Pants flat lay",
             "product_2_button_label": "See Fit & Colors"
           }
         }
       },
       "block_order": [
-        "home_88_look_3"
+        "home_88_look_3",
+        "home_1010_look_2",
+        "home_1010_look_3",
+        "home_1010_look_4"
       ],
       "settings": {
         "heading": "SHOP THE LOOK",
+        "subtitle": "Polished pairings made to wear together.",
         "background_color": "#ffffff",
         "text_color": "#171714",
         "padding_top_mobile": 20,
@@ -225,10 +286,10 @@
         "padding_bottom_desktop": 48,
         "heading_size_mobile": 20,
         "heading_size_desktop": 28,
-        "product_title_size_mobile": 13,
-        "product_title_size_desktop": 15,
-        "product_button_size_mobile": 10,
-        "product_button_size_desktop": 12
+        "product_title_size_mobile": 11,
+        "product_title_size_desktop": 13,
+        "product_button_size_mobile": 9,
+        "product_button_size_desktop": 10
       }
     },
     "home_88_collection_story": {

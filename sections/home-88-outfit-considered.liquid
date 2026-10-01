@@ -28,8 +28,15 @@
   "
 >
   <div class="home-88-outfit__inner">
-    {%- if section.settings.heading != blank -%}
-      <h2 class="home-88-outfit__heading">{{ section.settings.heading | escape }}</h2>
+    {%- if section.settings.heading != blank or section.settings.subtitle != blank -%}
+      <header class="home-88-outfit__header">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="home-88-outfit__heading">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subtitle != blank -%}
+          <p class="home-88-outfit__subtitle">{{ section.settings.subtitle | escape }}</p>
+        {%- endif -%}
+      </header>
     {%- endif -%}
 
     {%- if look_count > 0 -%}
@@ -154,6 +161,7 @@
   "max_blocks": 4,
   "settings": [
     { "type": "text", "id": "heading", "label": "Heading", "default": "SHOP THE LOOK" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Polished pairings made to wear together." },
     { "type": "color", "id": "background_color", "label": "Background color", "default": "#ffffff" },
     { "type": "color", "id": "text_color", "label": "Text color", "default": "#171714" },
     { "type": "header", "content": "Spacing" },
