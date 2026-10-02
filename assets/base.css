@@ -1548,3 +1548,13 @@ back-to-top .icon {
 .media {
   position: relative;
 }
+
+/* Shared typography for major Kasya landing-page section headings. */
+.kasya-section-heading {
+  font-family: "Manrope", var(--font-body-family, sans-serif);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.15;
+  text-transform: uppercase;
+}

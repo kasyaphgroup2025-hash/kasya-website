@@ -28,13 +28,8 @@
   margin: 0;
   padding: 0 1.6rem 1.6rem;
   color: inherit;
-  font-family: inherit;
   font-size: 2rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  line-height: 1.2;
   text-align: center;
-  text-transform: uppercase;
 }
 
 .home-next-collection__banner {

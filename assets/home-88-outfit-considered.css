@@ -27,13 +27,8 @@
 .home-88-outfit__heading {
   margin: 0;
   color: inherit;
-  font-family: inherit;
   font-size: var(--outfit-heading-mobile);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  line-height: 1.15;
   text-align: center;
-  text-transform: uppercase;
 }
 
 .home-88-outfit__subtitle {
@@ -395,7 +390,7 @@
   }
 
   .home-88-outfit__track {
-    align-items: flex-start;
+    align-items: stretch;
     gap: var(--outfit-desktop-gap);
     height: auto;
   }
@@ -404,6 +399,7 @@
     flex-basis: calc((100% - var(--outfit-desktop-gap)) / 2);
     width: calc((100% - var(--outfit-desktop-gap)) / 2);
     max-width: calc((100% - var(--outfit-desktop-gap)) / 2);
+    aspect-ratio: 4 / 5;
     height: auto;
     scroll-snap-align: none;
     scroll-snap-stop: normal;
@@ -415,8 +411,8 @@
   }
 
   .home-88-outfit__image {
-    height: auto;
-    object-fit: contain;
+    height: 100%;
+    object-fit: cover;
   }
 }
 

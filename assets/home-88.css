@@ -353,11 +353,7 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
 #home-88-product-grid .home-88-products__heading {
   margin: 0;
   color: #111;
-  font-family: inherit;
   font-size: var(--home-88-intro-heading-mobile, 32px);
-  font-weight: 400;
-  letter-spacing: -0.025em;
-  line-height: 1.05;
 }
 
 #home-88-product-grid .home-88-products__description {

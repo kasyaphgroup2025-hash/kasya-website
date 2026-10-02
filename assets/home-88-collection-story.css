@@ -32,10 +32,7 @@
 #home-88-collection-story h2 {
   margin: 0;
   color: inherit;
-  font: inherit;
   font-size: var(--story-heading-mobile);
-  letter-spacing: -0.025em;
-  line-height: 1.05;
 }
 
 #home-88-collection-story .home-88-story__opening {
