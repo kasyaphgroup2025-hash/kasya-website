@@ -1,4 +1,5 @@
 .home-next-collection {
+  --next-collection-gap: 4px;
   width: 100%;
   overflow: hidden;
   padding: 3.2rem 0 4rem;
@@ -112,7 +113,7 @@
 
 .home-next-collection__track {
   display: flex;
-  gap: 1.2rem;
+  gap: var(--next-collection-gap);
   width: 100%;
   margin: 0;
   padding: 0 1.6rem 1rem;
@@ -342,7 +343,7 @@
 
 @media screen and (min-width: 990px) {
   .home-next-collection__carousel {
-    --next-collection-gap: 2rem;
+    --next-collection-gap: 5px;
     --next-collection-side: clamp(2.4rem, 5vw, 7.2rem);
     margin-top: 2.4rem;
     padding-top: 3.6rem;
@@ -356,15 +357,15 @@
   }
 
   .home-next-collection__carousel[data-desktop-columns="3"] .home-next-collection__item {
-    flex-basis: calc(33.333333% - 1.3334rem);
+    flex-basis: calc((100% - (var(--next-collection-gap) * 2)) / 3);
   }
 
   .home-next-collection__carousel[data-desktop-columns="4"] .home-next-collection__item {
-    flex-basis: calc(25% - 1.5rem);
+    flex-basis: calc((100% - (var(--next-collection-gap) * 3)) / 4);
   }
 
   .home-next-collection__carousel[data-desktop-columns="5"] .home-next-collection__item {
-    flex-basis: calc(20% - 1.6rem);
+    flex-basis: calc((100% - (var(--next-collection-gap) * 4)) / 5);
   }
 
   .home-next-collection__controls {

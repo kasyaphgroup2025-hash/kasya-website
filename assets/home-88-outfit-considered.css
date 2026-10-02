@@ -384,6 +384,30 @@
   }
 }
 
+@media screen and (min-width: 990px) {
+  .home-88-outfit__stage {
+    width: calc(100% - clamp(4rem, 8vw, 12rem));
+    max-width: 96rem;
+    min-height: 0;
+    height: auto;
+    margin-inline: auto;
+  }
+
+  .home-88-outfit__track {
+    align-items: flex-start;
+    height: auto;
+  }
+
+  .home-88-outfit__slide {
+    height: auto;
+  }
+
+  .home-88-outfit__image {
+    height: auto;
+    object-fit: contain;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .home-88-outfit__track {
     scroll-behavior: auto;
