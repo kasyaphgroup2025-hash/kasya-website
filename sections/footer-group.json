@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "type": "footer",
   "name": "Footer Group",
@@ -61,13 +70,16 @@
         "newsletter_heading": "Subscribe to our emails",
         "newsletter_text": "Be the first to know about new collections and exclusive offers.",
         "footer_menu": "",
-        "facebook_url": "https://www.facebook.com/kasyaphhh",
-        "tiktok_url": "https://www.tiktok.com/@kasyaph",
-        "viber_url": "https://viber.me/639635655486",
+        "facebook_url": "",
+        "tiktok_url": "",
+        "viber_url": "",
+        "viber_icon": "shopify://shop_images/viber-black-logo-icon-viber-app-on-transparent-background-free-png.webp",
         "footer_logo": "shopify://shop_images/d9373903-dd42-492a-93cc-7ba68431c3c3.png",
         "show_powered_by_shopify": true
       }
     }
   },
-  "order": ["footer"]
+  "order": [
+    "footer"
+  ]
 }
