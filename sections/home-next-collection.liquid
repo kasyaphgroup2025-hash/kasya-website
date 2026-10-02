@@ -100,6 +100,27 @@
       data-product-carousel
       data-desktop-columns="{{ section.settings.desktop_products_per_view }}"
     >
+      <div class="home-next-collection__controls" role="group" aria-label="Product carousel controls">
+        <button
+          class="home-next-collection__arrow home-next-collection__arrow--previous"
+          type="button"
+          data-product-carousel-previous
+          aria-controls="HomeNextCollectionTrack-{{ section.id }}"
+          aria-label="Previous products"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/></svg>
+        </button>
+        <button
+          class="home-next-collection__arrow home-next-collection__arrow--next"
+          type="button"
+          data-product-carousel-next
+          aria-controls="HomeNextCollectionTrack-{{ section.id }}"
+          aria-label="Next products"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/></svg>
+        </button>
+      </div>
+
       <ul
         id="HomeNextCollectionTrack-{{ section.id }}"
         class="home-next-collection__track"
@@ -129,25 +150,6 @@
           </li>
         {%- endfor -%}
       </ul>
-
-      <button
-        class="home-next-collection__arrow home-next-collection__arrow--previous"
-        type="button"
-        data-product-carousel-previous
-        aria-controls="HomeNextCollectionTrack-{{ section.id }}"
-        aria-label="Previous products"
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/></svg>
-      </button>
-      <button
-        class="home-next-collection__arrow home-next-collection__arrow--next"
-        type="button"
-        data-product-carousel-next
-        aria-controls="HomeNextCollectionTrack-{{ section.id }}"
-        aria-label="Next products"
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/></svg>
-      </button>
     </div>
   {%- elsif request.design_mode -%}
     <p class="home-next-collection__editor-note">Select a product collection to populate this carousel.</p>
