@@ -335,6 +335,7 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
 /* 8.8 collection introduction and Quick Shop */
 #home-88-product-grid {
   --home-88-card-detail-gap: 1.1rem;
+  --home-88-product-gap: 6px;
   display: block;
   width: 100%;
   overflow-x: clip;
@@ -368,6 +369,7 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
   box-sizing: border-box;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--home-88-product-gap);
   width: 100%;
   max-width: 144rem;
   margin: 0 auto;
@@ -386,7 +388,7 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
 #home-88-product-grid .home-88-products__card[data-daliah-product-card="true"] {
   grid-column: 1 / -1;
   justify-self: center;
-  width: 50%;
+  width: calc((100% - var(--home-88-product-gap)) / 2);
 }
 
 #home-88-product-grid .home-88-products__image-link {
@@ -744,6 +746,10 @@ html.home-88-quick-shop-open {
 }
 
 @media screen and (min-width: 750px) {
+  #home-88-product-grid {
+    --home-88-product-gap: 8px;
+  }
+
   #home-88-product-grid .home-88-products__intro {
     padding-bottom: calc(var(--home-88-intro-bottom, 24px) + 0.8rem);
   }
