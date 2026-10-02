@@ -15,7 +15,7 @@
       {%- if section.settings.eyebrow != blank -%}
         <p class="kasya-information-page__eyebrow">{{ section.settings.eyebrow | escape }}</p>
       {%- endif -%}
-      <h1>{{ section.settings.title | default: page.title | escape }}</h1>
+      <h1 class="kasya-section-heading">{{ section.settings.title | default: page.title | escape }}</h1>
       {%- if section.settings.introduction != blank -%}
         <div class="kasya-information-page__introduction rte">
           {{ section.settings.introduction }}

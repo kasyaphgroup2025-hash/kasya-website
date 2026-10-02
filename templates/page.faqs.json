@@ -31,6 +31,27 @@
             "answer": "<p>Contact Kasya as soon as possible with your order details. Changes or cancellations cannot be guaranteed once an order is already being processed or has been handed to the courier.</p>"
           }
         },
+        "payment_category": {
+          "type": "category",
+          "settings": {
+            "heading": "Payment",
+            "description": ""
+          }
+        },
+        "payment_methods": {
+          "type": "faq",
+          "settings": {
+            "question": "What payment methods are available?",
+            "answer": "<p>Kasya accepts Cash on Delivery and the available online-payment methods shown during checkout. Review the payment options at checkout for the most current availability.</p>"
+          }
+        },
+        "payment_cod": {
+          "type": "faq",
+          "settings": {
+            "question": "Is Cash on Delivery available?",
+            "answer": "<p>Yes, Cash on Delivery is available for eligible orders. The available payment methods for your order are confirmed during checkout.</p>"
+          }
+        },
         "sizing_category": {
           "type": "category",
           "settings": {
@@ -64,6 +85,13 @@
           "settings": {
             "heading": "Shipping",
             "description": ""
+          }
+        },
+        "shipping_cost": {
+          "type": "faq",
+          "settings": {
+            "question": "How much is shipping?",
+            "answer": "<p>Shipping costs ₱55–₱99 depending on location. Kasya currently offers free shipping on orders of ₱2,000 and up.</p>"
           }
         },
         "shipping_track": {
@@ -156,11 +184,15 @@
         "ordering_place",
         "ordering_success",
         "ordering_change",
+        "payment_category",
+        "payment_methods",
+        "payment_cod",
         "sizing_category",
         "sizing_choose",
         "sizing_chart",
         "sizing_fit",
         "shipping_category",
+        "shipping_cost",
         "shipping_track",
         "shipping_delivery",
         "shipping_delayed",

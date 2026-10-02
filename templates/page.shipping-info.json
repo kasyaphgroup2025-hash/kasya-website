@@ -28,7 +28,7 @@
           "type": "content",
           "settings": {
             "heading": "Shipping fees",
-            "content": "<p>Shipping fees may vary by order and destination. The applicable amount will be shown during checkout or communicated with your order.</p>"
+            "content": "<p>Shipping costs ₱55–₱99 depending on location. The applicable amount is shown during checkout before you complete your order.</p>"
           }
         },
         "free_shipping": {
@@ -58,7 +58,7 @@
             "heading": "Need help?",
             "content": "<p>For questions about an order or delivery, visit Kasya’s Contact Details page and include your order number when available.</p>",
             "button_label": "Contact Kasya",
-            "contact_page": ""
+            "contact_page": "contact"
           }
         }
       },
