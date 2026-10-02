@@ -219,12 +219,11 @@
 }
 
 .kasya-footer__social-link .icon,
-.kasya-footer__social-image {
+.kasya-footer__social-icon {
   display: block;
   width: 2.4rem;
   height: 2.4rem;
   flex: 0 0 2.4rem;
-  object-fit: contain;
 }
 
 .kasya-footer__brand {
