@@ -13,12 +13,15 @@
       this.slides = Array.from(root.querySelectorAll('[data-carousel-slide]'));
       this.status = root.querySelector('[data-carousel-status]');
       this.activeSlide = 0;
+      this.visibleLooks = this.getVisibleLooks();
       this.scrollFrame = null;
+      this.resizeFrame = null;
 
       const options = { signal: this.abortController.signal };
       root.addEventListener('click', this.onClick, options);
       root.addEventListener('keydown', this.onKeyDown, options);
       this.track?.addEventListener('scroll', this.onScroll, { ...options, passive: true });
+      window.addEventListener('resize', this.onResize, { ...options, passive: true });
       document.addEventListener('shopify:block:select', this.onBlockSelect, options);
 
       if (this.slides.length) this.activateSlide(0);
@@ -26,7 +29,18 @@
 
     destroy() {
       if (this.scrollFrame) cancelAnimationFrame(this.scrollFrame);
+      if (this.resizeFrame) cancelAnimationFrame(this.resizeFrame);
       this.abortController.abort();
+    }
+
+    getVisibleLooks() {
+      return window.matchMedia('(min-width: 990px)').matches ? 2 : 1;
+    }
+
+    getGroupStart(index) {
+      if (!this.slides.length) return 0;
+      const clampedIndex = Math.max(0, Math.min(index, this.slides.length - 1));
+      return Math.floor(clampedIndex / this.visibleLooks) * this.visibleLooks;
     }
 
     onClick = (event) => {
@@ -64,6 +78,14 @@
       });
     };
 
+    onResize = () => {
+      if (this.resizeFrame) cancelAnimationFrame(this.resizeFrame);
+      this.resizeFrame = requestAnimationFrame(() => {
+        this.visibleLooks = this.getVisibleLooks();
+        this.goToSlide(this.activeSlide, false);
+      });
+    };
+
     onBlockSelect = (event) => {
       const index = this.slides.findIndex((slide) => slide.dataset.blockId === event.detail?.blockId);
       if (index >= 0) this.goToSlide(index, false);
@@ -71,13 +93,15 @@
 
     goBy(direction) {
       if (!this.slides.length) return;
-      const index = (this.activeSlide + direction + this.slides.length) % this.slides.length;
-      this.goToSlide(index, true);
+      const groupCount = Math.ceil(this.slides.length / this.visibleLooks);
+      const currentGroup = Math.floor(this.activeSlide / this.visibleLooks);
+      const nextGroup = (currentGroup + direction + groupCount) % groupCount;
+      this.goToSlide(nextGroup * this.visibleLooks, true);
     }
 
     goToSlide(index, smooth) {
       if (!this.track || !this.slides.length) return;
-      const next = Math.max(0, Math.min(index, this.slides.length - 1));
+      const next = this.getGroupStart(index);
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       this.track.scrollTo({
@@ -89,15 +113,20 @@
 
     activateSlide(index) {
       if (!this.slides.length) return;
-      this.activeSlide = Math.max(0, Math.min(index, this.slides.length - 1));
+      this.activeSlide = this.getGroupStart(index);
+      const lastVisibleSlide = Math.min(this.activeSlide + this.visibleLooks - 1, this.slides.length - 1);
 
       this.slides.forEach((slide, slideIndex) => {
-        const active = slideIndex === this.activeSlide;
+        const active = slideIndex >= this.activeSlide && slideIndex <= lastVisibleSlide;
         slide.setAttribute('aria-hidden', String(!active));
         slide.toggleAttribute('inert', !active);
       });
 
-      if (this.status) this.status.textContent = `Look ${this.activeSlide + 1} of ${this.slides.length}`;
+      if (this.status) {
+        this.status.textContent = this.visibleLooks > 1
+          ? `Looks ${this.activeSlide + 1}–${lastVisibleSlide + 1} of ${this.slides.length}`
+          : `Look ${this.activeSlide + 1} of ${this.slides.length}`;
+      }
     }
   }
 

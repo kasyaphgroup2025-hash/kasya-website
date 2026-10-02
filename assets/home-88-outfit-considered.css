@@ -386,6 +386,7 @@
 
 @media screen and (min-width: 990px) {
   .home-88-outfit__stage {
+    --outfit-desktop-gap: 0.8rem;
     width: calc(100% - clamp(4rem, 8vw, 12rem));
     max-width: 96rem;
     min-height: 0;
@@ -395,11 +396,22 @@
 
   .home-88-outfit__track {
     align-items: flex-start;
+    gap: var(--outfit-desktop-gap);
     height: auto;
   }
 
   .home-88-outfit__slide {
+    flex-basis: calc((100% - var(--outfit-desktop-gap)) / 2);
+    width: calc((100% - var(--outfit-desktop-gap)) / 2);
+    max-width: calc((100% - var(--outfit-desktop-gap)) / 2);
     height: auto;
+    scroll-snap-align: none;
+    scroll-snap-stop: normal;
+  }
+
+  .home-88-outfit__slide:nth-child(odd) {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
   }
 
   .home-88-outfit__image {
