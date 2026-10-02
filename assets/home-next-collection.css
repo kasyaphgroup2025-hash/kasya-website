@@ -1,5 +1,5 @@
 .home-next-collection {
-  --next-collection-gap: 4px;
+  --next-collection-gap: 6px;
   width: 100%;
   overflow: hidden;
   padding: 3.2rem 0 4rem;
@@ -338,7 +338,7 @@
 
 @media screen and (min-width: 990px) {
   .home-next-collection__carousel {
-    --next-collection-gap: 5px;
+    --next-collection-gap: 8px;
     --next-collection-side: clamp(2.4rem, 5vw, 7.2rem);
     margin-top: 2.4rem;
     padding-top: 3.6rem;
