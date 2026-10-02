@@ -1,8 +1,10 @@
 .kasya-footer {
+  --kasya-footer-background: #292929;
+  --kasya-footer-text: #fff;
   width: 100%;
   overflow: hidden;
-  background: #292929;
-  color: #fff;
+  background: var(--kasya-footer-background);
+  color: var(--kasya-footer-text);
   font-family: "Manrope", var(--font-body-family, sans-serif);
   font-style: normal;
   font-weight: 400;
@@ -17,22 +19,28 @@
 .kasya-footer__inner {
   width: min(100%, 128rem);
   margin: 0 auto;
-  padding: 4.8rem 2rem 2.4rem;
+  padding: 4rem 1.6rem 2.4rem;
+}
+
+.kasya-footer__main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 3.6rem;
+  align-items: start;
 }
 
 .kasya-footer__newsletter {
-  max-width: 76rem;
-  margin: 0 auto;
-  padding-bottom: 4.8rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-  text-align: center;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  text-align: left;
 }
 
 .kasya-footer__newsletter-heading {
   margin: 0;
   color: inherit;
   font-family: inherit;
-  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-size: clamp(2.2rem, 5vw, 3rem);
   font-style: normal;
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -40,16 +48,16 @@
 }
 
 .kasya-footer__newsletter-text {
-  max-width: 56rem;
-  margin: 1.2rem auto 0;
+  max-width: 48rem;
+  margin: 1.2rem 0 0;
   color: rgba(255, 255, 255, 0.72);
   font-size: 1.4rem;
   line-height: 1.6;
 }
 
 .kasya-footer__newsletter-form {
-  max-width: 62rem;
-  margin: 2.4rem auto 0;
+  max-width: 58rem;
+  margin: 2.4rem 0 0;
 }
 
 .kasya-footer__newsletter-fields {
@@ -94,8 +102,8 @@
 
 .kasya-footer__newsletter-button {
   flex: 0 0 auto;
-  min-width: 12rem;
-  padding: 1.2rem 2.4rem;
+  min-width: 11rem;
+  padding: 1.2rem 2rem;
   border: 1px solid #fff;
   background: #fff;
   color: #1f1f1f;
@@ -137,16 +145,16 @@
 }
 
 .kasya-footer__navigation {
-  padding: 4rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .kasya-footer__links {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0;
-  max-width: 92rem;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
@@ -157,18 +165,17 @@
 }
 
 .kasya-footer__link {
-  display: flex;
-  min-height: 4.6rem;
+  display: inline-flex;
+  min-height: 4rem;
   align-items: center;
-  justify-content: center;
-  padding: 0.9rem 1.2rem;
+  padding: 0.4rem 0;
   color: rgba(255, 255, 255, 0.86);
   font-size: 1.4rem;
   font-weight: 500;
   line-height: 1.4;
-  text-align: center;
+  text-align: left;
   text-decoration: none;
-  transition: color 180ms ease;
+  transition: color 180ms ease, opacity 180ms ease;
 }
 
 .kasya-footer__link:hover,
@@ -178,41 +185,53 @@
   text-underline-offset: 0.35rem;
 }
 
+.kasya-footer__right {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  flex-direction: column;
+  gap: 3.2rem;
+  text-align: center;
+}
+
 .kasya-footer__social {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2.4rem;
-  padding: 3.2rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
 }
 
 .kasya-footer__social-link {
   display: inline-flex;
-  width: 4.8rem;
-  height: 4.8rem;
+  width: 3.6rem;
+  height: 3.6rem;
   align-items: center;
   justify-content: center;
   color: #fff;
   text-decoration: none;
-  transition: opacity 180ms ease, transform 180ms ease;
+  transition: opacity 180ms ease;
 }
 
 .kasya-footer__social-link:hover {
-  opacity: 0.72;
-  transform: translateY(-1px);
+  opacity: 0.7;
 }
 
-.kasya-footer__social-link .icon {
+.kasya-footer__social-link .icon,
+.kasya-footer__social-image {
   display: block;
-  flex: 0 0 auto;
+  width: 2.4rem;
+  height: 2.4rem;
+  flex: 0 0 2.4rem;
+  object-fit: contain;
 }
 
 .kasya-footer__brand {
   display: flex;
+  max-width: 100%;
   align-items: center;
   flex-direction: column;
-  padding-top: 3.6rem;
   text-align: center;
 }
 
@@ -225,14 +244,15 @@
 
 .kasya-footer__logo {
   display: block;
-  width: min(var(--kasya-footer-logo-width, 180px), 70vw);
+  width: clamp(15rem, 14vw, 23rem);
+  max-width: 100%;
   height: auto;
   filter: brightness(0) invert(1);
 }
 
 .kasya-footer__copyright {
   display: block;
-  margin-top: 2.4rem;
+  margin-top: 1.4rem;
   color: rgba(255, 255, 255, 0.62);
   font-size: 1.1rem;
   line-height: 1.6;
@@ -248,14 +268,6 @@
 }
 
 @media screen and (max-width: 749px) {
-  .kasya-footer__inner {
-    padding: 4rem 1.6rem 2.2rem;
-  }
-
-  .kasya-footer__newsletter {
-    padding-bottom: 4rem;
-  }
-
   .kasya-footer__newsletter-fields {
     flex-direction: column;
   }
@@ -263,25 +275,32 @@
   .kasya-footer__newsletter-button {
     width: 100%;
   }
+}
 
-  .kasya-footer__navigation {
-    padding: 2.4rem 0;
-  }
-
-  .kasya-footer__link {
-    justify-content: flex-start;
-    text-align: left;
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  .kasya-footer__inner {
+    padding-right: 4rem;
+    padding-left: 4rem;
   }
 }
 
-@media screen and (min-width: 750px) {
+@media screen and (min-width: 990px) {
   .kasya-footer__inner {
-    padding: 6.4rem 4rem 3.2rem;
+    padding: 6.4rem 4rem 4.8rem;
   }
 
-  .kasya-footer__links {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    column-gap: 2rem;
+  .kasya-footer__main {
+    grid-template-columns: minmax(0, 1.4fr) minmax(22rem, 0.8fr) minmax(22rem, 0.7fr);
+    gap: clamp(4rem, 6vw, 9.6rem);
+  }
+
+  .kasya-footer__main--without-newsletter {
+    grid-template-columns: minmax(22rem, 0.8fr) minmax(22rem, 0.7fr);
+    justify-content: end;
+  }
+
+  .kasya-footer__right {
+    align-items: center;
   }
 }
 

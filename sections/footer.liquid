@@ -1,157 +1,168 @@
 {{ 'section-footer.css' | asset_url | stylesheet_tag }}
 
-<footer
-  class="kasya-footer"
-  data-section-id="{{ section.id }}"
-  style="--kasya-footer-logo-width: {{ section.settings.footer_logo_width }}px;"
->
+<footer class="kasya-footer" data-section-id="{{ section.id }}">
   <div class="kasya-footer__inner">
-    {%- if section.settings.show_newsletter -%}
-      <section
-        class="kasya-footer__newsletter"
-        {% if section.settings.newsletter_heading != blank %}aria-labelledby="KasyaFooterNewsletterHeading-{{ section.id }}"{% endif %}
-      >
-        {%- if section.settings.newsletter_heading != blank -%}
-          <h2 id="KasyaFooterNewsletterHeading-{{ section.id }}" class="kasya-footer__newsletter-heading">
-            {{- section.settings.newsletter_heading | escape -}}
-          </h2>
-        {%- endif -%}
-
-        {%- if section.settings.newsletter_text != blank -%}
-          <p class="kasya-footer__newsletter-text">{{ section.settings.newsletter_text | escape }}</p>
-        {%- endif -%}
-
-        {%- form 'customer', id: 'KasyaFooterNewsletter', class: 'kasya-footer__newsletter-form' -%}
-          <input type="hidden" name="contact[tags]" value="newsletter">
-
-          {%- if form.errors -%}
-            <p class="kasya-footer__form-message kasya-footer__form-message--error" id="KasyaFooterNewsletterError-{{ section.id }}">
-              {{- form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email -}}
-            </p>
+    <div class="kasya-footer__main{% unless section.settings.show_newsletter %} kasya-footer__main--without-newsletter{% endunless %}">
+      {%- if section.settings.show_newsletter -%}
+        <section
+          class="kasya-footer__newsletter"
+          {% if section.settings.newsletter_heading != blank %}aria-labelledby="KasyaFooterNewsletterHeading-{{ section.id }}"{% endif %}
+        >
+          {%- if section.settings.newsletter_heading != blank -%}
+            <h2 id="KasyaFooterNewsletterHeading-{{ section.id }}" class="kasya-footer__newsletter-heading">
+              {{- section.settings.newsletter_heading | escape -}}
+            </h2>
           {%- endif -%}
 
-          {%- if form.posted_successfully? -%}
-            <p class="kasya-footer__form-message kasya-footer__form-message--success" id="KasyaFooterNewsletterSuccess-{{ section.id }}" tabindex="-1">
-              {{- 'newsletter.success' | t -}}
-            </p>
+          {%- if section.settings.newsletter_text != blank -%}
+            <p class="kasya-footer__newsletter-text">{{ section.settings.newsletter_text | escape }}</p>
           {%- endif -%}
 
-          <div class="kasya-footer__newsletter-fields">
-            <div class="kasya-footer__newsletter-field">
-              <label class="visually-hidden" for="KasyaFooterEmail-{{ section.id }}">{{ 'newsletter.label' | t }}</label>
-              <input
-                id="KasyaFooterEmail-{{ section.id }}"
-                class="kasya-footer__newsletter-input"
-                type="email"
-                name="contact[email]"
-                value="{{ form.email }}"
-                autocomplete="email"
-                autocorrect="off"
-                autocapitalize="off"
-                aria-required="true"
-                {% if form.errors %}
-                  autofocus
-                  aria-invalid="true"
-                  aria-describedby="KasyaFooterNewsletterError-{{ section.id }}"
-                {% elsif form.posted_successfully? %}
-                  aria-describedby="KasyaFooterNewsletterSuccess-{{ section.id }}"
-                {% endif %}
-                placeholder="Email address"
-                required
-              >
+          {%- form 'customer', id: 'KasyaFooterNewsletter', class: 'kasya-footer__newsletter-form' -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+
+            {%- if form.errors -%}
+              <p class="kasya-footer__form-message kasya-footer__form-message--error" id="KasyaFooterNewsletterError-{{ section.id }}">
+                {{- form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email -}}
+              </p>
+            {%- endif -%}
+
+            {%- if form.posted_successfully? -%}
+              <p class="kasya-footer__form-message kasya-footer__form-message--success" id="KasyaFooterNewsletterSuccess-{{ section.id }}" tabindex="-1">
+                {{- 'newsletter.success' | t -}}
+              </p>
+            {%- endif -%}
+
+            <div class="kasya-footer__newsletter-fields">
+              <div class="kasya-footer__newsletter-field">
+                <label class="visually-hidden" for="KasyaFooterEmail-{{ section.id }}">{{ 'newsletter.label' | t }}</label>
+                <input
+                  id="KasyaFooterEmail-{{ section.id }}"
+                  class="kasya-footer__newsletter-input"
+                  type="email"
+                  name="contact[email]"
+                  value="{{ form.email }}"
+                  autocomplete="email"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  aria-required="true"
+                  {% if form.errors %}
+                    autofocus
+                    aria-invalid="true"
+                    aria-describedby="KasyaFooterNewsletterError-{{ section.id }}"
+                  {% elsif form.posted_successfully? %}
+                    aria-describedby="KasyaFooterNewsletterSuccess-{{ section.id }}"
+                  {% endif %}
+                  placeholder="Email address"
+                  required
+                >
+              </div>
+              <button class="kasya-footer__newsletter-button" type="submit" name="commit">
+                Sign Up
+              </button>
             </div>
-            <button class="kasya-footer__newsletter-button" type="submit" name="commit">
-              Sign Up
-            </button>
-          </div>
-        {%- endform -%}
-      </section>
-    {%- endif -%}
+          {%- endform -%}
+        </section>
+      {%- endif -%}
 
-    <nav class="kasya-footer__navigation" aria-label="Footer navigation">
-      <ul class="kasya-footer__links" role="list">
-        {%- if section.settings.footer_menu != blank -%}
-          {%- for link in section.settings.footer_menu.links -%}
-            <li>
-              <a class="kasya-footer__link" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>
-                {{- link.title | escape -}}
-              </a>
-            </li>
-          {%- endfor -%}
-        {%- else -%}
-          {%- for block in section.blocks -%}
-            {%- if block.type == 'footer_link' and block.settings.label != blank and block.settings.link != blank -%}
-              <li {{ block.shopify_attributes }}>
-                <a class="kasya-footer__link" href="{{ block.settings.link }}">
-                  {{- block.settings.label | escape -}}
+      <nav class="kasya-footer__navigation" aria-label="Footer navigation">
+        <ul class="kasya-footer__links" role="list">
+          {%- if section.settings.footer_menu != blank -%}
+            {%- for link in section.settings.footer_menu.links -%}
+              <li>
+                <a class="kasya-footer__link" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>
+                  {{- link.title | escape -}}
                 </a>
               </li>
-            {%- endif -%}
-          {%- endfor -%}
-        {%- endif -%}
-      </ul>
-    </nav>
+            {%- endfor -%}
+          {%- else -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'footer_link' and block.settings.label != blank and block.settings.link != blank -%}
+                <li {{ block.shopify_attributes }}>
+                  <a class="kasya-footer__link" href="{{ block.settings.link }}">
+                    {{- block.settings.label | escape -}}
+                  </a>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+        </ul>
+      </nav>
 
-    <div class="kasya-footer__social" role="group" aria-label="Connect with Kasya">
-      {%- if settings.social_facebook_link != blank -%}
-        <a
-          class="kasya-footer__social-link"
-          href="{{ settings.social_facebook_link }}"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Visit Kasya on Facebook"
-          data-no-instant
-        >
-          {%- render 'icon-facebook', icon_width: 26 -%}
-        </a>
-      {%- endif -%}
+      <div class="kasya-footer__right">
+        <div class="kasya-footer__social" role="group" aria-label="Connect with Kasya">
+          {%- assign footer_facebook_url = section.settings.facebook_url | default: settings.social_facebook_link -%}
+          {%- assign footer_tiktok_url = section.settings.tiktok_url | default: settings.social_tiktok_link -%}
 
-      {%- if settings.social_tiktok_link != blank -%}
-        <a
-          class="kasya-footer__social-link"
-          href="{{ settings.social_tiktok_link }}"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Visit Kasya on TikTok"
-          data-no-instant
-        >
-          {%- render 'icon-tiktok', icon_width: 26 -%}
-        </a>
-      {%- endif -%}
+          {%- if footer_facebook_url != blank -%}
+            <a
+              class="kasya-footer__social-link"
+              href="{{ footer_facebook_url }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit Kasya on Facebook"
+              data-no-instant
+            >
+              {%- render 'icon-facebook', icon_width: 24 -%}
+            </a>
+          {%- endif -%}
 
-      {%- if section.settings.viber_link != blank -%}
-        <a
-          class="kasya-footer__social-link"
-          href="{{ section.settings.viber_link }}"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Contact Kasya on Viber"
-          data-no-instant
-        >
-          {%- render 'icon-viber', icon_width: 27 -%}
-        </a>
-      {%- endif -%}
-    </div>
+          {%- if footer_tiktok_url != blank -%}
+            <a
+              class="kasya-footer__social-link"
+              href="{{ footer_tiktok_url }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit Kasya on TikTok"
+              data-no-instant
+            >
+              {%- render 'icon-tiktok', icon_width: 24 -%}
+            </a>
+          {%- endif -%}
 
-    <div class="kasya-footer__brand">
-      {%- if section.settings.footer_logo != blank -%}
-        <a class="kasya-footer__logo-link" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }} home">
-          {{- section.settings.footer_logo
-            | image_url: width: 600
-            | image_tag:
-              class: 'kasya-footer__logo',
-              widths: '160, 240, 360, 480, 600',
-              sizes: '(min-width: 750px) 220px, 180px',
-              loading: 'lazy',
-              alt: section.settings.footer_logo.alt | default: shop.name
-          -}}
-        </a>
-      {%- endif -%}
+          {%- if section.settings.viber_url != blank and section.settings.viber_icon != blank -%}
+            <a
+              class="kasya-footer__social-link"
+              href="{{ section.settings.viber_url }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Contact Kasya on Viber"
+              data-no-instant
+            >
+              {{- section.settings.viber_icon
+                | image_url: width: 72
+                | image_tag:
+                  class: 'kasya-footer__social-image',
+                  widths: '24, 36, 48, 72',
+                  sizes: '24px',
+                  loading: 'lazy',
+                  alt: ''
+              -}}
+            </a>
+          {%- endif -%}
+        </div>
 
-      <small class="kasya-footer__copyright">
-        &copy; {{ 'now' | date: '%Y' }}, <a href="{{ routes.root_url }}">{{ shop.name | escape }}</a>
-        {%- if section.settings.show_powered_by_shopify %} {{ powered_by_link }}{% endif -%}
-      </small>
+        <div class="kasya-footer__brand">
+          {%- if section.settings.footer_logo != blank -%}
+            <a class="kasya-footer__logo-link" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }} home">
+              {{- section.settings.footer_logo
+                | image_url: width: 600
+                | image_tag:
+                  class: 'kasya-footer__logo',
+                  widths: '160, 240, 360, 480, 600',
+                  sizes: '(min-width: 990px) 14vw, 180px',
+                  loading: 'lazy',
+                  alt: section.settings.footer_logo.alt | default: shop.name
+              -}}
+            </a>
+          {%- endif -%}
+
+          <small class="kasya-footer__copyright">
+            &copy; {{ 'now' | date: '%Y' }}, <a href="{{ routes.root_url }}">{{ shop.name | escape }}</a>
+            {%- if section.settings.show_powered_by_shopify %} {{ powered_by_link }}{% endif -%}
+          </small>
+        </div>
+      </div>
     </div>
   </div>
 </footer>
@@ -159,7 +170,7 @@
 {% schema %}
 {
   "name": "Kasya footer",
-  "max_blocks": 7,
+  "max_blocks": 6,
   "settings": [
     {
       "type": "checkbox",
@@ -195,12 +206,27 @@
     },
     {
       "type": "paragraph",
-      "content": "Facebook and TikTok use the URLs configured in Theme settings > Social media."
+      "content": "When left blank, Facebook and TikTok use the URLs configured in Theme settings > Social media."
     },
     {
       "type": "url",
-      "id": "viber_link",
-      "label": "Viber link"
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "TikTok URL"
+    },
+    {
+      "type": "url",
+      "id": "viber_url",
+      "label": "Viber URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "viber_icon",
+      "label": "Viber icon"
     },
     {
       "type": "header",
@@ -209,17 +235,7 @@
     {
       "type": "image_picker",
       "id": "footer_logo",
-      "label": "Footer logo"
-    },
-    {
-      "type": "range",
-      "id": "footer_logo_width",
-      "min": 120,
-      "max": 260,
-      "step": 10,
-      "unit": "px",
-      "label": "Logo width",
-      "default": 180
+      "label": "Footer Kasya logo"
     },
     {
       "type": "checkbox",

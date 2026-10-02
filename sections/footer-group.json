@@ -46,13 +46,6 @@
             "label": "Return My Order",
             "link": "/pages/kasya-return-exchange-assistance"
           }
-        },
-        "articles_link": {
-          "type": "footer_link",
-          "settings": {
-            "label": "Articles",
-            "link": "/blogs/news"
-          }
         }
       },
       "block_order": [
@@ -61,17 +54,17 @@
         "contact_link",
         "return_policy_link",
         "shipping_link",
-        "return_order_link",
-        "articles_link"
+        "return_order_link"
       ],
       "settings": {
         "show_newsletter": true,
         "newsletter_heading": "Subscribe to our emails",
         "newsletter_text": "Be the first to know about new collections and exclusive offers.",
         "footer_menu": "",
-        "viber_link": "https://viber.me/639635655486",
+        "facebook_url": "https://www.facebook.com/kasyaphhh",
+        "tiktok_url": "https://www.tiktok.com/@kasyaph",
+        "viber_url": "https://viber.me/639635655486",
         "footer_logo": "shopify://shop_images/d9373903-dd42-492a-93cc-7ba68431c3c3.png",
-        "footer_logo_width": 180,
         "show_powered_by_shopify": true
       }
     }
