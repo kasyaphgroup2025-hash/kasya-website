@@ -366,9 +366,9 @@
         "product_collection": "interlude-edit",
         "desktop_products_per_view": 4,
         "product_name_size_mobile": 12,
-        "product_name_size_desktop": 18,
+        "product_name_size_desktop": 14,
         "product_price_size_mobile": 15,
-        "product_price_size_desktop": 20,
+        "product_price_size_desktop": 16,
         "background_color": "#ffffff",
         "text_color": "#171714"
       }
@@ -393,9 +393,9 @@
         "product_collection": "rhythm",
         "desktop_products_per_view": 4,
         "product_name_size_mobile": 12,
-        "product_name_size_desktop": 18,
+        "product_name_size_desktop": 14,
         "product_price_size_mobile": 15,
-        "product_price_size_desktop": 20,
+        "product_price_size_desktop": 16,
         "background_color": "#ffffff",
         "text_color": "#171714"
       }
