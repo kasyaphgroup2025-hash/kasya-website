@@ -59,6 +59,7 @@
   {% endif %}
   data-sticky-type="{{ section.settings.sticky_header }}"
 >
+  <div class="header-sticky-content">
   {%- if has_announcement_messages -%}
     {%- assign announcement_has_active_message = false -%}
     <script src="{{ 'kasya-announcement-bar.js' | asset_url }}" defer="defer"></script>
@@ -904,6 +905,7 @@
       {%- endunless -%}
     </div>
   </header>
+  </div>
 </{{ header_wrap_tag }}>
 
 <script type="application/ld+json">

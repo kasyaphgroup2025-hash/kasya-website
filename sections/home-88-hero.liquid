@@ -61,34 +61,7 @@
 
     if (window.home88HeroController) window.home88HeroController.destroy();
 
-    const header = document.querySelector('.section-header');
-    let lastScrollY = Math.max(window.scrollY, 0);
-    let ticking = false;
-
-    const updateHeader = () => {
-      const currentScrollY = Math.max(window.scrollY, 0);
-      const scrollingDown = currentScrollY > lastScrollY + 8;
-      const scrollingUp = currentScrollY < lastScrollY - 8;
-
-      if (currentScrollY < 16) {
-        document.body.classList.remove('home-88-header-hidden', 'home-88-header-solid');
-      } else if (scrollingDown) {
-        document.body.classList.remove('home-88-header-solid');
-        document.body.classList.add('home-88-header-hidden');
-      } else if (scrollingUp) {
-        document.body.classList.remove('home-88-header-hidden');
-        document.body.classList.add('home-88-header-solid');
-      }
-
-      lastScrollY = currentScrollY;
-      ticking = false;
-    };
-
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(updateHeader);
-    };
+    document.body.classList.add('home-88-header-enabled');
 
     const onClick = (event) => {
       const link = event.target.closest('a[href^="#"]');
@@ -112,7 +85,6 @@
     };
 
     const destroy = () => {
-      window.removeEventListener('scroll', onScroll);
       section.removeEventListener('click', onClick);
       document.removeEventListener('shopify:section:unload', onSectionUnload);
       document.body.classList.remove('home-88-header-enabled', 'home-88-header-hidden', 'home-88-header-solid');
@@ -120,12 +92,6 @@
         delete window.home88HeroController;
       }
     };
-
-    if (header) {
-      document.body.classList.add('home-88-header-enabled');
-      window.addEventListener('scroll', onScroll, { passive: true });
-      updateHeader();
-    }
 
     section.addEventListener('click', onClick);
     document.addEventListener('shopify:section:unload', onSectionUnload);

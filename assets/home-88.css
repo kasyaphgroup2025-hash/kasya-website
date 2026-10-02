@@ -49,10 +49,10 @@
   justify-content: center;
   min-height: 4rem;
   padding: 0.9rem 2.4rem;
-  border: 0;
+  border: 0.1rem solid #111;
   border-radius: 0.2rem;
-  background: #111;
-  color: #fff;
+  background: transparent;
+  color: #111;
   font-size: 1.15rem;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -61,119 +61,24 @@
   text-decoration: none;
   text-shadow: none;
   text-transform: uppercase;
-  transition: background-color 180ms ease, color 180ms ease;
+  transition: background-color 220ms ease, border-color 220ms ease, color 220ms ease;
 }
 
 .home-88-hero__button--secondary {
-  background: #111;
-  color: #fff;
+  background: transparent;
+  color: #111;
 }
 
 .home-88-hero__button:focus-visible {
   outline: 0.2rem solid #fff;
   outline-offset: 0.3rem;
+  box-shadow: 0 0 0 0.1rem #111;
 }
 
-body.home-88-header-enabled .section-header {
-  position: fixed;
-  inset: 0 0 auto;
-  z-index: 60;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none;
-  transform: translateY(0);
-  transition: transform 240ms ease, box-shadow 240ms ease;
-}
-
-body.home-88-header-enabled .section-header .header-wrapper,
-body.home-88-header-enabled .section-header .header {
-  background: transparent !important;
-  box-shadow: none;
-  transition: background-color 240ms ease, box-shadow 240ms ease;
-}
-
-body.home-88-header-enabled .section-header .header__inner::before {
-  background: transparent !important;
-  opacity: 0 !important;
-}
-
-body.home-88-header-enabled .section-header .header {
-  position: relative !important;
-  inset: auto !important;
-  top: 0 !important;
-  width: 100%;
-}
-
-body.home-88-header-enabled.home-88-header-solid .section-header .header-wrapper,
-body.home-88-header-enabled.home-88-header-solid .section-header .header {
-  background: #fff !important;
-}
-
-body.home-88-header-enabled.home-88-header-solid .section-header {
-  background: #fff !important;
-  box-shadow: 0 0.1rem 0 rgba(17, 17, 17, 0.1);
-}
-
-body.home-88-header-enabled.home-88-header-solid .section-header .header__inner::before {
-  background: #fff !important;
-  opacity: 1 !important;
-}
-
-body.home-88-header-enabled.home-88-header-hidden .section-header {
-  transform: translateY(-110%);
-}
-
-body.home-88-header-enabled .section-header .header__icon,
-body.home-88-header-enabled .section-header .header__heading-link,
-body.home-88-header-enabled .section-header .header__menu-item,
-body.home-88-header-enabled .section-header .cart-count-bubble {
-  --color-foreground: 255, 255, 255;
-  --color-link: 255, 255, 255;
-  color: #fff !important;
-}
-
-body.home-88-header-enabled .section-header svg,
-body.home-88-header-enabled .section-header svg path,
-body.home-88-header-enabled .section-header svg circle,
-body.home-88-header-enabled .section-header svg line,
-body.home-88-header-enabled .section-header svg polyline {
+.home-88-hero__button:active {
+  border-color: #111;
+  background: #111;
   color: #fff;
-  stroke: currentColor;
-}
-
-body.home-88-header-enabled .section-header .header__heading-logo {
-  filter: brightness(0) invert(1);
-}
-
-body.home-88-header-enabled .section-header .cart-count-bubble {
-  background: #fff !important;
-  color: #111 !important;
-}
-
-body.home-88-header-enabled.home-88-header-solid .section-header .header__icon,
-body.home-88-header-enabled.home-88-header-solid .section-header .header__heading-link,
-body.home-88-header-enabled.home-88-header-solid .section-header .header__menu-item {
-  --color-foreground: 17, 17, 17;
-  --color-link: 17, 17, 17;
-  color: #111 !important;
-}
-
-body.home-88-header-enabled.home-88-header-solid .section-header svg,
-body.home-88-header-enabled.home-88-header-solid .section-header svg path,
-body.home-88-header-enabled.home-88-header-solid .section-header svg circle,
-body.home-88-header-enabled.home-88-header-solid .section-header svg line,
-body.home-88-header-enabled.home-88-header-solid .section-header svg polyline {
-  color: #111 !important;
-  stroke: currentColor;
-}
-
-body.home-88-header-enabled.home-88-header-solid .section-header .header__heading-logo {
-  filter: brightness(0);
-}
-
-body.home-88-header-enabled.home-88-header-solid .section-header .cart-count-bubble {
-  background: #111 !important;
-  color: #fff !important;
 }
 
 body.home-88-header-enabled .section-header {
@@ -235,7 +140,7 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
 
   body.home-88-header-enabled .section-header .header-wrapper {
     position: relative !important;
-    min-height: 0 !important;
+    min-height: var(--header-top-height, 4.4rem) !important;
     background: transparent !important;
   }
 
@@ -280,6 +185,44 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
   body.home-88-header-enabled .section-header .cart-count-bubble {
     background: #ffffff !important;
     color: #111111 !important;
+  }
+
+  body.home-88-header-enabled .section-header.shopify-section-header-sticky .header {
+    position: relative !important;
+    top: auto !important;
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+
+  body.home-88-header-enabled .section-header.shopify-section-header-sticky .header__inner::before {
+    background: #ffffff !important;
+    opacity: 1 !important;
+  }
+
+  body.home-88-header-enabled .section-header.shopify-section-header-sticky .header__icon,
+  body.home-88-header-enabled .section-header.shopify-section-header-sticky .header__heading-link,
+  body.home-88-header-enabled .section-header.shopify-section-header-sticky .header__menu-item {
+    --color-foreground: 17, 17, 17;
+    --color-link: 17, 17, 17;
+    color: #111111 !important;
+  }
+
+  body.home-88-header-enabled .section-header.shopify-section-header-sticky svg,
+  body.home-88-header-enabled .section-header.shopify-section-header-sticky svg path,
+  body.home-88-header-enabled .section-header.shopify-section-header-sticky svg circle,
+  body.home-88-header-enabled .section-header.shopify-section-header-sticky svg line,
+  body.home-88-header-enabled .section-header.shopify-section-header-sticky svg polyline {
+    color: #111111 !important;
+    stroke: currentColor;
+  }
+
+  body.home-88-header-enabled .section-header.shopify-section-header-sticky .header__heading-logo {
+    filter: none !important;
+  }
+
+  body.home-88-header-enabled .section-header.shopify-section-header-sticky .cart-count-bubble {
+    background: #111111 !important;
+    color: #ffffff !important;
   }
 }
 
@@ -371,7 +314,8 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
   }
 
   .home-88-hero__button:hover {
-    background: #2a2a2a;
+    border-color: #111;
+    background: #111;
     color: #fff;
   }
 
@@ -383,10 +327,7 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-88-hero__button,
-  body.home-88-header-enabled .section-header,
-  body.home-88-header-enabled .section-header .header-wrapper,
-  body.home-88-header-enabled .section-header .header {
+  .home-88-hero__button {
     transition: none;
   }
 }

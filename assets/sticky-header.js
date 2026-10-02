@@ -5,11 +5,13 @@ if (!customElements.get('sticky-header')) {
     }
 
     connectedCallback() {
-      this.currentScrollTop = 0;
+      this.currentScrollTop = document.documentElement.scrollTop;
       this.preventReveal = false;
       this.preventResize = false;
       this.header = document.querySelector('.section-header');
-      this.headerTop = document.querySelector('.header-top');
+      this.stickyContent = this.querySelector(':scope > .header-sticky-content');
+      this.mainHeader = this.stickyContent?.querySelector(':scope > header');
+      this.headerTop = this.stickyContent?.querySelector(':scope > .header-top');
       this.predictiveSearch = this.querySelector('predictive-search');
       this.onScrollHandler = this.onScroll.bind(this);
       this.isToggleNav = this.classList.contains('toggle-nav');
@@ -20,6 +22,7 @@ if (!customElements.get('sticky-header')) {
       } else {
         window.addEventListener('load', () => this.setupWindowResizeEvent(), { once: true });
       }
+      this.calculateHeaderHeight();
       this.calculateThreshold();
       this.hideHeaderOnScrollUp = () => this.preventReveal = true;
       this.addEventListener('preventHeaderReveal', this.hideHeaderOnScrollUp);
@@ -51,20 +54,14 @@ if (!customElements.get('sticky-header')) {
     }
 
     calculateHeaderHeight() {
-      this.headerHeight = 0;
-      this.fullHeaderHeight = 0;
-      this.querySelectorAll(':scope > *').forEach(element => {
-        this.fullHeaderHeight += element.clientHeight;
-        if(element.classList.contains('header')) {
-          this.headerHeight = element.clientHeight;
-          this.fullHeaderHeight += parseInt(window.getComputedStyle(element, null).getPropertyValue('margin-top'));
-        }
-      });
+      this.headerHeight = this.mainHeader?.clientHeight || 0;
+      this.fullHeaderHeight = this.headerHeight + this.getHeaderTopHeight();
     }
 
     calculateThreshold() {
-      this.headerBoundTop = this.header.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) + this.fullHeaderHeight;
-      this.threshold = this.headerBoundTop + 100;
+      this.headerStart = this.header.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop);
+      this.headerBoundTop = this.headerStart + this.fullHeaderHeight;
+      this.threshold = this.headerBoundTop;
       if(this.dataset.stickyType == 'always') {
         this.threshold += 100;
       }
@@ -72,9 +69,12 @@ if (!customElements.get('sticky-header')) {
 
     onScroll() {
       const scrollTop = document.documentElement.scrollTop;
+      const scrollDelta = scrollTop - this.currentScrollTop;
 
       if (this.predictiveSearch && this.predictiveSearch.isOpen) return;
-      if(scrollTop > this.currentScrollTop & scrollTop > this.headerBoundTop) {
+      if (Math.abs(scrollDelta) < 8 && scrollTop > this.headerBoundTop) return;
+
+      if(scrollDelta > 0 && scrollTop > this.headerBoundTop) {
         // Scrolling down and passed the header: hide the sticky header but keep position fixed.
         if(this.dataset.stickyType == 'always') {
           this.openStickyHeader(scrollTop);
@@ -85,7 +85,7 @@ if (!customElements.get('sticky-header')) {
       } else if (scrollTop < this.currentScrollTop && scrollTop > this.headerBoundTop) {
         // Scrolling up and passed the header: show the sticky header.
         this.openStickyHeader(scrollTop);
-      } else if (scrollTop <= this.headerBoundTop) {
+      } else if (scrollTop <= this.headerStart) {
         // Scroll above the header: reset the sticky header.
         requestAnimationFrame(this.reset.bind(this));
       }
@@ -125,15 +125,17 @@ if (!customElements.get('sticky-header')) {
         const navHeight = this.nav.clientHeight;
         document.body.style.setProperty('--nav-height', `${navHeight}px`);
         if(this.header.classList.contains('shopify-section-header-sticky') && !this.header.classList.contains('open-nav')) {
-          headerHeight = this.header.querySelector('header').clientHeight + navHeight + 11;
+          headerHeight = this.mainHeader.clientHeight + navHeight + 11;
         } else {
-          headerHeight = this.header.querySelector('header').clientHeight;
+          headerHeight = this.mainHeader.clientHeight;
         }
       } else {
-        headerHeight = this.header.querySelector('header').clientHeight;
+        headerHeight = this.mainHeader.clientHeight;
       }
       document.body.style.setProperty('--header-height', `${headerHeight}px`);
-      const stickyHeaderHeight = headerHeight + this.getHeaderTopHeight();
+      const headerTopHeight = this.getHeaderTopHeight();
+      const stickyHeaderHeight = headerHeight + headerTopHeight;
+      document.body.style.setProperty('--header-top-height', `${headerTopHeight}px`);
       if(window.innerWidth >= 990) {
         document.body.style.setProperty('--sticky-header-height-desktop', `${stickyHeaderHeight}px`);
       } else {
