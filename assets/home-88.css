@@ -49,10 +49,10 @@
   justify-content: center;
   min-height: 4rem;
   padding: 0.9rem 2.4rem;
-  border: 0.1rem solid #111;
+  border: 0.1rem solid #fff;
   border-radius: 0.2rem;
   background: transparent;
-  color: #111;
+  color: #fff;
   font-size: 1.15rem;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -66,7 +66,7 @@
 
 .home-88-hero__button--secondary {
   background: transparent;
-  color: #111;
+  color: #fff;
 }
 
 .home-88-hero__button:focus-visible {
@@ -76,7 +76,7 @@
 }
 
 .home-88-hero__button:active {
-  border-color: #111;
+  border-color: #fff;
   background: #111;
   color: #fff;
 }
@@ -314,7 +314,7 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
   }
 
   .home-88-hero__button:hover {
-    border-color: #111;
+    border-color: #fff;
     background: #111;
     color: #fff;
   }
