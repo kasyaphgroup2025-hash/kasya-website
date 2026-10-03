@@ -680,6 +680,51 @@
     ]
   },
   {
+    "name": "Shop product cards",
+    "settings": [
+      {
+        "type": "range",
+        "id": "shop_product_name_size_mobile",
+        "label": "Product name size — Mobile",
+        "min": 12,
+        "max": 22,
+        "step": 1,
+        "default": 15,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "shop_product_name_size_desktop",
+        "label": "Product name size — Desktop",
+        "min": 12,
+        "max": 26,
+        "step": 1,
+        "default": 17,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "shop_product_price_size_mobile",
+        "label": "Product price size — Mobile",
+        "min": 12,
+        "max": 24,
+        "step": 1,
+        "default": 17,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "shop_product_price_size_desktop",
+        "label": "Product price size — Desktop",
+        "min": 12,
+        "max": 28,
+        "step": 1,
+        "default": 19,
+        "unit": "px"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.reviews.name",
     "settings": [
       {
