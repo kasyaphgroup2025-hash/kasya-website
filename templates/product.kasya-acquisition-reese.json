@@ -12,7 +12,7 @@
     "kasya_lp_product_hero": {
       "type": "kasya-lp-product-hero",
       "settings": {
-        "product": "",
+        "product": "reese-polo",
         "show_header": false,
         "logo_text": "KASYA",
         "product_label": "KASYA 10.10",
@@ -151,7 +151,6 @@
         "lifestyle_1": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "Office Day",
             "description": "A clean collar and relaxed shape make workday styling simple."
           }
@@ -159,7 +158,6 @@
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "Everyday Errands",
             "description": "Breathable comfort for moving through a full day."
           }
@@ -167,7 +165,6 @@
         "lifestyle_3": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "Pair With Olivia",
             "description": "Style with the Olivia Skirt for polished A-line dressing."
           }
@@ -175,7 +172,6 @@
         "lifestyle_4": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "Pair With Paisley or Quinn",
             "description": "Complete the look with Paisley Pants or add the Quinn Shawl."
           }
