@@ -50,7 +50,6 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/VISCOSE_LINEN_GALE_GWEN.png",
-            "product": "summer-collection-terno-set-viscose-linen",
             "link": "shopify://products/summer-collection-terno-set-viscose-linen",
             "text": "GWEN + GALE TERNO SET - VISCOSE LINEN BUNDLE",
             "text_style": "caption-with-letter-spacing",
@@ -75,7 +74,6 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/VISCOSE_LINEN_GABY_GWEN.png",
-            "product": "summer-collection-gwen-gaby-terno-set-viscose-linen",
             "link": "shopify://products/summer-collection-gwen-gaby-terno-set-viscose-linen",
             "text": "GWEN + gaby TERNO SET - VISCOSE LINEN BUNDLE",
             "text_style": "caption-with-letter-spacing",
@@ -100,7 +98,6 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/SKIRTBUNDLE.png",
-            "product": "long-linen-skirt-bundle",
             "link": "shopify://products/long-linen-skirt-bundle",
             "text": "A-Line Maxi Skirt- Softlinen Bundle",
             "text_style": "caption-with-letter-spacing",
@@ -125,7 +122,6 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/WIDELEGBUNDLE.png",
-            "product": "where-your-outfit-gets-cheaper",
             "link": "shopify://products/where-your-outfit-gets-cheaper",
             "text": "Wide-Leg Pants- Softlinen Bundle",
             "text_style": "caption-with-letter-spacing",
@@ -151,7 +147,6 @@
           "disabled": true,
           "settings": {
             "image": "shopify://shop_images/JOURNAL_18.png",
-            "product": "choco-brown-wideleg-linen-pants-copy-2",
             "link": "shopify://products/choco-brown-wideleg-linen-pants-copy-2",
             "text": "Bundle Linen Pants Promo",
             "text_style": "caption-with-letter-spacing",

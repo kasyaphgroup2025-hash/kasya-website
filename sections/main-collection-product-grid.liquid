@@ -68,10 +68,6 @@
   .collection__product-grid {
     margin-top: 3rem;
   }
-  .section-{{ section.id }}-padding .card-wrapper--shop-collection {
-    --shop-product-name-size: {{ settings.shop_product_name_size_mobile | default: 15 }}px;
-    --shop-product-price-size: {{ settings.shop_product_price_size_mobile | default: 17 }}px;
-  }
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
@@ -88,10 +84,6 @@
     }
     .collection__product-grid {
       margin-top: 4rem;
-    }
-    .section-{{ section.id }}-padding .card-wrapper--shop-collection {
-      --shop-product-name-size: {{ settings.shop_product_name_size_desktop | default: 17 }}px;
-      --shop-product-price-size: {{ settings.shop_product_price_size_desktop | default: 19 }}px;
     }
   }
 </style>
@@ -251,7 +243,7 @@
                   -%} 
                   {%- render 'card-product',
                     card_product: card_product,
-                    media_aspect_ratio: 'square',
+                    media_aspect_ratio: section.settings.image_ratio,
                     show_secondary_image: section.settings.show_secondary_image,
                     show_vendor: section.settings.show_vendor,
                     show_rating: section.settings.show_rating,
@@ -268,8 +260,7 @@
                     allow_effect: use_animate,
                     parent_color_scheme: parent_color_scheme,
                     inherit_color_scheme: section.settings.inherit_card_color_scheme,
-                    card_color_scheme: section.settings.card_color_scheme,
-                    shop_collection_card: true
+                    card_color_scheme: section.settings.card_color_scheme
                   -%}
                 </li>
               {%- endfor -%}

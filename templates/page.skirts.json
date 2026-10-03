@@ -50,7 +50,6 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/68.jpg",
-            "product": "soft-linen-long-skirts-copy",
             "link": "shopify://products/soft-linen-long-skirts-copy",
             "text": "A-Line Maxi Skirt – Soft Linen",
             "text_style": "caption-with-letter-spacing",
@@ -75,7 +74,6 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/286.png",
-            "product": "silk-skirt-by-kasyaph",
             "link": "shopify://products/silk-skirt-by-kasyaph",
             "text": "A-Line Maxi Skirt – Silk",
             "text_style": "caption-with-letter-spacing",
@@ -100,7 +98,6 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/IMG_8466.jpg",
-            "product": "kasyaph-long-skirt-floral",
             "link": "shopify://products/kasyaph-long-skirt-floral",
             "text": "Sena Midi Skirt – Soft Linen",
             "text_style": "caption-with-letter-spacing",

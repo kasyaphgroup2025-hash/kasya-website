@@ -50,7 +50,6 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/Wideleg_Black_front_-_closeup_1_771abf99-c7da-4451-b19b-d2c9d5012eef.jpg",
-            "product": "wideleg-linen-pants",
             "link": "shopify://products/wideleg-linen-pants",
             "text": "Wide-Leg Pants – Soft Linen",
             "text_style": "caption-with-letter-spacing",
@@ -76,7 +75,6 @@
           "disabled": true,
           "settings": {
             "image": "shopify://shop_images/378.png",
-            "product": "wideleg-stripes-by-kasyaph",
             "link": "shopify://products/wideleg-stripes-by-kasyaph",
             "text": "Costa Wide-Leg Pants – Linen",
             "text_style": "caption-with-letter-spacing",
@@ -101,7 +99,6 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/68.jpg",
-            "product": "soft-linen-long-skirts-copy",
             "link": "shopify://products/soft-linen-long-skirts-copy",
             "text": "A-Line Maxi Skirt – Soft Linen",
             "text_style": "caption-with-letter-spacing",

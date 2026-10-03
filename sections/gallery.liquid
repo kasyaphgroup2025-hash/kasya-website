@@ -1,8 +1,6 @@
 {%- capture direction -%}{%- render 'direction' -%}{%- endcapture -%}
 <link rel="stylesheet" href="{{ 'section-gallery.css' | asset_url }}" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
 <noscript>{{ 'section-gallery.css' | asset_url | stylesheet_tag }}</noscript>
-<noscript>{{ 'component-price.css' | asset_url | stylesheet_tag }}</noscript>
 {%- if section.settings.flexible_columns_layout contains '2cols' -%}
   <link rel="stylesheet" href="{{ 'component-extra-grid-tablet-up.css' | asset_url }}" media="all and (min-width:750px)">
 {%- endif -%}  
@@ -53,10 +51,6 @@
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
   }
-  .section-{{ section.id }}-padding .gallery__item--product-card {
-    --gallery-product-name-size: {{ settings.shop_product_name_size_mobile | default: 15 }}px;
-    --gallery-product-price-size: {{ settings.shop_product_price_size_mobile | default: 17 }}px;
-  }
   {%- unless section.settings.disable_item_space -%}
     .gallery__item-radius-{{ section.id }} {
       border-radius: 1.6rem;
@@ -76,14 +70,10 @@
       padding-top: {{ section.settings.padding_top }}px;
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
-    .section-{{ section.id }}-padding .gallery__item--product-card {
-      --gallery-product-name-size: {{ settings.shop_product_name_size_desktop | default: 17 }}px;
-      --gallery-product-price-size: {{ settings.shop_product_price_size_desktop | default: 19 }}px;
-    }
   }
 
   {%- for block in section.blocks -%}
-    {%- if block.settings.product != blank or block.settings.heading != blank or block.settings.button_label != blank or block.settings.text != blank -%}
+    {%- if block.settings.heading != blank or block.settings.button_label != blank or block.settings.text != blank -%}
       .gallery__item__content--{{ section.id }}-{{ block.id }} {
         --color-caption: {{ block.settings.caption_color.red }}, {{ block.settings.caption_color.green }}, {{ block.settings.caption_color.blue }};
         --color-foreground: {{ block.settings.heading_color.red }}, {{ block.settings.heading_color.green }}, {{ block.settings.heading_color.blue }};
@@ -148,29 +138,8 @@
           role="list" aria-label="{{ 'sections.gallery.list' | t }}">
           {%- for block in section.blocks -%}
             {%- liquid
-              assign gallery_product = block.settings.product
-              assign is_product_card = false
-              if gallery_product == blank and block.type == 'text-outside-image' and block.settings.link contains '/products/'
-                assign legacy_product_handle = block.settings.link | split: '/products/' | last | split: '?' | first | split: '#' | first
-                assign gallery_product = all_products[legacy_product_handle]
-              endif
-              if block.type == 'text-outside-image' and gallery_product != blank
-                assign is_product_card = true
-              endif
-
-              assign gallery_image = block.settings.image
-              assign gallery_title = block.settings.text
-              assign gallery_link = block.settings.link
-              if is_product_card
-                assign gallery_image = gallery_product.featured_image | default: block.settings.image
-                assign gallery_title = gallery_product.title
-                assign gallery_link = gallery_product.url
-              endif
-
               assign ratio = 1
-              if is_product_card
-                assign ratio = 1
-              elsif section.settings.image_ratio == 'portrait'
+              if section.settings.image_ratio == 'portrait'
                 assign ratio = 0.8
               elsif section.settings.image_ratio == 'landscape'
                 assign ratio = 1.5
@@ -181,15 +150,11 @@
                 assign ratio = 1
               endif
               assign has_wrapper_link = false
-              if gallery_link != blank and block.settings.heading == blank and block.settings.button_label == blank
+              if block.settings.link != blank and block.settings.heading == blank and block.settings.button_label == blank
                 assign has_wrapper_link = true
               endif
               assign default_item_label = 'sections.gallery.item_id_label' | t: item_number: forloop.index
-              assign item_label = gallery_title | default: block.settings.heading | default: default_item_label
-              assign has_content = false
-              if is_product_card or block.settings.heading != blank or block.settings.button_label != blank or block.settings.text != blank
-                assign has_content = true
-              endif
+              assign item_label = block.settings.heading | default: default_item_label
               assign extra_grid_item_classes = ''
               if section.settings.flexible_columns_layout contains '2cols'
                 assign item_index_tablet = forloop.index | modulo: extra_columns_tablet_int
@@ -225,21 +190,21 @@
                 endif
               endif
             -%}
-            <li id="Slide-{{ section.id }}-{{ forloop.index }}" class="gallery__item grid__item{% if is_product_card %} gallery__item--product-card{% endif %}{% if section.settings.auto_fit %} flex-grow-1{% endif %}{% if show_mobile_slider or show_tablet_slider or show_desktop_slider %} slider__slide{% endif %}{{ extra_grid_item_classes }} gallery__item--{{ block.type }}" {{ block.shopify_attributes }}>
+            <li id="Slide-{{ section.id }}-{{ forloop.index }}" class="gallery__item grid__item{% if section.settings.auto_fit %} flex-grow-1{% endif %}{% if show_mobile_slider or show_tablet_slider or show_desktop_slider %} slider__slide{% endif %}{{ extra_grid_item_classes }} gallery__item--{{ block.type }}" {{ block.shopify_attributes }}>
               <div class="card-wrapper por{% unless block.type == 'text-outside-image' %}{{ radius_classes }}{% endunless %}">
                 <div class="gallery__item__inner{% if block.settings.vertical_alignment == 'top' %} gallery__item__inner--flex{% elsif block.settings.vertical_alignment != 'bottom' %} por{% endif %}">
-                  <{{ image_wrap_tag }} class="media media--hover-effect ratio w100 media--transparent{% if is_product_card %} gallery-product-card__media{% elsif block.type == 'text-outside-image' %}{{ radius_classes }}{% if has_content %} margin-{{ block.settings.vertical_alignment }}-1rem{% endif %}{% endif %}" style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%">
-                    {%- if gallery_image != blank -%}
+                  <{{ image_wrap_tag }} class="media media--hover-effect ratio w100 media--transparent{% if block.type == 'text-outside-image' %}{{ radius_classes }}{% if block.settings.heading != blank or block.settings.button_label != blank or block.settings.text != blank %} margin-{{ block.settings.vertical_alignment }}-1rem{% endif %}{% endif %}" style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%">
+                    {%- if block.settings.image != blank -%}
                       {% unless extra_grid_item_classes != '' %}
                         {{
-                          gallery_image
+                          block.settings.image
                           | image_url: width: 1420
                           | image_tag: loading: 'lazy', sizes: sizes, widths: '275, 550, 750, 1070, 1420'
                         }}
                       {% else %}
                         {% capture custom_sizes %}(min-width: 750px) calc((100vw - 120px) / 2), calc((100vw - 35px) / {{ section.settings.columns_mobile }}){% endcapture %}
                         {{
-                          gallery_image
+                          block.settings.image
                           | image_url: width: 1420
                           | image_tag: loading: 'lazy', sizes: custom_sizes, widths: '275, 550, 750, 1070, 1420'
                         }}
@@ -247,11 +212,11 @@
                     {%- else -%}  
                       {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg placeholder w100 h100' }}
                     {%- endif -%}
-                    {%- if section.settings.enable_images_lightbox and gallery_image != blank -%}
+                    {%- if section.settings.enable_images_lightbox and block.settings.image != blank -%}
                       <a class="gallery__item__lightbox-btn tap-area-icon zoom flex justify-center align-center color-foreground gallery__item__lightbox-btn--{{ section.id }} gallery__item__lightbox-btn--{{ section.id }}-{{ block.id }}"
-                        href="{{ gallery_image | image_url: width: gallery_image.width }}"
-                        data-pswp-width="{{ gallery_image.width }}"
-                        data-pswp-height="{{ gallery_image.height }}"
+                        href="{{ block.settings.image | image_url: width: block.settings.image.width }}"
+                        data-pswp-width="{{ block.settings.image.width }}"
+                        data-pswp-height="{{ block.settings.image.height }}"
                         aria-label="{{ 'products.product.media.open_media' | t: index: forloop.index | escape }}"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -260,52 +225,45 @@
                       </a>
                     {%- endif -%}
                   </{{ image_wrap_tag }}>
-                  {%- if has_content -%}
-                    <div class="gallery__item__content gallery__item__content--{{ section.id }}-{{ block.id }}{% if is_product_card %} gallery-product-card__content{% endif %} flex w100 h100 justify-{{ block.settings.horizontal_alignment }} {% if block.settings.vertical_alignment == 'top' or block.settings.vertical_alignment == 'bottom' %}gallery__item__content--{{ block.settings.vertical_alignment }}{% else %}gallery__item__content--inside align-{{ block.settings.vertical_alignment }}{% if columns_tablet_int >= 4 %} gallery__item__content--inside-small-tablet{% endif %}{% if section.settings.columns_desktop > 5 %} gallery__item__content--inside-small-desktop{% endif %}{% endif %}{% if block.settings.keep_ltr and direction == 'rtl' %} direction-ltr{% endif %}">
+                  {%- if block.settings.heading != blank or block.settings.button_label != blank or block.settings.text != blank -%}
+                    <div class="gallery__item__content gallery__item__content--{{ section.id }}-{{ block.id }} flex w100 h100 justify-{{ block.settings.horizontal_alignment }} {% if block.settings.vertical_alignment == 'top' or block.settings.vertical_alignment == 'bottom' %}gallery__item__content--{{ block.settings.vertical_alignment }}{% else %}gallery__item__content--inside align-{{ block.settings.vertical_alignment }}{% if columns_tablet_int >= 4 %} gallery__item__content--inside-small-tablet{% endif %}{% if section.settings.columns_desktop > 5 %} gallery__item__content--inside-small-desktop{% endif %}{% endif %}{% if block.settings.keep_ltr and direction == 'rtl' %} direction-ltr{% endif %}">
                       <div class="gallery__item__content-inner break {{ block.settings.horizontal_alignment }}">
-                        {%- if is_product_card -%}
-                          <h3 class="gallery-product-card__title color-foreground">
-                            {{- gallery_product.title | escape -}}
-                          </h3>
-                          {% render 'price', product: gallery_product, show_in_card: true, price_class: 'gallery-product-card__price' %}
-                        {%- else -%}
-                          {%- if block.settings.text != blank and block.settings.text_style == 'caption-with-letter-spacing' -%}
-                            <span class="gallery__item__caption {{ block.settings.text_style }} {{ block.settings.text_style }}--{{ block.settings.text_size }} color-foreground uppercase">{{ block.settings.text | escape }}</span>
-                            {%- if has_heading_line_mobile or has_heading_line_tablet or has_heading_line_desktop -%}
-                              <hr class="gallery__item__line  gallery__item__line--{{ block.settings.horizontal_alignment }}{% unless has_heading_line_desktop %} large-up-hide{% endunless %}{% unless has_heading_line_tablet %} medium-hide{% endunless %}{% unless has_heading_line_mobile %} small-hide{% endunless %}">
-                            {%- endif -%}
-                          {%- endif -%}
-                          {%- if block.settings.heading != blank -%}
-                            <h3 class="card__heading {{ block.settings.heading_size }}{% if block.settings.heading_uppercase %} uppercase{% endif %} font-heading-bold">
-                              {%- if block.settings.link != blank and block.settings.button_label == blank -%}
-                                <a class="full-unstyled-link" href="{{ block.settings.link }}">
-                                  {{ block.settings.heading }}
-                                </a>
-                              {%- else -%}
+                        {%- if block.settings.text != blank and block.settings.text_style == 'caption-with-letter-spacing' -%}
+                          <span class="gallery__item__caption {{ block.settings.text_style }} {{ block.settings.text_style }}--{{ block.settings.text_size }} color-foreground uppercase">{{ block.settings.text | escape }}</span>
+                          {%- if has_heading_line_mobile or has_heading_line_tablet or has_heading_line_desktop -%}
+                            <hr class="gallery__item__line  gallery__item__line--{{ block.settings.horizontal_alignment }}{% unless has_heading_line_desktop %} large-up-hide{% endunless %}{% unless has_heading_line_tablet %} medium-hide{% endunless %}{% unless has_heading_line_mobile %} small-hide{% endunless %}">
+                          {%- endif -%}  
+                        {%- endif -%}
+                        {%- if block.settings.heading != blank -%}  
+                          <h3 class="card__heading {{ block.settings.heading_size }}{% if block.settings.heading_uppercase %} uppercase{% endif %} font-heading-bold">
+                            {%- if block.settings.link != blank and block.settings.button_label == blank -%}
+                              <a class="full-unstyled-link" href="{{ block.settings.link }}">
                                 {{ block.settings.heading }}
-                              {%- endif -%}
-                            </h3>
-                          {%- endif -%}
-                          {%- if block.settings.text != blank and block.settings.text_style == 'subtitle' -%}
-                            {%- if has_heading_line_mobile or has_heading_line_tablet or has_heading_line_desktop -%}
-                              <hr class="gallery__item__line gallery__item__line--{{ block.settings.horizontal_alignment }}{% unless has_heading_line_desktop %} large-up-hide{% endunless %}{% unless has_heading_line_tablet %} medium-hide{% endunless %}{% unless has_heading_line_mobile %} small-hide{% endunless %}">
+                              </a>
+                            {%- else -%}
+                              {{ block.settings.heading }}  
                             {%- endif -%}
-                            <span class="gallery__item__caption {{ block.settings.text_style }} {{ block.settings.text_style }}--{{ block.settings.text_size }} color-foreground db">{{ block.settings.text | escape }}</span>
-                          {%- endif -%}
-                          {%- if block.settings.button_label != blank -%}
-                            <a href="{{ block.settings.link | default: '#' }}" class="{% if block.settings.button_style != 'link' %}button button--{{ block.settings.button_size }} button--{{ block.settings.button_style }} button--semi-bold{% else %}link link-with-icon link-effect-no-underline align-center font-body-semi-bold{% endif %}{% if block.settings.text != blank or block.settings.heading != blank %} margin-top-1rem{% endif %}{% if block.settings.button_pin_bottom and block.settings.vertical_alignment != 'bottom' %} gallery__pin-button gallery__pin-button--{{ block.settings.horizontal_alignment }}{% endif %}"{% unless block.settings.link %} data-no-instant{% endunless %}>
-                              <span>{{ block.settings.button_label }}</span>
-                              {%- if block.settings.button_style == 'link' -%}{%- render 'icon-picker', icon: 'chevron_double_right', icon_width: 12 -%}{%- endif -%}
-                            </a>
-                          {%- endif -%}
+                          </h3>
+                        {%- endif -%}
+                        {%- if block.settings.text != blank and block.settings.text_style == 'subtitle' -%}
+                          {%- if has_heading_line_mobile or has_heading_line_tablet or has_heading_line_desktop -%}
+                            <hr class="gallery__item__line gallery__item__line--{{ block.settings.horizontal_alignment }}{% unless has_heading_line_desktop %} large-up-hide{% endunless %}{% unless has_heading_line_tablet %} medium-hide{% endunless %}{% unless has_heading_line_mobile %} small-hide{% endunless %}">
+                          {%- endif -%}  
+                          <span class="gallery__item__caption {{ block.settings.text_style }} {{ block.settings.text_style }}--{{ block.settings.text_size }} color-foreground db">{{ block.settings.text | escape }}</span>
+                        {%- endif -%}
+                        {%- if block.settings.button_label != blank -%}
+                          <a href="{{ block.settings.link | default: '#' }}" class="{% if block.settings.button_style != 'link' %}button button--{{ block.settings.button_size }} button--{{ block.settings.button_style }} button--semi-bold{% else %}link link-with-icon link-effect-no-underline align-center font-body-semi-bold{% endif %}{% if block.settings.text != blank or block.settings.heading != blank %} margin-top-1rem{% endif %}{% if block.settings.button_pin_bottom and block.settings.vertical_alignment != 'bottom' %} gallery__pin-button gallery__pin-button--{{ block.settings.horizontal_alignment }}{% endif %}"{% unless block.settings.link %} data-no-instant{% endunless %}>
+                            <span>{{ block.settings.button_label }}</span>
+                            {%- if block.settings.button_style == 'link' -%}{%- render 'icon-picker', icon: 'chevron_double_right', icon_width: 12 -%}{%- endif -%}
+                          </a>
                         {%- endif -%}
                       </div>  
                     </div>
                   {%- endif -%} 
                   {%- if has_wrapper_link -%}
-                    <a class="gallery__item__full-link full-unstyled-link full-link" href="{{ gallery_link }}"
+                    <a class="gallery__item__full-link full-unstyled-link full-link" href="{{ block.settings.link }}"
                       {% unless block.settings.heading %}
-                        aria-label="{% if gallery_image != blank %}{{ gallery_image.alt | default: item_label | escape }}{% else %}{{ item_label | escape }}{% endif %}"
+                        aria-label="{% if block.settings.image != blank %}{{ block.settings.image.alt | default: item_label | escape }}{% else %}{{ item_label | escape }}{% endif %}"
                       {% endunless %}></a>
                   {%- endif -%}
                 </div>
@@ -780,12 +738,6 @@
       "type": "text-outside-image",
       "name": "t:sections.gallery.blocks.image.name_outside",
       "settings": [
-        {
-          "type": "product",
-          "id": "product",
-          "label": "Product",
-          "info": "When selected, the image, title, price, and link come from this Shopify product."
-        },
         {
           "type": "image_picker",
           "id": "image",
