@@ -50,6 +50,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/FRONT_3.png",
+            "product": "black-claire-soft-linen-dress",
             "link": "shopify://products/black-claire-soft-linen-dress",
             "text": "Claire Maxi Dress – Soft Linen",
             "text_style": "caption-with-letter-spacing",
@@ -74,6 +75,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/25_8d7f0285-9c87-4047-a300-af0560192671.jpg",
+            "product": "faye-sleeveless-maxi-dress-soft-linen",
             "link": "shopify://products/faye-sleeveless-maxi-dress-soft-linen",
             "text": "Faye Sleeveless Maxi Dress - soft linen",
             "text_style": "caption-with-letter-spacing",
@@ -98,6 +100,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/102_40e09509-124f-4266-bf03-aee8417a42d4.jpg",
+            "product": "freya-maxi-dress-soft-linen",
             "link": "shopify://products/freya-maxi-dress-soft-linen",
             "text": "Freya Maxi Dress - soft linen",
             "text_style": "caption-with-letter-spacing",

@@ -50,6 +50,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/Wideleg_Black_front_-_closeup.jpg",
+            "product": "wideleg-linen-pants",
             "link": "shopify://products/wideleg-linen-pants",
             "text": "Wide-Leg Pants – Soft Linen",
             "text_style": "caption-with-letter-spacing",
@@ -75,6 +76,7 @@
           "disabled": true,
           "settings": {
             "image": "shopify://shop_images/IMG_4049_3a4efe82-04f3-4fe0-9164-cb072f0c2a08.png",
+            "product": "wideleg-linen-pants-by-kasyaph",
             "link": "shopify://products/wideleg-linen-pants-by-kasyaph",
             "text": "Skintone wide-Leg pants - soft linen",
             "text_style": "caption-with-letter-spacing",
@@ -99,6 +101,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/WEBSITE_45_2026_Releases_1.jpg",
+            "product": "gaby-wide-leg-pants-viscose-linen",
             "link": "shopify://products/gaby-wide-leg-pants-viscose-linen",
             "text": "Gaby Wide-Leg Pants – Viscose Linen",
             "text_style": "caption-with-letter-spacing",
@@ -123,6 +126,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/20_50717400-839f-446d-8b75-7c7232eaddd9.jpg",
+            "product": "wide-leg-pants-soft-linen-new-colors",
             "link": "shopify://products/wide-leg-pants-soft-linen-new-colors",
             "text": "Wide-Leg Pants – soft linen (new colors)",
             "text_style": "caption-with-letter-spacing",
@@ -147,6 +151,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/DEMI_BARREL_PANTS_-_BLACK.jpg",
+            "product": "demi-barrel-pants-acid-linen",
             "link": "shopify://products/demi-barrel-pants-acid-linen",
             "text": "Demi Barrel Pants - Acid Linen",
             "text_style": "caption-with-letter-spacing",
@@ -171,6 +176,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/Hazel_Trouser_-_Viscose_Linen_-_BLACK.jpg",
+            "product": "hazel-trouser-viscose-linen",
             "link": "shopify://products/hazel-trouser-viscose-linen",
             "text": "Hazel Trouser - Viscose Linen",
             "text_style": "caption-with-letter-spacing",
@@ -195,6 +201,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/lea_gray_front.jpg",
+            "product": "lea-trouser-woven",
             "link": "shopify://products/lea-trouser-woven",
             "text": "Lea Trouser - Woven",
             "text_style": "caption-with-letter-spacing",
@@ -219,6 +226,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/mia_black_front.jpg",
+            "product": "mia-palazzo-pants-soft-linen",
             "link": "shopify://products/mia-palazzo-pants-soft-linen",
             "text": "Mia Palazzo Pants - Soft Linen",
             "text_style": "caption-with-letter-spacing",
@@ -243,6 +251,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/naomi_navy-blue_front.jpg",
+            "product": "naomi-culottes-acid-linen",
             "link": "shopify://products/naomi-culottes-acid-linen",
             "text": "Naomi Culottes - Acid Linen",
             "text_style": "caption-with-letter-spacing",
@@ -267,6 +276,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/Jane_Black_22.jpg",
+            "product": "jane-pants-premium-ity",
             "link": "shopify://products/jane-pants-premium-ity",
             "text": "Jane Pants - Premium ITY",
             "text_style": "caption-with-letter-spacing",

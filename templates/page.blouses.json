@@ -50,6 +50,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/152_70d44392-0693-4bc9-83cb-db684fa6c8e2.jpg",
+            "product": "belle-polo",
             "link": "shopify://products/belle-polo",
             "text": "Belle Polo Top – Soft Linen",
             "text_style": "caption-with-letter-spacing",
@@ -74,6 +75,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/66_5c69feb3-3fc0-41ec-b15a-5d7ff46cd4ad.jpg",
+            "product": "gwen-boxy-polo-blouse-viscose-linen",
             "link": "shopify://products/gwen-boxy-polo-blouse-viscose-linen",
             "text": "Gwen Boxy Polo Blouse - Viscose Linen",
             "text_style": "caption-with-letter-spacing",
@@ -98,6 +100,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/153_3e322e79-58ab-4066-bb70-ee6d40b75b49.jpg",
+            "product": "fabi-empire-blouse-soft-linen",
             "link": "shopify://products/fabi-empire-blouse-soft-linen",
             "text": "Fabi Empire Blouse  – Soft Linen",
             "text_style": "caption-with-letter-spacing",
@@ -122,6 +125,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/47_bde6d4b2-e82d-4e47-ba3b-ab2441d3328b.jpg",
+            "product": "farah-sleeveless-blouse-soft-linen",
             "link": "shopify://products/farah-sleeveless-blouse-soft-linen",
             "text": "Farah Sleeveless Blouse  – Soft Linen",
             "text_style": "caption-with-letter-spacing",
@@ -146,6 +150,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/mary_ella.jpg",
+            "product": "ella-box-polo-soft-linen",
             "link": "shopify://products/ella-box-polo-soft-linen",
             "text": "ella polo blouse – Soft Linen",
             "text_style": "caption-with-letter-spacing",
@@ -170,6 +175,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/5_2c0d87bb-f112-4b96-b80b-3733dc2c3e1e.jpg",
+            "product": "ella-polo-blouse-soft-linen-new-colors",
             "link": "shopify://products/ella-polo-blouse-soft-linen-new-colors",
             "text": "Belle Polo blouse – Soft Linen (Version 2)",
             "text_style": "caption-with-letter-spacing",
@@ -194,6 +200,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/DALIAH_POLO_-_BLACK.jpg",
+            "product": "daliah-polo-acid-linen",
             "link": "shopify://products/daliah-polo-acid-linen",
             "text": "Daliah Polo - Acid Linen",
             "text_style": "caption-with-letter-spacing",
@@ -218,6 +225,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/ChatGPT_Image_Jun_4_2026_09_27_50_AM_1_67cfbcca-3e7e-410e-b893-3e0e94606bab.png",
+            "product": "inah-blouse-viscose-linen",
             "link": "shopify://products/inah-blouse-viscose-linen",
             "text": "Inah Blouse - Viscose Linen",
             "text_style": "caption-with-letter-spacing",
@@ -242,6 +250,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/kianna_berry-blue_front.jpg",
+            "product": "kianna-puff-sleeves-blouse-knitted",
             "link": "shopify://products/kianna-puff-sleeves-blouse-knitted",
             "text": "Kianna Puff Sleeves Blouse - Knitted",
             "text_style": "caption-with-letter-spacing",
@@ -266,6 +275,7 @@
           "type": "text-outside-image",
           "settings": {
             "image": "shopify://shop_images/37_30bfb184-aaf0-4c71-8375-be463b1c674e.jpg",
+            "product": "jane-blouse-premium-ity",
             "link": "shopify://products/jane-blouse-premium-ity",
             "text": "Jane Blouse - Premium ITY",
             "text_style": "caption-with-letter-spacing",
