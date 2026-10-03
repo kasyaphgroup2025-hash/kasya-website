@@ -12,10 +12,10 @@
     "kasya_lp_product_hero": {
       "type": "kasya-lp-product-hero",
       "settings": {
-        "product": "",
+        "product": "sofia-dress",
         "show_header": false,
         "logo_text": "KASYA",
-        "product_label": "KASYA 10.10",
+        "product_label": "KASYA BASICS",
         "heading": "",
         "subtitle": "ITY",
         "rating_text": "",
@@ -151,7 +151,6 @@
         "lifestyle_1": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "Office Day",
             "description": "A polished one-piece outfit that keeps morning decisions simple."
           }
@@ -159,7 +158,6 @@
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "Errands & Family Days",
             "description": "Relaxed movement and side pockets for everyday plans."
           }
@@ -167,7 +165,6 @@
         "lifestyle_3": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "Church & Casual Occasions",
             "description": "An easy A-line shape for comfortably polished dressing."
           }
@@ -175,7 +172,6 @@
         "lifestyle_4": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "Style It With Quinn",
             "description": "Add the Quinn Shawl when you want another layer or a changed-up look."
           }
