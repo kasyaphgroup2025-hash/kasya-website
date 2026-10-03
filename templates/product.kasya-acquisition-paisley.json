@@ -12,7 +12,7 @@
     "kasya_lp_product_hero": {
       "type": "kasya-lp-product-hero",
       "settings": {
-        "product": "",
+        "product": "paisley-pants",
         "show_header": false,
         "logo_text": "KASYA",
         "product_label": "KASYA 10.10",
@@ -151,7 +151,6 @@
         "lifestyle_1": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "Office & Meetings",
             "description": "Structured pleats make everyday work outfits feel polished."
           }
@@ -159,7 +158,6 @@
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "Lunch & Errands",
             "description": "Wide-leg movement keeps busy days comfortable."
           }
@@ -167,7 +165,6 @@
         "lifestyle_3": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "Travel",
             "description": "An easier waist and roomy silhouette support long days out."
           }
@@ -175,7 +172,6 @@
         "lifestyle_4": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "Style It With Reese",
             "description": "Pair with the Reese Polo for a complete 10.10 look."
           }
