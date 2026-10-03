@@ -1084,7 +1084,9 @@
 
     const defaultColor = {{ section.settings.default_color | json }};
     const productHandle = {{ lp_product.handle | json }};
+    const templateSuffix = {{ template.suffix | json }};
     const isDaliahAcquisitionHero = section.dataset.daliahComingSoonHero === 'true';
+    const usesApprovedOatSwatch = ['kasya-acquisition-paisley', 'kasya-acquisition-reese'].includes(templateSuffix);
     const colorOptionName = {{ section.settings.color_option_name | json }};
     const sizeOptionName = {{ section.settings.size_option_name | json }};
     const ctaText = {{ section.settings.cta_text | json }};
@@ -1171,6 +1173,7 @@
       const manualIsBlack = ['#000', '#000000'].includes(lower(manualSwatch));
       const nameIsBlack = normalizeColorName(colorName).includes('black');
 
+      if (usesApprovedOatSwatch && normalizeColorName(colorName) === 'oat') return '#EFDDB4';
       if (isDaliahAcquisitionHero && productHandle === 'daliah-polo-acid-linen' && normalizeColorName(colorName) === 'cinnamon') return '#AD753C';
 
       if (manualSwatch && (!manualIsBlack || nameIsBlack)) return manualSwatch;
