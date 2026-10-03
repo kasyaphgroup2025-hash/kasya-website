@@ -1,0 +1,186 @@
+.kasya-about-us {
+  width: 100%;
+  overflow: hidden;
+  background: #ffffff;
+  color: #171717;
+  font-family: "Manrope", var(--font-body-family, sans-serif);
+}
+
+.kasya-about-us,
+.kasya-about-us * {
+  box-sizing: border-box;
+}
+
+.kasya-about-us__hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #d9d5d0;
+}
+
+.kasya-about-us__media,
+.kasya-about-us__media picture,
+.kasya-about-us__media img,
+.kasya-about-us__placeholder {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.kasya-about-us__media img,
+.kasya-about-us__placeholder {
+  border-radius: 0;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.kasya-about-us__placeholder {
+  color: rgba(23, 23, 23, 0.3);
+  background: #d9d5d0;
+}
+
+.kasya-about-us__hero-content {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 3.6rem 2.2rem;
+  pointer-events: none;
+}
+
+.kasya-about-us__hero-content--x-left {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.kasya-about-us__hero-content--x-center {
+  align-items: center;
+  text-align: center;
+}
+
+.kasya-about-us__hero-content--x-right {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.kasya-about-us__hero-content--y-upper {
+  justify-content: flex-start;
+}
+
+.kasya-about-us__hero-content--y-middle {
+  justify-content: center;
+}
+
+.kasya-about-us__hero-content--y-lower {
+  justify-content: flex-end;
+}
+
+.kasya-about-us__hero-title {
+  max-width: 100%;
+  margin: 0;
+  color: #ffffff;
+  font-family: Optima, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-size: clamp(2.2rem, 7.2vw, var(--kasya-about-hero-size-mobile));
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  text-shadow: 0 0.15rem 0.8rem rgba(0, 0, 0, 0.38);
+}
+
+.kasya-about-us__hero-title span {
+  display: block;
+}
+
+.kasya-about-us__story {
+  padding: 4rem 2.2rem 5.2rem;
+  background: #ffffff;
+}
+
+.kasya-about-us__story-inner {
+  width: 100%;
+  max-width: 90rem;
+  margin-inline: auto;
+}
+
+.kasya-about-us__story-heading {
+  margin: 0;
+  color: #171717;
+  font-family: Optima, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-size: clamp(3.6rem, 11vw, 4.8rem);
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  text-align: center;
+}
+
+.kasya-about-us__story-copy {
+  margin-top: 2.6rem;
+  color: #2a2a2a;
+  font-family: "Manrope", var(--font-body-family, sans-serif);
+  font-size: 1.6rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.65;
+}
+
+.kasya-about-us__story-copy p {
+  margin: 0;
+}
+
+.kasya-about-us__story-copy p + p {
+  margin-top: 2.4rem;
+}
+
+.kasya-about-us__closing {
+  max-width: 82rem;
+  margin: 4.8rem auto 0;
+  color: #171717;
+  font-family: Optima, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-size: var(--kasya-about-closing-size-mobile);
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  text-align: center;
+}
+
+@media screen and (min-width: 750px) {
+  .kasya-about-us__hero {
+    min-height: 52rem;
+    max-height: 76rem;
+    aspect-ratio: 16 / 7;
+  }
+
+  .kasya-about-us__hero-content {
+    padding: clamp(5.6rem, 6vw, 9.6rem);
+  }
+
+  .kasya-about-us__hero-title {
+    max-width: 24ch;
+    font-size: var(--kasya-about-hero-size-desktop);
+  }
+
+  .kasya-about-us__story {
+    padding: 6.4rem 4rem 7.2rem;
+  }
+
+  .kasya-about-us__story-heading {
+    font-size: clamp(4.4rem, 4.4vw, 6.4rem);
+  }
+
+  .kasya-about-us__story-copy {
+    margin-top: 3.2rem;
+    font-size: clamp(1.7rem, 1.35vw, 2rem);
+  }
+
+  .kasya-about-us__closing {
+    margin-top: 5.6rem;
+    font-size: var(--kasya-about-closing-size-desktop);
+  }
+}

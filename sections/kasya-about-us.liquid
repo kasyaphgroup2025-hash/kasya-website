@@ -1,0 +1,198 @@
+{{ 'section-kasya-about-us.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign desktop_image = section.settings.hero_image | default: section.settings.hero_image_mobile
+  assign mobile_image = section.settings.hero_image_mobile | default: desktop_image
+  assign hero_alt = desktop_image.alt | default: mobile_image.alt | default: page.title
+  assign hero_text_lines = section.settings.hero_text | newline_to_br | split: '<br />'
+-%}
+
+<section
+  id="KasyaAboutUs-{{ section.id }}"
+  class="kasya-about-us"
+  style="--kasya-about-hero-size-mobile: {{ section.settings.hero_text_size_mobile }}px; --kasya-about-hero-size-desktop: {{ section.settings.hero_text_size_desktop }}px; --kasya-about-closing-size-mobile: {{ section.settings.closing_size_mobile }}px; --kasya-about-closing-size-desktop: {{ section.settings.closing_size_desktop }}px;"
+>
+  <div class="kasya-about-us__hero">
+    <div class="kasya-about-us__media">
+      {%- if desktop_image != blank -%}
+        <picture>
+          {%- if section.settings.hero_image_mobile != blank -%}
+            <source
+              media="(max-width: 749px)"
+              srcset="
+                {{ mobile_image | image_url: width: 375 }} 375w,
+                {{ mobile_image | image_url: width: 550 }} 550w,
+                {{ mobile_image | image_url: width: 750 }} 750w,
+                {{ mobile_image | image_url: width: 1000 }} 1000w
+              "
+              sizes="100vw"
+            >
+          {%- endif -%}
+          {{
+            desktop_image
+            | image_url: width: 2400
+            | image_tag:
+              class: 'kasya-about-us__hero-image',
+              loading: 'eager',
+              fetchpriority: 'high',
+              widths: '750, 1100, 1500, 1800, 2100, 2400',
+              sizes: '100vw',
+              alt: hero_alt
+          }}
+        </picture>
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'kasya-about-us__placeholder' }}
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.hero_text != blank -%}
+      <div class="kasya-about-us__hero-content kasya-about-us__hero-content--x-{{ section.settings.hero_horizontal_position }} kasya-about-us__hero-content--y-{{ section.settings.hero_vertical_position }}">
+        <h1 class="kasya-about-us__hero-title">
+          {%- for hero_line in hero_text_lines -%}
+            <span>{{ hero_line | strip | escape }}</span>
+          {%- endfor -%}
+        </h1>
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="kasya-about-us__story">
+    <div class="kasya-about-us__story-inner">
+      {%- if section.settings.story_heading != blank -%}
+        <h2 class="kasya-about-us__story-heading">{{ section.settings.story_heading | escape }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.story_copy != blank -%}
+        <div class="kasya-about-us__story-copy rte">{{ section.settings.story_copy }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.closing_statement != blank -%}
+        <p class="kasya-about-us__closing">{{ section.settings.closing_statement | escape }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Kasya About Us",
+  "tag": "section",
+  "class": "section kasya-about-us-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "About Us banner image"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image_mobile",
+      "label": "Mobile banner image (optional)",
+      "info": "Uses the main banner image when left blank."
+    },
+    {
+      "type": "textarea",
+      "id": "hero_text",
+      "label": "Hero text",
+      "default": "Comfort, confidence, and\nelegance in every piece."
+    },
+    {
+      "type": "range",
+      "id": "hero_text_size_desktop",
+      "label": "Hero text size — Desktop",
+      "min": 48,
+      "max": 72,
+      "step": 1,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "hero_text_size_mobile",
+      "label": "Hero text size — Mobile",
+      "min": 28,
+      "max": 40,
+      "step": 1,
+      "default": 34,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "hero_horizontal_position",
+      "label": "Horizontal position",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "hero_vertical_position",
+      "label": "Vertical position",
+      "default": "upper",
+      "options": [
+        { "value": "upper", "label": "Upper" },
+        { "value": "middle", "label": "Middle" },
+        { "value": "lower", "label": "Lower" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Our Story"
+    },
+    {
+      "type": "text",
+      "id": "story_heading",
+      "label": "Story heading",
+      "default": "Our Story"
+    },
+    {
+      "type": "richtext",
+      "id": "story_copy",
+      "label": "Story copy",
+      "default": "<p>At KASYA, we believe the everyday can be extraordinary. We design refined essentials for women who want to feel elegant, comfortable, and confident in every part of real life — from work to weekends, and everything in between.</p><p>Rooted in a love for timeless style and modern living, our pieces are thoughtfully made to move with you. We focus on versatile, effortless designs that celebrate all women, embracing different shapes, lifestyles, and journeys. Because true elegance isn’t about a moment — it’s about how you feel, every day.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Closing statement"
+    },
+    {
+      "type": "text",
+      "id": "closing_statement",
+      "label": "Closing statement text",
+      "default": "Elegance that feels natural to you."
+    },
+    {
+      "type": "range",
+      "id": "closing_size_desktop",
+      "label": "Closing statement size — Desktop",
+      "min": 44,
+      "max": 64,
+      "step": 1,
+      "default": 54,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "closing_size_mobile",
+      "label": "Closing statement size — Mobile",
+      "min": 32,
+      "max": 42,
+      "step": 1,
+      "default": 36,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Kasya About Us"
+    }
+  ]
+}
+{% endschema %}

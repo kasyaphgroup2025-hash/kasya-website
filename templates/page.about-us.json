@@ -1,1 +1,20 @@
-{"sections":{"main":{"type":"main-page","settings":{"section_width":"full_bleed","content_alignment":"left","color_scheme":"","padding_top":40,"padding_bottom":40}}},"order":["main"]}
+{
+  "sections": {
+    "main": {
+      "type": "kasya-about-us",
+      "settings": {
+        "hero_text": "Comfort, confidence, and\nelegance in every piece.",
+        "hero_text_size_desktop": 60,
+        "hero_text_size_mobile": 34,
+        "hero_horizontal_position": "left",
+        "hero_vertical_position": "upper",
+        "story_heading": "Our Story",
+        "story_copy": "<p>At KASYA, we believe the everyday can be extraordinary. We design refined essentials for women who want to feel elegant, comfortable, and confident in every part of real life — from work to weekends, and everything in between.</p><p>Rooted in a love for timeless style and modern living, our pieces are thoughtfully made to move with you. We focus on versatile, effortless designs that celebrate all women, embracing different shapes, lifestyles, and journeys. Because true elegance isn’t about a moment — it’s about how you feel, every day.</p>",
+        "closing_statement": "Elegance that feels natural to you.",
+        "closing_size_desktop": 54,
+        "closing_size_mobile": 36
+      }
+    }
+  },
+  "order": ["main"]
+}
