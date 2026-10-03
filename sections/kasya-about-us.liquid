@@ -10,7 +10,7 @@
 <section
   id="KasyaAboutUs-{{ section.id }}"
   class="kasya-about-us"
-  style="--kasya-about-hero-size-mobile: {{ section.settings.hero_text_size_mobile }}px; --kasya-about-hero-size-desktop: {{ section.settings.hero_text_size_desktop }}px; --kasya-about-closing-size-mobile: {{ section.settings.closing_size_mobile }}px; --kasya-about-closing-size-desktop: {{ section.settings.closing_size_desktop }}px;"
+  style="--kasya-about-hero-size-mobile: {{ section.settings.hero_text_size_mobile }}px; --kasya-about-hero-size-desktop: {{ section.settings.hero_text_size_desktop }}px; --kasya-about-story-heading-size-mobile: {{ section.settings.story_heading_size_mobile }}px; --kasya-about-story-heading-size-desktop: {{ section.settings.story_heading_size_desktop }}px; --kasya-about-story-body-size-mobile: {{ section.settings.story_body_size_mobile }}px; --kasya-about-story-body-size-desktop: {{ section.settings.story_body_size_desktop }}px; --kasya-about-closing-size-mobile: {{ section.settings.closing_size_mobile }}px; --kasya-about-closing-size-desktop: {{ section.settings.closing_size_desktop }}px;"
 >
   <div class="kasya-about-us__hero">
     <div class="kasya-about-us__media">
@@ -101,26 +101,6 @@
       "default": "Comfort, confidence, and\nelegance in every piece."
     },
     {
-      "type": "range",
-      "id": "hero_text_size_desktop",
-      "label": "Hero text size — Desktop",
-      "min": 48,
-      "max": 72,
-      "step": 1,
-      "default": 60,
-      "unit": "px"
-    },
-    {
-      "type": "range",
-      "id": "hero_text_size_mobile",
-      "label": "Hero text size — Mobile",
-      "min": 28,
-      "max": 40,
-      "step": 1,
-      "default": 34,
-      "unit": "px"
-    },
-    {
       "type": "select",
       "id": "hero_horizontal_position",
       "label": "Horizontal position",
@@ -169,21 +149,101 @@
       "default": "Elegance that feels natural to you."
     },
     {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "paragraph",
+      "content": "Hero"
+    },
+    {
+      "type": "range",
+      "id": "hero_text_size_desktop",
+      "label": "Hero text size — Desktop",
+      "min": 30,
+      "max": 90,
+      "step": 1,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "hero_text_size_mobile",
+      "label": "Hero text size — Mobile",
+      "min": 22,
+      "max": 50,
+      "step": 1,
+      "default": 34,
+      "unit": "px"
+    },
+    {
+      "type": "paragraph",
+      "content": "Our Story heading"
+    },
+    {
+      "type": "range",
+      "id": "story_heading_size_desktop",
+      "label": "Our Story size — Desktop",
+      "min": 36,
+      "max": 80,
+      "step": 1,
+      "default": 56,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "story_heading_size_mobile",
+      "label": "Our Story size — Mobile",
+      "min": 28,
+      "max": 56,
+      "step": 1,
+      "default": 42,
+      "unit": "px"
+    },
+    {
+      "type": "paragraph",
+      "content": "Story text"
+    },
+    {
+      "type": "range",
+      "id": "story_body_size_desktop",
+      "label": "Story text size — Desktop",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "story_body_size_mobile",
+      "label": "Story text size — Mobile",
+      "min": 13,
+      "max": 21,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "paragraph",
+      "content": "Closing statement size"
+    },
+    {
       "type": "range",
       "id": "closing_size_desktop",
       "label": "Closing statement size — Desktop",
-      "min": 44,
-      "max": 64,
+      "min": 32,
+      "max": 78,
       "step": 1,
-      "default": 54,
+      "default": 52,
       "unit": "px"
     },
     {
       "type": "range",
       "id": "closing_size_mobile",
       "label": "Closing statement size — Mobile",
-      "min": 32,
-      "max": 42,
+      "min": 26,
+      "max": 50,
       "step": 1,
       "default": 36,
       "unit": "px"

@@ -84,7 +84,7 @@
   margin: 0;
   color: #ffffff;
   font-family: Optima, "Palatino Linotype", "Book Antiqua", Palatino, serif;
-  font-size: clamp(2.2rem, 7.2vw, var(--kasya-about-hero-size-mobile));
+  font-size: var(--kasya-about-hero-size-mobile);
   font-style: normal;
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -111,7 +111,7 @@
   margin: 0;
   color: #171717;
   font-family: Optima, "Palatino Linotype", "Book Antiqua", Palatino, serif;
-  font-size: clamp(3.6rem, 11vw, 4.8rem);
+  font-size: var(--kasya-about-story-heading-size-mobile);
   font-style: normal;
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -123,7 +123,7 @@
   margin-top: 2.6rem;
   color: #2a2a2a;
   font-family: "Manrope", var(--font-body-family, sans-serif);
-  font-size: 1.6rem;
+  font-size: var(--kasya-about-story-body-size-mobile);
   font-weight: 400;
   letter-spacing: 0;
   line-height: 1.65;
@@ -171,12 +171,12 @@
   }
 
   .kasya-about-us__story-heading {
-    font-size: clamp(4.4rem, 4.4vw, 6.4rem);
+    font-size: var(--kasya-about-story-heading-size-desktop);
   }
 
   .kasya-about-us__story-copy {
     margin-top: 3.2rem;
-    font-size: clamp(1.7rem, 1.35vw, 2rem);
+    font-size: var(--kasya-about-story-body-size-desktop);
   }
 
   .kasya-about-us__closing {
