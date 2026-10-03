@@ -1,24 +1,35 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "kasya-about-us",
       "settings": {
         "hero_text": "Comfort, confidence, and\nelegance in every piece.",
-        "hero_text_size_desktop": 60,
-        "hero_text_size_mobile": 34,
         "hero_horizontal_position": "left",
         "hero_vertical_position": "upper",
         "story_heading": "Our Story",
         "story_copy": "<p>At KASYA, we believe the everyday can be extraordinary. We design refined essentials for women who want to feel elegant, comfortable, and confident in every part of real life — from work to weekends, and everything in between.</p><p>Rooted in a love for timeless style and modern living, our pieces are thoughtfully made to move with you. We focus on versatile, effortless designs that celebrate all women, embracing different shapes, lifestyles, and journeys. Because true elegance isn’t about a moment — it’s about how you feel, every day.</p>",
+        "closing_statement": "Elegance that feels natural to you.",
+        "hero_text_size_desktop": 60,
+        "hero_text_size_mobile": 26,
         "story_heading_size_desktop": 56,
         "story_heading_size_mobile": 42,
         "story_body_size_desktop": 18,
-        "story_body_size_mobile": 16,
-        "closing_statement": "Elegance that feels natural to you.",
+        "story_body_size_mobile": 13,
         "closing_size_desktop": 52,
-        "closing_size_mobile": 36
+        "closing_size_mobile": 32
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
