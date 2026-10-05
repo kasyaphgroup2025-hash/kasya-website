@@ -81,6 +81,9 @@
         "side_description": "Shows the relaxed drape and room for comfortable movement.",
         "back_label": "BACK VIEW",
         "back_description": "Shows the simple back line and everyday coverage.",
+        "model_height": "",
+        "model_waist": "",
+        "model_size": "",
         "model_info": ""
       }
     },

@@ -3,6 +3,17 @@
   Standalone section for model views and fit notes.
 {% endcomment %}
 
+{%- liquid
+  assign model_height = section.settings.model_height | strip
+  assign model_waist = section.settings.model_waist | strip
+  assign model_size = section.settings.model_size | strip
+  assign has_structured_model_info = false
+
+  if model_height != blank or model_waist != blank or model_size != blank
+    assign has_structured_model_info = true
+  endif
+-%}
+
 <section class="kasya-fit-confidence" data-kasya-fit-confidence data-section-id="{{ section.id }}">
   <div class="kasya-fit-confidence__inner">
     <div class="kasya-fit-confidence__header">
@@ -148,9 +159,27 @@
       </article>
     </div>
 
-    {% if section.settings.model_info != blank %}
+    {% if has_structured_model_info or section.settings.model_info != blank %}
       <p class="kasya-fit-confidence__model">
-        {{ section.settings.model_info }}
+        {%- if has_structured_model_info -%}
+          {%- assign model_separator_needed = false -%}
+          {%- if model_height != blank -%}
+            <span>Model is {{ model_height | escape }}</span>
+            {%- assign model_separator_needed = true -%}
+          {%- endif -%}
+          {%- if model_waist != blank -%}
+            {%- if model_separator_needed -%}<span aria-hidden="true"> | </span>{%- endif -%}
+            <span>Waist {{ model_waist | escape }}</span>
+            {%- assign model_separator_needed = true -%}
+          {%- endif -%}
+          {%- if model_size != blank -%}
+            {%- if model_separator_needed -%}<span aria-hidden="true"> | </span>{%- endif -%}
+            <span>Wears size {{ model_size | escape }}</span>
+          {%- endif -%}
+          <span aria-hidden="true">.</span>
+        {%- else -%}
+          {{ section.settings.model_info }}
+        {%- endif -%}
       </p>
     {% endif %}
 
@@ -509,9 +538,32 @@
       "default": "Shows how it falls from behind."
     },
     {
+      "type": "header",
+      "content": "Model reference"
+    },
+    {
+      "type": "text",
+      "id": "model_height",
+      "label": "Model height",
+      "info": "Example: 5'2"
+    },
+    {
+      "type": "text",
+      "id": "model_waist",
+      "label": "Model waist",
+      "info": "Example: 29\""
+    },
+    {
+      "type": "text",
+      "id": "model_size",
+      "label": "Model size",
+      "info": "Example: XL"
+    },
+    {
       "type": "textarea",
       "id": "model_info",
-      "label": "Model info",
+      "label": "Legacy model info",
+      "info": "Fallback used only when the structured model fields above are blank.",
       "default": "Model is 5'2 and wears size L."
     }
   ],

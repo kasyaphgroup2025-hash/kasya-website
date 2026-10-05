@@ -81,6 +81,9 @@
         "side_description": "Shows how the lightweight piece falls from the side.",
         "back_label": "BACK VIEW",
         "back_description": "Shows the back coverage and simple layered silhouette.",
+        "model_height": "",
+        "model_waist": "",
+        "model_size": "",
         "model_info": ""
       }
     },

@@ -81,6 +81,9 @@
         "side_description": "Shows the flowing leg line and practical side pockets.",
         "back_label": "BACK VIEW",
         "back_description": "Shows the back garter that keeps the waist comfortable.",
+        "model_height": "",
+        "model_waist": "",
+        "model_size": "",
         "model_info": ""
       }
     },
