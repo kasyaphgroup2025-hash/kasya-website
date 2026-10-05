@@ -305,7 +305,7 @@
         "editorial_image_alt": "UNFOLD collection campaign",
         "image_position_mobile": "center center",
         "image_position_desktop": "center center",
-        "section_height_mobile": 500,
+        "section_height_mobile": 450,
         "section_height_desktop": 600,
         "panel_padding_mobile": 24,
         "panel_padding_desktop": 48,
@@ -319,7 +319,7 @@
         "opening_size_desktop": 18,
         "body_size_mobile": 13,
         "body_size_desktop": 16,
-        "closing_size_mobile": 15,
+        "closing_size_mobile": 14,
         "closing_size_desktop": 18,
         "line_height_mobile": 130,
         "line_height_desktop": 150
