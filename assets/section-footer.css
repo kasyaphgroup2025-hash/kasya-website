@@ -39,12 +39,7 @@
 .kasya-footer__newsletter-heading {
   margin: 0;
   color: inherit;
-  font-family: inherit;
   font-size: clamp(2.2rem, 5vw, 3rem);
-  font-style: normal;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  line-height: 1.2;
 }
 
 .kasya-footer__newsletter-text {
