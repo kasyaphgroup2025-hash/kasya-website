@@ -75,15 +75,23 @@
 #home-88-collection-story .home-88-story__heading {
   margin: 0;
   color: inherit;
+  font-family: var(--story-editorial-font, Georgia, "Times New Roman", serif);
   font-size: var(--story-heading-mobile);
+  font-style: var(--story-editorial-style, normal);
+  font-weight: var(--story-editorial-weight, 400);
+  letter-spacing: 0.015em;
+  line-height: 0.95;
+  text-transform: uppercase;
 }
 
 #home-88-collection-story .home-88-story__opening {
-  margin: 1.6rem 0 0;
+  margin: 1rem 0 0;
+  font-family: var(--story-editorial-font, Georgia, "Times New Roman", serif);
   font-size: var(--story-opening-mobile);
-  font-weight: 500;
-  letter-spacing: 0.015em;
-  line-height: 1.35;
+  font-style: var(--story-editorial-style, normal);
+  font-weight: var(--story-editorial-weight, 400);
+  letter-spacing: 0.005em;
+  line-height: 1.25;
 }
 
 #home-88-collection-story .home-88-story__body {
@@ -103,10 +111,12 @@
 
 #home-88-collection-story .home-88-story__closing {
   margin: 2.4rem 0 0;
+  font-family: var(--story-editorial-font, Georgia, "Times New Roman", serif);
   font-size: var(--story-closing-mobile);
-  font-weight: 600;
-  letter-spacing: 0.015em;
-  line-height: var(--story-line-mobile);
+  font-style: var(--story-editorial-style, normal);
+  font-weight: var(--story-editorial-weight, 400);
+  letter-spacing: 0.005em;
+  line-height: 1.3;
 }
 
 @media screen and (min-width: 750px) {
@@ -148,9 +158,9 @@
   }
 
   #home-88-collection-story .home-88-story__opening {
-    margin-top: 1.6rem;
+    margin-top: 1rem;
     font-size: var(--story-opening-desktop);
-    line-height: 1.4;
+    line-height: 1.25;
   }
 
   #home-88-collection-story .home-88-story__body {
@@ -169,6 +179,6 @@
   #home-88-collection-story .home-88-story__closing {
     margin-top: 2.4rem;
     font-size: var(--story-closing-desktop);
-    line-height: var(--story-line-desktop);
+    line-height: 1.3;
   }
 }
