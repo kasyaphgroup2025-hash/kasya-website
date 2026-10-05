@@ -154,6 +154,7 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
     border-bottom: 0 !important;
     color: #ffffff !important;
     box-shadow: none !important;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   body.home-88-header-enabled .section-header .header__inner::before {
@@ -185,6 +186,42 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
   body.home-88-header-enabled .section-header .cart-count-bubble {
     background: #ffffff !important;
     color: #111111 !important;
+  }
+
+  body.home-88-header-enabled .section-header.menu-open .header {
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+
+  body.home-88-header-enabled .section-header.menu-open .header__inner::before {
+    background: #ffffff !important;
+    opacity: 1 !important;
+  }
+
+  body.home-88-header-enabled .section-header.menu-open .header__icon,
+  body.home-88-header-enabled .section-header.menu-open .header__heading-link,
+  body.home-88-header-enabled .section-header.menu-open .header__menu-item {
+    --color-foreground: 17, 17, 17;
+    --color-link: 17, 17, 17;
+    color: #111111 !important;
+  }
+
+  body.home-88-header-enabled .section-header.menu-open svg,
+  body.home-88-header-enabled .section-header.menu-open svg path,
+  body.home-88-header-enabled .section-header.menu-open svg circle,
+  body.home-88-header-enabled .section-header.menu-open svg line,
+  body.home-88-header-enabled .section-header.menu-open svg polyline {
+    color: #111111 !important;
+    stroke: currentColor;
+  }
+
+  body.home-88-header-enabled .section-header.menu-open .header__heading-logo {
+    filter: none !important;
+  }
+
+  body.home-88-header-enabled .section-header.menu-open .cart-count-bubble {
+    background: #111111 !important;
+    color: #ffffff !important;
   }
 
   body.home-88-header-enabled .section-header.shopify-section-header-sticky .header {
