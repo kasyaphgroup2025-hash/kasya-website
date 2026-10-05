@@ -1,0 +1,317 @@
+{% comment %}
+  Draft-theme UNFOLD product fit notes.
+  This section is intentionally handle-gated so the default product template can
+  include it without changing Shopify product-template assignments.
+{% endcomment %}
+
+{%- liquid
+  assign unfold_product_key = blank
+  assign quinn_product_handle = section.settings.quinn_product_handle | strip
+
+  case product.handle
+    when 'olivia-skirt'
+      assign unfold_product_key = 'olivia'
+    when 'paisley-pants'
+      assign unfold_product_key = 'paisley'
+    when 'reese-polo'
+      assign unfold_product_key = 'reese'
+    when 'sofia-dress'
+      assign unfold_product_key = 'sofia'
+  endcase
+
+  if unfold_product_key == blank and quinn_product_handle != blank and product.handle == quinn_product_handle
+    assign unfold_product_key = 'quinn'
+  endif
+
+  if unfold_product_key != blank
+    assign model_height_key = unfold_product_key | append: '_model_height'
+    assign model_waist_key = unfold_product_key | append: '_model_waist'
+    assign model_size_key = unfold_product_key | append: '_model_size'
+    assign fit_note_1_key = unfold_product_key | append: '_fit_note_1'
+    assign fit_note_2_key = unfold_product_key | append: '_fit_note_2'
+    assign fit_note_3_key = unfold_product_key | append: '_fit_note_3'
+    assign fit_note_4_key = unfold_product_key | append: '_fit_note_4'
+    assign fit_note_5_key = unfold_product_key | append: '_fit_note_5'
+
+    assign model_height = section.settings[model_height_key]
+    assign model_waist = section.settings[model_waist_key]
+    assign model_size = section.settings[model_size_key]
+    assign fit_note_1 = section.settings[fit_note_1_key]
+    assign fit_note_2 = section.settings[fit_note_2_key]
+    assign fit_note_3 = section.settings[fit_note_3_key]
+    assign fit_note_4 = section.settings[fit_note_4_key]
+    assign fit_note_5 = section.settings[fit_note_5_key]
+  endif
+-%}
+
+{%- if unfold_product_key != blank -%}
+  {%- render 'unfold-fit-notes',
+    model_height: model_height,
+    model_waist: model_waist,
+    model_size: model_size,
+    fit_note_1: fit_note_1,
+    fit_note_2: fit_note_2,
+    fit_note_3: fit_note_3,
+    fit_note_4: fit_note_4,
+    fit_note_5: fit_note_5
+  -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "UNFOLD fit notes",
+  "settings": [
+    {
+      "type": "text",
+      "id": "quinn_product_handle",
+      "label": "Quinn product handle",
+      "info": "Enter Quinn Shawl's exact Shopify handle. Left blank until the product reference is available."
+    },
+    {
+      "type": "header",
+      "content": "Olivia Skirt"
+    },
+    {
+      "type": "text",
+      "id": "olivia_model_height",
+      "label": "Olivia model height"
+    },
+    {
+      "type": "text",
+      "id": "olivia_model_waist",
+      "label": "Olivia model waist"
+    },
+    {
+      "type": "text",
+      "id": "olivia_model_size",
+      "label": "Olivia model size"
+    },
+    {
+      "type": "text",
+      "id": "olivia_fit_note_1",
+      "label": "Olivia fit note 1",
+      "default": "A-line silhouette"
+    },
+    {
+      "type": "text",
+      "id": "olivia_fit_note_2",
+      "label": "Olivia fit note 2",
+      "default": "Front zipper"
+    },
+    {
+      "type": "text",
+      "id": "olivia_fit_note_3",
+      "label": "Olivia fit note 3",
+      "default": "Back garter for added waist comfort"
+    },
+    {
+      "type": "text",
+      "id": "olivia_fit_note_4",
+      "label": "Olivia fit note 4",
+      "default": "Two side pockets"
+    },
+    {
+      "type": "text",
+      "id": "olivia_fit_note_5",
+      "label": "Olivia fit note 5",
+      "default": "Designed for comfortable movement"
+    },
+    {
+      "type": "header",
+      "content": "Paisley Pants"
+    },
+    {
+      "type": "text",
+      "id": "paisley_model_height",
+      "label": "Paisley model height"
+    },
+    {
+      "type": "text",
+      "id": "paisley_model_waist",
+      "label": "Paisley model waist"
+    },
+    {
+      "type": "text",
+      "id": "paisley_model_size",
+      "label": "Paisley model size"
+    },
+    {
+      "type": "text",
+      "id": "paisley_fit_note_1",
+      "label": "Paisley fit note 1",
+      "default": "Wide-leg silhouette"
+    },
+    {
+      "type": "text",
+      "id": "paisley_fit_note_2",
+      "label": "Paisley fit note 2",
+      "default": "Front pleats"
+    },
+    {
+      "type": "text",
+      "id": "paisley_fit_note_3",
+      "label": "Paisley fit note 3",
+      "default": "Back garter"
+    },
+    {
+      "type": "text",
+      "id": "paisley_fit_note_4",
+      "label": "Paisley fit note 4",
+      "default": "Side pockets"
+    },
+    {
+      "type": "text",
+      "id": "paisley_fit_note_5",
+      "label": "Paisley fit note 5",
+      "default": "Designed for comfortable movement"
+    },
+    {
+      "type": "header",
+      "content": "Quinn Shawl"
+    },
+    {
+      "type": "text",
+      "id": "quinn_model_height",
+      "label": "Quinn model height"
+    },
+    {
+      "type": "text",
+      "id": "quinn_model_waist",
+      "label": "Quinn model waist"
+    },
+    {
+      "type": "text",
+      "id": "quinn_model_size",
+      "label": "Quinn model size"
+    },
+    {
+      "type": "text",
+      "id": "quinn_fit_note_1",
+      "label": "Quinn fit note 1",
+      "default": "Free size"
+    },
+    {
+      "type": "text",
+      "id": "quinn_fit_note_2",
+      "label": "Quinn fit note 2",
+      "default": "Easy layering"
+    },
+    {
+      "type": "text",
+      "id": "quinn_fit_note_3",
+      "label": "Quinn fit note 3",
+      "default": "Three versatile colorways"
+    },
+    {
+      "type": "text",
+      "id": "quinn_fit_note_4",
+      "label": "Quinn fit note 4",
+      "default": "Lightweight styling piece"
+    },
+    {
+      "type": "text",
+      "id": "quinn_fit_note_5",
+      "label": "Quinn fit note 5",
+      "default": "Works across different outfits"
+    },
+    {
+      "type": "header",
+      "content": "Reese Polo"
+    },
+    {
+      "type": "text",
+      "id": "reese_model_height",
+      "label": "Reese model height"
+    },
+    {
+      "type": "text",
+      "id": "reese_model_waist",
+      "label": "Reese model waist"
+    },
+    {
+      "type": "text",
+      "id": "reese_model_size",
+      "label": "Reese model size"
+    },
+    {
+      "type": "text",
+      "id": "reese_fit_note_1",
+      "label": "Reese fit note 1",
+      "default": "Relaxed polo silhouette"
+    },
+    {
+      "type": "text",
+      "id": "reese_fit_note_2",
+      "label": "Reese fit note 2",
+      "default": "Button front"
+    },
+    {
+      "type": "text",
+      "id": "reese_fit_note_3",
+      "label": "Reese fit note 3",
+      "default": "Clean collar"
+    },
+    {
+      "type": "text",
+      "id": "reese_fit_note_4",
+      "label": "Reese fit note 4",
+      "default": "Patch pockets"
+    },
+    {
+      "type": "text",
+      "id": "reese_fit_note_5",
+      "label": "Reese fit note 5",
+      "default": "Roll-up sleeve band"
+    },
+    {
+      "type": "header",
+      "content": "Sofia Dress"
+    },
+    {
+      "type": "text",
+      "id": "sofia_model_height",
+      "label": "Sofia model height"
+    },
+    {
+      "type": "text",
+      "id": "sofia_model_waist",
+      "label": "Sofia model waist"
+    },
+    {
+      "type": "text",
+      "id": "sofia_model_size",
+      "label": "Sofia model size"
+    },
+    {
+      "type": "text",
+      "id": "sofia_fit_note_1",
+      "label": "Sofia fit note 1",
+      "default": "A-line silhouette"
+    },
+    {
+      "type": "text",
+      "id": "sofia_fit_note_2",
+      "label": "Sofia fit note 2",
+      "default": "Relaxed fit"
+    },
+    {
+      "type": "text",
+      "id": "sofia_fit_note_3",
+      "label": "Sofia fit note 3",
+      "default": "Stretch-based fabric"
+    },
+    {
+      "type": "text",
+      "id": "sofia_fit_note_4",
+      "label": "Sofia fit note 4",
+      "default": "Easy drape"
+    },
+    {
+      "type": "text",
+      "id": "sofia_fit_note_5",
+      "label": "Sofia fit note 5",
+      "default": "Side pockets"
+    }
+  ]
+}
+{% endschema %}

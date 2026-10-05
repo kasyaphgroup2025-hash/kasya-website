@@ -1,0 +1,78 @@
+{{ 'unfold-fit-notes.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign model_height_value = model_height | strip
+  assign model_waist_value = model_waist | strip
+  assign model_size_value = model_size | strip
+  assign legacy_model_info_value = legacy_model_info | strip
+  assign has_structured_model = false
+  assign has_model = false
+  assign has_notes = false
+
+  if model_height_value != blank or model_waist_value != blank or model_size_value != blank
+    assign has_structured_model = true
+    assign has_model = true
+  elsif legacy_model_info_value != blank
+    assign has_model = true
+  endif
+
+  if note_blocks != blank
+    for note_block in note_blocks
+      if note_block.settings.note != blank
+        assign has_notes = true
+        break
+      endif
+    endfor
+  elsif fit_note_1 != blank or fit_note_2 != blank or fit_note_3 != blank or fit_note_4 != blank or fit_note_5 != blank
+    assign has_notes = true
+  endif
+-%}
+
+{%- if has_model or has_notes -%}
+  <div class="unfold-fit-notes{% if embedded %} unfold-fit-notes--embedded{% endif %}{% if has_model %} unfold-fit-notes--has-model{% endif %}" data-unfold-fit-notes>
+    {%- if has_model -%}
+      <p class="unfold-fit-notes__model">
+        {%- if has_structured_model -%}
+          {%- assign model_separator_needed = false -%}
+          {%- if model_height_value != blank -%}
+            <span>Model is {{ model_height_value | escape }}</span>
+            {%- assign model_separator_needed = true -%}
+          {%- endif -%}
+          {%- if model_waist_value != blank -%}
+            {%- if model_separator_needed -%}<span aria-hidden="true"> | </span>{%- endif -%}
+            <span>Waist {{ model_waist_value | escape }}</span>
+            {%- assign model_separator_needed = true -%}
+          {%- endif -%}
+          {%- if model_size_value != blank -%}
+            {%- if model_separator_needed -%}<span aria-hidden="true"> | </span>{%- endif -%}
+            <span>Wears size {{ model_size_value | escape }}</span>
+          {%- endif -%}
+          <span aria-hidden="true">.</span>
+        {%- else -%}
+          {{ legacy_model_info_value | escape }}
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+
+    {%- if has_notes -%}
+      <div class="unfold-fit-notes__notes-wrap">
+        <h3 class="unfold-fit-notes__heading">FIT NOTES</h3>
+        <ul class="unfold-fit-notes__list">
+          {%- if note_blocks != blank -%}
+            {%- for note_block in note_blocks -%}
+              {%- if note_block.settings.note != blank -%}
+                <li class="unfold-fit-notes__note" {{ note_block.shopify_attributes }}>{{ note_block.settings.note | escape }}</li>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- else -%}
+            {%- if fit_note_1 != blank -%}<li class="unfold-fit-notes__note">{{ fit_note_1 | escape }}</li>{%- endif -%}
+            {%- if fit_note_2 != blank -%}<li class="unfold-fit-notes__note">{{ fit_note_2 | escape }}</li>{%- endif -%}
+            {%- if fit_note_3 != blank -%}<li class="unfold-fit-notes__note">{{ fit_note_3 | escape }}</li>{%- endif -%}
+            {%- if fit_note_4 != blank -%}<li class="unfold-fit-notes__note">{{ fit_note_4 | escape }}</li>{%- endif -%}
+            {%- if fit_note_5 != blank -%}<li class="unfold-fit-notes__note">{{ fit_note_5 | escape }}</li>{%- endif -%}
+          {%- endif -%}
+        </ul>
+      </div>
+    {%- endif -%}
+  </div>
+{%- endif -%}

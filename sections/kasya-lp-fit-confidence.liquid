@@ -3,17 +3,6 @@
   Standalone section for model views and fit notes.
 {% endcomment %}
 
-{%- liquid
-  assign model_height = section.settings.model_height | strip
-  assign model_waist = section.settings.model_waist | strip
-  assign model_size = section.settings.model_size | strip
-  assign has_structured_model_info = false
-
-  if model_height != blank or model_waist != blank or model_size != blank
-    assign has_structured_model_info = true
-  endif
--%}
-
 <section class="kasya-fit-confidence" data-kasya-fit-confidence data-section-id="{{ section.id }}">
   <div class="kasya-fit-confidence__inner">
     <div class="kasya-fit-confidence__header">
@@ -159,45 +148,15 @@
       </article>
     </div>
 
-    {% if has_structured_model_info or section.settings.model_info != blank %}
-      <p class="kasya-fit-confidence__model">
-        {%- if has_structured_model_info -%}
-          {%- assign model_separator_needed = false -%}
-          {%- if model_height != blank -%}
-            <span>Model is {{ model_height | escape }}</span>
-            {%- assign model_separator_needed = true -%}
-          {%- endif -%}
-          {%- if model_waist != blank -%}
-            {%- if model_separator_needed -%}<span aria-hidden="true"> | </span>{%- endif -%}
-            <span>Waist {{ model_waist | escape }}</span>
-            {%- assign model_separator_needed = true -%}
-          {%- endif -%}
-          {%- if model_size != blank -%}
-            {%- if model_separator_needed -%}<span aria-hidden="true"> | </span>{%- endif -%}
-            <span>Wears size {{ model_size | escape }}</span>
-          {%- endif -%}
-          <span aria-hidden="true">.</span>
-        {%- else -%}
-          {{ section.settings.model_info }}
-        {%- endif -%}
-      </p>
-    {% endif %}
-
-    {% if section.blocks.size > 0 %}
-      <div class="kasya-fit-confidence__notes-wrap">
-        <h3 class="kasya-fit-confidence__notes-heading">FIT NOTES</h3>
-
-        <ul class="kasya-fit-confidence__notes">
-          {% for block in section.blocks %}
-            {% if block.settings.note != blank %}
-              <li class="kasya-fit-confidence__note" {{ block.shopify_attributes }}>
-                {{ block.settings.note }}
-              </li>
-            {% endif %}
-          {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
+    {%- assign fit_note_blocks = section.blocks | where: 'type', 'fit_note' -%}
+    {%- render 'unfold-fit-notes',
+      model_height: section.settings.model_height,
+      model_waist: section.settings.model_waist,
+      model_size: section.settings.model_size,
+      legacy_model_info: section.settings.model_info,
+      note_blocks: fit_note_blocks,
+      embedded: true
+    -%}
   </div>
 </section>
 
@@ -325,58 +284,6 @@
     color: var(--kasya-fit-muted);
     font-size: 14px;
     line-height: 1.45;
-  }
-
-  .kasya-fit-confidence__model {
-    margin: 22px 0 0;
-    padding: 12px 14px;
-    border: 1px solid var(--kasya-fit-line);
-    border-radius: 6px;
-    color: #292929;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 1.4;
-  }
-
-  .kasya-fit-confidence__notes-wrap {
-    margin-top: 14px;
-  }
-
-  .kasya-fit-confidence__notes-heading {
-    margin: 0 0 10px;
-    color: #111111;
-    font-size: 12px;
-    font-weight: 850;
-    letter-spacing: 0.12em;
-    line-height: 1.2;
-    text-transform: uppercase;
-  }
-
-  .kasya-fit-confidence__notes {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 8px;
-  }
-
-  .kasya-fit-confidence__note {
-    position: relative;
-    padding-left: 18px;
-    color: var(--kasya-fit-muted);
-    font-size: 14px;
-    line-height: 1.4;
-  }
-
-  .kasya-fit-confidence__note::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0.55em;
-    width: 6px;
-    height: 6px;
-    border-radius: 999px;
-    background: #111111;
   }
 
   @media screen and (min-width: 680px) {
