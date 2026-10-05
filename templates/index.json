@@ -305,7 +305,7 @@
         "image_position_desktop": "center center",
         "section_height_mobile": 600,
         "section_height_desktop": 600,
-        "panel_padding_mobile": 20,
+        "panel_padding_mobile": 16,
         "panel_padding_desktop": 48,
         "bottom_spacing_mobile": 40,
         "bottom_spacing_desktop": 64,
