@@ -310,6 +310,8 @@
         "panel_padding_desktop": 48,
         "bottom_spacing_mobile": 40,
         "bottom_spacing_desktop": 64,
+        "section_gap_mobile": 48,
+        "section_gap_desktop": 72,
         "heading_size_mobile": 34,
         "heading_size_desktop": 48,
         "opening_size_mobile": 14,

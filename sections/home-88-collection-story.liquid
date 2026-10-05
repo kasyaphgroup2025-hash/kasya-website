@@ -1,5 +1,17 @@
 {{ 'home-88-collection-story.css' | asset_url | stylesheet_tag }}
 
+{%- style -%}
+  #shopify-section-{{ section.id }} + .section-home-next-collection .home-next-collection {
+    padding-top: {{ section.settings.section_gap_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} + .section-home-next-collection .home-next-collection {
+      padding-top: {{ section.settings.section_gap_desktop }}px;
+    }
+  }
+{%- endstyle -%}
+
 {%- liquid
   assign story_image = section.settings.editorial_image | default: section.settings.mobile_image
   assign story_image_alt = section.settings.editorial_image_alt | default: section.settings.heading
@@ -114,6 +126,9 @@
     { "type": "range", "id": "panel_padding_desktop", "label": "Desktop side spacing", "min": 24, "max": 96, "step": 4, "unit": "px", "default": 48 },
     { "type": "range", "id": "bottom_spacing_mobile", "label": "Mobile text spacing from bottom", "min": 24, "max": 100, "step": 4, "unit": "px", "default": 40 },
     { "type": "range", "id": "bottom_spacing_desktop", "label": "Desktop text spacing from bottom", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 64 },
+    { "type": "header", "content": "Spacing after story" },
+    { "type": "range", "id": "section_gap_mobile", "label": "Bottom spacing — Mobile", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 48 },
+    { "type": "range", "id": "section_gap_desktop", "label": "Bottom spacing — Desktop", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 72 },
     { "type": "header", "content": "Typography" },
     { "type": "range", "id": "heading_size_mobile", "label": "Mobile heading size", "min": 30, "max": 44, "step": 1, "unit": "px", "default": 34 },
     { "type": "range", "id": "heading_size_desktop", "label": "Desktop heading size", "min": 40, "max": 60, "step": 1, "unit": "px", "default": 48 },
