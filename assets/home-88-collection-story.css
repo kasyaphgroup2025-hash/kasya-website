@@ -83,14 +83,14 @@
 }
 
 #home-88-collection-story .home-88-story__opening {
-  margin: 1rem 0 0;
+  margin: 0.8rem 0 0;
   font-size: var(--story-opening-mobile);
   letter-spacing: 0.005em;
   line-height: 1.35;
 }
 
 #home-88-collection-story .home-88-story__body {
-  margin: 1.4rem auto 0;
+  margin: 1.8rem auto 0;
   max-width: 72rem;
   font-family: "Manrope", var(--font-body-family, sans-serif);
   font-size: var(--story-body-mobile);
@@ -111,11 +111,11 @@
 }
 
 #home-88-collection-story .home-88-story__body p + p {
-  margin-top: 0.8rem;
+  margin-top: 1.2rem;
 }
 
 #home-88-collection-story .home-88-story__closing {
-  margin: 1.4rem 0 0;
+  margin: 1.6rem 0 0;
   font-family: "Manrope", var(--font-body-family, sans-serif);
   font-size: var(--story-closing-mobile);
   font-style: normal;
