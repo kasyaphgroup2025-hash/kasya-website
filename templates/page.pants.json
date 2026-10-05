@@ -95,30 +95,6 @@
             "lightbox_button_background": "#ffffff"
           }
         },
-        "text_outside_image_qei94z": {
-          "type": "text-outside-image",
-          "settings": {
-            "image": "shopify://shop_images/Jane_Black_22.jpg",
-            "link": "shopify://products/jane-pants-premium-ity",
-            "text": "Gaby Wide-Leg Pants – Viscose Linen",
-            "text_style": "caption-with-letter-spacing",
-            "text_size": "small",
-            "heading": "",
-            "heading_size": "h4",
-            "heading_uppercase": false,
-            "button_label": "",
-            "button_style": "primary",
-            "button_size": "normal",
-            "horizontal_alignment": "center",
-            "vertical_alignment": "bottom",
-            "heading_color": "#000000",
-            "caption_color": "#000000",
-            "button_foreground": "#ffffff",
-            "button_background": "#000000",
-            "lightbox_button_color": "#000000",
-            "lightbox_button_background": "#ffffff"
-          }
-        },
         "text_outside_image_q3Ptjb": {
           "type": "text-outside-image",
           "settings": {
@@ -387,7 +363,6 @@
       "block_order": [
         "text_outside_image_r8Npiq",
         "text_outside_image_aintfa",
-        "text_outside_image_qei94z",
         "text_outside_image_q3Ptjb",
         "text_outside_image_LTdAG3",
         "text_outside_image_bEx6Bk",
