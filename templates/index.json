@@ -300,6 +300,7 @@
         "story_background": "#b9aaa0",
         "story_text_color": "#ffffff",
         "editorial_image": "shopify://shop_images/57.jpg",
+        "mobile_image": "shopify://shop_images/57.jpg",
         "editorial_image_alt": "UNFOLD collection campaign",
         "image_position_mobile": "center center",
         "image_position_desktop": "center center",
