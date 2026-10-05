@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -14,7 +23,7 @@
         "intro_description": "Our team is ready to assist you.\nReach out through any of the channels below.",
         "phone_number": "09635655486",
         "email_address": "kasyaph@kasyaph.com",
-        "working_hours": "Monday – Saturday\n9AM – 6PM\n\nSunday\nClosed",
+        "working_hours": "Monday – Saturday\n9AM – 6PM\n\nSunday: Closed",
         "response_time": "Within 24 hours",
         "timezone": "Asia/Manila (GMT+8)",
         "closing_message": "We appreciate your support and are committed to providing you with the best possible experience.",
@@ -22,5 +31,7 @@
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
