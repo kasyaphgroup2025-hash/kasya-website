@@ -285,6 +285,12 @@ body.home-88-header-enabled .section-header .cart-count-bubble {
     transform: translateY(-50%);
   }
 
+  body.home-88-header-enabled .section-header.menu-open .header__left-icons {
+    top: 0;
+    bottom: 0;
+    transform: none;
+  }
+
   body.home-88-header-enabled .section-header .header__left-icons .header__icon--account,
   body.home-88-header-enabled .section-header .header__left-icons .header__account,
   body.home-88-header-enabled .section-header .header__left-icons [href*="/account"],
