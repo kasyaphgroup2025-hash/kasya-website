@@ -270,10 +270,20 @@ details[open].menu-opening > .menu-drawer__submenu {
     inset-inline: auto;
     left: 0;
     right: auto;
+    margin: 0;
     width: min(88vw, 38rem);
     max-width: calc(100vw - 3.2rem);
     transform: translateX(-100%);
     font-family: var(--mobile-drawer-font-family, var(--font-body-family));
+  }
+
+  .js .menu-drawer.menu-drawer--left {
+    position: fixed;
+    top: var(--header-bottom-position, 0px);
+    left: 0;
+    right: auto;
+    height: calc(var(--viewport-height, 100dvh) - var(--header-bottom-position, 0px));
+    max-height: calc(var(--viewport-height, 100dvh) - var(--header-bottom-position, 0px));
   }
 
   .no-js details[open] > .menu-drawer.menu-drawer--left,
