@@ -5,6 +5,20 @@
 {%- style -%}
   {%- if story_editorial_font != blank -%}
     {{ story_editorial_font | font_face: font_display: 'swap' }}
+
+    #shopify-section-{{ section.id }} .home-88-story__heading,
+    #shopify-section-{{ section.id }} .home-88-story__opening {
+      font-family: {{ story_editorial_font.family }}, {{ story_editorial_font.fallback_families }};
+      font-style: {{ story_editorial_font.style }};
+      font-weight: {{ story_editorial_font.weight }};
+    }
+  {%- else -%}
+    #shopify-section-{{ section.id }} .home-88-story__heading,
+    #shopify-section-{{ section.id }} .home-88-story__opening {
+      font-family: Georgia, "Times New Roman", serif;
+      font-style: normal;
+      font-weight: 400;
+    }
   {%- endif -%}
 
   #shopify-section-{{ section.id }} + .section-home-next-collection .home-next-collection {
@@ -30,14 +44,6 @@
   style="
     --story-bg: {{ section.settings.story_background }};
     --story-text: {{ section.settings.story_text_color }};
-    --story-editorial-font:
-      {%- if story_editorial_font != blank -%}
-        {{ story_editorial_font.family | json }}, {{ story_editorial_font.fallback_families }}
-      {%- else -%}
-        "Playfair", Georgia, "Times New Roman", serif
-      {%- endif -%};
-    --story-editorial-style: {{ story_editorial_font.style | default: 'normal' }};
-    --story-editorial-weight: {{ story_editorial_font.weight | default: 400 }};
     --home-88-story-height-mobile: {{ section.settings.section_height_mobile }}px;
     --home-88-story-height-desktop: {{ section.settings.section_height_desktop }}px;
     --story-side-padding-mobile: {{ section.settings.panel_padding_mobile }}px;
@@ -124,7 +130,7 @@
     { "type": "text", "id": "opening_line", "label": "Campaign line", "default": "Different chapters. Same becoming." },
     { "type": "textarea", "id": "main_body", "label": "Story copy", "default": "Life unfolds differently for every woman. Some chapters are about finding your footing; others bring greater confidence and clarity.\n\nUNFOLD brings polished, comfortable pieces made to move with you through every chapter." },
     { "type": "textarea", "id": "closing_line", "label": "Closing line", "default": "Elegance that feels natural at every stage." },
-    { "type": "font_picker", "id": "editorial_font", "label": "Editorial serif font", "default": "playfair_n4" },
+    { "type": "font_picker", "id": "editorial_font", "label": "Editorial serif font", "default": "playfair_display_n4" },
     { "type": "color", "id": "story_background", "label": "Story background color", "default": "#1d2107" },
     { "type": "color", "id": "story_text_color", "label": "Story text color", "default": "#ffffff" },
     { "type": "header", "content": "Images" },
@@ -145,14 +151,14 @@
     { "type": "range", "id": "section_gap_mobile", "label": "Bottom spacing — Mobile", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 48 },
     { "type": "range", "id": "section_gap_desktop", "label": "Bottom spacing — Desktop", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 72 },
     { "type": "header", "content": "Typography" },
-    { "type": "range", "id": "heading_size_mobile", "label": "Mobile heading size", "min": 48, "max": 72, "step": 1, "unit": "px", "default": 56 },
-    { "type": "range", "id": "heading_size_desktop", "label": "Desktop heading size", "min": 64, "max": 104, "step": 1, "unit": "px", "default": 76 },
-    { "type": "range", "id": "opening_size_mobile", "label": "Mobile campaign-line size", "min": 18, "max": 26, "step": 1, "unit": "px", "default": 19 },
-    { "type": "range", "id": "opening_size_desktop", "label": "Desktop campaign-line size", "min": 22, "max": 32, "step": 1, "unit": "px", "default": 24 },
-    { "type": "range", "id": "body_size_mobile", "label": "Mobile body size", "min": 13, "max": 17, "step": 1, "unit": "px", "default": 15 },
+    { "type": "range", "id": "heading_size_mobile", "label": "Mobile heading size", "min": 30, "max": 44, "step": 1, "unit": "px", "default": 34 },
+    { "type": "range", "id": "heading_size_desktop", "label": "Desktop heading size", "min": 40, "max": 60, "step": 1, "unit": "px", "default": 48 },
+    { "type": "range", "id": "opening_size_mobile", "label": "Mobile campaign-line size", "min": 14, "max": 20, "step": 1, "unit": "px", "default": 16 },
+    { "type": "range", "id": "opening_size_desktop", "label": "Desktop campaign-line size", "min": 18, "max": 24, "step": 1, "unit": "px", "default": 20 },
+    { "type": "range", "id": "body_size_mobile", "label": "Mobile body size", "min": 13, "max": 17, "step": 1, "unit": "px", "default": 14 },
     { "type": "range", "id": "body_size_desktop", "label": "Desktop body size", "min": 15, "max": 20, "step": 1, "unit": "px", "default": 16 },
-    { "type": "range", "id": "closing_size_mobile", "label": "Mobile closing-line size", "min": 16, "max": 22, "step": 1, "unit": "px", "default": 17 },
-    { "type": "range", "id": "closing_size_desktop", "label": "Desktop closing-line size", "min": 18, "max": 26, "step": 1, "unit": "px", "default": 20 },
+    { "type": "range", "id": "closing_size_mobile", "label": "Mobile closing-line size", "min": 14, "max": 18, "step": 1, "unit": "px", "default": 15 },
+    { "type": "range", "id": "closing_size_desktop", "label": "Desktop closing-line size", "min": 16, "max": 22, "step": 1, "unit": "px", "default": 18 },
     { "type": "range", "id": "line_height_mobile", "label": "Mobile line height", "min": 130, "max": 170, "step": 5, "unit": "%", "default": 150 },
     { "type": "range", "id": "line_height_desktop", "label": "Desktop line height", "min": 130, "max": 170, "step": 5, "unit": "%", "default": 150 }
   ],
