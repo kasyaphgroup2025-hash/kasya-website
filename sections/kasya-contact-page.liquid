@@ -1,0 +1,200 @@
+{{ 'kasya-contact-page.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign hero_image = section.settings.desktop_banner_image | default: section.settings.mobile_banner_image
+  assign hero_alt = section.settings.banner_image_alt | default: section.settings.hero_heading
+  assign phone_href = section.settings.phone_number | strip | replace: ' ', ''
+  assign email_href = section.settings.email_address | strip
+-%}
+
+<section
+  id="KasyaContactPage-{{ section.id }}"
+  class="kasya-contact-page"
+  style="--contact-position-mobile: {{ section.settings.mobile_image_position }}; --contact-position-desktop: {{ section.settings.desktop_image_position }};"
+>
+  <div class="kasya-contact-page__hero">
+    <div class="kasya-contact-page__hero-media">
+      {%- if hero_image != blank -%}
+        <picture>
+          {%- if section.settings.mobile_banner_image != blank -%}
+            <source
+              media="(max-width: 749px)"
+              srcset="
+                {{ section.settings.mobile_banner_image | image_url: width: 375 }} 375w,
+                {{ section.settings.mobile_banner_image | image_url: width: 550 }} 550w,
+                {{ section.settings.mobile_banner_image | image_url: width: 750 }} 750w,
+                {{ section.settings.mobile_banner_image | image_url: width: 1000 }} 1000w
+              "
+              sizes="100vw"
+            >
+          {%- endif -%}
+          {{- hero_image
+            | image_url: width: 2400
+            | image_tag:
+              class: 'kasya-contact-page__hero-image',
+              widths: '480, 750, 990, 1200, 1500, 1800, 2100, 2400',
+              sizes: '100vw',
+              loading: 'eager',
+              fetchpriority: 'high',
+              alt: hero_alt
+          -}}
+        </picture>
+      {%- else -%}
+        {{- 'lifestyle-2' | placeholder_svg_tag: 'kasya-contact-page__hero-placeholder' -}}
+      {%- endif -%}
+    </div>
+    <span class="kasya-contact-page__hero-overlay" aria-hidden="true"></span>
+
+    <div class="kasya-contact-page__hero-content">
+      {%- if section.settings.hero_eyebrow != blank -%}
+        <p class="kasya-contact-page__eyebrow kasya-contact-page__eyebrow--hero">{{ section.settings.hero_eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.hero_heading != blank -%}
+        <h1 class="kasya-contact-page__hero-heading kasya-section-heading">
+          {{- section.settings.hero_heading | escape | newline_to_br -}}
+        </h1>
+      {%- endif -%}
+      {%- if section.settings.hero_description != blank -%}
+        <p class="kasya-contact-page__hero-description">
+          {{- section.settings.hero_description | escape | newline_to_br -}}
+        </p>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div class="kasya-contact-page__content">
+    <div class="kasya-contact-page__inner">
+      <header class="kasya-contact-page__intro">
+        {%- if section.settings.intro_eyebrow != blank -%}
+          <p class="kasya-contact-page__eyebrow">{{ section.settings.intro_eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.intro_heading != blank -%}
+          <h2 class="kasya-contact-page__intro-heading">{{ section.settings.intro_heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.intro_description != blank -%}
+          <p class="kasya-contact-page__intro-description">
+            {{- section.settings.intro_description | escape | newline_to_br -}}
+          </p>
+        {%- endif -%}
+      </header>
+
+      <div class="kasya-contact-page__cards">
+        <article class="kasya-contact-page__card" aria-labelledby="ContactPhoneHeading-{{ section.id }}">
+          <span class="kasya-contact-page__card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M6.7 2.75h2.4l1.2 4.45-1.85 1.2a15.35 15.35 0 0 0 7.15 7.15l1.2-1.85 4.45 1.2v2.4a3.95 3.95 0 0 1-4.3 3.93A15.7 15.7 0 0 1 2.77 7.05 3.95 3.95 0 0 1 6.7 2.75Z"/>
+            </svg>
+          </span>
+          <h3 id="ContactPhoneHeading-{{ section.id }}" class="kasya-contact-page__card-heading">Contact number</h3>
+          {%- if section.settings.phone_number != blank -%}
+            <a class="kasya-contact-page__card-value kasya-contact-page__card-link" href="tel:{{ phone_href | escape }}">
+              {{- section.settings.phone_number | escape -}}
+            </a>
+          {%- endif -%}
+          <p class="kasya-contact-page__card-copy">Call or message us for quick assistance.</p>
+        </article>
+
+        <article class="kasya-contact-page__card" aria-labelledby="ContactEmailHeading-{{ section.id }}">
+          <span class="kasya-contact-page__card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <rect x="2.75" y="4.75" width="18.5" height="14.5" rx="1.75"/>
+              <path d="m3.5 6 8.5 6.25L20.5 6"/>
+            </svg>
+          </span>
+          <h3 id="ContactEmailHeading-{{ section.id }}" class="kasya-contact-page__card-heading">Email address</h3>
+          {%- if section.settings.email_address != blank -%}
+            <a class="kasya-contact-page__card-value kasya-contact-page__card-link" href="mailto:{{ email_href | escape }}">
+              {{- section.settings.email_address | escape -}}
+            </a>
+          {%- endif -%}
+          <p class="kasya-contact-page__card-copy">Send us your inquiries anytime. We'll get back to you as soon as possible.</p>
+        </article>
+
+        <article class="kasya-contact-page__card" aria-labelledby="ContactHoursHeading-{{ section.id }}">
+          <span class="kasya-contact-page__card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <circle cx="12" cy="12" r="9.25"/>
+              <path d="M12 7v5.25l3.4 2"/>
+            </svg>
+          </span>
+          <h3 id="ContactHoursHeading-{{ section.id }}" class="kasya-contact-page__card-heading">Working hours</h3>
+          {%- if section.settings.working_hours != blank -%}
+            <div class="kasya-contact-page__card-value kasya-contact-page__card-value--multiline">
+              {{- section.settings.working_hours | escape | newline_to_br -}}
+            </div>
+          {%- endif -%}
+        </article>
+
+        <article class="kasya-contact-page__card" aria-labelledby="ContactAvailabilityHeading-{{ section.id }}">
+          <span class="kasya-contact-page__card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M4 13v-2a8 8 0 0 1 16 0v2"/>
+              <path d="M4 12.5H3.5A1.5 1.5 0 0 0 2 14v2.5A1.5 1.5 0 0 0 3.5 18H6v-5.5H4Zm16 0h.5A1.5 1.5 0 0 1 22 14v2.5a1.5 1.5 0 0 1-1.5 1.5H18v-5.5h2ZM18 18c-.8 2-2.75 3-5.5 3"/>
+            </svg>
+          </span>
+          <h3 id="ContactAvailabilityHeading-{{ section.id }}" class="kasya-contact-page__card-heading">Support availability</h3>
+          <dl class="kasya-contact-page__details">
+            {%- if section.settings.response_time != blank -%}
+              <div>
+                <dt>Response time:</dt>
+                <dd>{{ section.settings.response_time | escape }}</dd>
+              </div>
+            {%- endif -%}
+            {%- if section.settings.timezone != blank -%}
+              <div>
+                <dt>Timezone:</dt>
+                <dd>{{ section.settings.timezone | escape }}</dd>
+              </div>
+            {%- endif -%}
+          </dl>
+        </article>
+      </div>
+    </div>
+
+    {%- if section.settings.closing_message != blank or section.settings.closing_line != blank -%}
+      <div class="kasya-contact-page__closing">
+        <div class="kasya-contact-page__closing-inner">
+          {%- if section.settings.closing_message != blank -%}
+            <p class="kasya-contact-page__closing-message">{{ section.settings.closing_message | escape }}</p>
+          {%- endif -%}
+          {%- if section.settings.closing_line != blank -%}
+            <p class="kasya-contact-page__closing-line">{{ section.settings.closing_line | escape }}</p>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Kasya contact page",
+  "tag": "section",
+  "class": "section-kasya-contact-page",
+  "settings": [
+    { "type": "header", "content": "Contact banner" },
+    { "type": "image_picker", "id": "desktop_banner_image", "label": "Desktop banner image" },
+    { "type": "image_picker", "id": "mobile_banner_image", "label": "Mobile banner image" },
+    { "type": "text", "id": "banner_image_alt", "label": "Banner image alt text", "default": "Kasya customer support" },
+    { "type": "text", "id": "hero_eyebrow", "label": "Small label", "default": "WE'RE HERE FOR YOU" },
+    { "type": "textarea", "id": "hero_heading", "label": "Heading", "default": "Need assistance?\nContact us." },
+    { "type": "textarea", "id": "hero_description", "label": "Description", "default": "We're here to help with orders, returns,\nsizing, and general inquiries." },
+    { "type": "select", "id": "desktop_image_position", "label": "Desktop image position", "default": "center center", "options": [{ "value": "left center", "label": "Left" }, { "value": "center center", "label": "Center" }, { "value": "right center", "label": "Right" }, { "value": "center top", "label": "Top" }, { "value": "center bottom", "label": "Bottom" }] },
+    { "type": "select", "id": "mobile_image_position", "label": "Mobile image position", "default": "center center", "options": [{ "value": "left center", "label": "Left" }, { "value": "center center", "label": "Center" }, { "value": "right center", "label": "Right" }, { "value": "center top", "label": "Top" }, { "value": "center bottom", "label": "Bottom" }] },
+    { "type": "header", "content": "Contact introduction" },
+    { "type": "text", "id": "intro_eyebrow", "label": "Small label", "default": "GET IN TOUCH" },
+    { "type": "text", "id": "intro_heading", "label": "Heading", "default": "How can we help you?" },
+    { "type": "textarea", "id": "intro_description", "label": "Description", "default": "Our team is ready to assist you.\nReach out through any of the channels below." },
+    { "type": "header", "content": "Contact details" },
+    { "type": "text", "id": "phone_number", "label": "Phone number", "default": "09635655486" },
+    { "type": "text", "id": "email_address", "label": "Email address", "default": "kasyaph@kasyaph.com" },
+    { "type": "textarea", "id": "working_hours", "label": "Working hours", "default": "Monday – Saturday\n9AM – 6PM\n\nSunday\nClosed" },
+    { "type": "text", "id": "response_time", "label": "Response time", "default": "Within 24 hours" },
+    { "type": "text", "id": "timezone", "label": "Timezone", "default": "Asia/Manila (GMT+8)" },
+    { "type": "header", "content": "Closing message" },
+    { "type": "textarea", "id": "closing_message", "label": "Main message", "default": "We appreciate your support and are committed to providing you with the best possible experience." },
+    { "type": "text", "id": "closing_line", "label": "Closing line", "default": "THANK YOU FOR BEING A PART OF KASYA." }
+  ],
+  "presets": [{ "name": "Kasya contact page" }]
+}
+{% endschema %}

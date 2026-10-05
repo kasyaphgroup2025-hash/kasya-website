@@ -1,1 +1,26 @@
-{"sections":{"882ae9d2-b3e9-4bb3-b7c2-a3083565f24f":{"type":"maps","blocks":{"template--18627972956461__882ae9d2-b3e9-4bb3-b7c2-a3083565f24f-16855376465a7fd714-0":{"type":"working_time","settings":{"title":"9AM - 6PM"}},"c580f205-257a-41c7-9377-71176d742903":{"type":"physical_address","settings":{"title":"Metro Manila, Quezon City"}},"working_time_mnjiPz":{"type":"working_time","settings":{"title":"09635655486"}},"working_time_F4ynxe":{"type":"working_time","settings":{"title":"kasyaph@kasyaph.com"}}},"block_order":["template--18627972956461__882ae9d2-b3e9-4bb3-b7c2-a3083565f24f-16855376465a7fd714-0","c580f205-257a-41c7-9377-71176d742903","working_time_mnjiPz","working_time_F4ynxe"],"disabled":true,"settings":{"layout":"full_bleed","title":"Contact us","heading_size":"h1","description":"","badge":"","overlapping_content_layout":true,"color_scheme":"background-2","api_library":"embed","coordinates":"14.619267012080265, 121.01425600989396","map_height":525,"map_zoom":18,"map_type":"roadmap","map_id":"","button_label":"","button_style_secondary":false,"button_link":"","accessibility_info":"Google Maps","padding_top":0,"padding_bottom":0}},"form":{"type":"contact-form","blocks":{"d93a8f14-f408-4bf2-af1c-ad8dcc0c50c2":{"type":"opening_hour","settings":{"weekdays":"Weekdays","working_hour":"9AM - 6PM"}},"c17536c2-bac0-4885-834f-6f3efc3850fa":{"type":"social_media_icons","settings":{"title":"Follow us"}},"opening_hour_dAq4Wr":{"type":"opening_hour","settings":{"weekdays":"","working_hour":""}}},"block_order":["d93a8f14-f408-4bf2-af1c-ad8dcc0c50c2","c17536c2-bac0-4885-834f-6f3efc3850fa","opening_hour_dAq4Wr"],"disabled":true,"settings":{"title":"Contact Us","subtitle":"Get discounts!","heading_size":"h2","color_scheme":"background-1","padding_top":40,"padding_bottom":40}},"17686324653ba8deaa":{"type":"_blocks","blocks":{"ai_gen_block_4d5bd87_TUaAVY":{"type":"ai_gen_block_4d5bd87","settings":{"heading":"","heading_size":32,"heading_spacing":24,"show_phone":true,"phone_label":"Contact number","phone_number":"09635655486","show_email":true,"email_label":"Email address","email_address":"kasyaph@kasyaph.com","show_hours":true,"hours_label":"Working hours","working_hours":"<p>Monday - Saturday: 9AM - 6PM<\/p><p>Sunday: Closed<\/p>","show_support_time":true,"support_time_label":"Support availability","support_time":"","max_width":1200,"text_alignment":"left","columns_desktop":4,"columns_tablet":"2","columns_mobile":"2","grid_gap":12,"content_spacing":0,"item_padding":24,"item_gap":12,"item_border_radius":8,"icon_size":40,"label_size":16,"value_size":14,"background_color":"#ffffff","item_background":"#fafafa","heading_color":"#121212","icon_color":"#000000","label_color":"#121212","value_color":"#525252","link_color":"#000000","link_hover_color":"#525252","padding_top":48,"padding_bottom":48,"padding_horizontal":20},"blocks":{}}},"block_order":["ai_gen_block_4d5bd87_TUaAVY"],"settings":{"title":"Need Assistance? Contact us.","subtitle":"","heading_size":"h1","section_width":"grid","content_direction_desktop":"column","horizontal_alignment_desktop":"flex-start","vertical_alignment_desktop":"center","horizontal_alignment_flex_direction_column_desktop":"flex-start","gap_desktop":12,"content_direction_mobile":"column","horizontal_alignment_mobile":"left","vertical_alignment_mobile":"center","horizontal_alignment_flex_direction_column_mobile":"start","gap_mobile":12,"enable_section_box_layout":false,"color_scheme":"","padding_top":36,"padding_bottom":36}}},"order":["882ae9d2-b3e9-4bb3-b7c2-a3083565f24f","form","17686324653ba8deaa"]}
+{
+  "sections": {
+    "main": {
+      "type": "kasya-contact-page",
+      "settings": {
+        "banner_image_alt": "Kasya customer support",
+        "hero_eyebrow": "WE'RE HERE FOR YOU",
+        "hero_heading": "Need assistance?\nContact us.",
+        "hero_description": "We're here to help with orders, returns,\nsizing, and general inquiries.",
+        "desktop_image_position": "center center",
+        "mobile_image_position": "center center",
+        "intro_eyebrow": "GET IN TOUCH",
+        "intro_heading": "How can we help you?",
+        "intro_description": "Our team is ready to assist you.\nReach out through any of the channels below.",
+        "phone_number": "09635655486",
+        "email_address": "kasyaph@kasyaph.com",
+        "working_hours": "Monday – Saturday\n9AM – 6PM\n\nSunday\nClosed",
+        "response_time": "Within 24 hours",
+        "timezone": "Asia/Manila (GMT+8)",
+        "closing_message": "We appreciate your support and are committed to providing you with the best possible experience.",
+        "closing_line": "THANK YOU FOR BEING A PART OF KASYA."
+      }
+    }
+  },
+  "order": ["main"]
+}

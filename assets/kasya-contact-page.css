@@ -1,0 +1,339 @@
+.kasya-contact-page {
+  width: 100%;
+  overflow: hidden;
+  padding: 0 0 4.8rem;
+  background: #faf9f6;
+  color: #171714;
+  font-family: "Manrope", var(--font-body-family, sans-serif);
+  font-style: normal;
+  font-weight: 400;
+}
+
+.kasya-contact-page *,
+.kasya-contact-page *::before,
+.kasya-contact-page *::after {
+  box-sizing: border-box;
+}
+
+.kasya-contact-page__hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  min-height: 52rem;
+  overflow: hidden;
+  background: #77736c;
+}
+
+.kasya-contact-page__hero-media,
+.kasya-contact-page__hero-media picture,
+.kasya-contact-page__hero-image,
+.kasya-contact-page__hero-placeholder {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.kasya-contact-page__hero-image,
+.kasya-contact-page__hero-placeholder {
+  object-fit: cover;
+  object-position: var(--contact-position-mobile, center center);
+  border-radius: 0;
+}
+
+.kasya-contact-page__hero-placeholder {
+  background: #77736c;
+}
+
+.kasya-contact-page__hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.2) 68%, rgba(0, 0, 0, 0.04) 100%),
+    linear-gradient(to right, rgba(0, 0, 0, 0.38), rgba(0, 0, 0, 0) 78%);
+  pointer-events: none;
+}
+
+.kasya-contact-page__hero-content {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 56rem);
+  padding: 4rem 2rem;
+  color: #fff;
+  text-align: left;
+  text-shadow: 0 0.1rem 1.6rem rgba(0, 0, 0, 0.24);
+}
+
+.kasya-contact-page__eyebrow {
+  margin: 0;
+  color: #5a564f;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.kasya-contact-page__eyebrow--hero {
+  color: inherit;
+}
+
+.kasya-contact-page__hero-heading {
+  margin: 1.2rem 0 0;
+  color: inherit;
+  font-size: clamp(3.2rem, 9vw, 4.6rem);
+}
+
+.kasya-contact-page__hero-description {
+  max-width: 48rem;
+  margin: 1.8rem 0 0;
+  color: inherit;
+  font-size: 1.5rem;
+  line-height: 1.6;
+}
+
+.kasya-contact-page__content {
+  padding: 3.6rem 2rem 0;
+}
+
+.kasya-contact-page__inner {
+  width: min(100%, 128rem);
+  margin: 0 auto;
+}
+
+.kasya-contact-page__intro {
+  max-width: 72rem;
+}
+
+.kasya-contact-page__intro-heading {
+  margin: 0.8rem 0 0;
+  color: inherit;
+  font-family: inherit;
+  font-size: clamp(2.8rem, 8vw, 3.6rem);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+.kasya-contact-page__intro-description {
+  margin: 1.4rem 0 0;
+  color: #5e5b55;
+  font-size: 1.5rem;
+  line-height: 1.6;
+}
+
+.kasya-contact-page__cards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.4rem;
+  margin-top: 2.8rem;
+}
+
+.kasya-contact-page__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 2.4rem;
+  border: 0.1rem solid #dedbd5;
+  border-radius: 0.6rem;
+  background: #fff;
+  box-shadow: none;
+}
+
+.kasya-contact-page__card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  color: #171714;
+}
+
+.kasya-contact-page__card-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.kasya-contact-page__card-heading {
+  margin: 1.8rem 0 0;
+  color: inherit;
+  font-family: inherit;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+}
+
+.kasya-contact-page__card-value {
+  margin: 1rem 0 0;
+  color: inherit;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.kasya-contact-page__card-link {
+  text-decoration: none;
+  text-underline-offset: 0.3rem;
+}
+
+.kasya-contact-page__card-link:hover {
+  text-decoration: underline;
+}
+
+.kasya-contact-page__card-link:focus-visible {
+  outline: 0.2rem solid currentColor;
+  outline-offset: 0.3rem;
+}
+
+.kasya-contact-page__card-copy {
+  margin: 1rem 0 0;
+  color: #69665f;
+  font-size: 1.35rem;
+  line-height: 1.6;
+}
+
+.kasya-contact-page__card-value--multiline {
+  white-space: normal;
+}
+
+.kasya-contact-page__details {
+  display: grid;
+  gap: 1.3rem;
+  width: 100%;
+  margin: 1rem 0 0;
+}
+
+.kasya-contact-page__details div {
+  min-width: 0;
+}
+
+.kasya-contact-page__details dt,
+.kasya-contact-page__details dd {
+  margin: 0;
+  font-size: 1.4rem;
+  line-height: 1.5;
+}
+
+.kasya-contact-page__details dt {
+  color: #69665f;
+}
+
+.kasya-contact-page__details dd {
+  color: inherit;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.kasya-contact-page__closing {
+  width: 100%;
+  margin-top: 3.6rem;
+  padding: 3.6rem 2rem;
+  background: #eee8df;
+  text-align: center;
+}
+
+.kasya-contact-page__closing-inner {
+  width: min(100%, 82rem);
+  margin: 0 auto;
+}
+
+.kasya-contact-page__closing-message {
+  margin: 0;
+  color: #4e4a43;
+  font-size: 1.5rem;
+  line-height: 1.65;
+}
+
+.kasya-contact-page__closing-line {
+  margin: 1.5rem 0 0;
+  color: #171714;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+@media screen and (min-width: 750px) {
+  .kasya-contact-page {
+    padding-bottom: 5.6rem;
+  }
+
+  .kasya-contact-page__hero {
+    align-items: center;
+    min-height: 48rem;
+    height: clamp(48rem, 44vw, 64rem);
+  }
+
+  .kasya-contact-page__hero-image,
+  .kasya-contact-page__hero-placeholder {
+    object-position: var(--contact-position-desktop, center center);
+  }
+
+  .kasya-contact-page__hero-overlay {
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.67) 0%, rgba(0, 0, 0, 0.38) 38%, rgba(0, 0, 0, 0.06) 76%, rgba(0, 0, 0, 0) 100%);
+  }
+
+  .kasya-contact-page__hero-content {
+    width: min(66rem, 60vw);
+    padding: 4rem 2rem 4rem clamp(4rem, 7vw, 10rem);
+  }
+
+  .kasya-contact-page__hero-heading {
+    font-size: clamp(4.4rem, 5vw, 6.4rem);
+  }
+
+  .kasya-contact-page__hero-description {
+    font-size: 1.6rem;
+  }
+
+  .kasya-contact-page__content {
+    padding-top: 6.4rem;
+    padding-right: clamp(2.4rem, 5vw, 7.2rem);
+    padding-left: clamp(2.4rem, 5vw, 7.2rem);
+  }
+
+  .kasya-contact-page__intro-heading {
+    font-size: 4rem;
+  }
+
+  .kasya-contact-page__intro-description {
+    font-size: 1.6rem;
+  }
+
+  .kasya-contact-page__cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+    margin-top: 3.6rem;
+  }
+
+  .kasya-contact-page__card {
+    padding: 2.8rem;
+  }
+
+  .kasya-contact-page__closing {
+    margin-top: 4.8rem;
+    padding: 4.2rem clamp(2.4rem, 5vw, 7.2rem);
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .kasya-contact-page__cards {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
