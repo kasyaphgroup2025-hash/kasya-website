@@ -18,10 +18,8 @@
 .kasya-contact-page__hero {
   position: relative;
   isolation: isolate;
-  display: flex;
-  align-items: flex-end;
   width: 100%;
-  min-height: 52rem;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   background: #77736c;
 }
@@ -59,10 +57,12 @@
 }
 
 .kasya-contact-page__hero-content {
-  position: relative;
+  position: absolute;
+  bottom: 0;
+  left: 0;
   z-index: 2;
   width: min(100%, 56rem);
-  padding: 4rem 2rem;
+  padding: 3.2rem 2.2rem;
   color: #fff;
   text-align: left;
   text-shadow: 0 0.1rem 1.6rem rgba(0, 0, 0, 0.24);
@@ -83,17 +83,17 @@
 }
 
 .kasya-contact-page__hero-heading {
-  margin: 1.2rem 0 0;
+  margin: 1rem 0 0;
   color: inherit;
   font-size: clamp(3.2rem, 9vw, 4.6rem);
 }
 
 .kasya-contact-page__hero-description {
   max-width: 48rem;
-  margin: 1.8rem 0 0;
+  margin: 1.2rem 0 0;
   color: inherit;
   font-size: 1.5rem;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 .kasya-contact-page__content {
@@ -268,9 +268,9 @@
   }
 
   .kasya-contact-page__hero {
-    align-items: center;
-    min-height: 48rem;
-    height: clamp(48rem, 44vw, 64rem);
+    min-height: 52rem;
+    max-height: 76rem;
+    aspect-ratio: 16 / 7;
   }
 
   .kasya-contact-page__hero-image,
@@ -283,16 +283,22 @@
   }
 
   .kasya-contact-page__hero-content {
+    top: 50%;
+    bottom: auto;
     width: min(66rem, 60vw);
     padding: 4rem 2rem 4rem clamp(4rem, 7vw, 10rem);
+    transform: translateY(-50%);
   }
 
   .kasya-contact-page__hero-heading {
+    margin-top: 1.2rem;
     font-size: clamp(4.4rem, 5vw, 6.4rem);
   }
 
   .kasya-contact-page__hero-description {
+    margin-top: 1.8rem;
     font-size: 1.6rem;
+    line-height: 1.6;
   }
 
   .kasya-contact-page__content {
