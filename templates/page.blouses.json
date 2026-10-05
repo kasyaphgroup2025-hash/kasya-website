@@ -301,7 +301,7 @@
       ],
       "name": "t:names.gallery_classic_grid",
       "settings": {
-        "title": "Tops",
+        "title": "TOPS",
         "heading_size": "h1",
         "flexible_columns_layout": "grid",
         "columns_desktop": 4,
