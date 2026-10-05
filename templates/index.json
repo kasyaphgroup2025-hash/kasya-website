@@ -296,7 +296,7 @@
         "heading": "UNFOLD",
         "opening_line": "Different chapters. Same becoming.",
         "main_body": "Life unfolds differently for every woman. Some chapters are about finding your footing, while others come with greater confidence, responsibility, and clarity.\n\nUNFOLD is designed to move through those changing stages with you—bringing together polished, comfortable pieces for the routines, opportunities, and everyday moments that shape who you are becoming.",
-        "closing_line": "Because elegance should feel natural, at every stage.",
+        "closing_line": "Because elegance should feel natural,\nat every stage.",
         "story_background": "#b9aaa0",
         "story_text_color": "#ffffff",
         "editorial_image": "shopify://shop_images/57.jpg",
@@ -315,9 +315,9 @@
         "opening_size_desktop": 20,
         "body_size_mobile": 13,
         "body_size_desktop": 16,
-        "closing_size_mobile": 14,
+        "closing_size_mobile": 15,
         "closing_size_desktop": 18,
-        "line_height_mobile": 150,
+        "line_height_mobile": 140,
         "line_height_desktop": 150
       }
     },
