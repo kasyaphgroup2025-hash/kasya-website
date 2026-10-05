@@ -115,8 +115,25 @@
 
 @media screen and (min-width: 750px) {
   #home-88-collection-story {
+    align-items: center;
+    justify-content: flex-end;
     min-height: var(--home-88-story-height-desktop);
-    padding: 4rem var(--story-side-padding-desktop) var(--story-bottom-desktop);
+    padding: 4rem var(--story-side-padding-desktop);
+  }
+
+  #home-88-collection-story .home-88-story__media::after {
+    background:
+      linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0) 30%,
+        rgba(0, 0, 0, 0.22) 55%,
+        rgba(0, 0, 0, 0.68) 100%
+      ),
+      linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 58%,
+        rgba(0, 0, 0, 0.18) 100%
+      );
   }
 
   #home-88-collection-story .home-88-story__media img {
@@ -124,7 +141,10 @@
   }
 
   #home-88-collection-story .home-88-story__copy {
-    width: min(100%, 78rem);
+    width: clamp(38rem, 40vw, 52rem);
+    max-width: 100%;
+    margin-left: auto;
+    text-align: left;
   }
 
   #home-88-collection-story .home-88-story__heading {
@@ -139,6 +159,9 @@
 
   #home-88-collection-story .home-88-story__body {
     margin-top: 2.6rem;
+    margin-right: 0;
+    margin-left: 0;
+    max-width: 100%;
     font-size: var(--story-body-desktop);
     line-height: var(--story-line-desktop);
   }
