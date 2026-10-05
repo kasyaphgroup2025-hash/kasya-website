@@ -2,7 +2,7 @@
   width: 100%;
   overflow: hidden;
   padding: 0 0 4.8rem;
-  background: #faf9f6;
+  background: #fff;
   color: #171714;
   font-family: "Manrope", var(--font-body-family, sans-serif);
   font-style: normal;
@@ -140,7 +140,7 @@
   align-items: flex-start;
   min-width: 0;
   padding: 2.4rem;
-  border: 0.1rem solid #dedbd5;
+  border: 0.1rem solid #e2e2e2;
   border-radius: 0.6rem;
   background: #fff;
   box-shadow: none;
@@ -200,13 +200,6 @@
   outline-offset: 0.3rem;
 }
 
-.kasya-contact-page__card-copy {
-  margin: 1rem 0 0;
-  color: #69665f;
-  font-size: 1.35rem;
-  line-height: 1.6;
-}
-
 .kasya-contact-page__card-value--multiline {
   white-space: normal;
 }
@@ -243,7 +236,7 @@
   width: 100%;
   margin-top: 3.6rem;
   padding: 3.6rem 2rem;
-  background: #eee8df;
+  background: #fff;
   text-align: center;
 }
 
