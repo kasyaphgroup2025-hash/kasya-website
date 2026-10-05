@@ -70,6 +70,30 @@
             "lightbox_button_background": "#ffffff"
           }
         },
+        "text_outside_image_paisley": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/10.10_RELEASE_OUTDOOR_SHOOT.jpg",
+            "link": "shopify://products/paisley-pants",
+            "text": "Paisley Pants",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "small",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        },
         "text_outside_image_aintfa": {
           "type": "text-outside-image",
           "disabled": true,
@@ -121,6 +145,7 @@
         },
         "text_outside_image_LTdAG3": {
           "type": "text-outside-image",
+          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/20_50717400-839f-446d-8b75-7c7232eaddd9.jpg",
             "link": "shopify://products/wide-leg-pants-soft-linen-new-colors",
@@ -362,15 +387,16 @@
       },
       "block_order": [
         "text_outside_image_r8Npiq",
-        "text_outside_image_aintfa",
-        "text_outside_image_qei94z",
-        "text_outside_image_LTdAG3",
-        "text_outside_image_bEx6Bk",
-        "text_outside_image_kGz7wD",
-        "text_outside_image_NrHKxi",
+        "text_outside_image_paisley",
+        "text_outside_image_LrHB8B",
         "text_outside_image_qLFQtc",
         "text_outside_image_ydUxzY",
-        "text_outside_image_LrHB8B",
+        "text_outside_image_NrHKxi",
+        "text_outside_image_bEx6Bk",
+        "text_outside_image_kGz7wD",
+        "text_outside_image_qei94z",
+        "text_outside_image_aintfa",
+        "text_outside_image_LTdAG3",
         "text_outside_image_4fXgFc",
         "text_outside_image_rDfKEC",
         "text_outside_image_HtzjAN"
