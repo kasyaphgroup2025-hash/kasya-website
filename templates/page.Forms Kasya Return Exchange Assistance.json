@@ -12,17 +12,17 @@
     "order_care": {
       "type": "order-care-page",
       "settings": {
-        "heading_size_desktop": 40,
-        "heading_size_mobile": 24,
-        "description_size": 13,
-        "small_label_size": 10,
-        "terms_heading_size": 18,
-        "terms_text_size": 12,
-        "shipping_heading_size": 13,
-        "shipping_text_size": 11,
-        "messenger_heading_size": 13,
-        "messenger_description_size": 10,
-        "messenger_button_size": 11
+        "heading_size_desktop": 46,
+        "heading_size_mobile": 34,
+        "description_size": 16,
+        "small_label_size": 11,
+        "terms_heading_size": 22,
+        "terms_text_size": 14,
+        "shipping_heading_size": 16,
+        "shipping_text_size": 14,
+        "messenger_heading_size": 16,
+        "messenger_description_size": 13,
+        "messenger_button_size": 13
       }
     },
     "forms": {
