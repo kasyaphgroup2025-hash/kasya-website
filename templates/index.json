@@ -360,6 +360,8 @@
         "section_heading": "OTHER COLLECTION",
         "banner_collection": "interlude-edit",
         "banner_link": "shopify://collections/interlude-edit",
+        "desktop_banner_image": "shopify://shop_images/PRODUCT_BANNER_8.jpg",
+        "mobile_banner_image": "shopify://shop_images/PRODUCT_BANNER_8.jpg",
         "banner_image_alt": "Interlude Edit collection",
         "show_banner_text": true,
         "banner_text": "INTERLUDE EDIT",
