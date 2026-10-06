@@ -200,6 +200,7 @@
   letter-spacing: 0.01em;
   line-height: 1.1;
   text-align: center;
+  text-decoration: none;
   cursor: pointer;
   transition: background-color 160ms ease, color 160ms ease;
 }

@@ -110,18 +110,15 @@
 
                         <a class="home-88-outfit__product-title" href="{{ look_product.url }}">{{ product_title | escape }}</a>
 
-                        <quick-add-drawer-opener class="home-88-outfit__quick-add">
-                          <button
+                        <div class="home-88-outfit__quick-add">
+                          <a
                             class="home-88-outfit__product-button"
-                            type="button"
-                            data-product-url="{{ look_product.url }}"
-                            aria-haspopup="dialog"
+                            href="{{ look_product.url }}"
                             aria-label="{{ button_label | escape }} for {{ product_title | escape }}"
                           >
                             <span>{{ button_label | escape }}</span>
-                            <span class="loading-overlay__spinner hidden">{% render 'icon-cart-loading' %}</span>
-                          </button>
-                        </quick-add-drawer-opener>
+                          </a>
+                        </div>
                       </article>
                     {%- endif -%}
                   {%- endfor -%}
