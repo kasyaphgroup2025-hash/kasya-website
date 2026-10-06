@@ -86,7 +86,7 @@
           "type": "faq",
           "settings": {
             "question": "What if the size I ordered does not fit?",
-            "answer": "<p>You may submit a size-exchange request through our Customer Service. Requests are reviewed before approval and depend on item availability.&nbsp;</p>"
+            "answer": "<p>You may submit a size-exchange request through Kasya’s Return My Order page. Requests are reviewed before approval and depend on item availability. For size exchanges, the customer shoulders the courier or shipping fee.</p>"
           }
         },
         "shipping_category": {
@@ -135,7 +135,7 @@
           "type": "faq",
           "settings": {
             "question": "Can I exchange an item for another size?",
-            "answer": "<p>You may request a size exchange through our Customer Service. Please wait for approval and instructions before sending an item back. Approval and replacement availability are not automatic.</p>"
+            "answer": "<p>You may request a size exchange through the Return My Order page. Please wait for approval and instructions before sending an item back. Approval and replacement availability are not automatic.</p>"
           }
         },
         "returns_fee": {
