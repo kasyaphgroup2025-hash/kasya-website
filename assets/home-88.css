@@ -814,7 +814,8 @@ html.home-88-quick-shop-open {
   }
 
   #home-88-product-grid .home-88-products__grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: calc(100% - clamp(4rem, 8vw, 12rem));
   }
 
   #home-88-product-grid .home-88-products__card[data-daliah-product-card="true"] {
@@ -833,6 +834,12 @@ html.home-88-quick-shop-open {
 
   #home-88-product-grid .home-88-products__prices {
     font-size: var(--home-88-product-price-desktop, 19px);
+  }
+}
+
+@media screen and (min-width: 990px) {
+  #home-88-product-grid .home-88-products__grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }
 

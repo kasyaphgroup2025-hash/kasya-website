@@ -340,7 +340,11 @@
   .home-next-collection__carousel {
     --next-collection-gap: 8px;
     --next-collection-side: clamp(2.4rem, 5vw, 7.2rem);
+    width: calc(100% - clamp(4rem, 8vw, 12rem));
+    max-width: 144rem;
     margin-top: 2.4rem;
+    margin-right: auto;
+    margin-left: auto;
     padding-top: 3.6rem;
   }
 

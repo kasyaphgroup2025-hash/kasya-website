@@ -384,7 +384,7 @@
   .home-88-outfit__stage {
     --outfit-desktop-gap: 0.8rem;
     width: calc(100% - clamp(4rem, 8vw, 12rem));
-    max-width: 96rem;
+    max-width: 140rem;
     min-height: 0;
     height: auto;
     margin-inline: auto;
