@@ -201,10 +201,10 @@
             "product_1": "inah-blouse-viscose-linen",
             "product_1_title": "Sofia Dress",
             "product_1_image": "shopify://shop_images/INAH_-_CREAM_2.jpg",
-            "product_1_image_alt": "Sofia Dress",
+            "product_1_image_alt": "Reese Polo",
             "product_1_button_label": "See Fit & Colors",
             "product_2": "demi-barrel-pants-acid-linen",
-            "product_2_title": "Quinn Shawl",
+            "product_2_title": "Paisley Pants",
             "product_2_image": "shopify://shop_images/16_b7865bcd-9c41-423d-88ee-e9d5abf48f04.jpg",
             "product_2_image_alt": "Demi Barrel Pants flat lay",
             "product_2_button_label": "See Fit & Colors"
@@ -232,17 +232,17 @@
         "home_1010_look_3": {
           "type": "look",
           "settings": {
-            "front_image": "shopify://shop_images/LOOK_3_f8e99682-0163-4f3d-9257-ef3bef2e72eb.jpg",
+            "front_image": "shopify://shop_images/LOOK_1_e30b2609-c563-44d0-9fec-0a01b0689ca5.jpg",
             "front_image_alt": "After Hours look",
             "mobile_image_position": "center center",
             "desktop_image_position": "center center",
             "product_1": "daliah-polo-acid-linen",
-            "product_1_title": "Reese Polo",
+            "product_1_title": "Sofia Dress",
             "product_1_image": "shopify://shop_images/24_0c267d7a-adb4-478b-a4f0-eb9ded018ef9.jpg",
             "product_1_image_alt": "Daliah Polo flat lay",
             "product_1_button_label": "See Fit & Colors",
             "product_2": "demi-barrel-pants-acid-linen",
-            "product_2_title": "Paisley Pants",
+            "product_2_title": "Quinn Shawl",
             "product_2_image": "shopify://shop_images/14_3b206207-52b0-4a91-a3d0-40e13c086759.jpg",
             "product_2_image_alt": "Demi Barrel Pants flat lay",
             "product_2_button_label": "See Fit & Colors"
@@ -251,7 +251,7 @@
         "home_1010_look_4": {
           "type": "look",
           "settings": {
-            "front_image": "shopify://shop_images/LOOK_1_e30b2609-c563-44d0-9fec-0a01b0689ca5.jpg",
+            "front_image": "shopify://shop_images/LOOK_3_f8e99682-0163-4f3d-9257-ef3bef2e72eb.jpg",
             "front_image_alt": "Weekend Ease look",
             "mobile_image_position": "center center",
             "desktop_image_position": "center center",
