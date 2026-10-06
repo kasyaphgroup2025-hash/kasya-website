@@ -27,7 +27,17 @@
   endif
 
   if target == product and product.price_varies
-    assign money_price = 'products.product.price.from_price_html' | t: price: money_price
+    if show_in_card and product.handle == 'soft-linen-long-skirts-copy'
+      assign money_price_min = product.price_min | money
+      assign money_price_max = product.price_max | money
+      if settings.currency_code_enabled
+        assign money_price_min = product.price_min | money_with_currency
+        assign money_price_max = product.price_max | money_with_currency
+      endif
+      assign money_price = 'products.product.price.varies_html' | t: price_from: money_price_min, price_to: money_price_max
+    else
+      assign money_price = 'products.product.price.from_price_html' | t: price: money_price
+    endif
   endif
   unless use_custom_element
     assign price_tag = 'div'
