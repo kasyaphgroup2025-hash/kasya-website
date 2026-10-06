@@ -194,7 +194,7 @@
         "home_88_look_3": {
           "type": "look",
           "settings": {
-            "front_image": "shopify://shop_images/LOOK_1_e30b2609-c563-44d0-9fec-0a01b0689ca5.jpg",
+            "front_image": "shopify://shop_images/reese_paisley.jpg",
             "front_image_alt": "Morning Loop look",
             "mobile_image_position": "center center",
             "desktop_image_position": "center center",
@@ -251,7 +251,7 @@
         "home_1010_look_4": {
           "type": "look",
           "settings": {
-            "front_image": "shopify://shop_images/reese_paisley.jpg",
+            "front_image": "shopify://shop_images/LOOK_1_e30b2609-c563-44d0-9fec-0a01b0689ca5.jpg",
             "front_image_alt": "Weekend Ease look",
             "mobile_image_position": "center center",
             "desktop_image_position": "center center",
