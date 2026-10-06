@@ -12,6 +12,7 @@
     "main": {
       "type": "kasya-contact-page",
       "settings": {
+        "desktop_banner_image": "shopify://shop_images/37_61a591eb-42a0-40cc-bdfb-47e364e40a37.jpg",
         "banner_image_alt": "Kasya customer support",
         "hero_eyebrow": "WE'RE HERE FOR YOU",
         "hero_heading": "Need assistance?\nContact us.",
