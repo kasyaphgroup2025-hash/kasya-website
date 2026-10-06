@@ -13,6 +13,7 @@
       "type": "kasya-about-us",
       "settings": {
         "hero_image": "shopify://shop_images/BANNER_169_1.jpg",
+        "hero_image_mobile": "shopify://shop_images/10.10_RELEASE_OUTDOOR_SHOOT.png",
         "hero_text": "Comfort, confidence, and\nelegance in every piece.",
         "hero_horizontal_position": "left",
         "hero_vertical_position": "middle",
