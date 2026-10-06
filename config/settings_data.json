@@ -150,7 +150,7 @@
             "type": "color_item",
             "settings": {
               "title": "Red",
-              "colors_background": "#e60101",
+              "colors_background": "#C52228",
               "gradient_background": "",
               "color_checkmark_icon": "#ffffff"
             }
@@ -469,6 +469,81 @@
               "gradient_background": "linear-gradient(46deg, rgba(255, 255, 0, 1) 13%, rgba(255, 215, 0, 1) 86%)",
               "color_checkmark_icon": ""
             }
+          },
+          "kasya-a-line-swatches": {
+            "type": "group_item",
+            "settings": {
+              "title_1": "Plain Black",
+              "colors_background_1": "#111111",
+              "gradient_background_1": "",
+              "background_image_1": "",
+              "color_checkmark_icon_1": "#ffffff",
+              "title_2": "Emerald",
+              "colors_background_2": "#0F625B",
+              "gradient_background_2": "",
+              "background_image_2": "",
+              "color_checkmark_icon_2": "#ffffff",
+              "title_3": "Navy Blue",
+              "colors_background_3": "#253E83",
+              "gradient_background_3": "",
+              "background_image_3": "",
+              "color_checkmark_icon_3": "#ffffff",
+              "title_4": "Choco Brown",
+              "colors_background_4": "#754537",
+              "gradient_background_4": "",
+              "background_image_4": "",
+              "color_checkmark_icon_4": "#ffffff",
+              "title_5": "Berry Blue",
+              "colors_background_5": "#6689D7",
+              "gradient_background_5": "",
+              "background_image_5": "",
+              "color_checkmark_icon_5": "#ffffff",
+              "title_6": "Lavender",
+              "colors_background_6": "#C7A8E6",
+              "gradient_background_6": "",
+              "background_image_6": "",
+              "color_checkmark_icon_6": "#000000",
+              "title_7": "Dusty Pink",
+              "colors_background_7": "#D8A3AD",
+              "gradient_background_7": "",
+              "background_image_7": "",
+              "color_checkmark_icon_7": "#000000",
+              "title_8": "Light Gray",
+              "colors_background_8": "#B8C1CA",
+              "gradient_background_8": "",
+              "background_image_8": "",
+              "color_checkmark_icon_8": "#000000",
+              "title_9": "Pastel Yellow",
+              "colors_background_9": "#EADCA2",
+              "gradient_background_9": "",
+              "background_image_9": "",
+              "color_checkmark_icon_9": "#000000",
+              "title_10": "Sage Green",
+              "colors_background_10": "#768E6B",
+              "gradient_background_10": "",
+              "background_image_10": "",
+              "color_checkmark_icon_10": "#ffffff",
+              "title_11": "Olive Brown",
+              "colors_background_11": "#7A4D32",
+              "gradient_background_11": "",
+              "background_image_11": "",
+              "color_checkmark_icon_11": "#ffffff",
+              "title_12": "White Floral",
+              "colors_background_12": "#F4F1E9",
+              "gradient_background_12": "",
+              "background_image_12": "",
+              "color_checkmark_icon_12": "#000000"
+            }
+          },
+          "kasya-red-floral-swatch": {
+            "type": "color_item",
+            "settings": {
+              "title": "Red Floral",
+              "colors_background": "#A94B57",
+              "gradient_background": "",
+              "background_image": "",
+              "color_checkmark_icon": "#ffffff"
+            }
           }
         },
         "block_order": [
@@ -509,7 +584,9 @@
           "ec3c8518-4ff9-4233-aa4b-3df76defcbb3",
           "8cd83ee0-1ea1-40fc-af0c-50d4e62c3e58",
           "a1b786f5-359b-4a68-b141-00e8a969b62b",
-          "2ef2c799-8499-4634-b227-96c14543b77d"
+          "2ef2c799-8499-4634-b227-96c14543b77d",
+          "kasya-a-line-swatches",
+          "kasya-red-floral-swatch"
         ],
         "settings": {}
       },
