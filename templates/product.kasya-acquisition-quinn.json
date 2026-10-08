@@ -12,10 +12,10 @@
     "kasya_lp_product_hero": {
       "type": "kasya-lp-product-hero",
       "settings": {
-        "product": "",
+        "product": "quinn-shawl",
         "show_header": false,
         "logo_text": "KASYA",
-        "product_label": "KASYA 10.10",
+        "product_label": "KASYA BASICS",
         "heading": "",
         "subtitle": "Special Fabric",
         "rating_text": "",
@@ -154,7 +154,6 @@
         "lifestyle_1": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "With Sofia",
             "description": "Layer over the Sofia Dress for an easy finished 10.10 look."
           }
@@ -162,7 +161,6 @@
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "With Reese",
             "description": "Add Quinn to the Reese Polo for another way to style everyday separates."
           }
@@ -170,7 +168,6 @@
         "lifestyle_3": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "Office to Errands",
             "description": "Carry one layer across changing spaces and everyday plans."
           }
@@ -178,7 +175,6 @@
         "lifestyle_4": {
           "type": "lifestyle_card",
           "settings": {
-            "image": "",
             "title": "Repeat-Wear Styling",
             "description": "Use Quinn to give familiar outfits a different finish."
           }
