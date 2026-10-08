@@ -19,9 +19,14 @@
     assign hide_landing_header = false
     assign show_initial_media_preview = false
     assign is_daliah_acquisition_hero = false
+    assign is_quinn_shawl = false
     assign expected_media_role = ''
     assign explicit_selection_templates = 'kasya-acquisition-dahlia,kasya-acquisition-ellav2,kasya-acquisition-hazel,kasya-acquisition-inah,kasya-acquisition-mia,kasya-acquisition-kianna,kasya-acquisition-naomi,kasya-acquisition-olivia,kasya-acquisition-paisley,kasya-acquisition-reese,kasya-acquisition-sofia,kasya-acquisition-quinn,kasya-acqusition-lea,kasya-jane_blouse,kasya-jane_pants' | split: ','
     assign lp_product_title_downcase = lp_product.title | downcase
+
+    if lp_product.handle == 'quinn-shawl'
+      assign is_quinn_shawl = true
+    endif
 
     if template.suffix == 'kasya-jane_blouse' or lp_product.handle == 'jane-blouse-premium-ity-1'
       assign expected_media_role = 'blouse'
@@ -57,7 +62,7 @@
   endif
 %}
 
-<section class="kasya-product-hero{% if section.settings.enable_sticky_atc %} kasya-product-hero--sticky-enabled{% endif %}" data-kasya-hero data-section-id="{{ section.id }}"{% if require_explicit_variant_selection %} data-require-explicit-variant-selection="true"{% endif %}{% if show_initial_media_preview %} data-initial-media-preview="true"{% endif %}{% if is_daliah_acquisition_hero %} data-daliah-coming-soon-hero="true"{% endif %}{% if expected_media_role != blank %} data-expected-media-role="{{ expected_media_role }}"{% endif %}>
+<section class="kasya-product-hero{% if section.settings.enable_sticky_atc %} kasya-product-hero--sticky-enabled{% endif %}" data-kasya-hero data-section-id="{{ section.id }}"{% if require_explicit_variant_selection %} data-require-explicit-variant-selection="true"{% endif %}{% if show_initial_media_preview %} data-initial-media-preview="true"{% endif %}{% if is_daliah_acquisition_hero %} data-daliah-coming-soon-hero="true"{% endif %}{% if is_quinn_shawl %} data-quinn-shawl="true"{% endif %}{% if expected_media_role != blank %} data-expected-media-role="{{ expected_media_role }}"{% endif %}>
   {% if lp_product == blank %}
     <div class="kasya-product-hero__empty">
       <p>Select a product in this section's settings.</p>
@@ -282,47 +287,49 @@
           </p>
         </div>
 
-        <div class="kasya-product-hero__sizes-wrap" data-size-wrap>
-          <p class="kasya-product-hero__option-label">SIZE{% if require_explicit_variant_selection %}: <span data-selected-size class="is-required">Please select</span>{% endif %}</p>
-          <div class="kasya-product-hero__sizes" data-size-options></div>
-        </div>
-
-        {% if section.settings.size_helper_text != blank %}
-          <p class="kasya-product-hero__size-helper">
-            {{ section.settings.size_helper_text }}
-          </p>
-        {% endif %}
-
-        {% if section.settings.show_size_chart and size_chart_image != blank %}
-          <div class="kasya-product-hero__size-chart" data-size-chart>
-            <button
-              type="button"
-              class="kasya-product-hero__size-chart-toggle"
-              aria-expanded="false"
-              data-size-chart-toggle
-            >
-              <span data-size-chart-toggle-text>{{ section.settings.size_chart_trigger_text }}</span>
-              <span class="kasya-product-hero__size-chart-icon" aria-hidden="true">⌄</span>
-            </button>
-
-            <div class="kasya-product-hero__size-chart-panel" data-size-chart-panel hidden>
-              <img
-                data-size-chart-image
-                data-size-chart-src="{{ size_chart_image | image_url: width: 1200 }}"
-                alt="{{ size_chart_alt | escape }}"
-                width="1200"
-                height="900"
-                loading="lazy"
-              >
-
-              {% if section.settings.size_chart_note != blank %}
-                <p class="kasya-product-hero__size-chart-note">
-                  {{ section.settings.size_chart_note }}
-                </p>
-              {% endif %}
-            </div>
+        {% unless is_quinn_shawl %}
+          <div class="kasya-product-hero__sizes-wrap" data-size-wrap>
+            <p class="kasya-product-hero__option-label">SIZE{% if require_explicit_variant_selection %}: <span data-selected-size class="is-required">Please select</span>{% endif %}</p>
+            <div class="kasya-product-hero__sizes" data-size-options></div>
           </div>
-        {% endif %}
+
+          {% if section.settings.size_helper_text != blank %}
+            <p class="kasya-product-hero__size-helper">
+              {{ section.settings.size_helper_text }}
+            </p>
+          {% endif %}
+
+          {% if section.settings.show_size_chart and size_chart_image != blank %}
+            <div class="kasya-product-hero__size-chart" data-size-chart>
+              <button
+                type="button"
+                class="kasya-product-hero__size-chart-toggle"
+                aria-expanded="false"
+                data-size-chart-toggle
+              >
+                <span data-size-chart-toggle-text>{{ section.settings.size_chart_trigger_text }}</span>
+                <span class="kasya-product-hero__size-chart-icon" aria-hidden="true">⌄</span>
+              </button>
+
+              <div class="kasya-product-hero__size-chart-panel" data-size-chart-panel hidden>
+                <img
+                  data-size-chart-image
+                  data-size-chart-src="{{ size_chart_image | image_url: width: 1200 }}"
+                  alt="{{ size_chart_alt | escape }}"
+                  width="1200"
+                  height="900"
+                  loading="lazy"
+                >
+
+                {% if section.settings.size_chart_note != blank %}
+                  <p class="kasya-product-hero__size-chart-note">
+                    {{ section.settings.size_chart_note }}
+                  </p>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endunless %}
 
         <button
           type="submit"
@@ -347,7 +354,7 @@
     {% if section.settings.enable_sticky_atc %}
       <div class="kasya-product-hero__sticky-atc" data-sticky-atc>
         <div class="kasya-product-hero__sticky-context" data-sticky-context>
-          {% if require_explicit_variant_selection %}COLOR: Please select / SIZE: Please select{% else %}{{ section.settings.default_color | upcase }} — {{ selected_variant.price | money }}{% endif %}
+          {% if is_quinn_shawl %}COLOR: Please select{% elsif require_explicit_variant_selection %}COLOR: Please select / SIZE: Please select{% else %}{{ section.settings.default_color | upcase }} — {{ selected_variant.price | money }}{% endif %}
         </div>
 
         <button
@@ -1086,6 +1093,7 @@
     const productHandle = {{ lp_product.handle | json }};
     const templateSuffix = {{ template.suffix | json }};
     const isDaliahAcquisitionHero = section.dataset.daliahComingSoonHero === 'true';
+    const isQuinnShawl = productHandle === 'quinn-shawl' && section.dataset.quinnShawl === 'true';
     const usesApprovedOatSwatch = ['kasya-acquisition-paisley', 'kasya-acquisition-reese'].includes(templateSuffix);
     const colorOptionName = {{ section.settings.color_option_name | json }};
     const sizeOptionName = {{ section.settings.size_option_name | json }};
@@ -1093,7 +1101,9 @@
     const sizeChartTriggerText = {{ section.settings.size_chart_trigger_text | json }};
     const sizeChartHideText = 'Hide size chart';
     const fallbackImage = {% if lp_product.featured_image != blank %}{{ lp_product.featured_image | image_url: width: 1400 | json }}{% else %}null{% endif %};
-    const lpShotOrder = ['front', 'side', 'back', 'sitting', 'detail 1', 'detail 2', 'detail 3', 'fabric close up'];
+    const lpShotOrder = isQuinnShawl
+      ? ['front', 'back', 'wearing 1', 'wearing 2', 'wearing 3', 'wearing 4', 'wearing 5', 'fabric close up', 'detail 1', 'detail 2', 'detail 3']
+      : ['front', 'side', 'back', 'sitting', 'detail 1', 'detail 2', 'detail 3', 'fabric close up'];
 
     const lower = value => String(value || '').trim().toLowerCase();
 
@@ -1252,6 +1262,11 @@
       if (compactShot === 'detail3') return 'detail 3';
       if (compactShot === 'fabriccloseup') return 'fabric close up';
 
+      if (isQuinnShawl) {
+        const wearingMatch = compactShot.match(/^(?:wear|wearing)([1-5])$/);
+        if (wearingMatch) return `wearing ${wearingMatch[1]}`;
+      }
+
       if (showInitialMediaPreview && compactShot.includes('front')) return 'front';
       if (showInitialMediaPreview && compactShot.includes('side')) return 'side';
       if (showInitialMediaPreview && compactShot.includes('back')) return 'back';
@@ -1270,6 +1285,10 @@
       if (compact.includes('detail2')) return 'detail 2';
       if (compact.includes('detail3')) return 'detail 3';
       if (compact.includes('fabriccloseup')) return 'fabric close up';
+      if (isQuinnShawl) {
+        const wearingMatch = compact.match(/(?:wear|wearing)([1-5])/);
+        if (wearingMatch) return `wearing ${wearingMatch[1]}`;
+      }
       if (compact.includes('sitting')) return 'sitting';
       if (compact.includes('front')) return 'front';
       if (compact.includes('side')) return 'side';
@@ -1319,11 +1338,15 @@
           parsed.scope === 'product' ||
           (parsed.scope === 'filename' && !mediaTextMatchesAnyProductColor(item.src))
         );
-        const matchesColor = isProductDetailShot(parsed.shot)
-          ? isSharedProductDetail
-          : parsed.color
+        const matchesColor = isQuinnShawl && isProductDetailShot(parsed.shot)
+          ? parsed.color
             ? uniqueColorNames.includes(lower(parsed.color))
-            : mediaTextMatchesColor(mediaText, colorValue, block);
+            : mediaTextMatchesColor(mediaText, colorValue, block)
+          : isProductDetailShot(parsed.shot)
+            ? isSharedProductDetail
+            : parsed.color
+              ? uniqueColorNames.includes(lower(parsed.color))
+              : mediaTextMatchesColor(mediaText, colorValue, block);
         if (!matchesColor) return;
         if (!allowedShots.has(parsed.shot) || !Number.isFinite(rolePriority)) return;
         if (images[parsed.shot] && priorities[parsed.shot] <= rolePriority) return;
@@ -1401,6 +1424,17 @@
     }
 
     function getFitImageMapForColor(colorValue) {
+      if (isQuinnShawl) {
+        const block = getColorBlock(colorValue);
+        const quinnMedia = getProductMediaShotMapForColor(colorValue, block, ['front', 'back', 'wearing 1']);
+
+        return {
+          front: quinnMedia.front || '',
+          side: quinnMedia.back || '',
+          back: quinnMedia['wearing 1'] || ''
+        };
+      }
+
       const fitShotOrder = ['front', 'side', 'back'];
       const block = getColorBlock(colorValue);
       const defaultBlock = getColorBlock(defaultColor);
@@ -1465,6 +1499,12 @@
 
     function getFabricCloseupForColor(colorValue) {
       const block = getColorBlock(colorValue);
+
+      if (isQuinnShawl) {
+        const quinnFabricImages = getProductMediaImagesForColor(colorValue, block, ['fabric close up', 'detail 1']);
+        return quinnFabricImages[0] || (block ? block.image_5 : '') || '';
+      }
+
       const fabricImages = getProductMediaImagesForColor(colorValue, block, ['fabric close up']);
 
       return fabricImages[0] ||
@@ -1514,13 +1554,15 @@
     }
 
     function findVariant() {
-      if (requireExplicitVariantSelection && (!selectedColor || !selectedSize)) {
+      const missingRequiredSize = !isQuinnShawl && sizeIndex !== -1 && !selectedSize;
+
+      if (requireExplicitVariantSelection && (!selectedColor || missingRequiredSize)) {
         return null;
       }
 
       let match = variants.find(variant => {
         const colorMatches = colorIndex === -1 || lower(variant.options[colorIndex]) === lower(selectedColor);
-        const sizeMatches = sizeIndex === -1 || lower(variant.options[sizeIndex]) === lower(selectedSize);
+        const sizeMatches = sizeIndex === -1 || (isQuinnShawl && !selectedSize) || lower(variant.options[sizeIndex]) === lower(selectedSize);
         return colorMatches && sizeMatches && variant.available;
       });
 
@@ -1528,7 +1570,7 @@
 
       match = variants.find(variant => {
         const colorMatches = colorIndex === -1 || lower(variant.options[colorIndex]) === lower(selectedColor);
-        const sizeMatches = sizeIndex === -1 || lower(variant.options[sizeIndex]) === lower(selectedSize);
+        const sizeMatches = sizeIndex === -1 || (isQuinnShawl && !selectedSize) || lower(variant.options[sizeIndex]) === lower(selectedSize);
         return colorMatches && sizeMatches;
       });
 
@@ -1741,6 +1783,14 @@
     function renderSizes() {
       const sizes = getAvailableSizesForColor(selectedColor);
 
+      if (isQuinnShawl) {
+        const firstAvailableSize = sizes.find(size => isSizeAvailable(size));
+        selectedSize = firstAvailableSize || sizes[0] || '';
+        return;
+      }
+
+      if (!sizeOptionsContainer) return;
+
       if (!sizes.length) {
         sizeOptionsContainer.innerHTML = '';
         return;
@@ -1820,7 +1870,9 @@
         if (stickyAtc && stickyContext) {
           const colorLabel = selectedColor ? String(selectedColor).toUpperCase() : 'Please select';
           const sizeLabel = selectedSize ? String(selectedSize).toUpperCase() : 'Please select';
-          stickyContext.textContent = `COLOR: ${colorLabel} / SIZE: ${sizeLabel}`;
+          stickyContext.textContent = isQuinnShawl
+            ? `COLOR: ${colorLabel}`
+            : `COLOR: ${colorLabel} / SIZE: ${sizeLabel}`;
         }
 
         if (stickySubmitButton && stickySubmitText) {
@@ -1841,7 +1893,9 @@
         const block = getColorBlock(selectedColor);
         const displayColor = String((block && block.display_name) || selectedColor || '').toUpperCase();
         const displaySize = selectedSize ? ` / ${String(selectedSize).toUpperCase()}` : '';
-        stickyContext.textContent = `${displayColor}${displaySize} — ${variant.price}`;
+        stickyContext.textContent = isQuinnShawl
+          ? `COLOR: ${displayColor}`
+          : `${displayColor}${displaySize} — ${variant.price}`;
       }
 
       if (variant.available) {
@@ -1875,7 +1929,13 @@
         displayColor,
         images: getFitImageMapForColor(selectedColor),
         fabricCloseup: getFabricCloseupForColor(selectedColor),
-        featuredImage: fallbackImage
+        featuredImage: fallbackImage,
+        strictColorMedia: isQuinnShawl,
+        imageLabels: isQuinnShawl ? {
+          front: 'front view',
+          side: 'back view',
+          back: 'how it wears'
+        } : null
       };
 
       window.KasyaLPSelectedColor = colorState;
@@ -1898,7 +1958,13 @@
         displayColor,
         images: getFitImageMapForColor(previewColor),
         fabricCloseup: getFabricCloseupForColor(previewColor),
-        featuredImage: fallbackImage
+        featuredImage: fallbackImage,
+        strictColorMedia: isQuinnShawl,
+        imageLabels: isQuinnShawl ? {
+          front: 'front view',
+          side: 'back view',
+          back: 'how it wears'
+        } : null
       };
 
       window.KasyaLPSelectedColor = colorState;
@@ -2000,12 +2066,14 @@
       selectColor(button.dataset.colorValue);
     });
 
-    sizeOptionsContainer.addEventListener('click', event => {
-      const button = event.target.closest('[data-size-value]');
-      if (!button || button.classList.contains('is-disabled')) return;
+    if (sizeOptionsContainer) {
+      sizeOptionsContainer.addEventListener('click', event => {
+        const button = event.target.closest('[data-size-value]');
+        if (!button || button.classList.contains('is-disabled')) return;
 
-      selectSize(button.dataset.sizeValue);
-    });
+        selectSize(button.dataset.sizeValue);
+      });
+    }
 
     slider.addEventListener('scroll', () => {
       window.requestAnimationFrame(updateDots);

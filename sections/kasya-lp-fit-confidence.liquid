@@ -321,7 +321,7 @@
     const colorName = section.querySelector('[data-fit-color-name]');
     const shots = ['front', 'side', 'back'];
 
-    function updateShot(shot, src, displayColor, strictColorMedia) {
+    function updateShot(shot, src, displayColor, strictColorMedia, imageLabel) {
       const image = section.querySelector(`[data-fit-image="${shot}"]`);
       const placeholder = section.querySelector(`[data-fit-placeholder="${shot}"]`);
       if (!image) return;
@@ -333,7 +333,7 @@
           image.setAttribute('src', nextSrc);
         }
 
-        image.alt = `${displayColor} ${shot} view`.trim();
+        image.alt = `${displayColor} ${imageLabel || `${shot} view`}`.trim();
         image.hidden = false;
 
         if (placeholder) {
@@ -356,6 +356,7 @@
 
       const displayColor = String(state.displayColor || state.color || state.previewColor || '').trim();
       const images = state.images || {};
+      const imageLabels = state.imageLabels || {};
 
       if (colorLabel && colorName && displayColor) {
         colorName.textContent = displayColor.toUpperCase();
@@ -363,7 +364,7 @@
       }
 
       shots.forEach(shot => {
-        updateShot(shot, images[shot], displayColor, state.strictColorMedia);
+        updateShot(shot, images[shot], displayColor, state.strictColorMedia, imageLabels[shot]);
       });
     }
 
