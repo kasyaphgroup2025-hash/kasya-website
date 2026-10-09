@@ -154,6 +154,7 @@
         "lifestyle_1": {
           "type": "lifestyle_card",
           "settings": {
+            "image": "shopify://shop_images/LOOK_1_b186f981-b268-4ab0-a214-f43fe6afbf07.jpg",
             "title": "Office Day",
             "description": "A polished one-piece outfit that keeps morning decisions simple."
           }
