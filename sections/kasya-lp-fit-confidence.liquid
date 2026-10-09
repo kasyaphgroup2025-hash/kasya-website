@@ -5,8 +5,8 @@
 
 {% liquid
   assign uses_unfold_image_logic = false
-  assign unfold_d2_image = blank
-  assign unfold_d3_image = blank
+  assign unfold_lp01_image = blank
+  assign unfold_lp02_image = blank
 
   case product.handle
     when 'quinn-shawl', 'reese-polo', 'olivia-skirt', 'paisley-pants', 'sofia-dress'
@@ -21,25 +21,22 @@
   assign third_fit_description = section.settings.back_description
 
   if uses_unfold_image_logic
-    assign second_fit_key = 'wearing'
-    assign second_fit_label = 'HOW IT WEARS'
-    assign second_fit_description = 'See how the piece falls and moves when worn.'
     assign third_fit_key = 'fabric'
     assign third_fit_label = 'FABRIC CLOSEUP'
     assign third_fit_description = 'A closer look at the fabric, texture, and finish.'
 
     for media in product.media
       if media.media_type == 'image' and media.preview_image != blank
-        assign media_alt_role = media.alt | split: '|' | last | strip | downcase
+        assign media_alt_normalized = media.alt | strip | downcase | replace: '|', '' | replace: ' ', ''
 
-        case media_alt_role
-          when 'd2'
-            if unfold_d2_image == blank
-              assign unfold_d2_image = media.preview_image
+        case media_alt_normalized
+          when 'lp01'
+            if unfold_lp01_image == blank
+              assign unfold_lp01_image = media.preview_image
             endif
-          when 'd3'
-            if unfold_d3_image == blank
-              assign unfold_d3_image = media.preview_image
+          when 'lp02'
+            if unfold_lp02_image == blank
+              assign unfold_lp02_image = media.preview_image
             endif
         endcase
       endif
@@ -109,92 +106,100 @@
         </div>
       </article>
 
-      {% if unfold_d2_image != blank %}
+      {% if unfold_lp01_image != blank %}
         <article class="kasya-fit-confidence__card">
           <div class="kasya-fit-confidence__media">
             <img
-              src="{{ unfold_d2_image | image_url: width: 900 }}"
-              data-fit-image="additional-view-d2"
-              data-default-src="{{ unfold_d2_image | image_url: width: 900 }}"
+              src="{{ unfold_lp01_image | image_url: width: 900 }}"
+              data-fit-image="additional-view-lp01"
+              data-default-src="{{ unfold_lp01_image | image_url: width: 900 }}"
               alt="MORE VIEW"
               width="900"
               height="1200"
               loading="lazy"
             >
-            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="additional-view-d2" hidden>
+            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="additional-view-lp01" hidden>
               MORE VIEW
             </div>
           </div>
 
           <div class="kasya-fit-confidence__card-copy">
             <h3 class="kasya-fit-confidence__card-label">MORE VIEW</h3>
+            <p class="kasya-fit-confidence__card-description">
+              Another look at the piece to show its shape, drape, and details.
+            </p>
           </div>
         </article>
       {% endif %}
 
-      {% if unfold_d3_image != blank %}
+      {% if unfold_lp02_image != blank %}
         <article class="kasya-fit-confidence__card">
           <div class="kasya-fit-confidence__media">
             <img
-              src="{{ unfold_d3_image | image_url: width: 900 }}"
-              data-fit-image="additional-view-d3"
-              data-default-src="{{ unfold_d3_image | image_url: width: 900 }}"
+              src="{{ unfold_lp02_image | image_url: width: 900 }}"
+              data-fit-image="additional-view-lp02"
+              data-default-src="{{ unfold_lp02_image | image_url: width: 900 }}"
               alt="MORE VIEW"
               width="900"
               height="1200"
               loading="lazy"
             >
-            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="additional-view-d3" hidden>
+            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="additional-view-lp02" hidden>
               MORE VIEW
             </div>
           </div>
 
           <div class="kasya-fit-confidence__card-copy">
             <h3 class="kasya-fit-confidence__card-label">MORE VIEW</h3>
+            <p class="kasya-fit-confidence__card-description">
+              An additional view to see more of the overall fit and finish.
+            </p>
           </div>
         </article>
       {% endif %}
 
-      <article class="kasya-fit-confidence__card">
-        <div class="kasya-fit-confidence__media">
-          {% if section.settings.side_image != blank %}
-            <img
-              src="{{ section.settings.side_image | image_url: width: 900 }}"
-              data-fit-image="{{ second_fit_key }}"
-              data-default-src="{{ section.settings.side_image | image_url: width: 900 }}"
-              alt="{{ second_fit_label | escape }}"
-              width="900"
-              height="1200"
-              loading="lazy"
-            >
-            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="{{ second_fit_key }}" hidden>
-              {{ second_fit_label }}
-            </div>
-          {% else %}
-            <img
-              data-fit-image="{{ second_fit_key }}"
-              data-default-src=""
-              alt="{{ second_fit_label | escape }}"
-              width="900"
-              height="1200"
-              loading="lazy"
-              hidden
-            >
-            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="{{ second_fit_key }}">
-              {{ second_fit_label }}
-            </div>
-          {% endif %}
-        </div>
+      {% unless uses_unfold_image_logic %}
+        <article class="kasya-fit-confidence__card">
+          <div class="kasya-fit-confidence__media">
+            {% if section.settings.side_image != blank %}
+              <img
+                src="{{ section.settings.side_image | image_url: width: 900 }}"
+                data-fit-image="{{ second_fit_key }}"
+                data-default-src="{{ section.settings.side_image | image_url: width: 900 }}"
+                alt="{{ second_fit_label | escape }}"
+                width="900"
+                height="1200"
+                loading="lazy"
+              >
+              <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="{{ second_fit_key }}" hidden>
+                {{ second_fit_label }}
+              </div>
+            {% else %}
+              <img
+                data-fit-image="{{ second_fit_key }}"
+                data-default-src=""
+                alt="{{ second_fit_label | escape }}"
+                width="900"
+                height="1200"
+                loading="lazy"
+                hidden
+              >
+              <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="{{ second_fit_key }}">
+                {{ second_fit_label }}
+              </div>
+            {% endif %}
+          </div>
 
-        <div class="kasya-fit-confidence__card-copy">
-          <h3 class="kasya-fit-confidence__card-label">
-            {{ second_fit_label }}
-          </h3>
-          <p class="kasya-fit-confidence__card-description">
-            {{ second_fit_description }}
-          </p>
-        </div>
-      </article>
+          <div class="kasya-fit-confidence__card-copy">
+            <h3 class="kasya-fit-confidence__card-label">
+              {{ second_fit_label }}
+            </h3>
+            <p class="kasya-fit-confidence__card-description">
+              {{ second_fit_description }}
+            </p>
+          </div>
+        </article>
+      {% endunless %}
 
       <article class="kasya-fit-confidence__card">
         <div class="kasya-fit-confidence__media">
@@ -411,7 +416,7 @@
     const colorName = section.querySelector('[data-fit-color-name]');
     const usesUnfoldImageLogic = section.dataset.unfoldImageLogic === 'true';
     const shots = usesUnfoldImageLogic
-      ? ['front', 'wearing', 'additional-view-d2', 'additional-view-d3', 'fabric']
+      ? ['front', 'additional-view-lp01', 'additional-view-lp02', 'fabric']
       : ['front', 'side', 'back'];
 
     function updateShot(shot, src, displayColor, strictColorMedia, imageLabel) {

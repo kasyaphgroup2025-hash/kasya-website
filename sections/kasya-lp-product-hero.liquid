@@ -1109,9 +1109,9 @@
     const sizeChartTriggerText = {{ section.settings.size_chart_trigger_text | json }};
     const sizeChartHideText = 'Hide size chart';
     const fallbackImage = {% if lp_product.featured_image != blank %}{{ lp_product.featured_image | image_url: width: 1400 | json }}{% else %}null{% endif %};
-    const unfoldLookShotOrder = Array.from({ length: 250 }, (_, index) => `look ${index + 1}`);
+    const unfoldLookShotOrder = Array.from({ length: 248 }, (_, index) => `look ${index + 3}`);
     const lpShotOrder = usesUnfoldImageLogic
-      ? ['front', ...unfoldLookShotOrder, 'wearing 1', 'wearing 2', 'wearing 3', 'wearing 4', 'wearing 5', 'additional view d2', 'additional view d3', 'fabric close up', 'detail 1', 'detail 2', 'detail 3']
+      ? ['front', 'additional view lp01', 'additional view lp02', ...unfoldLookShotOrder, 'fabric close up', 'detail 1', 'detail 2', 'detail 3']
       : ['front', 'side', 'back', 'sitting', 'detail 1', 'detail 2', 'detail 3', 'fabric close up'];
 
     const lower = value => String(value || '').trim().toLowerCase();
@@ -1228,12 +1228,13 @@
 
     function parseProductMediaAlt(altText) {
       const normalizedAlt = String(altText || '').trim();
+      const unfoldNumberedShot = getUnfoldNumberedAltShot(normalizedAlt);
 
-      if (usesUnfoldImageLogic && /^d[23]$/i.test(normalizedAlt)) {
+      if (unfoldNumberedShot) {
         return {
           role: '',
           color: '',
-          shot: normalizeMediaShotName(normalizedAlt),
+          shot: unfoldNumberedShot,
           scope: 'product'
         };
       }
@@ -1256,6 +1257,21 @@
         shot: normalizeMediaShotName(parts.length === 4 ? parts[3] : parts[2]),
         scope: 'color'
       };
+    }
+
+    function getUnfoldNumberedAltShot(altText) {
+      if (!usesUnfoldImageLogic) return '';
+
+      const normalizedAlt = lower(altText).replace(/\s+/g, ' ');
+      const compactAlt = normalizedAlt.replace(/\s*\|\s*/g, '').replace(/\s+/g, '');
+      const numberedMatch = compactAlt.match(/^lp0*([1-9]\d*)$/);
+      if (!numberedMatch) return '';
+
+      const imageNumber = Number(numberedMatch[1]);
+      if (imageNumber === 1) return 'additional view lp01';
+      if (imageNumber === 2) return 'additional view lp02';
+
+      return `look ${imageNumber}`;
     }
 
     function getMediaRolePriority(role, shot) {
@@ -1282,17 +1298,6 @@
       if (compactShot === 'detail3') return 'detail 3';
       if (compactShot === 'fabriccloseup') return 'fabric close up';
 
-      if (usesUnfoldImageLogic) {
-        if (compactShot === 'd2') return 'additional view d2';
-        if (compactShot === 'd3') return 'additional view d3';
-
-        const numberedLookMatch = compactShot.match(/^0*([1-9]\d*)$/);
-        if (numberedLookMatch) return `look ${numberedLookMatch[1]}`;
-
-        const wearingMatch = compactShot.match(/^(?:wear|wearing)([1-5])$/);
-        if (wearingMatch) return `wearing ${wearingMatch[1]}`;
-      }
-
       if (showInitialMediaPreview && compactShot.includes('front')) return 'front';
       if (showInitialMediaPreview && compactShot.includes('side')) return 'side';
       if (showInitialMediaPreview && compactShot.includes('back')) return 'back';
@@ -1311,10 +1316,6 @@
       if (compact.includes('detail2')) return 'detail 2';
       if (compact.includes('detail3')) return 'detail 3';
       if (compact.includes('fabriccloseup')) return 'fabric close up';
-      if (usesUnfoldImageLogic) {
-        const wearingMatch = compact.match(/(?:wear|wearing)([1-5])/);
-        if (wearingMatch) return `wearing ${wearingMatch[1]}`;
-      }
       if (compact.includes('sitting')) return 'sitting';
       if (compact.includes('front')) return 'front';
       if (compact.includes('side')) return 'side';
@@ -1329,9 +1330,9 @@
 
     function isUnfoldLookShot(shot) {
       return usesUnfoldImageLogic && (
-        /^look [1-9]\d*$/.test(shot) ||
-        /^wearing [1-5]$/.test(shot) ||
-        /^additional view d[23]$/.test(shot)
+        /^look (?:[3-9]|[1-9]\d+)$/.test(shot) ||
+        shot === 'additional view lp01' ||
+        shot === 'additional view lp02'
       );
     }
 
@@ -1464,22 +1465,18 @@
         const block = getColorBlock(colorValue);
         const unfoldMedia = getProductMediaShotMapForColor(colorValue, block, [
           'front',
-          'look 1',
-          'wearing 1',
-          'additional view d2',
-          'additional view d3'
+          'additional view lp01',
+          'additional view lp02'
         ]);
         const manualImages = getManualFitImageMapForBlock(block);
         const colorVariant = variants.find(variant => {
           return colorIndex !== -1 && lower(variant.options[colorIndex]) === lower(colorValue);
         });
-        const unclassifiedLook = productMedia.find(item => item.src && !String(item.alt || '').trim());
 
         return {
           front: unfoldMedia.front || manualImages.front || colorVariant?.featured_image || '',
-          wearing: unfoldMedia['look 1'] || unfoldMedia['wearing 1'] || unclassifiedLook?.src || '',
-          'additional-view-d2': unfoldMedia['additional view d2'] || '',
-          'additional-view-d3': unfoldMedia['additional view d3'] || '',
+          'additional-view-lp01': unfoldMedia['additional view lp01'] || '',
+          'additional-view-lp02': unfoldMedia['additional view lp02'] || '',
           fabric: getFabricCloseupForColor(colorValue)
         };
       }
@@ -1983,9 +1980,8 @@
         usesUnfoldImageLogic,
         imageLabels: usesUnfoldImageLogic ? {
           front: 'front view',
-          wearing: 'how it wears',
-          'additional-view-d2': 'more view',
-          'additional-view-d3': 'more view',
+          'additional-view-lp01': 'more view',
+          'additional-view-lp02': 'more view',
           fabric: 'fabric closeup'
         } : null
       };
@@ -2015,9 +2011,8 @@
         usesUnfoldImageLogic,
         imageLabels: usesUnfoldImageLogic ? {
           front: 'front view',
-          wearing: 'how it wears',
-          'additional-view-d2': 'more view',
-          'additional-view-d3': 'more view',
+          'additional-view-lp01': 'more view',
+          'additional-view-lp02': 'more view',
           fabric: 'fabric closeup'
         } : null
       };
