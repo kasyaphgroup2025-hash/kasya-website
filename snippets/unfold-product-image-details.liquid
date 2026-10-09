@@ -1,0 +1,274 @@
+{% comment %}
+  UNFOLD image details for the five campaign products on the shared PDP path.
+  The handle guard keeps every other product on the existing main-product output.
+{% endcomment %}
+
+{%- liquid
+  assign is_unfold_product = false
+
+  case product.handle
+    when 'quinn-shawl', 'reese-polo', 'olivia-skirt', 'paisley-pants', 'sofia-dress'
+      assign is_unfold_product = true
+  endcase
+-%}
+
+{%- if is_unfold_product -%}
+  {%- liquid
+    assign selected_variant = product.selected_or_first_available_variant
+    assign selected_color = blank
+
+    for option in product.options_with_values
+      assign option_name = option.name | strip | downcase
+      if option_name contains 'color' or option_name contains 'colour'
+        assign color_option_index = forloop.index0
+        assign selected_color = selected_variant.options[color_option_index]
+        break
+      endif
+    endfor
+
+    assign selected_color_compact = selected_color | strip | downcase | replace: ' ', '' | replace: '-', '' | replace: '_', ''
+    assign front_image = blank
+    assign lp01_image = blank
+    assign lp02_image = blank
+    assign fabric_image = blank
+    assign fallback_fabric_image = blank
+
+    for media in product.media
+      if media.media_type == 'image' and media.preview_image != blank
+        assign media_alt = media.alt | default: '' | strip | downcase
+        assign media_alt_lp = media_alt | replace: '|', '' | replace: ' ', ''
+        assign media_alt_compact = media_alt | replace: '|', '' | replace: ' ', '' | replace: '-', '' | replace: '_', ''
+
+        if front_image == blank and selected_color_compact != blank and media_alt_compact contains selected_color_compact and media_alt_compact contains 'front'
+          assign front_image = media.preview_image
+        endif
+
+        case media_alt_lp
+          when 'lp01'
+            if lp01_image == blank
+              assign lp01_image = media.preview_image
+            endif
+          when 'lp02'
+            if lp02_image == blank
+              assign lp02_image = media.preview_image
+            endif
+        endcase
+
+        if media_alt_compact contains 'fabriccloseup'
+          if fallback_fabric_image == blank
+            assign fallback_fabric_image = media.preview_image
+          endif
+
+          if fabric_image == blank and selected_color_compact != blank and media_alt_compact contains selected_color_compact
+            assign fabric_image = media.preview_image
+          endif
+        endif
+      endif
+    endfor
+
+    if front_image == blank and featured_media.preview_image != blank
+      assign front_image = featured_media.preview_image
+    endif
+    if front_image == blank and product.featured_media.preview_image != blank
+      assign front_image = product.featured_media.preview_image
+    endif
+    if fabric_image == blank
+      assign fabric_image = fallback_fabric_image
+    endif
+  -%}
+
+  {%- if front_image != blank or lp01_image != blank or lp02_image != blank or fabric_image != blank -%}
+    <section
+      id="UnfoldProductDetails-{{ section_id }}"
+      class="unfold-product-details"
+      data-unfold-product-details
+      data-section-id="{{ section_id }}"
+    >
+      <div class="unfold-product-details__inner">
+        <h2 class="unfold-product-details__heading">HOW IT FITS</h2>
+
+        <div class="unfold-product-details__cards">
+          {%- if front_image != blank -%}
+            <article class="unfold-product-details__card" data-unfold-detail-card="front">
+              <div class="unfold-product-details__media">
+                <img
+                  src="{{ front_image | image_url: width: 900 }}"
+                  srcset="{{ front_image | image_url: width: 450 }} 450w, {{ front_image | image_url: width: 700 }} 700w, {{ front_image | image_url: width: 900 }} 900w"
+                  sizes="(min-width: 990px) 25vw, (min-width: 680px) 50vw, 100vw"
+                  alt="FRONT VIEW"
+                  width="{{ front_image.width }}"
+                  height="{{ front_image.height }}"
+                  loading="lazy"
+                  data-unfold-detail-image="front"
+                >
+              </div>
+              <h3 class="unfold-product-details__label">FRONT VIEW</h3>
+            </article>
+          {%- endif -%}
+
+          {%- if lp01_image != blank -%}
+            <article class="unfold-product-details__card" data-unfold-detail-card="lp01">
+              <div class="unfold-product-details__media">
+                <img
+                  src="{{ lp01_image | image_url: width: 900 }}"
+                  srcset="{{ lp01_image | image_url: width: 450 }} 450w, {{ lp01_image | image_url: width: 700 }} 700w, {{ lp01_image | image_url: width: 900 }} 900w"
+                  sizes="(min-width: 990px) 25vw, (min-width: 680px) 50vw, 100vw"
+                  alt="MORE VIEW"
+                  width="{{ lp01_image.width }}"
+                  height="{{ lp01_image.height }}"
+                  loading="lazy"
+                  data-unfold-detail-image="lp01"
+                >
+              </div>
+              <h3 class="unfold-product-details__label">MORE VIEW</h3>
+            </article>
+          {%- endif -%}
+
+          {%- if lp02_image != blank -%}
+            <article class="unfold-product-details__card" data-unfold-detail-card="lp02">
+              <div class="unfold-product-details__media">
+                <img
+                  src="{{ lp02_image | image_url: width: 900 }}"
+                  srcset="{{ lp02_image | image_url: width: 450 }} 450w, {{ lp02_image | image_url: width: 700 }} 700w, {{ lp02_image | image_url: width: 900 }} 900w"
+                  sizes="(min-width: 990px) 25vw, (min-width: 680px) 50vw, 100vw"
+                  alt="MORE VIEW"
+                  width="{{ lp02_image.width }}"
+                  height="{{ lp02_image.height }}"
+                  loading="lazy"
+                  data-unfold-detail-image="lp02"
+                >
+              </div>
+              <h3 class="unfold-product-details__label">MORE VIEW</h3>
+            </article>
+          {%- endif -%}
+
+          {%- if fabric_image != blank -%}
+            <article class="unfold-product-details__card" data-unfold-detail-card="fabric">
+              <div class="unfold-product-details__media">
+                <img
+                  src="{{ fabric_image | image_url: width: 900 }}"
+                  srcset="{{ fabric_image | image_url: width: 450 }} 450w, {{ fabric_image | image_url: width: 700 }} 700w, {{ fabric_image | image_url: width: 900 }} 900w"
+                  sizes="(min-width: 990px) 25vw, (min-width: 680px) 50vw, 100vw"
+                  alt="FABRIC CLOSEUP"
+                  width="{{ fabric_image.width }}"
+                  height="{{ fabric_image.height }}"
+                  loading="lazy"
+                  data-unfold-detail-image="fabric"
+                >
+              </div>
+              <h3 class="unfold-product-details__label">FABRIC CLOSEUP</h3>
+            </article>
+          {%- endif -%}
+        </div>
+      </div>
+    </section>
+
+    <style>
+      #UnfoldProductDetails-{{ section_id }} {
+        background: #ffffff;
+        color: #111111;
+      }
+
+      #UnfoldProductDetails-{{ section_id }} * {
+        box-sizing: border-box;
+      }
+
+      #UnfoldProductDetails-{{ section_id }} .unfold-product-details__inner {
+        width: min(100%, var(--page-width));
+        margin: 0 auto;
+        padding: 30px 18px 40px;
+      }
+
+      #UnfoldProductDetails-{{ section_id }} .unfold-product-details__heading {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+        line-height: 1.05;
+        text-transform: uppercase;
+      }
+
+      #UnfoldProductDetails-{{ section_id }} .unfold-product-details__cards {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 18px;
+        margin-top: 22px;
+      }
+
+      #UnfoldProductDetails-{{ section_id }} .unfold-product-details__media {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        background: #f7f4ef;
+        aspect-ratio: 3 / 4;
+      }
+
+      #UnfoldProductDetails-{{ section_id }} .unfold-product-details__media img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      #UnfoldProductDetails-{{ section_id }} .unfold-product-details__label {
+        margin: 12px 0 0;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        line-height: 1.3;
+        text-transform: uppercase;
+      }
+
+      @media screen and (min-width: 680px) {
+        #UnfoldProductDetails-{{ section_id }} .unfold-product-details__inner {
+          padding: 42px 26px 46px;
+        }
+
+        #UnfoldProductDetails-{{ section_id }} .unfold-product-details__heading {
+          font-size: 34px;
+        }
+
+        #UnfoldProductDetails-{{ section_id }} .unfold-product-details__cards {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media screen and (min-width: 990px) {
+        #UnfoldProductDetails-{{ section_id }} .unfold-product-details__cards {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+      }
+    </style>
+
+    <script>
+      (() => {
+        const root = document.querySelector(
+          '[data-unfold-product-details][data-section-id="{{ section_id }}"]'
+        );
+        if (!root || root.dataset.variantSyncBound === 'true') return;
+
+        root.dataset.variantSyncBound = 'true';
+
+        document.addEventListener('afterVariantChanged', event => {
+          if (event.detail?.sectionId !== '{{ section_id }}' || !event.detail.html) return;
+
+          const nextRoot = event.detail.html.querySelector(
+            '[data-unfold-product-details][data-section-id="{{ section_id }}"]'
+          );
+          if (!nextRoot) return;
+
+          ['front', 'fabric'].forEach(key => {
+            const currentImage = root.querySelector(`[data-unfold-detail-image="${key}"]`);
+            const nextImage = nextRoot.querySelector(`[data-unfold-detail-image="${key}"]`);
+            if (!currentImage || !nextImage || !nextImage.getAttribute('src')) return;
+
+            ['src', 'srcset', 'sizes', 'alt', 'width', 'height'].forEach(attribute => {
+              const value = nextImage.getAttribute(attribute);
+              if (value) currentImage.setAttribute(attribute, value);
+            });
+          });
+        });
+      })();
+    </script>
+  {%- endif -%}
+{%- endif -%}

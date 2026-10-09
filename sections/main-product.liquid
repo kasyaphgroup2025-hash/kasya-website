@@ -761,6 +761,11 @@
     </script>
   {%- endif -%}
 </product-info>
+{%- render 'unfold-product-image-details',
+  product: product,
+  section_id: section.id,
+  featured_media: featured_media
+-%}
 {%- unless is_jane_set_direct_product -%}
   {%- render 'main-product-sticky-cart', section: section, product: product, product_form_id: product_form_id, featured_media: featured_media, cart_qty: cart_qty -%}
 {%- endunless -%}
