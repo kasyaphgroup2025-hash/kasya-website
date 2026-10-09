@@ -49,6 +49,30 @@
         "text_outside_image_LUVtyT": {
           "type": "text-outside-image",
           "settings": {
+            "image": "shopify://shop_images/40_53a6b3f0-1d90-40c7-944e-9ee0f37cafcb.jpg",
+            "link": "shopify://products/sofia-dress",
+            "text": "Sofia Dress",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        },
+        "text_outside_image_LKJc4P": {
+          "type": "text-outside-image",
+          "settings": {
             "image": "shopify://shop_images/FRONT_3.png",
             "link": "shopify://products/black-claire-soft-linen-dress",
             "text": "Claire Maxi Dress – Soft Linen",
@@ -193,6 +217,7 @@
       },
       "block_order": [
         "text_outside_image_LUVtyT",
+        "text_outside_image_LKJc4P",
         "text_outside_image_nDHPzF",
         "text_outside_image_fjq7Ez",
         "text_outside_image_PzYyGN",
