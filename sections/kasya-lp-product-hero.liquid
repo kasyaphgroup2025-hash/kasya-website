@@ -1463,11 +1463,7 @@
     function getFitImageMapForColor(colorValue) {
       if (usesUnfoldImageLogic) {
         const block = getColorBlock(colorValue);
-        const unfoldMedia = getProductMediaShotMapForColor(colorValue, block, [
-          'front',
-          'additional view lp01',
-          'additional view lp02'
-        ]);
+        const unfoldMedia = getProductMediaShotMapForColor(colorValue, block, ['front']);
         const manualImages = getManualFitImageMapForBlock(block);
         const colorVariant = variants.find(variant => {
           return colorIndex !== -1 && lower(variant.options[colorIndex]) === lower(colorValue);
@@ -1475,8 +1471,6 @@
 
         return {
           front: unfoldMedia.front || manualImages.front || colorVariant?.featured_image || '',
-          'additional-view-lp01': unfoldMedia['additional view lp01'] || '',
-          'additional-view-lp02': unfoldMedia['additional view lp02'] || '',
           fabric: getFabricCloseupForColor(colorValue)
         };
       }
@@ -1980,8 +1974,6 @@
         usesUnfoldImageLogic,
         imageLabels: usesUnfoldImageLogic ? {
           front: 'front view',
-          'additional-view-lp01': 'more view',
-          'additional-view-lp02': 'more view',
           fabric: 'fabric closeup'
         } : null
       };
@@ -2011,8 +2003,6 @@
         usesUnfoldImageLogic,
         imageLabels: usesUnfoldImageLogic ? {
           front: 'front view',
-          'additional-view-lp01': 'more view',
-          'additional-view-lp02': 'more view',
           fabric: 'fabric closeup'
         } : null
       };

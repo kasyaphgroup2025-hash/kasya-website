@@ -28,8 +28,8 @@
 
     assign selected_color_compact = selected_color | strip | downcase | replace: ' ', '' | replace: '-', '' | replace: '_', ''
     assign front_image = blank
-    assign lp01_image = blank
-    assign lp02_image = blank
+    assign lp01_media = blank
+    assign lp02_media = blank
     assign fabric_image = blank
     assign fallback_fabric_image = blank
 
@@ -45,12 +45,12 @@
 
         case media_alt_lp
           when 'lp01'
-            if lp01_image == blank
-              assign lp01_image = media.preview_image
+            if lp01_media == blank
+              assign lp01_media = media
             endif
           when 'lp02'
-            if lp02_image == blank
-              assign lp02_image = media.preview_image
+            if lp02_media == blank
+              assign lp02_media = media
             endif
         endcase
 
@@ -75,6 +75,9 @@
     if fabric_image == blank
       assign fabric_image = fallback_fabric_image
     endif
+
+    assign lp01_image = lp01_media.preview_image
+    assign lp02_image = lp02_media.preview_image
   -%}
 
   {%- if front_image != blank or lp01_image != blank or lp02_image != blank or fabric_image != blank -%}
@@ -118,9 +121,13 @@
                   height="{{ lp01_image.height }}"
                   loading="lazy"
                   data-unfold-detail-image="lp01"
+                  data-product-media-id="{{ lp01_media.id }}"
                 >
               </div>
               <h3 class="unfold-product-details__label">MORE VIEW</h3>
+              <p class="unfold-product-details__description">
+                Another look at the piece to show its shape, drape, and details.
+              </p>
             </article>
           {%- endif -%}
 
@@ -136,9 +143,13 @@
                   height="{{ lp02_image.height }}"
                   loading="lazy"
                   data-unfold-detail-image="lp02"
+                  data-product-media-id="{{ lp02_media.id }}"
                 >
               </div>
               <h3 class="unfold-product-details__label">MORE VIEW</h3>
+              <p class="unfold-product-details__description">
+                An additional view to see more of the overall fit and finish.
+              </p>
             </article>
           {%- endif -%}
 
@@ -217,6 +228,13 @@
         letter-spacing: 0.08em;
         line-height: 1.3;
         text-transform: uppercase;
+      }
+
+      #UnfoldProductDetails-{{ section_id }} .unfold-product-details__description {
+        margin: 6px 0 0;
+        color: #5d5d5d;
+        font-size: 14px;
+        line-height: 1.45;
       }
 
       @media screen and (min-width: 680px) {

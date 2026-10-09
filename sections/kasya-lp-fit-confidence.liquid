@@ -5,8 +5,8 @@
 
 {% liquid
   assign uses_unfold_image_logic = false
-  assign unfold_lp01_image = blank
-  assign unfold_lp02_image = blank
+  assign unfold_lp01_media = blank
+  assign unfold_lp02_media = blank
 
   case product.handle
     when 'quinn-shawl', 'reese-polo', 'olivia-skirt', 'paisley-pants', 'sofia-dress'
@@ -31,12 +31,12 @@
 
         case media_alt_normalized
           when 'lp01'
-            if unfold_lp01_image == blank
-              assign unfold_lp01_image = media.preview_image
+            if unfold_lp01_media == blank
+              assign unfold_lp01_media = media
             endif
           when 'lp02'
-            if unfold_lp02_image == blank
-              assign unfold_lp02_image = media.preview_image
+            if unfold_lp02_media == blank
+              assign unfold_lp02_media = media
             endif
         endcase
       endif
@@ -106,13 +106,14 @@
         </div>
       </article>
 
-      {% if unfold_lp01_image != blank %}
+      {% if unfold_lp01_media != blank and unfold_lp01_media.preview_image != blank %}
         <article class="kasya-fit-confidence__card">
           <div class="kasya-fit-confidence__media">
             <img
-              src="{{ unfold_lp01_image | image_url: width: 900 }}"
+              src="{{ unfold_lp01_media.preview_image | image_url: width: 900 }}"
               data-fit-image="additional-view-lp01"
-              data-default-src="{{ unfold_lp01_image | image_url: width: 900 }}"
+              data-default-src="{{ unfold_lp01_media.preview_image | image_url: width: 900 }}"
+              data-product-media-id="{{ unfold_lp01_media.id }}"
               alt="MORE VIEW"
               width="900"
               height="1200"
@@ -132,13 +133,14 @@
         </article>
       {% endif %}
 
-      {% if unfold_lp02_image != blank %}
+      {% if unfold_lp02_media != blank and unfold_lp02_media.preview_image != blank %}
         <article class="kasya-fit-confidence__card">
           <div class="kasya-fit-confidence__media">
             <img
-              src="{{ unfold_lp02_image | image_url: width: 900 }}"
+              src="{{ unfold_lp02_media.preview_image | image_url: width: 900 }}"
               data-fit-image="additional-view-lp02"
-              data-default-src="{{ unfold_lp02_image | image_url: width: 900 }}"
+              data-default-src="{{ unfold_lp02_media.preview_image | image_url: width: 900 }}"
+              data-product-media-id="{{ unfold_lp02_media.id }}"
               alt="MORE VIEW"
               width="900"
               height="1200"
@@ -415,8 +417,10 @@
     const colorLabel = section.querySelector('[data-fit-color-shown]');
     const colorName = section.querySelector('[data-fit-color-name]');
     const usesUnfoldImageLogic = section.dataset.unfoldImageLogic === 'true';
+    // LP01 and LP02 are product-level media found from the complete product.media
+    // collection. They must remain independent of color-change state.
     const shots = usesUnfoldImageLogic
-      ? ['front', 'additional-view-lp01', 'additional-view-lp02', 'fabric']
+      ? ['front', 'fabric']
       : ['front', 'side', 'back'];
 
     function updateShot(shot, src, displayColor, strictColorMedia, imageLabel) {
