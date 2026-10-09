@@ -151,13 +151,6 @@
     "kasya_lp_lifestyle": {
       "type": "kasya-lp-lifestyle",
       "blocks": {
-        "lifestyle_1": {
-          "type": "lifestyle_card",
-          "settings": {
-            "title": "Office Day",
-            "description": "A clean A-line shape that feels comfortable through long workdays."
-          }
-        },
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
@@ -176,7 +169,6 @@
         }
       },
       "block_order": [
-        "lifestyle_1",
         "lifestyle_2",
         "lifestyle_4"
       ],
