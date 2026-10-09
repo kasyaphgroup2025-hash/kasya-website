@@ -3,15 +3,7 @@
   Where-to-wear-it section for real-life use cases.
 {% endcomment %}
 
-{% liquid
-  assign jane_lifestyle_templates = 'kasya-acquisition-janeset,kasya-jane_blouse,kasya-jane_pants' | split: ','
-  assign show_full_outfit = false
-  if jane_lifestyle_templates contains template.suffix
-    assign show_full_outfit = true
-  endif
-%}
-
-<section class="kasya-lp-lifestyle{% if show_full_outfit %} kasya-lp-lifestyle--full-outfit{% endif %}">
+<section class="kasya-lp-lifestyle">
   <div class="kasya-lp-lifestyle__inner">
     <div class="kasya-lp-lifestyle__header">
       {% if section.settings.heading != blank %}
@@ -134,7 +126,7 @@
 
   .kasya-lp-lifestyle__image-wrap {
     width: 100%;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 4 / 5;
     overflow: hidden;
     background: #f3f3f3;
   }
@@ -143,14 +135,6 @@
     display: block;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-  }
-
-  .kasya-lp-lifestyle--full-outfit .kasya-lp-lifestyle__image-wrap {
-    aspect-ratio: 4 / 5;
-  }
-
-  .kasya-lp-lifestyle--full-outfit .kasya-lp-lifestyle__image {
     object-fit: contain;
     object-position: center;
   }
@@ -210,10 +194,6 @@
     .kasya-lp-lifestyle__grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 18px 14px;
-    }
-
-    .kasya-lp-lifestyle__image-wrap {
-      aspect-ratio: 4 / 3;
     }
 
     .kasya-lp-lifestyle__copy {
