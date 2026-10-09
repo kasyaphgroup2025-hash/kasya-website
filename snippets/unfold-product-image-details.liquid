@@ -30,8 +30,6 @@
     assign front_image = blank
     assign lp01_media = blank
     assign lp02_media = blank
-    assign fabric_image = blank
-    assign fallback_fabric_image = blank
 
     for media in product.media
       if media.media_type == 'image' and media.preview_image != blank
@@ -54,15 +52,6 @@
             endif
         endcase
 
-        if media_alt_compact contains 'fabriccloseup'
-          if fallback_fabric_image == blank
-            assign fallback_fabric_image = media.preview_image
-          endif
-
-          if fabric_image == blank and selected_color_compact != blank and media_alt_compact contains selected_color_compact
-            assign fabric_image = media.preview_image
-          endif
-        endif
       endif
     endfor
 
@@ -72,15 +61,11 @@
     if front_image == blank and product.featured_media.preview_image != blank
       assign front_image = product.featured_media.preview_image
     endif
-    if fabric_image == blank
-      assign fabric_image = fallback_fabric_image
-    endif
-
     assign lp01_image = lp01_media.preview_image
     assign lp02_image = lp02_media.preview_image
   -%}
 
-  {%- if front_image != blank or lp01_image != blank or lp02_image != blank or fabric_image != blank -%}
+  {%- if front_image != blank or lp01_image != blank or lp02_image != blank -%}
     <section
       id="UnfoldProductDetails-{{ section_id }}"
       class="unfold-product-details"
@@ -153,23 +138,6 @@
             </article>
           {%- endif -%}
 
-          {%- if fabric_image != blank -%}
-            <article class="unfold-product-details__card" data-unfold-detail-card="fabric">
-              <div class="unfold-product-details__media">
-                <img
-                  src="{{ fabric_image | image_url: width: 900 }}"
-                  srcset="{{ fabric_image | image_url: width: 450 }} 450w, {{ fabric_image | image_url: width: 700 }} 700w, {{ fabric_image | image_url: width: 900 }} 900w"
-                  sizes="(min-width: 990px) 25vw, (min-width: 680px) 50vw, 100vw"
-                  alt="FABRIC CLOSEUP"
-                  width="{{ fabric_image.width }}"
-                  height="{{ fabric_image.height }}"
-                  loading="lazy"
-                  data-unfold-detail-image="fabric"
-                >
-              </div>
-              <h3 class="unfold-product-details__label">FABRIC CLOSEUP</h3>
-            </article>
-          {%- endif -%}
         </div>
       </div>
     </section>
@@ -253,7 +221,7 @@
 
       @media screen and (min-width: 990px) {
         #UnfoldProductDetails-{{ section_id }} .unfold-product-details__cards {
-          grid-template-columns: repeat(4, minmax(0, 1fr));
+          grid-template-columns: repeat(3, minmax(0, 1fr));
         }
       }
     </style>
@@ -275,7 +243,7 @@
           );
           if (!nextRoot) return;
 
-          ['front', 'fabric'].forEach(key => {
+          ['front'].forEach(key => {
             const currentImage = root.querySelector(`[data-unfold-detail-image="${key}"]`);
             const nextImage = nextRoot.querySelector(`[data-unfold-detail-image="${key}"]`);
             if (!currentImage || !nextImage || !nextImage.getAttribute('src')) return;

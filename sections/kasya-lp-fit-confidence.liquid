@@ -4,11 +4,12 @@
 {% endcomment %}
 
 {% liquid
+  assign landing_product = section.settings.product | default: product
   assign uses_unfold_image_logic = false
   assign unfold_lp01_media = blank
   assign unfold_lp02_media = blank
 
-  case product.handle
+  case landing_product.handle
     when 'quinn-shawl', 'reese-polo', 'olivia-skirt', 'paisley-pants', 'sofia-dress'
       assign uses_unfold_image_logic = true
   endcase
@@ -21,11 +22,7 @@
   assign third_fit_description = section.settings.back_description
 
   if uses_unfold_image_logic
-    assign third_fit_key = 'fabric'
-    assign third_fit_label = 'FABRIC CLOSEUP'
-    assign third_fit_description = 'A closer look at the fabric, texture, and finish.'
-
-    for media in product.media
+    for media in landing_product.media
       if media.media_type == 'image' and media.preview_image != blank
         assign media_alt_normalized = media.alt | strip | downcase | replace: '|', '' | replace: ' ', ''
 
@@ -203,46 +200,48 @@
         </article>
       {% endunless %}
 
-      <article class="kasya-fit-confidence__card">
-        <div class="kasya-fit-confidence__media">
-          {% if section.settings.back_image != blank %}
-            <img
-              src="{{ section.settings.back_image | image_url: width: 900 }}"
-              data-fit-image="{{ third_fit_key }}"
-              data-default-src="{{ section.settings.back_image | image_url: width: 900 }}"
-              alt="{{ third_fit_label | escape }}"
-              width="900"
-              height="1200"
-              loading="lazy"
-            >
-            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="{{ third_fit_key }}" hidden>
-              {{ third_fit_label }}
-            </div>
-          {% else %}
-            <img
-              data-fit-image="{{ third_fit_key }}"
-              data-default-src=""
-              alt="{{ third_fit_label | escape }}"
-              width="900"
-              height="1200"
-              loading="lazy"
-              hidden
-            >
-            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="{{ third_fit_key }}">
-              {{ third_fit_label }}
-            </div>
-          {% endif %}
-        </div>
+      {% unless uses_unfold_image_logic %}
+        <article class="kasya-fit-confidence__card">
+          <div class="kasya-fit-confidence__media">
+            {% if section.settings.back_image != blank %}
+              <img
+                src="{{ section.settings.back_image | image_url: width: 900 }}"
+                data-fit-image="{{ third_fit_key }}"
+                data-default-src="{{ section.settings.back_image | image_url: width: 900 }}"
+                alt="{{ third_fit_label | escape }}"
+                width="900"
+                height="1200"
+                loading="lazy"
+              >
+              <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="{{ third_fit_key }}" hidden>
+                {{ third_fit_label }}
+              </div>
+            {% else %}
+              <img
+                data-fit-image="{{ third_fit_key }}"
+                data-default-src=""
+                alt="{{ third_fit_label | escape }}"
+                width="900"
+                height="1200"
+                loading="lazy"
+                hidden
+              >
+              <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="{{ third_fit_key }}">
+                {{ third_fit_label }}
+              </div>
+            {% endif %}
+          </div>
 
-        <div class="kasya-fit-confidence__card-copy">
-          <h3 class="kasya-fit-confidence__card-label">
-            {{ third_fit_label }}
-          </h3>
-          <p class="kasya-fit-confidence__card-description">
-            {{ third_fit_description }}
-          </p>
-        </div>
-      </article>
+          <div class="kasya-fit-confidence__card-copy">
+            <h3 class="kasya-fit-confidence__card-label">
+              {{ third_fit_label }}
+            </h3>
+            <p class="kasya-fit-confidence__card-description">
+              {{ third_fit_description }}
+            </p>
+          </div>
+        </article>
+      {% endunless %}
     </div>
 
     {%- assign fit_note_blocks = section.blocks | where: 'type', 'fit_note' -%}
@@ -420,7 +419,7 @@
     // LP01 and LP02 are product-level media found from the complete product.media
     // collection. They must remain independent of color-change state.
     const shots = usesUnfoldImageLogic
-      ? ['front', 'fabric']
+      ? ['front']
       : ['front', 'side', 'back'];
 
     function updateShot(shot, src, displayColor, strictColorMedia, imageLabel) {
@@ -484,6 +483,12 @@
 {
   "name": "Kasya LP Fit Confidence",
   "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Optional explicit product for unassigned template previews. Uses the current product when blank."
+    },
     {
       "type": "text",
       "id": "heading",

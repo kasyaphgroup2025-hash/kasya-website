@@ -73,6 +73,7 @@
         "fit_note_5"
       ],
       "settings": {
+        "product": "sofia-dress",
         "heading": "HOW IT FITS",
         "subheading": "An easy A-line dress with a relaxed fit and stretch-based fabric for comfortable daily movement.",
         "front_label": "FRONT VIEW",
@@ -130,6 +131,7 @@
         "fabric_note_4"
       ],
       "settings": {
+        "product": "sofia-dress",
         "heading": "FABRIC & QUALITY",
         "subheading": "Stretch-based ITY with an easy drape for comfortable, low-effort dressing.",
         "main_note": "One piece. Less deciding. Sofia keeps the silhouette polished while making everyday dressing simpler.",

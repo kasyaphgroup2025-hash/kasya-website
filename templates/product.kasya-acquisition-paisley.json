@@ -73,6 +73,7 @@
         "fit_note_5"
       ],
       "settings": {
+        "product": "paisley-pants",
         "heading": "HOW IT FITS",
         "subheading": "Volume without the stiffness, with front pleats for shape and a back garter for waist comfort.",
         "front_label": "FRONT VIEW",
@@ -130,6 +131,7 @@
         "fabric_note_4"
       ],
       "settings": {
+        "product": "paisley-pants",
         "heading": "FABRIC & QUALITY",
         "subheading": "Breathable Acid Linen with enough structure for a confident wide-leg silhouette.",
         "main_note": "The pleated shape gives an outfit definition, while the fabric and back garter keep movement easy.",
