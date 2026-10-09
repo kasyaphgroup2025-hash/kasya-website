@@ -161,20 +161,15 @@
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
+            "image": "shopify://shop_images/60_7b0b5229-5ed1-418b-9a06-1a87cf3bfff6.jpg",
             "title": "Errands",
             "description": "Easy movement and useful pockets for days on the go."
-          }
-        },
-        "lifestyle_3": {
-          "type": "lifestyle_card",
-          "settings": {
-            "title": "Church & Family Days",
-            "description": "A polished, comfortable option for time with family."
           }
         },
         "lifestyle_4": {
           "type": "lifestyle_card",
           "settings": {
+            "image": "shopify://shop_images/61_47330e64-dd0f-426c-a404-2e5c160387c3.jpg",
             "title": "Style It With Reese",
             "description": "Pair with the Reese Polo for an easy 10.10 outfit."
           }
@@ -183,7 +178,6 @@
       "block_order": [
         "lifestyle_1",
         "lifestyle_2",
-        "lifestyle_3",
         "lifestyle_4"
       ],
       "settings": {
