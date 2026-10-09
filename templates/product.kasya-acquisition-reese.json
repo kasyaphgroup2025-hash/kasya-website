@@ -156,6 +156,7 @@
         "lifestyle_1": {
           "type": "lifestyle_card",
           "settings": {
+            "image": "shopify://shop_images/63.jpg",
             "title": "Office Day",
             "description": "A clean collar and relaxed shape make workday styling simple."
           }
@@ -163,30 +164,15 @@
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
+            "image": "shopify://shop_images/64.jpg",
             "title": "Everyday Errands",
             "description": "Breathable comfort for moving through a full day."
-          }
-        },
-        "lifestyle_3": {
-          "type": "lifestyle_card",
-          "settings": {
-            "title": "Pair With Olivia",
-            "description": "Style with the Olivia Skirt for polished A-line dressing."
-          }
-        },
-        "lifestyle_4": {
-          "type": "lifestyle_card",
-          "settings": {
-            "title": "Pair With Paisley or Quinn",
-            "description": "Complete the look with Paisley Pants or add the Quinn Shawl."
           }
         }
       },
       "block_order": [
         "lifestyle_1",
-        "lifestyle_2",
-        "lifestyle_3",
-        "lifestyle_4"
+        "lifestyle_2"
       ],
       "settings": {
         "heading": "WHERE TO WEAR IT",

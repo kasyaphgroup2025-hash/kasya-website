@@ -48,13 +48,6 @@
             "label": "Shipping Info",
             "link": "/pages/shipping-info"
           }
-        },
-        "return_order_link": {
-          "type": "footer_link",
-          "settings": {
-            "label": "Return My Order",
-            "link": "/pages/kasya-return-exchange-assistance"
-          }
         }
       },
       "block_order": [
@@ -62,8 +55,7 @@
         "about_link",
         "contact_link",
         "return_policy_link",
-        "shipping_link",
-        "return_order_link"
+        "shipping_link"
       ],
       "settings": {
         "show_newsletter": true,
@@ -73,7 +65,6 @@
         "facebook_url": "",
         "tiktok_url": "",
         "viber_url": "",
-        "viber_icon": "shopify://shop_images/viber-black-logo-icon-viber-app-on-transparent-background-free-png.webp",
         "footer_logo": "shopify://shop_images/KASYA_WORDMARK_WHITE_9a48d9ef-2f37-4121-96bd-cdd20062f530.png",
         "show_powered_by_shopify": true
       }

@@ -153,14 +153,6 @@
     "kasya_lp_lifestyle": {
       "type": "kasya-lp-lifestyle",
       "blocks": {
-        "lifestyle_1": {
-          "type": "lifestyle_card",
-          "settings": {
-            "image": "shopify://shop_images/LOOK_1_b186f981-b268-4ab0-a214-f43fe6afbf07.jpg",
-            "title": "Office Day",
-            "description": "A polished one-piece outfit that keeps morning decisions simple."
-          }
-        },
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
@@ -171,6 +163,7 @@
         "lifestyle_3": {
           "type": "lifestyle_card",
           "settings": {
+            "image": "shopify://shop_images/LP_03.jpg",
             "title": "Church & Casual Occasions",
             "description": "An easy A-line shape for comfortably polished dressing."
           }
@@ -178,13 +171,13 @@
         "lifestyle_4": {
           "type": "lifestyle_card",
           "settings": {
+            "image": "shopify://shop_images/LOOK_1_b186f981-b268-4ab0-a214-f43fe6afbf07.jpg",
             "title": "Style It With Quinn",
             "description": "Add the Quinn Shawl when you want another layer or a changed-up look."
           }
         }
       },
       "block_order": [
-        "lifestyle_1",
         "lifestyle_2",
         "lifestyle_3",
         "lifestyle_4"
