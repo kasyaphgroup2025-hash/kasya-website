@@ -70,6 +70,30 @@
             "lightbox_button_background": "#ffffff"
           }
         },
+        "text_outside_image_99yBBh": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/10.10_RELEASE_OUTDOOR_SHOOT.jpg",
+            "link": "shopify://products/paisley-pants",
+            "text": "Paisley Pants",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "small",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        },
         "text_outside_image_LrHB8B": {
           "type": "text-outside-image",
           "settings": {
@@ -363,6 +387,7 @@
       },
       "block_order": [
         "text_outside_image_r8Npiq",
+        "text_outside_image_99yBBh",
         "text_outside_image_LrHB8B",
         "text_outside_image_qLFQtc",
         "text_outside_image_ydUxzY",
