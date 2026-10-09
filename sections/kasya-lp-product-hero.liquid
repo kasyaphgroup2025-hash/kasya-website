@@ -1111,7 +1111,7 @@
     const fallbackImage = {% if lp_product.featured_image != blank %}{{ lp_product.featured_image | image_url: width: 1400 | json }}{% else %}null{% endif %};
     const unfoldLookShotOrder = Array.from({ length: 250 }, (_, index) => `look ${index + 1}`);
     const lpShotOrder = usesUnfoldImageLogic
-      ? ['front', ...unfoldLookShotOrder, 'wearing 1', 'wearing 2', 'wearing 3', 'wearing 4', 'wearing 5', 'fabric close up', 'detail 1', 'detail 2', 'detail 3']
+      ? ['front', ...unfoldLookShotOrder, 'wearing 1', 'wearing 2', 'wearing 3', 'wearing 4', 'wearing 5', 'additional view d2', 'additional view d3', 'fabric close up', 'detail 1', 'detail 2', 'detail 3']
       : ['front', 'side', 'back', 'sitting', 'detail 1', 'detail 2', 'detail 3', 'fabric close up'];
 
     const lower = value => String(value || '').trim().toLowerCase();
@@ -1227,7 +1227,18 @@
     }
 
     function parseProductMediaAlt(altText) {
-      const parts = String(altText || '').split('|').map(part => part.trim());
+      const normalizedAlt = String(altText || '').trim();
+
+      if (usesUnfoldImageLogic && /^d[23]$/i.test(normalizedAlt)) {
+        return {
+          role: '',
+          color: '',
+          shot: normalizeMediaShotName(normalizedAlt),
+          scope: 'product'
+        };
+      }
+
+      const parts = normalizedAlt.split('|').map(part => part.trim());
       if (![2, 3, 4].includes(parts.length) || lower(parts[0]) !== 'lp') return null;
 
       if (parts.length === 2) {
@@ -1272,6 +1283,9 @@
       if (compactShot === 'fabriccloseup') return 'fabric close up';
 
       if (usesUnfoldImageLogic) {
+        if (compactShot === 'd2') return 'additional view d2';
+        if (compactShot === 'd3') return 'additional view d3';
+
         const numberedLookMatch = compactShot.match(/^0*([1-9]\d*)$/);
         if (numberedLookMatch) return `look ${numberedLookMatch[1]}`;
 
@@ -1314,7 +1328,11 @@
     }
 
     function isUnfoldLookShot(shot) {
-      return usesUnfoldImageLogic && (/^look [1-9]\d*$/.test(shot) || /^wearing [1-5]$/.test(shot));
+      return usesUnfoldImageLogic && (
+        /^look [1-9]\d*$/.test(shot) ||
+        /^wearing [1-5]$/.test(shot) ||
+        /^additional view d[23]$/.test(shot)
+      );
     }
 
     function mediaTextMatchesAnyProductColor(value) {
@@ -1444,7 +1462,13 @@
     function getFitImageMapForColor(colorValue) {
       if (usesUnfoldImageLogic) {
         const block = getColorBlock(colorValue);
-        const unfoldMedia = getProductMediaShotMapForColor(colorValue, block, ['front', 'look 1', 'wearing 1']);
+        const unfoldMedia = getProductMediaShotMapForColor(colorValue, block, [
+          'front',
+          'look 1',
+          'wearing 1',
+          'additional view d2',
+          'additional view d3'
+        ]);
         const manualImages = getManualFitImageMapForBlock(block);
         const colorVariant = variants.find(variant => {
           return colorIndex !== -1 && lower(variant.options[colorIndex]) === lower(colorValue);
@@ -1454,6 +1478,8 @@
         return {
           front: unfoldMedia.front || manualImages.front || colorVariant?.featured_image || '',
           wearing: unfoldMedia['look 1'] || unfoldMedia['wearing 1'] || unclassifiedLook?.src || '',
+          'additional-view-d2': unfoldMedia['additional view d2'] || '',
+          'additional-view-d3': unfoldMedia['additional view d3'] || '',
           fabric: getFabricCloseupForColor(colorValue)
         };
       }
@@ -1958,6 +1984,8 @@
         imageLabels: usesUnfoldImageLogic ? {
           front: 'front view',
           wearing: 'how it wears',
+          'additional-view-d2': 'more view',
+          'additional-view-d3': 'more view',
           fabric: 'fabric closeup'
         } : null
       };
@@ -1988,6 +2016,8 @@
         imageLabels: usesUnfoldImageLogic ? {
           front: 'front view',
           wearing: 'how it wears',
+          'additional-view-d2': 'more view',
+          'additional-view-d3': 'more view',
           fabric: 'fabric closeup'
         } : null
       };
