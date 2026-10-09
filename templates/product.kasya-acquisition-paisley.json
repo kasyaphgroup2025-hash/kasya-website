@@ -156,6 +156,7 @@
         "lifestyle_1": {
           "type": "lifestyle_card",
           "settings": {
+            "image": "shopify://shop_images/68_429fb994-4073-4cdc-ad61-ba54d7dfe726.jpg",
             "title": "Office & Meetings",
             "description": "Structured pleats make everyday work outfits feel polished."
           }
@@ -163,30 +164,15 @@
         "lifestyle_2": {
           "type": "lifestyle_card",
           "settings": {
+            "image": "shopify://shop_images/65_eac2413c-f9d3-450b-9cc2-44e3963a43b7.jpg",
             "title": "Lunch & Errands",
             "description": "Wide-leg movement keeps busy days comfortable."
-          }
-        },
-        "lifestyle_3": {
-          "type": "lifestyle_card",
-          "settings": {
-            "title": "Travel",
-            "description": "An easier waist and roomy silhouette support long days out."
-          }
-        },
-        "lifestyle_4": {
-          "type": "lifestyle_card",
-          "settings": {
-            "title": "Style It With Reese",
-            "description": "Pair with the Reese Polo for a complete 10.10 look."
           }
         }
       },
       "block_order": [
         "lifestyle_1",
-        "lifestyle_2",
-        "lifestyle_3",
-        "lifestyle_4"
+        "lifestyle_2"
       ],
       "settings": {
         "heading": "WHERE TO WEAR IT",
