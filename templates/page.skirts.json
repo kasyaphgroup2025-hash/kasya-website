@@ -70,6 +70,30 @@
             "lightbox_button_background": "#ffffff"
           }
         },
+        "text_outside_image_TLDzPf": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/45_2e46c6fc-8f87-44d1-bf92-b10e8d752f3f.jpg",
+            "link": "shopify://products/olivia-skirt",
+            "text": "Olivia Skirt",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        },
         "text_outside_image_p3ErKq": {
           "type": "text-outside-image",
           "settings": {
@@ -145,6 +169,7 @@
       },
       "block_order": [
         "text_outside_image_zB6f7r",
+        "text_outside_image_TLDzPf",
         "text_outside_image_p3ErKq",
         "text_outside_image_3cdNQR",
         "text_outside_image_z4kzWN"

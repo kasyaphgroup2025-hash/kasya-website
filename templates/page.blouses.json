@@ -49,6 +49,30 @@
         "text_outside_image_B4neJP": {
           "type": "text-outside-image",
           "settings": {
+            "image": "shopify://shop_images/8_0bb353f7-7656-47e5-9574-5959d8a35fcb.jpg",
+            "link": "shopify://products/reese-polo",
+            "text": "Reese Polo",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "small",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000000",
+            "caption_color": "#000000",
+            "button_foreground": "#ffffff",
+            "button_background": "#000000",
+            "lightbox_button_color": "#000000",
+            "lightbox_button_background": "#ffffff"
+          }
+        },
+        "text_outside_image_YgH4pc": {
+          "type": "text-outside-image",
+          "settings": {
             "image": "shopify://shop_images/37_30bfb184-aaf0-4c71-8375-be463b1c674e.jpg",
             "link": "shopify://products/jane-blouse-premium-ity",
             "text": "Jane Blouse - Premium ITY",
@@ -289,6 +313,7 @@
       },
       "block_order": [
         "text_outside_image_B4neJP",
+        "text_outside_image_YgH4pc",
         "text_outside_image_hqTzD9",
         "text_outside_image_MyKpQz",
         "text_outside_image_yVHq78",
