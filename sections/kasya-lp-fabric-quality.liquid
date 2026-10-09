@@ -3,7 +3,16 @@
   Compact quality proof section for fabric feel and care notes.
 {% endcomment %}
 
-<section class="kasya-lp-fabric-quality" data-kasya-fabric-quality data-section-id="{{ section.id }}">
+{% liquid
+  assign uses_unfold_image_logic = false
+
+  case product.handle
+    when 'quinn-shawl', 'reese-polo', 'olivia-skirt', 'paisley-pants', 'sofia-dress'
+      assign uses_unfold_image_logic = true
+  endcase
+%}
+
+<section class="kasya-lp-fabric-quality" data-kasya-fabric-quality data-section-id="{{ section.id }}"{% if uses_unfold_image_logic %} data-unfold-image-logic="true"{% endif %}>
   <div class="kasya-lp-fabric-quality__inner">
     <div class="kasya-lp-fabric-quality__header">
       {% if section.settings.heading != blank %}
@@ -23,37 +32,39 @@
       </p>
     </div>
 
-    <div class="kasya-lp-fabric-quality__image-wrap">
-      {% if section.settings.fabric_image != blank %}
-        <img
-          src="{{ section.settings.fabric_image | image_url: width: 1200 }}"
-          data-fabric-image
-          data-default-src="{{ section.settings.fabric_image | image_url: width: 1200 }}"
-          alt="{{ section.settings.heading | default: 'Fabric close-up' | escape }}"
-          width="1200"
-          height="900"
-          loading="lazy"
-          class="kasya-lp-fabric-quality__image"
-        >
-        <div class="kasya-lp-fabric-quality__placeholder" data-fabric-placeholder hidden>
-          Fabric close-up
-        </div>
-      {% else %}
-        <img
-          data-fabric-image
-          data-default-src=""
-          alt="{{ section.settings.heading | default: 'Fabric close-up' | escape }}"
-          width="1200"
-          height="900"
-          loading="lazy"
-          class="kasya-lp-fabric-quality__image"
-          hidden
-        >
-        <div class="kasya-lp-fabric-quality__placeholder" data-fabric-placeholder>
-          Fabric close-up
-        </div>
-      {% endif %}
-    </div>
+    {% unless uses_unfold_image_logic %}
+      <div class="kasya-lp-fabric-quality__image-wrap">
+        {% if section.settings.fabric_image != blank %}
+          <img
+            src="{{ section.settings.fabric_image | image_url: width: 1200 }}"
+            data-fabric-image
+            data-default-src="{{ section.settings.fabric_image | image_url: width: 1200 }}"
+            alt="{{ section.settings.heading | default: 'Fabric close-up' | escape }}"
+            width="1200"
+            height="900"
+            loading="lazy"
+            class="kasya-lp-fabric-quality__image"
+          >
+          <div class="kasya-lp-fabric-quality__placeholder" data-fabric-placeholder hidden>
+            Fabric close-up
+          </div>
+        {% else %}
+          <img
+            data-fabric-image
+            data-default-src=""
+            alt="{{ section.settings.heading | default: 'Fabric close-up' | escape }}"
+            width="1200"
+            height="900"
+            loading="lazy"
+            class="kasya-lp-fabric-quality__image"
+            hidden
+          >
+          <div class="kasya-lp-fabric-quality__placeholder" data-fabric-placeholder>
+            Fabric close-up
+          </div>
+        {% endif %}
+      </div>
+    {% endunless %}
 
     {% if section.settings.main_note != blank %}
       <p class="kasya-lp-fabric-quality__main-note">

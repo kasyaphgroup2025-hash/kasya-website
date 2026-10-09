@@ -3,7 +3,32 @@
   Standalone section for model views and fit notes.
 {% endcomment %}
 
-<section class="kasya-fit-confidence" data-kasya-fit-confidence data-section-id="{{ section.id }}">
+{% liquid
+  assign uses_unfold_image_logic = false
+
+  case product.handle
+    when 'quinn-shawl', 'reese-polo', 'olivia-skirt', 'paisley-pants', 'sofia-dress'
+      assign uses_unfold_image_logic = true
+  endcase
+
+  assign second_fit_key = 'side'
+  assign second_fit_label = section.settings.side_label
+  assign second_fit_description = section.settings.side_description
+  assign third_fit_key = 'back'
+  assign third_fit_label = section.settings.back_label
+  assign third_fit_description = section.settings.back_description
+
+  if uses_unfold_image_logic
+    assign second_fit_key = 'wearing'
+    assign second_fit_label = 'HOW IT WEARS'
+    assign second_fit_description = 'See how the piece falls and moves when worn.'
+    assign third_fit_key = 'fabric'
+    assign third_fit_label = 'FABRIC CLOSEUP'
+    assign third_fit_description = 'A closer look at the fabric, texture, and finish.'
+  endif
+%}
+
+<section class="kasya-fit-confidence" data-kasya-fit-confidence data-section-id="{{ section.id }}"{% if uses_unfold_image_logic %} data-unfold-image-logic="true"{% endif %}>
   <div class="kasya-fit-confidence__inner">
     <div class="kasya-fit-confidence__header">
       {% if section.settings.heading != blank %}
@@ -70,38 +95,38 @@
           {% if section.settings.side_image != blank %}
             <img
               src="{{ section.settings.side_image | image_url: width: 900 }}"
-              data-fit-image="side"
+              data-fit-image="{{ second_fit_key }}"
               data-default-src="{{ section.settings.side_image | image_url: width: 900 }}"
-              alt="{{ section.settings.side_label | escape }}"
+              alt="{{ second_fit_label | escape }}"
               width="900"
               height="1200"
               loading="lazy"
             >
-            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="side" hidden>
-              {{ section.settings.side_label }}
+            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="{{ second_fit_key }}" hidden>
+              {{ second_fit_label }}
             </div>
           {% else %}
             <img
-              data-fit-image="side"
+              data-fit-image="{{ second_fit_key }}"
               data-default-src=""
-              alt="{{ section.settings.side_label | escape }}"
+              alt="{{ second_fit_label | escape }}"
               width="900"
               height="1200"
               loading="lazy"
               hidden
             >
-            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="side">
-              {{ section.settings.side_label }}
+            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="{{ second_fit_key }}">
+              {{ second_fit_label }}
             </div>
           {% endif %}
         </div>
 
         <div class="kasya-fit-confidence__card-copy">
           <h3 class="kasya-fit-confidence__card-label">
-            {{ section.settings.side_label }}
+            {{ second_fit_label }}
           </h3>
           <p class="kasya-fit-confidence__card-description">
-            {{ section.settings.side_description }}
+            {{ second_fit_description }}
           </p>
         </div>
       </article>
@@ -111,38 +136,38 @@
           {% if section.settings.back_image != blank %}
             <img
               src="{{ section.settings.back_image | image_url: width: 900 }}"
-              data-fit-image="back"
+              data-fit-image="{{ third_fit_key }}"
               data-default-src="{{ section.settings.back_image | image_url: width: 900 }}"
-              alt="{{ section.settings.back_label | escape }}"
+              alt="{{ third_fit_label | escape }}"
               width="900"
               height="1200"
               loading="lazy"
             >
-            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="back" hidden>
-              {{ section.settings.back_label }}
+            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="{{ third_fit_key }}" hidden>
+              {{ third_fit_label }}
             </div>
           {% else %}
             <img
-              data-fit-image="back"
+              data-fit-image="{{ third_fit_key }}"
               data-default-src=""
-              alt="{{ section.settings.back_label | escape }}"
+              alt="{{ third_fit_label | escape }}"
               width="900"
               height="1200"
               loading="lazy"
               hidden
             >
-            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="back">
-              {{ section.settings.back_label }}
+            <div class="kasya-fit-confidence__placeholder" data-fit-placeholder="{{ third_fit_key }}">
+              {{ third_fit_label }}
             </div>
           {% endif %}
         </div>
 
         <div class="kasya-fit-confidence__card-copy">
           <h3 class="kasya-fit-confidence__card-label">
-            {{ section.settings.back_label }}
+            {{ third_fit_label }}
           </h3>
           <p class="kasya-fit-confidence__card-description">
-            {{ section.settings.back_description }}
+            {{ third_fit_description }}
           </p>
         </div>
       </article>
@@ -319,7 +344,8 @@
 
     const colorLabel = section.querySelector('[data-fit-color-shown]');
     const colorName = section.querySelector('[data-fit-color-name]');
-    const shots = ['front', 'side', 'back'];
+    const usesUnfoldImageLogic = section.dataset.unfoldImageLogic === 'true';
+    const shots = usesUnfoldImageLogic ? ['front', 'wearing', 'fabric'] : ['front', 'side', 'back'];
 
     function updateShot(shot, src, displayColor, strictColorMedia, imageLabel) {
       const image = section.querySelector(`[data-fit-image="${shot}"]`);

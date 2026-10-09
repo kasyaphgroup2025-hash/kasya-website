@@ -20,6 +20,7 @@
     assign show_initial_media_preview = false
     assign is_daliah_acquisition_hero = false
     assign is_quinn_shawl = false
+    assign uses_unfold_image_logic = false
     assign expected_media_role = ''
     assign explicit_selection_templates = 'kasya-acquisition-dahlia,kasya-acquisition-ellav2,kasya-acquisition-hazel,kasya-acquisition-inah,kasya-acquisition-mia,kasya-acquisition-kianna,kasya-acquisition-naomi,kasya-acquisition-olivia,kasya-acquisition-paisley,kasya-acquisition-reese,kasya-acquisition-sofia,kasya-acquisition-quinn,kasya-acqusition-lea,kasya-jane_blouse,kasya-jane_pants' | split: ','
     assign lp_product_title_downcase = lp_product.title | downcase
@@ -27,6 +28,11 @@
     if lp_product.handle == 'quinn-shawl'
       assign is_quinn_shawl = true
     endif
+
+    case lp_product.handle
+      when 'quinn-shawl', 'reese-polo', 'olivia-skirt', 'paisley-pants', 'sofia-dress'
+        assign uses_unfold_image_logic = true
+    endcase
 
     if template.suffix == 'kasya-jane_blouse' or lp_product.handle == 'jane-blouse-premium-ity-1'
       assign expected_media_role = 'blouse'
@@ -62,7 +68,7 @@
   endif
 %}
 
-<section class="kasya-product-hero{% if section.settings.enable_sticky_atc %} kasya-product-hero--sticky-enabled{% endif %}" data-kasya-hero data-section-id="{{ section.id }}"{% if require_explicit_variant_selection %} data-require-explicit-variant-selection="true"{% endif %}{% if show_initial_media_preview %} data-initial-media-preview="true"{% endif %}{% if is_daliah_acquisition_hero %} data-daliah-coming-soon-hero="true"{% endif %}{% if is_quinn_shawl %} data-quinn-shawl="true"{% endif %}{% if expected_media_role != blank %} data-expected-media-role="{{ expected_media_role }}"{% endif %}>
+<section class="kasya-product-hero{% if section.settings.enable_sticky_atc %} kasya-product-hero--sticky-enabled{% endif %}" data-kasya-hero data-section-id="{{ section.id }}"{% if require_explicit_variant_selection %} data-require-explicit-variant-selection="true"{% endif %}{% if show_initial_media_preview %} data-initial-media-preview="true"{% endif %}{% if is_daliah_acquisition_hero %} data-daliah-coming-soon-hero="true"{% endif %}{% if is_quinn_shawl %} data-quinn-shawl="true"{% endif %}{% if uses_unfold_image_logic %} data-unfold-image-logic="true"{% endif %}{% if expected_media_role != blank %} data-expected-media-role="{{ expected_media_role }}"{% endif %}>
   {% if lp_product == blank %}
     <div class="kasya-product-hero__empty">
       <p>Select a product in this section's settings.</p>
@@ -1094,6 +1100,8 @@
     const templateSuffix = {{ template.suffix | json }};
     const isDaliahAcquisitionHero = section.dataset.daliahComingSoonHero === 'true';
     const isQuinnShawl = productHandle === 'quinn-shawl' && section.dataset.quinnShawl === 'true';
+    const unfoldImageProductHandles = ['quinn-shawl', 'reese-polo', 'olivia-skirt', 'paisley-pants', 'sofia-dress'];
+    const usesUnfoldImageLogic = section.dataset.unfoldImageLogic === 'true' && unfoldImageProductHandles.includes(productHandle);
     const usesApprovedOatSwatch = ['kasya-acquisition-paisley', 'kasya-acquisition-reese'].includes(templateSuffix);
     const colorOptionName = {{ section.settings.color_option_name | json }};
     const sizeOptionName = {{ section.settings.size_option_name | json }};
@@ -1101,8 +1109,9 @@
     const sizeChartTriggerText = {{ section.settings.size_chart_trigger_text | json }};
     const sizeChartHideText = 'Hide size chart';
     const fallbackImage = {% if lp_product.featured_image != blank %}{{ lp_product.featured_image | image_url: width: 1400 | json }}{% else %}null{% endif %};
-    const lpShotOrder = isQuinnShawl
-      ? ['front', 'back', 'wearing 1', 'wearing 2', 'wearing 3', 'wearing 4', 'wearing 5', 'fabric close up', 'detail 1', 'detail 2', 'detail 3']
+    const unfoldLookShotOrder = Array.from({ length: 250 }, (_, index) => `look ${index + 1}`);
+    const lpShotOrder = usesUnfoldImageLogic
+      ? ['front', ...unfoldLookShotOrder, 'wearing 1', 'wearing 2', 'wearing 3', 'wearing 4', 'wearing 5', 'fabric close up', 'detail 1', 'detail 2', 'detail 3']
       : ['front', 'side', 'back', 'sitting', 'detail 1', 'detail 2', 'detail 3', 'fabric close up'];
 
     const lower = value => String(value || '').trim().toLowerCase();
@@ -1262,7 +1271,10 @@
       if (compactShot === 'detail3') return 'detail 3';
       if (compactShot === 'fabriccloseup') return 'fabric close up';
 
-      if (isQuinnShawl) {
+      if (usesUnfoldImageLogic) {
+        const numberedLookMatch = compactShot.match(/^0*([1-9]\d*)$/);
+        if (numberedLookMatch) return `look ${numberedLookMatch[1]}`;
+
         const wearingMatch = compactShot.match(/^(?:wear|wearing)([1-5])$/);
         if (wearingMatch) return `wearing ${wearingMatch[1]}`;
       }
@@ -1285,7 +1297,7 @@
       if (compact.includes('detail2')) return 'detail 2';
       if (compact.includes('detail3')) return 'detail 3';
       if (compact.includes('fabriccloseup')) return 'fabric close up';
-      if (isQuinnShawl) {
+      if (usesUnfoldImageLogic) {
         const wearingMatch = compact.match(/(?:wear|wearing)([1-5])/);
         if (wearingMatch) return `wearing ${wearingMatch[1]}`;
       }
@@ -1299,6 +1311,10 @@
 
     function isProductDetailShot(shot) {
       return shot === 'detail 1' || shot === 'detail 2' || shot === 'detail 3';
+    }
+
+    function isUnfoldLookShot(shot) {
+      return usesUnfoldImageLogic && (/^look [1-9]\d*$/.test(shot) || /^wearing [1-5]$/.test(shot));
     }
 
     function mediaTextMatchesAnyProductColor(value) {
@@ -1338,7 +1354,9 @@
           parsed.scope === 'product' ||
           (parsed.scope === 'filename' && !mediaTextMatchesAnyProductColor(item.src))
         );
-        const matchesColor = isQuinnShawl && isProductDetailShot(parsed.shot)
+        const matchesColor = usesUnfoldImageLogic && isUnfoldLookShot(parsed.shot) && parsed.scope === 'product'
+          ? true
+          : isQuinnShawl && isProductDetailShot(parsed.shot)
           ? parsed.color
             ? uniqueColorNames.includes(lower(parsed.color))
             : mediaTextMatchesColor(mediaText, colorValue, block)
@@ -1424,14 +1442,19 @@
     }
 
     function getFitImageMapForColor(colorValue) {
-      if (isQuinnShawl) {
+      if (usesUnfoldImageLogic) {
         const block = getColorBlock(colorValue);
-        const quinnMedia = getProductMediaShotMapForColor(colorValue, block, ['front', 'back', 'wearing 1']);
+        const unfoldMedia = getProductMediaShotMapForColor(colorValue, block, ['front', 'look 1', 'wearing 1']);
+        const manualImages = getManualFitImageMapForBlock(block);
+        const colorVariant = variants.find(variant => {
+          return colorIndex !== -1 && lower(variant.options[colorIndex]) === lower(colorValue);
+        });
+        const unclassifiedLook = productMedia.find(item => item.src && !String(item.alt || '').trim());
 
         return {
-          front: quinnMedia.front || '',
-          side: quinnMedia.back || '',
-          back: quinnMedia['wearing 1'] || ''
+          front: unfoldMedia.front || manualImages.front || colorVariant?.featured_image || '',
+          wearing: unfoldMedia['look 1'] || unfoldMedia['wearing 1'] || unclassifiedLook?.src || '',
+          fabric: getFabricCloseupForColor(colorValue)
         };
       }
 
@@ -1500,9 +1523,9 @@
     function getFabricCloseupForColor(colorValue) {
       const block = getColorBlock(colorValue);
 
-      if (isQuinnShawl) {
-        const quinnFabricImages = getProductMediaImagesForColor(colorValue, block, ['fabric close up', 'detail 1']);
-        return quinnFabricImages[0] || (block ? block.image_5 : '') || '';
+      if (usesUnfoldImageLogic) {
+        const unfoldFabricImages = getProductMediaImagesForColor(colorValue, block, ['fabric close up']);
+        return unfoldFabricImages[0] || (block ? block.image_5 : '') || '';
       }
 
       const fabricImages = getProductMediaImagesForColor(colorValue, block, ['fabric close up']);
@@ -1930,11 +1953,12 @@
         images: getFitImageMapForColor(selectedColor),
         fabricCloseup: getFabricCloseupForColor(selectedColor),
         featuredImage: fallbackImage,
-        strictColorMedia: isQuinnShawl,
-        imageLabels: isQuinnShawl ? {
+        strictColorMedia: usesUnfoldImageLogic,
+        usesUnfoldImageLogic,
+        imageLabels: usesUnfoldImageLogic ? {
           front: 'front view',
-          side: 'back view',
-          back: 'how it wears'
+          wearing: 'how it wears',
+          fabric: 'fabric closeup'
         } : null
       };
 
@@ -1959,11 +1983,12 @@
         images: getFitImageMapForColor(previewColor),
         fabricCloseup: getFabricCloseupForColor(previewColor),
         featuredImage: fallbackImage,
-        strictColorMedia: isQuinnShawl,
-        imageLabels: isQuinnShawl ? {
+        strictColorMedia: usesUnfoldImageLogic,
+        usesUnfoldImageLogic,
+        imageLabels: usesUnfoldImageLogic ? {
           front: 'front view',
-          side: 'back view',
-          back: 'how it wears'
+          wearing: 'how it wears',
+          fabric: 'fabric closeup'
         } : null
       };
 
