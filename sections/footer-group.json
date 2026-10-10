@@ -18,7 +18,7 @@
           "type": "footer_link",
           "settings": {
             "label": "FAQs",
-            "link": "/pages/faqs"
+            "link": "shopify://pages/faqs"
           }
         },
         "about_link": {
@@ -39,14 +39,14 @@
           "type": "footer_link",
           "settings": {
             "label": "Return & Refund Policy",
-            "link": "/pages/return-refund-policy"
+            "link": "shopify://pages/return-refund-policy"
           }
         },
         "shipping_link": {
           "type": "footer_link",
           "settings": {
             "label": "Shipping Info",
-            "link": "/pages/shipping-info"
+            "link": "shopify://pages/shipping-info"
           }
         }
       },
