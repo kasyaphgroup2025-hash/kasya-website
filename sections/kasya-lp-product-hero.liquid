@@ -304,38 +304,38 @@
               {{ section.settings.size_helper_text }}
             </p>
           {% endif %}
-
-          {% if section.settings.show_size_chart and size_chart_image != blank %}
-            <div class="kasya-product-hero__size-chart" data-size-chart>
-              <button
-                type="button"
-                class="kasya-product-hero__size-chart-toggle"
-                aria-expanded="false"
-                data-size-chart-toggle
-              >
-                <span data-size-chart-toggle-text>{{ section.settings.size_chart_trigger_text }}</span>
-                <span class="kasya-product-hero__size-chart-icon" aria-hidden="true">⌄</span>
-              </button>
-
-              <div class="kasya-product-hero__size-chart-panel" data-size-chart-panel hidden>
-                <img
-                  data-size-chart-image
-                  data-size-chart-src="{{ size_chart_image | image_url: width: 1200 }}"
-                  alt="{{ size_chart_alt | escape }}"
-                  width="1200"
-                  height="900"
-                  loading="lazy"
-                >
-
-                {% if section.settings.size_chart_note != blank %}
-                  <p class="kasya-product-hero__size-chart-note">
-                    {{ section.settings.size_chart_note }}
-                  </p>
-                {% endif %}
-              </div>
-            </div>
-          {% endif %}
         {% endunless %}
+
+        {% if section.settings.show_size_chart and size_chart_image != blank %}
+          <div class="kasya-product-hero__size-chart" data-size-chart>
+            <button
+              type="button"
+              class="kasya-product-hero__size-chart-toggle"
+              aria-expanded="false"
+              data-size-chart-toggle
+            >
+              <span data-size-chart-toggle-text>{{ section.settings.size_chart_trigger_text }}</span>
+              <span class="kasya-product-hero__size-chart-icon" aria-hidden="true">⌄</span>
+            </button>
+
+            <div class="kasya-product-hero__size-chart-panel" data-size-chart-panel hidden>
+              <img
+                data-size-chart-image
+                data-size-chart-src="{{ size_chart_image | image_url: width: 1200 }}"
+                alt="{{ size_chart_alt | escape }}"
+                width="1200"
+                height="900"
+                loading="lazy"
+              >
+
+              {% if section.settings.size_chart_note != blank %}
+                <p class="kasya-product-hero__size-chart-note">
+                  {{ section.settings.size_chart_note }}
+                </p>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
 
         <button
           type="submit"
