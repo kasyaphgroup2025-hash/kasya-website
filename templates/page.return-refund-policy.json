@@ -16,7 +16,7 @@
           "type": "content",
           "settings": {
             "heading": "Returns",
-            "content": "<p>Kasya wants the process to be clear when there is an issue with your order. Submit your concern through the existing Return My Order page and wait for approval and instructions before sending an item back.</p><p>Submitting a request does not automatically guarantee approval of a return, exchange, refund, or voucher.</p>"
+            "content": "<p>If you have an issue with your order and would like to request a return, exchange, refund, or other assistance, please contact our Customer Service team first.</p><p>Our team will review your concern and provide the appropriate instructions before you send any item back.</p><p>Please do not return or ship an item without confirmation from our Customer Service team.</p><p>Submitting a concern does not automatically guarantee approval of a return, exchange, refund, or voucher.</p>"
           }
         },
         "size_exchange_notice": {
@@ -51,7 +51,7 @@
           "type": "content",
           "settings": {
             "heading": "How to request a return or exchange",
-            "content": "<p>Use Kasya’s Return My Order page and provide your email address, order details, concern, and genuine supporting proof when needed. Kasya may contact you if more information is required.</p><p>Please wait for approval and return instructions before arranging a shipment.</p>"
+            "content": "<p>Contact KASYA Customer Service directly and provide your email address, order details, concern, and genuine supporting proof when needed. Our team may contact you if more information is required.</p><p>Please wait for confirmation and return instructions before arranging a shipment.</p>"
           }
         },
         "courier_fees": {
@@ -72,7 +72,7 @@
           "type": "contact",
           "settings": {
             "heading": "Contact information",
-            "content": "<p>If you need help before submitting a request, visit Kasya’s Contact Details page.</p>",
+            "content": "<p>For return, exchange, refund, or order concerns, contact KASYA Customer Service through the Contact Details page.</p>",
             "button_label": "Contact Kasya",
             "contact_page": "contact"
           }
@@ -92,7 +92,7 @@
       "settings": {
         "eyebrow": "Customer care",
         "title": "Return & Refund Policy",
-        "introduction": "<p>We want you to have a clear process when there is an issue with your order. The information below explains how to start a request and what to expect while it is reviewed.</p>",
+        "introduction": "<p>We want you to have a clear process when there is an issue with your order. The information below explains how to contact our Customer Service team and what to expect while your concern is being reviewed.</p>",
         "color_scheme": "background-1",
         "padding_top": 64,
         "padding_bottom": 80
