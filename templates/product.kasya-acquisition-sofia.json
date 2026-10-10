@@ -153,13 +153,6 @@
     "kasya_lp_lifestyle": {
       "type": "kasya-lp-lifestyle",
       "blocks": {
-        "lifestyle_2": {
-          "type": "lifestyle_card",
-          "settings": {
-            "title": "Errands & Family Days",
-            "description": "Relaxed movement and side pockets for everyday plans."
-          }
-        },
         "lifestyle_3": {
           "type": "lifestyle_card",
           "settings": {
@@ -178,7 +171,6 @@
         }
       },
       "block_order": [
-        "lifestyle_2",
         "lifestyle_3",
         "lifestyle_4"
       ],
