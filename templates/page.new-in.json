@@ -94,6 +94,78 @@
             "lightbox_button_background": "#fff"
           }
         },
+        "text_outside_image_XmWi88": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/45_2e46c6fc-8f87-44d1-bf92-b10e8d752f3f.jpg",
+            "link": "shopify://products/olivia-skirt",
+            "text": "Olivia Skirt",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000",
+            "caption_color": "#000",
+            "button_foreground": "#fff",
+            "button_background": "#000",
+            "lightbox_button_color": "#000",
+            "lightbox_button_background": "#fff"
+          }
+        },
+        "text_outside_image_Wp77aW": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/40_53a6b3f0-1d90-40c7-944e-9ee0f37cafcb.jpg",
+            "link": "shopify://products/sofia-dress",
+            "text": "Sofia Dress",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000",
+            "caption_color": "#000",
+            "button_foreground": "#fff",
+            "button_background": "#000",
+            "lightbox_button_color": "#000",
+            "lightbox_button_background": "#fff"
+          }
+        },
+        "text_outside_image_Thwiw7": {
+          "type": "text-outside-image",
+          "settings": {
+            "image": "shopify://shop_images/21_d822738c-92e2-4b6e-926f-3452ed0a5bd7.jpg",
+            "link": "shopify://products/quinn-shawl",
+            "text": "Quinn Shawl",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium",
+            "heading": "",
+            "heading_size": "h4",
+            "heading_uppercase": false,
+            "button_label": "",
+            "button_style": "primary",
+            "button_size": "normal",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "bottom",
+            "heading_color": "#000",
+            "caption_color": "#000",
+            "button_foreground": "#fff",
+            "button_background": "#000",
+            "lightbox_button_color": "#000",
+            "lightbox_button_background": "#fff"
+          }
+        },
         "text_outside_image_cbk8UU": {
           "type": "text-outside-image",
           "disabled": true,
@@ -218,6 +290,9 @@
       "block_order": [
         "text_outside_image_xmWJx6",
         "text_outside_image_yMDx9j",
+        "text_outside_image_XmWi88",
+        "text_outside_image_Wp77aW",
+        "text_outside_image_Thwiw7",
         "text_outside_image_cbk8UU",
         "text_outside_image_xqKzGX",
         "text_outside_image_fkjpfH",
