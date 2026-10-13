@@ -2,11 +2,14 @@
 (function () {
   if (customElements.get('payday-bundle')) return;
 
+  /* Same swatch colors as the product page (kasya-lp-product-hero) */
   var SWATCH_HEX = {
-    'black': '#1f1f1f', 'choco brown': '#5a3b2a', 'navy blue': '#23304a', 'emerald green': '#1f5e4a',
-    'army green': '#4b5320', 'red': '#a3262a', 'dark teal': '#1e4f55', 'gray': '#8a8a87', 'grey': '#8a8a87',
-    'skintone': '#d9b99b', 'warm sand': '#cdb89a', 'dusty lilac': '#b6a2b8', 'warm taupe': '#9a8576'
+    'black': '#000000', 'choco brown': '#7A4A2A', 'navy blue': '#101E4A', 'emerald green': '#0F6B4F',
+    'army green': '#0F5132', 'red': '#8B0000', 'dark teal': '#0F5C5C', 'gray': '#7A7A7A', 'grey': '#7A7A7A',
+    'skintone': '#D8B79B', 'warm sand': '#D6C2A3', 'dusty lilac': '#C8B4D9', 'warm taupe': '#B8A38E'
   };
+  var SHOT_ORDER = ['front', 'side', 'back', 'sitting', 'fabric close up'];
+  var SHOT_LABEL = { 'front': 'Front', 'side': 'Side', 'back': 'Back', 'sitting': 'Sitting', 'fabric close up': 'Fabric close-up' };
 
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
@@ -57,6 +60,15 @@
         if (self.sizes.indexOf(v.size) === -1) self.sizes.push(v.size);
       });
       this.tiers = this.cfg.tiers.slice().sort(function (a, b) { return a.min - b.min; });
+      this.mediaByColor = {};
+      (this.cfg.media || []).forEach(function (m) {
+        var parts = String(m.alt || '').split('|').map(function (x) { return x.trim(); });
+        if (parts.length !== 3 || parts[0].toLowerCase() !== 'lp') return;
+        var shot = parts[2].toLowerCase().replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').replace('closeup', 'close up');
+        if (SHOT_ORDER.indexOf(shot) === -1) return;
+        var key = parts[1].toLowerCase();
+        (self.mediaByColor[key] = self.mediaByColor[key] || {})[shot] = m.src;
+      });
       this.price = this.variants.length ? this.variants[0].price : 0;
 
       var firstAvailable = this.variants.find(function (v) { return v.available; });
@@ -147,12 +159,6 @@
           '</button>';
       }).join('');
 
-      this.$('[data-chart-rows]').innerHTML = '<table><thead><tr><th scope="col">Size</th><th scope="col">Label</th></tr></thead><tbody>' +
-        this.sizes.map(function (s) {
-          var p = self.sizeParts(s);
-          return '<tr><td>' + esc(p.short) + '</td><td>' + esc(p.detail || s) + '</td></tr>';
-        }).join('') + '</tbody></table>';
-
       var max = this.tiers[this.tiers.length - 1].min;
       this.$('[data-markers]').innerHTML = this.tiers.map(function (t) {
         return '<span class="payday-marker" data-marker="' + t.min + '" style="left:' + (t.min / max * 100) + '%"></span>';
@@ -175,10 +181,6 @@
         if (a === 'size') self.state.size = el.dataset.size;
         if (a === 'inc') self.setQty(Number(el.dataset.variant), self.qtyOf(Number(el.dataset.variant)) + 1);
         if (a === 'dec') self.setQty(Number(el.dataset.variant), self.qtyOf(Number(el.dataset.variant)) - 1);
-        if (a === 'quick') {
-          var qv = self.variantFor(el.dataset.color, self.state.size);
-          if (qv) self.addVariant(qv);
-        }
         self.clearError();
         self.render(el);
       });
@@ -192,6 +194,21 @@
         var chart = self.$('[data-chart]');
         chart.hidden = !chart.hidden;
         e.currentTarget.setAttribute('aria-expanded', String(!chart.hidden));
+        var img = chart.querySelector('[data-chart-src]');
+        if (!chart.hidden && img && !img.getAttribute('src')) img.setAttribute('src', img.dataset.chartSrc);
+      });
+
+      var track = this.$('[data-track]');
+      this.$('[data-prev]').addEventListener('click', function () { self.goToSlide(self.slideIndex() - 1); });
+      this.$('[data-next]').addEventListener('click', function () { self.goToSlide(self.slideIndex() + 1); });
+      this.$('[data-dots]').addEventListener('click', function (e) {
+        var dot = e.target.closest('[data-dot]');
+        if (dot) self.goToSlide(Number(dot.dataset.dot));
+      });
+      track.addEventListener('scroll', function () { window.requestAnimationFrame(function () { self.updateDots(); }); }, { passive: true });
+      track.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight') { e.preventDefault(); self.goToSlide(self.slideIndex() + 1); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); self.goToSlide(self.slideIndex() - 1); }
       });
       this.$('[data-checkout]').addEventListener('click', function () { self.syncCart('checkout'); });
       this.$('[data-to-cart]').addEventListener('click', function () { self.syncCart('cart'); });
@@ -200,6 +217,49 @@
       var pad = function () { document.body.style.paddingBottom = bar.offsetHeight + 'px'; };
       if (window.ResizeObserver) new ResizeObserver(pad).observe(bar);
       pad();
+    }
+
+    /* ---------- gallery ---------- */
+    imagesFor(color) {
+      var shots = this.mediaByColor[String(color).toLowerCase()] || {};
+      var list = SHOT_ORDER.filter(function (k) { return shots[k]; }).map(function (k) { return { src: shots[k], label: SHOT_LABEL[k] }; });
+      if (list.length) return list;
+      var v = this.variants.find(function (x) { return x.color === color && x.image; });
+      if (v) return [{ src: v.image, label: '' }];
+      return this.cfg.fallbackImage ? [{ src: this.cfg.fallbackImage, label: '' }] : [];
+    }
+    renderGallery(color) {
+      if (this.galleryColor === color) return;
+      this.galleryColor = color;
+      var imgs = this.imagesFor(color);
+      var track = this.$('[data-track]');
+      track.innerHTML = imgs.map(function (im, i) {
+        return '<figure class="payday-slide">' +
+          '<img src="' + im.src + '" alt="' + esc(color) + ' Wide-Leg Pants' + (im.label ? ', ' + im.label.toLowerCase() + ' view' : '') + '" width="1000" height="1250" loading="' + (i === 0 ? 'eager' : 'lazy') + '">' +
+          (im.label ? '<figcaption class="payday-slide__label">' + im.label + '</figcaption>' : '') +
+          '</figure>';
+      }).join('');
+      this.$('[data-dots]').innerHTML = imgs.length > 1 ? imgs.map(function (im, i) {
+        return '<button type="button" class="payday-dot-nav' + (i === 0 ? ' is-active' : '') + '" data-dot="' + i + '" aria-label="Show ' + (im.label || 'photo ' + (i + 1)) + '"></button>';
+      }).join('') : '';
+      this.$('[data-prev]').hidden = imgs.length < 2;
+      this.$('[data-next]').hidden = imgs.length < 2;
+      track.scrollTo({ left: 0, behavior: 'auto' });
+    }
+    slideIndex() {
+      var track = this.$('[data-track]');
+      return track.clientWidth ? Math.round(track.scrollLeft / track.clientWidth) : 0;
+    }
+    goToSlide(i) {
+      var track = this.$('[data-track]');
+      var n = track.children.length;
+      if (!n) return;
+      var idx = (i + n) % n;
+      track.scrollTo({ left: track.clientWidth * idx, behavior: 'smooth' });
+    }
+    updateDots() {
+      var idx = this.slideIndex();
+      this.querySelectorAll('.payday-dot-nav').forEach(function (d, i) { d.classList.toggle('is-active', i === idx); });
     }
 
     addVariant(v) {
@@ -226,6 +286,9 @@
       if (focusSource && (focusSource.dataset.action === 'inc' || focusSource.dataset.action === 'dec')) {
         focusKey = focusSource.dataset.action + '|' + focusSource.dataset.variant;
       }
+      var n = this.count();
+      var reached = this.tiers.filter(function (t) { return t.min <= n; }).pop();
+      if (reached && reached.min > this.state.target) this.state.target = reached.min;
       this.renderSelector();
       this.renderTray();
       this.renderBar();
@@ -253,13 +316,7 @@
       });
       this.$('[data-color-name]').textContent = s.color;
 
-      var withImg = this.variants.find(function (v) { return v.color === s.color && v.image; });
-      var src = withImg ? withImg.image : this.cfg.fallbackImage;
-      var photo = this.$('[data-photo]');
-      if (src && photo.dataset.src !== src) {
-        photo.dataset.src = src;
-        photo.innerHTML = '<img src="' + src + '" alt="' + esc(s.color) + ' Wide-Leg Pants" loading="lazy">';
-      }
+      this.renderGallery(s.color);
 
       var stock = this.$('[data-stock]'), add = this.$('[data-add]');
       stock.classList.remove('is-warn');
@@ -319,17 +376,6 @@
       this.$('[data-slots]').innerHTML = Array.from({ length: open }, function (_, k) {
         return '<div class="payday-slot">Pair ' + (n + k + 1) + ' of ' + s.target + ': choose a color and size</div>';
       }).join('');
-
-      var quick = (s.size && n > 0) ? this.colors.filter(function (c) {
-        var v = self.variantFor(c, s.size);
-        return c !== s.color && v && v.available && self.qtyOf(v.id) < self.maxFor(v);
-      }) : [];
-      this.$('[data-quick]').hidden = quick.length === 0;
-      if (s.size) this.$('[data-quick-label]').textContent = 'Add another color in ' + this.sizeParts(s.size).short;
-      this.$('[data-quick-swatches]').innerHTML = quick.map(function (c) {
-        return '<button type="button" class="payday-swatch" data-action="quick" data-color="' + esc(c) + '" aria-label="Add ' + esc(c) + ' in ' + esc(self.sizeParts(s.size).short) + '">' +
-          '<i style="' + self.swatchStyle(c) + '"></i></button>';
-      }).join('');
     }
 
     renderBar() {
@@ -339,9 +385,23 @@
       var top = this.tiers[this.tiers.length - 1];
       var msg, nudge = false;
 
+      var target = this.state.target;
+      var goal = this.tiers.filter(function (t) { return t.min <= target; }).pop() || this.tiers[0];
+
       if (n === 0) {
-        var t2 = this.tiers[1] || this.tiers[0];
-        msg = 'Pick ' + t2.min + ' pairs to save ' + t2.pct + '%';
+        msg = goal.min === 1
+          ? 'Add your first pair to get ' + goal.pct + '% off'
+          : 'Pick ' + goal.min + ' pairs to get ' + goal.pct + '% off every pair';
+      } else if (n < goal.min) {
+        var short = goal.min - n;
+        if (short === 1) {
+          msg = 'Add 1 more pair for just ' + money(this.costFor(n + 1) - total) + ' to unlock ' + goal.pct + '% off';
+          nudge = true;
+        } else if (Math.abs(this.costFor(goal.min) - total - this.price) < 1) {
+          msg = 'Add ' + short + ' more pairs for the price of 1 to unlock ' + goal.pct + '% off';
+        } else {
+          msg = 'Add ' + short + ' more pairs to unlock ' + goal.pct + '% off every pair';
+        }
       } else if (!next) {
         msg = 'Best price unlocked: ' + money(this.price * (1 - top.pct / 100)) + ' a pair';
       } else if (next.min - n === 1) {
@@ -363,7 +423,9 @@
         m.classList.toggle('is-on', n >= Number(m.dataset.marker));
       });
 
-      this.$('[data-bar-count]').textContent = n === 0 ? 'No pairs yet' : n + (n === 1 ? ' pair, ' : ' pairs, ') + pct + '% off';
+      var countText = n === 0 ? goal.min + (goal.min === 1 ? ' pair' : ' pairs') + ' for ' + goal.pct + '% off'
+        : (n < goal.min ? n + ' of ' + goal.min + ' pairs, ' + pct + '% off now' : n + (n === 1 ? ' pair, ' : ' pairs, ') + pct + '% off');
+      this.$('[data-bar-count]').textContent = countText;
       this.$('[data-bar-savings]').innerHTML = n === 0 ? '' :
         '<s>' + money(regular) + '</s> <span class="payday-saved">You save ' + money(regular - total) + '</span>';
       this.$('[data-bar-total]').textContent = n === 0 ? '' : money(total);
