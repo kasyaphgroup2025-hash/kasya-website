@@ -23,7 +23,7 @@
 /* Hero banner */
 .payday-hero__banner {
   position: relative; overflow: hidden; background: #3A3B39;
-  aspect-ratio: 4 / 5; max-height: 64rem; width: 100%;
+  aspect-ratio: 1 / var(--payday-hero-m, 1); max-height: 64rem; width: 100%;
 }
 .payday-hero__banner picture, .payday-hero__img {
   position: absolute; inset: 0; width: 100%; height: 100%; display: block;
@@ -186,7 +186,7 @@
 
 /* Desktop */
 @media screen and (min-width: 990px) {
-  .payday-hero__banner { aspect-ratio: 16 / 7; }
+  .payday-hero__banner { aspect-ratio: 1 / var(--payday-hero-d, .44); }
   .payday-hero__text { padding-bottom: 5.6rem; }
   .payday-hero__title { font-size: 6.4rem; font-weight: 300; }
   .payday-tier { padding: 2.2rem 1.2rem 1.8rem; }
