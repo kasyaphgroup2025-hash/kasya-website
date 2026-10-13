@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "payday-sale-landing",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
