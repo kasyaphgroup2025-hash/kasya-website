@@ -33,12 +33,14 @@
       ],
       "settings": {
         "product": "wideleg-linen-pants",
+        "hero_image": "shopify://shop_images/36_a365859c-a429-4256-bef6-1fc53fe0d6e8.jpg",
         "hero_height_mobile": 100,
         "hero_height_desktop": 44,
         "overlay_opacity": 45,
         "eyebrow": "Payday Sale",
         "heading": "Up to 35% off Wide-Leg Pants",
         "subheading": "Mix any colors and sizes. The more you add, the bigger your discount, applied automatically at checkout.",
+        "tiers_heading": "Pick your bundle",
         "tier_1_min": 1,
         "tier_1_pct": 15,
         "tier_2_min": 3,
@@ -52,6 +54,7 @@
         "trust_1": "",
         "trust_2": "",
         "trust_3": "",
+        "faq_heading": "FAQ",
         "accent": "#2f5d55",
         "ink": "#1f2421"
       }
