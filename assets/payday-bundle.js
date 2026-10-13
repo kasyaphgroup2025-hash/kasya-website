@@ -124,11 +124,12 @@
         var next = self.tiers[i + 1];
         var range = next ? (t.min + (next.min - 1 > t.min ? '–' + (next.min - 1) : '') + ' pairs') : (t.min + '+ pairs');
         if (t.min === 1 && next && next.min === 2) range = '1 pair';
-        return '<button type="button" class="payday-tier" data-action="tier" data-target="' + t.min + '" aria-pressed="false">' +
-          '<span class="payday-tier__range">' + range + '</span>' +
-          '<span class="payday-tier__off">' + t.pct + '% off</span>' +
-          '<span class="payday-tier__each">' + money(self.price * (1 - t.pct / 100)) + ' each</span>' +
-          (t.badge ? '<span class="payday-badge">' + esc(t.badge) + '</span>' : '') +
+        return '<button type="button" class="payday-tier" data-action="tier" data-target="' + t.min + '" aria-pressed="false"' +
+          ' aria-label="' + range + ', ' + t.pct + '% off, ' + money(self.price * (1 - t.pct / 100)) + ' per pair' + (t.badge ? ', ' + esc(t.badge) : '') + '">' +
+          (t.badge ? '<span class="payday-badge" aria-hidden="true">' + esc(t.badge) + '</span>' : '') +
+          '<span class="payday-tier__range" aria-hidden="true">' + range + '</span>' +
+          '<span class="payday-tier__off" aria-hidden="true">' + t.pct + '% off</span>' +
+          '<span class="payday-tier__each" aria-hidden="true">' + money(self.price * (1 - t.pct / 100)) + '</span>' +
           '</button>';
       }).join('');
 

@@ -19,26 +19,50 @@
     data-section-id="{{ section.id }}"
     style="--payday-accent: {{ section.settings.accent }}; --payday-ink: {{ section.settings.ink }};"
   >
+    {%- liquid
+      assign hero_desktop = section.settings.hero_image | default: p.featured_image
+      assign hero_mobile = section.settings.hero_image_mobile | default: hero_desktop
+      assign overlay = section.settings.overlay_opacity | divided_by: 100.0
+      assign hero_pos = 'object-position: center'
+      if hero_mobile.presentation.focal_point != blank
+        assign hero_pos = hero_mobile.presentation.focal_point | prepend: 'object-position: '
+      endif
+      assign hero_alt = hero_mobile.alt | default: p.title
+    -%}
     <section class="payday-hero">
-      {%- if section.settings.hero_image != blank -%}
-        <div class="payday-hero__media">
-          {{ section.settings.hero_image | image_url: width: 1600 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 990px) 1200px, 100vw', widths: '600, 900, 1200, 1600', alt: section.settings.hero_image.alt | default: p.title }}
+      <div class="payday-hero__banner" style="--payday-overlay: {{ overlay }};">
+        {%- if hero_desktop -%}
+          <picture>
+            <source media="(min-width: 750px)" srcset="{{ hero_desktop | image_url: width: 1200 }} 1200w, {{ hero_desktop | image_url: width: 1800 }} 1800w, {{ hero_desktop | image_url: width: 2400 }} 2400w" sizes="100vw">
+            {{ hero_mobile | image_url: width: 1200 | image_tag:
+              loading: 'eager',
+              fetchpriority: 'high',
+              sizes: '100vw',
+              widths: '600, 900, 1200',
+              class: 'payday-hero__img',
+              style: hero_pos,
+              alt: hero_alt
+            }}
+          </picture>
+        {%- endif -%}
+        <div class="payday-hero__overlay">
+          <div class="payday-hero__text payday-wrap">
+            {%- if section.settings.eyebrow != blank -%}
+              <p class="payday-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+            {%- endif -%}
+            <h1 class="payday-hero__title">{{ section.settings.heading }}</h1>
+          </div>
         </div>
-      {%- endif -%}
-      <div class="payday-hero__copy payday-wrap">
-        {%- if section.settings.eyebrow != blank -%}
-          <p class="payday-hero__date">{{ section.settings.eyebrow }}</p>
-        {%- endif -%}
-        <h1 class="payday-hero__title">{{ section.settings.heading }}</h1>
-        {%- if section.settings.subheading != blank -%}
-          <p class="payday-hero__sub">{{ section.settings.subheading }}</p>
-        {%- endif -%}
       </div>
+      {%- if section.settings.subheading != blank -%}
+        <div class="payday-wrap"><p class="payday-hero__sub">{{ section.settings.subheading }}</p></div>
+      {%- endif -%}
     </section>
 
     <section class="payday-wrap payday-tiers-wrap" aria-labelledby="PaydayTiers-{{ section.id }}">
       <h2 class="payday-label-lg" id="PaydayTiers-{{ section.id }}">How many pairs?</h2>
       <div class="payday-tiers" data-tiers></div>
+      <p class="payday-tiers__note">Price per pair. The discount applies to every pair in your order.</p>
     </section>
 
     <section class="payday-shop" aria-labelledby="PaydayProduct-{{ section.id }}">
@@ -178,7 +202,9 @@
   "settings": [
     { "type": "product", "id": "product", "label": "Eligible product (Wide-Leg Pants)" },
     { "type": "header", "content": "Hero" },
-    { "type": "image_picker", "id": "hero_image", "label": "Hero image" },
+    { "type": "image_picker", "id": "hero_image", "label": "Banner image (desktop)", "info": "Wide lifestyle photo, at least 2400px wide. If empty, the product photo is used." },
+    { "type": "image_picker", "id": "hero_image_mobile", "label": "Banner image (mobile)", "info": "Optional portrait photo, 4:5. Set a focal point so faces stay in frame." },
+    { "type": "range", "id": "overlay_opacity", "label": "Darken photo behind text", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 45 },
     { "type": "text", "id": "eyebrow", "label": "Campaign dates line", "default": "Payday Sale, limited time" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "The more you mix, the more you save." },
     { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Mix any colors and sizes of our Soft Linen Wide-Leg Pants. Savings apply automatically." },
