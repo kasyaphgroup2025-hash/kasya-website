@@ -134,10 +134,9 @@
       var self = this;
       this.$('[data-tiers]').innerHTML = this.tiers.map(function (t, i) {
         var next = self.tiers[i + 1];
-        var range = next ? (t.min + (next.min - 1 > t.min ? '–' + (next.min - 1) : '') + ' pairs') : (t.min + '+ pairs');
-        if (t.min === 1 && next && next.min === 2) range = '1 pair';
+        var range = next ? (t.min + (next.min - 1 > t.min ? '–' + (next.min - 1) : '') + ' pants') : (t.min + '+ pants');
         return '<button type="button" class="payday-tier" data-action="tier" data-target="' + t.min + '" aria-pressed="false"' +
-          ' aria-label="' + range + ', ' + t.pct + '% off, ' + money(self.price * (1 - t.pct / 100)) + ' per pair' + (t.badge ? ', ' + esc(t.badge) : '') + '">' +
+          ' aria-label="' + range + ', ' + t.pct + '% off, ' + money(self.price * (1 - t.pct / 100)) + ' each' + (t.badge ? ', ' + esc(t.badge) : '') + '">' +
           (t.badge ? '<span class="payday-badge" aria-hidden="true">' + esc(t.badge) + '</span>' : '') +
           '<span class="payday-tier__range" aria-hidden="true">' + range + '</span>' +
           '<span class="payday-tier__off" aria-hidden="true">' + t.pct + '% off</span>' +
@@ -159,14 +158,8 @@
           '</button>';
       }).join('');
 
-      var max = this.tiers[this.tiers.length - 1].min;
-      this.$('[data-markers]').innerHTML = this.tiers.map(function (t) {
-        return '<span class="payday-marker" data-marker="' + t.min + '" style="left:' + (t.min / max * 100) + '%"></span>';
-      }).join('');
-      this.$('[data-marker-labels]').innerHTML = this.tiers.map(function (t, i) {
-        var last = i === self.tiers.length - 1;
-        var pos = last ? 'right:0' : 'left:' + (t.min / max * 100) + '%;transform:translateX(-50%)';
-        return '<span style="' + pos + '">' + t.min + (t.min === 1 ? ' pair, ' : ' pairs, ') + t.pct + '%</span>';
+      this.$('[data-steps]').innerHTML = this.tiers.map(function (t) {
+        return '<span class="payday-step" data-step="' + t.min + '"><i class="payday-step__fill"></i><span class="payday-step__label">' + t.pct + '% off</span></span>';
       }).join('');
     }
 
@@ -316,6 +309,12 @@
       });
       this.$('[data-color-name]').textContent = s.color;
 
+      var offer = this.tiers.filter(function (t) { return t.min <= s.target; }).pop() || this.tiers[0];
+      this.$('[data-price]').innerHTML =
+        '<span class="payday-price__row"><s class="payday-price__was">' + money(this.price) + '</s> ' +
+        '<span class="payday-price__now">' + money(this.price * (1 - offer.pct / 100)) + '</span></span>' +
+        '<span class="payday-price__note">each with ' + offer.pct + '% off</span>';
+
       this.renderGallery(s.color);
 
       var stock = this.$('[data-stock]'), add = this.$('[data-add]');
@@ -351,7 +350,7 @@
         stock.textContent = 'In stock';
       }
       add.disabled = false;
-      add.textContent = 'Add pair: ' + s.color + ', ' + short;
+      add.textContent = 'Add to bundle: ' + s.color + ', ' + short;
     }
 
     renderTray() {
@@ -374,7 +373,7 @@
 
       var open = Math.max(0, s.target - n);
       this.$('[data-slots]').innerHTML = Array.from({ length: open }, function (_, k) {
-        return '<div class="payday-slot">Pair ' + (n + k + 1) + ' of ' + s.target + ': choose a color and size</div>';
+        return '<div class="payday-slot">Pants ' + (n + k + 1) + ' of ' + s.target + ': choose a color and size</div>';
       }).join('');
     }
 
@@ -390,44 +389,51 @@
 
       if (n === 0) {
         msg = goal.min === 1
-          ? 'Add your first pair to get ' + goal.pct + '% off'
-          : 'Pick ' + goal.min + ' pairs to get ' + goal.pct + '% off every pair';
+          ? 'Add your first pants to get ' + goal.pct + '% off'
+          : 'Pick ' + goal.min + ' pants to get ' + goal.pct + '% off each';
       } else if (n < goal.min) {
         var short = goal.min - n;
         if (short === 1) {
-          msg = 'Add 1 more pair for just ' + money(this.costFor(n + 1) - total) + ' to unlock ' + goal.pct + '% off';
+          msg = '1 more pants for just ' + money(this.costFor(n + 1) - total) + ' unlocks ' + goal.pct + '% off';
           nudge = true;
         } else if (Math.abs(this.costFor(goal.min) - total - this.price) < 1) {
-          msg = 'Add ' + short + ' more pairs for the price of 1 to unlock ' + goal.pct + '% off';
+          msg = short + ' more pants for the price of 1 unlocks ' + goal.pct + '% off';
+          nudge = true;
         } else {
-          msg = 'Add ' + short + ' more pairs to unlock ' + goal.pct + '% off every pair';
+          msg = 'Add ' + short + ' more pants to unlock ' + goal.pct + '% off';
         }
       } else if (!next) {
-        msg = 'Best price unlocked: ' + money(this.price * (1 - top.pct / 100)) + ' a pair';
+        msg = 'Best price unlocked: ' + money(this.price * (1 - top.pct / 100)) + ' each';
       } else if (next.min - n === 1) {
-        msg = 'Add 1 more pair for just ' + money(this.costFor(n + 1) - total) + ' and unlock ' + next.pct + '% off';
+        msg = '1 more pants for just ' + money(this.costFor(n + 1) - total) + ' unlocks ' + next.pct + '% off';
         nudge = true;
       } else {
         var need = next.min - n;
-        var cur = this.tiers.filter(function (t) { return t.min <= n; }).pop();
         var extra = this.costFor(next.min) - total;
-        msg = cur.pct + '% off applied. Add ' + need + ' more for ' + next.pct + '% off';
-        if (Math.abs(extra - this.price) < 1) msg = cur.pct + '% off unlocked. Add ' + need + ' more pairs for the price of 1';
+        msg = Math.abs(extra - this.price) < 1
+          ? need + ' more pants for the price of 1 unlocks ' + next.pct + '% off'
+          : pct + '% off applied. Add ' + need + ' more for ' + next.pct + '% off';
+        nudge = Math.abs(extra - this.price) < 1;
       }
       var barMsg = this.$('[data-bar-msg]');
       barMsg.textContent = msg;
       barMsg.classList.toggle('is-nudge', nudge);
 
-      this.$('[data-fill]').style.width = (Math.min(n, top.min) / top.min * 100) + '%';
-      this.querySelectorAll('.payday-marker').forEach(function (m) {
-        m.classList.toggle('is-on', n >= Number(m.dataset.marker));
+      var tiers = this.tiers;
+      this.querySelectorAll('.payday-step').forEach(function (el, i) {
+        var t = tiers[i], prev = i ? tiers[i - 1].min : 0;
+        var on = n >= t.min;
+        var part = on ? 1 : Math.max(0, (n - prev) / (t.min - prev));
+        el.classList.toggle('is-on', on);
+        el.classList.toggle('is-goal', !on && t.min === goal.min);
+        el.querySelector('.payday-step__fill').style.width = (part * 100) + '%';
       });
 
-      var countText = n === 0 ? goal.min + (goal.min === 1 ? ' pair' : ' pairs') + ' for ' + goal.pct + '% off'
-        : (n < goal.min ? n + ' of ' + goal.min + ' pairs, ' + pct + '% off now' : n + (n === 1 ? ' pair, ' : ' pairs, ') + pct + '% off');
+      var countText = n === 0 ? 'No pants yet'
+        : (n < goal.min ? n + ' of ' + goal.min + ' pants' : n + ' pants, ' + pct + '% off');
       this.$('[data-bar-count]').textContent = countText;
       this.$('[data-bar-savings]').innerHTML = n === 0 ? '' :
-        '<s>' + money(regular) + '</s> <span class="payday-saved">You save ' + money(regular - total) + '</span>';
+        '<s>' + money(regular) + '</s> <span class="payday-saved">Save ' + money(regular - total) + '</span>';
       this.$('[data-bar-total]').textContent = n === 0 ? '' : money(total);
       this.$('[data-checkout]').disabled = n === 0;
       this.$('[data-to-cart]').hidden = n === 0;

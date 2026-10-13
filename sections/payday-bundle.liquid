@@ -69,9 +69,9 @@
     </section>
 
     <section class="payday-wrap payday-tiers-wrap" aria-labelledby="PaydayTiers-{{ section.id }}">
-      <h2 class="payday-label-lg" id="PaydayTiers-{{ section.id }}">How many pairs?</h2>
+      <h2 class="payday-label-lg" id="PaydayTiers-{{ section.id }}">How many pants?</h2>
       <div class="payday-tiers" data-tiers></div>
-      <p class="payday-tiers__note">Price per pair. The discount applies to every pair in your order.</p>
+      <p class="payday-tiers__note">Price shown is per piece. The discount applies to all pants in your order.</p>
     </section>
 
     <section class="payday-shop" aria-labelledby="PaydayProduct-{{ section.id }}">
@@ -97,7 +97,7 @@
       <div class="payday-shop__panel payday-wrap">
         <div class="payday-title-row">
           <h2 class="payday-product-title" id="PaydayProduct-{{ section.id }}">{{ p.title }}</h2>
-          <span class="payday-reg">{{ p.price | money }} regular</span>
+          <div class="payday-price" data-price aria-live="polite"><span class="payday-price__now">{{ p.price | money }}</span></div>
         </div>
 
         <div class="payday-field">
@@ -131,6 +131,7 @@
           <h3 class="payday-label-lg">Your bundle</h3>
           <div data-tray-items></div>
           <div class="payday-slots" data-slots></div>
+          <button type="button" class="payday-link payday-link--small payday-tray__cart" data-to-cart hidden>Add to cart and keep shopping</button>
         </div>
       </div>
     </section>
@@ -161,24 +162,17 @@
     <aside class="payday-bar" data-bar aria-label="Your bundle summary">
       <div class="payday-bar__inner">
         <p class="payday-bar__msg" data-bar-msg aria-live="polite"></p>
-        <div class="payday-track" aria-hidden="true">
-          <div class="payday-track__fill" data-fill></div>
-          <div data-markers></div>
-        </div>
-        <div class="payday-track__labels" data-marker-labels aria-hidden="true"></div>
+        <div class="payday-steps" data-steps aria-hidden="true"></div>
         <div class="payday-bar__row">
           <div class="payday-bar__totals">
             <span class="payday-bar__count" data-bar-count></span>
-            <span data-bar-savings></span>
+            <span class="payday-bar__savings" data-bar-savings></span>
           </div>
           <button type="button" class="payday-btn payday-btn--checkout" data-checkout disabled>
             <span>Checkout</span><span data-bar-total></span>
           </button>
         </div>
-        <div class="payday-bar__foot">
-          <span class="payday-bar__ship" data-ship-line></span>
-          <button type="button" class="payday-link payday-link--small" data-to-cart hidden>Add to cart instead</button>
-        </div>
+        <p class="payday-bar__ship" data-ship-line></p>
         <p class="payday-bar__error" data-error role="alert"></p>
       </div>
     </aside>
@@ -243,12 +237,12 @@
     { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Mix any colors and sizes of our Soft Linen Wide-Leg Pants. Savings apply automatically." },
     { "type": "header", "content": "Discount tiers" },
     { "type": "paragraph", "content": "Preview only. These must match the three automatic Payday discounts in Shopify admin." },
-    { "type": "number", "id": "tier_1_min", "label": "Tier 1 minimum pairs", "default": 1 },
+    { "type": "number", "id": "tier_1_min", "label": "Tier 1 minimum pants", "default": 1 },
     { "type": "number", "id": "tier_1_pct", "label": "Tier 1 % off", "default": 15 },
-    { "type": "number", "id": "tier_2_min", "label": "Tier 2 minimum pairs", "default": 3 },
+    { "type": "number", "id": "tier_2_min", "label": "Tier 2 minimum pants", "default": 3 },
     { "type": "number", "id": "tier_2_pct", "label": "Tier 2 % off", "default": 25 },
     { "type": "text", "id": "tier_2_badge", "label": "Tier 2 badge", "default": "Most popular" },
-    { "type": "number", "id": "tier_3_min", "label": "Tier 3 minimum pairs", "default": 5 },
+    { "type": "number", "id": "tier_3_min", "label": "Tier 3 minimum pants", "default": 5 },
     { "type": "number", "id": "tier_3_pct", "label": "Tier 3 % off", "default": 35 },
     { "type": "text", "id": "tier_3_badge", "label": "Tier 3 badge", "default": "Best value" },
     { "type": "header", "content": "Fit and trust" },
@@ -268,7 +262,7 @@
       "name": "FAQ item",
       "settings": [
         { "type": "text", "id": "question", "label": "Question", "default": "Can I mix colors and sizes?" },
-        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Yes. Every pair counts toward your discount.</p>" }
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Yes. All pants in your bundle count toward your discount.</p>" }
       ]
     }
   ],
