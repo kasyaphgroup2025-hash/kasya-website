@@ -84,7 +84,7 @@
       this.buildStatic();
       this.bind();
       this.render();
-      this.prefillFromCart();
+      this.loadFromCart();
       publish('payday_page_view', { product_id: this.cfg.productId });
     }
 
@@ -174,6 +174,13 @@
         if (a === 'size') self.state.size = el.dataset.size;
         if (a === 'inc') self.setQty(Number(el.dataset.variant), self.qtyOf(Number(el.dataset.variant)) + 1);
         if (a === 'dec') self.setQty(Number(el.dataset.variant), self.qtyOf(Number(el.dataset.variant)) - 1);
+        if (a === 'slot') {
+          var field = self.$('[data-color-field]');
+          if (field) field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          var current = self.querySelector('[data-swatches] .payday-swatch[aria-pressed="true"]');
+          if (current) current.focus({ preventScroll: true });
+          return;
+        }
         self.clearError();
         self.render(el);
       });
@@ -203,8 +210,15 @@
         if (e.key === 'ArrowRight') { e.preventDefault(); self.goToSlide(self.slideIndex() + 1); }
         if (e.key === 'ArrowLeft') { e.preventDefault(); self.goToSlide(self.slideIndex() - 1); }
       });
-      this.$('[data-checkout]').addEventListener('click', function () { self.syncCart('checkout'); });
-      this.$('[data-to-cart]').addEventListener('click', function () { self.syncCart('cart'); });
+      this.$('[data-checkout]').addEventListener('click', function () { self.addToCart(); });
+
+      /* When the AOV cart closes, mirror any changes made there back into the bundle */
+      var drawer = document.querySelector('[data-kasya-aov-cart]');
+      if (drawer && window.MutationObserver) {
+        new MutationObserver(function () {
+          if (drawer.getAttribute('aria-hidden') === 'true') self.loadFromCart();
+        }).observe(drawer, { attributes: true, attributeFilter: ['aria-hidden'] });
+      }
 
       var bar = this.$('[data-bar]');
       var pad = function () { document.body.style.paddingBottom = bar.offsetHeight + 'px'; };
@@ -372,9 +386,13 @@
       }).join('');
 
       var open = Math.max(0, s.target - n);
-      this.$('[data-slots]').innerHTML = Array.from({ length: open }, function (_, k) {
-        return '<div class="payday-slot">Pants ' + (n + k + 1) + ' of ' + s.target + ': choose a color and size</div>';
-      }).join('');
+      var slots = Array.from({ length: open }, function (_, k) {
+        return '<button type="button" class="payday-slot" data-action="slot">Pants ' + (n + k + 1) + ' of ' + s.target + ': choose a color and size</button>';
+      });
+      if (open === 0 && n > 0) {
+        slots.push('<button type="button" class="payday-slot payday-slot--extra" data-action="slot"><span aria-hidden="true">+</span> Pants ' + (n + 1) + ': add another color or size</button>');
+      }
+      this.$('[data-slots]').innerHTML = slots.join('');
     }
 
     renderBar() {
@@ -435,8 +453,7 @@
       this.$('[data-bar-savings]').innerHTML = n === 0 ? '' :
         '<s>' + money(regular) + '</s> <span class="payday-saved">Save ' + money(regular - total) + '</span>';
       this.$('[data-bar-total]').textContent = n === 0 ? '' : money(total);
-      this.$('[data-checkout]').disabled = n === 0;
-      this.$('[data-to-cart]').hidden = n === 0;
+      this.$('[data-checkout]').disabled = n === 0 || this.adding;
 
       var ship = this.cfg.freeShippingMin, line = '';
       if (ship > 0) {
@@ -454,33 +471,44 @@
     }
 
     /* ---------- cart ---------- */
-    prefillFromCart() {
+    loadFromCart() {
       var self = this;
-      fetch(this.root + 'cart.js', { headers: { Accept: 'application/json' } })
+      return fetch(this.root + 'cart.js', { headers: { Accept: 'application/json' } })
         .then(function (r) { return r.json(); })
         .then(function (cart) {
-          var found = false;
+          var items = [];
           (cart.items || []).forEach(function (line) {
-            if (line.product_id !== self.cfg.productId) return;
-            var v = self.variantById(line.variant_id);
-            if (!v) return;
-            found = true;
-            var existing = self.state.items.find(function (i) { return i.id === v.id; });
+            if (line.product_id !== self.cfg.productId || !self.variantById(line.variant_id)) return;
+            var existing = items.find(function (i) { return i.id === line.variant_id; });
             if (existing) existing.qty += line.quantity;
-            else self.state.items.push({ id: v.id, qty: line.quantity });
+            else items.push({ id: line.variant_id, qty: line.quantity });
           });
-          if (found) self.render();
+          var before = JSON.stringify(self.state.items);
+          if (items.length || self.inCart) self.state.items = items;
+          self.inCart = items.length > 0;
+          if (JSON.stringify(self.state.items) !== before) self.render();
         })
-        .catch(function () { /* cart prefill is optional */ });
+        .catch(function () { /* reading the cart is optional */ });
     }
 
-    syncCart(dest) {
+    updateCartIcon(sections) {
+      var html = sections && sections['cart-icon-bubble'];
+      var icon = document.getElementById('cart-icon-bubble');
+      if (!html || !icon) return;
+      var doc = new DOMParser().parseFromString(html, 'text/html');
+      var fresh = doc.getElementById('cart-icon-bubble') || doc.querySelector('.shopify-section') || doc.body;
+      if (fresh) icon.innerHTML = fresh.innerHTML;
+    }
+
+    addToCart() {
       var self = this, n = this.count();
-      if (n === 0) return;
-      var buttons = [this.$('[data-checkout]'), this.$('[data-to-cart]')];
-      buttons.forEach(function (b) { b.disabled = true; });
+      if (n === 0 || this.adding) return;
+      var btn = this.$('[data-checkout]'), label = this.$('[data-btn-label]');
+      this.adding = true;
+      btn.disabled = true;
+      label.textContent = 'Adding\u2026';
       var expectedDiscount = n * this.price - this.costFor(n);
-      publish('payday_checkout_click', { pairs: n, preview_total: Math.round(this.costFor(n)) / 100, destination: dest });
+      publish('payday_add_to_cart_click', { pairs: n, preview_total: Math.round(this.costFor(n)) / 100 });
 
       fetch(this.root + 'cart.js', { headers: { Accept: 'application/json' } })
         .then(function (r) { return r.json(); })
@@ -493,11 +521,11 @@
           return fetch(self.root + 'cart/update.js', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify({ updates: updates })
+            body: JSON.stringify({ updates: updates, sections: 'cart-icon-bubble', sections_url: window.location.pathname })
           });
         })
         .then(function (r) {
-          if (!r.ok) return r.json().then(function (err) { throw new Error(err.description || err.message || 'Cart update failed'); });
+          if (!r.ok) return r.json().then(function (err) { throw new Error(err.description || err.message || 'Could not add to cart'); });
           return r.json();
         })
         .then(function (cart) {
@@ -508,11 +536,21 @@
           if (Math.abs(actual - expectedDiscount) > n) {
             console.warn('[Payday] Preview discount ' + money(expectedDiscount) + ' differs from cart discount ' + money(actual) + '. Check the automatic discounts in Shopify admin.');
           }
-          window.location.href = self.root + (dest === 'checkout' ? 'checkout' : 'cart');
+          self.updateCartIcon(cart.sections);
+          self.inCart = true;
+          document.dispatchEvent(new CustomEvent('payday:added-to-cart', { detail: { cart: cart } }));
+          if (window.KasyaAovCart && typeof window.KasyaAovCart.open === 'function') {
+            window.KasyaAovCart.open();
+          } else {
+            window.location.href = self.root + 'cart';
+          }
         })
         .catch(function (err) {
           self.showError((err && err.message) ? err.message : 'Something went wrong. Please try again.');
-          buttons.forEach(function (b) { b.disabled = false; });
+        })
+        .then(function () {
+          self.adding = false;
+          label.textContent = 'Add to cart';
           self.renderBar();
         });
     }

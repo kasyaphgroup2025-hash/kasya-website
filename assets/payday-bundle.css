@@ -154,9 +154,13 @@
 .payday-stepper button:disabled { color: #B9B6AE; cursor: not-allowed; }
 .payday-stepper output { min-width: 2rem; text-align: center; font-size: 1.4rem; }
 .payday-slots { display: grid; gap: .8rem; }
-.payday-tray__cart { justify-self: start; }
-.payday-tray__cart[hidden] { display: none; }
-.payday-slot { min-height: 5.2rem; border: 1px dashed #C9C6BE; border-radius: .8rem; display: flex; align-items: center; padding: 0 1.4rem; font-size: 1.3rem; color: var(--payday-muted); }
+.payday-slot {
+  width: 100%; min-height: 5.2rem; border: 1px dashed #C9C6BE; border-radius: .8rem; background: none; cursor: pointer;
+  display: flex; align-items: center; gap: .8rem; padding: 0 1.4rem; font-size: 1.3rem; color: var(--payday-muted); text-align: left;
+}
+.payday-slot:hover { border-color: var(--payday-ink-2); color: var(--payday-ink-2); }
+.payday-slot--extra { border-color: var(--payday-accent); color: var(--payday-accent); font-weight: 600; }
+.payday-slot--extra span { font-size: 1.8rem; line-height: 1; }
 
 /* Trust + FAQ */
 .payday-trust { border-top: 1px solid var(--payday-line); padding-top: 2rem; padding-bottom: 2rem; display: grid; gap: 1rem; font-size: 1.4rem; }
