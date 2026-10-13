@@ -1,11 +1,60 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
-    "main": {
-      "type": "payday-sale-landing",
-      "settings": {}
+    "payday": {
+      "type": "payday-bundle",
+      "blocks": {
+        "faq_mix": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I mix colors and sizes?",
+            "answer": "<p>Yes. Every pair of Wide-Leg Pants counts toward your discount, in any color and size.</p>"
+          }
+        },
+        "faq_codes": {
+          "type": "faq",
+          "settings": {
+            "question": "Does this work with my other discount codes?",
+            "answer": "<p>Payday savings can’t be combined with other discount codes. You always get the Payday price automatically, with no code needed.</p>"
+          }
+        },
+        "faq_shipping": {
+          "type": "faq",
+          "settings": {
+            "question": "Is free shipping still included?",
+            "answer": "<p>Yes. Orders that qualify for free shipping still ship free.</p>"
+          }
+        }
+      },
+      "block_order": ["faq_mix", "faq_codes", "faq_shipping"],
+      "settings": {
+        "product": "wideleg-linen-pants",
+        "eyebrow": "Payday Sale",
+        "heading": "The more you mix, the more you save.",
+        "subheading": "Mix any colors and sizes of our Soft Linen Wide-Leg Pants. Savings apply automatically at checkout.",
+        "tier_1_min": 1,
+        "tier_1_pct": 15,
+        "tier_2_min": 3,
+        "tier_2_pct": 25,
+        "tier_2_badge": "Most popular",
+        "tier_3_min": 5,
+        "tier_3_pct": 35,
+        "tier_3_badge": "Best value",
+        "trust_1": "Savings apply automatically. No code needed.",
+        "trust_2": "",
+        "trust_3": "",
+        "accent": "#2F5D55",
+        "ink": "#1F2421"
+      }
     }
   },
-  "order": [
-    "main"
-  ]
+  "order": ["payday"]
 }
