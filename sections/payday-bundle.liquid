@@ -69,7 +69,7 @@
     </section>
 
     <section class="payday-wrap payday-tiers-wrap" aria-labelledby="PaydayTiers-{{ section.id }}">
-      <h2 class="payday-label-lg" id="PaydayTiers-{{ section.id }}">How many pants?</h2>
+      <h2 class="payday-label-lg" id="PaydayTiers-{{ section.id }}">{{ section.settings.tiers_heading | default: 'Pick your bundle' }}</h2>
       <div class="payday-tiers" data-tiers></div>
       <p class="payday-tiers__note">Price shown is per piece. The discount applies to all pants in your order.</p>
     </section>
@@ -148,7 +148,7 @@
 
     {%- if section.blocks.size > 0 -%}
       <section class="payday-wrap payday-faq" aria-labelledby="PaydayFaq-{{ section.id }}">
-        <h2 class="payday-label-lg" id="PaydayFaq-{{ section.id }}">Questions</h2>
+        <h2 class="payday-label-lg" id="PaydayFaq-{{ section.id }}">{{ section.settings.faq_heading | default: 'FAQ' }}</h2>
         {%- for block in section.blocks -%}
           <details class="payday-faq__item" {{ block.shopify_attributes }}>
             <summary>{{ block.settings.question }}</summary>
@@ -232,9 +232,10 @@
     { "type": "range", "id": "hero_height_desktop", "label": "Banner height on desktop", "info": "As a percentage of screen width.", "min": 30, "max": 60, "step": 2, "unit": "%", "default": 44 },
     { "type": "range", "id": "overlay_opacity", "label": "Darken photo behind text", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 45 },
     { "type": "text", "id": "eyebrow", "label": "Campaign dates line", "default": "Payday Sale, limited time" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "The more you mix, the more you save." },
-    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Mix any colors and sizes of our Soft Linen Wide-Leg Pants. Savings apply automatically." },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Up to 35% off Wide-Leg Pants" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Mix any colors and sizes. The more you add, the bigger your discount, applied automatically at checkout." },
     { "type": "header", "content": "Discount tiers" },
+    { "type": "text", "id": "tiers_heading", "label": "Heading above the offers", "default": "Pick your bundle" },
     { "type": "paragraph", "content": "Preview only. These must match the three automatic Payday discounts in Shopify admin." },
     { "type": "number", "id": "tier_1_min", "label": "Tier 1 minimum pants", "default": 1 },
     { "type": "number", "id": "tier_1_pct", "label": "Tier 1 % off", "default": 15 },
@@ -251,6 +252,7 @@
     { "type": "text", "id": "trust_1", "label": "Trust line 1" },
     { "type": "text", "id": "trust_2", "label": "Trust line 2" },
     { "type": "text", "id": "trust_3", "label": "Trust line 3" },
+    { "type": "text", "id": "faq_heading", "label": "FAQ heading", "default": "FAQ" },
     { "type": "header", "content": "Colors" },
     { "type": "color", "id": "accent", "label": "Savings and progress color", "default": "#2F5D55" },
     { "type": "color", "id": "ink", "label": "Text and button color", "default": "#1F2421" }
